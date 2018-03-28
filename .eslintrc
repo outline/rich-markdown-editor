@@ -1,0 +1,39 @@
+{
+  "parser": "babel-eslint",
+  "extends": [
+    "react-app",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:flowtype/recommended"
+  ],
+  "plugins": ["prettier", "flowtype"],
+  "rules": {
+    "eqeqeq": 2,
+    "no-unused-vars": 2,
+    "import/order": "warn",
+    "no-mixed-operators": "off",
+    "import/no-unresolved": [
+      "error",
+      {
+        "ignore": ["slate-drop-or-paste-images"]
+      }
+    ],
+    "jsx-a11y/href-no-hash": "off",
+    "flowtype/require-valid-file-annotation": [
+      2,
+      "always",
+      {
+        "annotationStyle": "line"
+      }
+    ],
+    "flowtype/space-after-type-colon": [2, "always"],
+    "flowtype/space-before-type-colon": [2, "never"],
+    "prettier/prettier": [
+      "error",
+      {
+        "printWidth": 80,
+        "trailingComma": "es5"
+      }
+    ]
+  }
+}
