@@ -52,6 +52,7 @@
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-plugin-transform-regenerator": "^6.24.1",
     "babel-preset-flow": "^6.23.0",
+    "babel-preset-react": "^6.24.1",
     "eslint": "^4.19.1",
     "eslint-config-react-app": "^2.1.0",
     "eslint-plugin-import": "^2.9.0",

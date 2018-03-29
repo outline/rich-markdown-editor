@@ -93,7 +93,8 @@ class MarkdownEditor extends React.Component<Props> {
     ev.stopPropagation();
 
     const files = getDataTransferFiles(ev);
-    for (const file of files) {
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
       if (file.type.startsWith("image/")) {
         await this.insertImageFile(file);
       }
