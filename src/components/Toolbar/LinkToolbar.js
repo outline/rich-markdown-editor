@@ -28,7 +28,7 @@ type Props = {
 @keydown
 @observer
 export default class LinkToolbar extends React.Component<Props> {
-  wrapper: HTMLElement;
+  wrapper: ?HTMLElement;
   input: HTMLInputElement;
   firstDocument: HTMLElement;
   originalValue: string = "";
@@ -89,9 +89,10 @@ export default class LinkToolbar extends React.Component<Props> {
   // };
 
   onKeyDown = (ev: SyntheticKeyboardEvent<*>) => {
-    switch (ev.keyCode) {
+    switch (ev.which) {
       case 13: // enter
         ev.preventDefault();
+        if (!(ev.target instanceof HTMLInputElement)) return;
         return this.save(ev.target.value);
       case 27: // escape
         return this.save(this.originalValue);
@@ -106,7 +107,7 @@ export default class LinkToolbar extends React.Component<Props> {
     }
   };
 
-  onChange = (ev: SyntheticKeyboardEvent<*> & SyntheticInputEvent<*>) => {
+  onChange = (ev: SyntheticKeyboardEvent<*>) => {
     // try {
     //   new URL(ev.target.value);
     // } catch (err) {

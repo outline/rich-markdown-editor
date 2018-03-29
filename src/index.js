@@ -83,7 +83,7 @@ class MarkdownEditor extends React.Component<Props> {
     }
   };
 
-  handleDrop = async (ev: SyntheticEvent<*>) => {
+  handleDrop = async (ev: SyntheticDragEvent<*>) => {
     if (this.props.readOnly) return;
     // check if this event was already handled by the Editor
     if (ev.isDefaultPrevented()) return;

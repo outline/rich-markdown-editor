@@ -2,14 +2,12 @@
 src/.*
 
 [ignore]
+.*/node_modules/immutable/.*
 
 [libs]
 
 [options]
 emoji=true
-
-module.system.node.resolve_dirname=node_modules
-module.system.node.resolve_dirname=app
 
 esproposal.decorators=ignore
 esproposal.class_static_fields=enable

@@ -1,6 +1,8 @@
 // @flow
 
-export default function getDataTransferFiles(event: SyntheticEvent<*>) {
+export default function getDataTransferFiles(
+  event: SyntheticDragEvent<*> | SyntheticInputEvent<*>
+) {
   let dataTransferItemsList = [];
 
   if (event.dataTransfer) {
