@@ -1,0 +1,15 @@
+machine:
+  node:
+    version: 8.0
+  environment:
+    PATH: "${PATH}:${HOME}/${CIRCLE_PROJECT_REPONAME}/node_modules/.bin"
+
+dependencies:
+  override:
+    - yarn install --pure-lockfile
+  cache_directories:
+    - ~/.cache/yarn
+
+test:
+  override:
+    - yarn lint && yarn flow
