@@ -1,8 +1,6 @@
 // @flow
 import * as React from "react";
 import styled from "styled-components";
-import { observable } from "mobx";
-import { observer } from "mobx-react";
 import { Editor } from "slate-react";
 import { Block } from "slate";
 import { List } from "immutable";
@@ -13,10 +11,10 @@ type Props = {
   editor: Editor,
 };
 
-@observer
-class Contents extends React.Component<Props> {
-  @observable activeHeading: ?string;
-
+type State = {
+  activeHeading: ?string,
+};
+class Contents extends React.Component<Props, State> {
   componentDidMount() {
     window.addEventListener("scroll", this.updateActiveHeading);
     this.updateActiveHeading();
@@ -37,7 +35,9 @@ class Contents extends React.Component<Props> {
       if (bounds.top <= 0) activeHeading = element.id;
     }
 
-    this.activeHeading = activeHeading;
+    if (this.state.activeHeading !== activeHeading) {
+      this.setState({ activeHeading });
+    }
   };
 
   getHeadingElements(): HTMLElement[] {
@@ -74,7 +74,7 @@ class Contents extends React.Component<Props> {
         <Sections>
           {headings.map(heading => {
             const slug = headingToSlug(editor.value.document, heading);
-            const active = this.activeHeading === slug;
+            const active = this.state.activeHeading === slug;
 
             return (
               <ListItem type={heading.type} active={active} key={slug}>

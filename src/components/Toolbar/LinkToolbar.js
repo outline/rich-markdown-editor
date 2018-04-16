@@ -1,8 +1,6 @@
 // @flow
 import * as React from "react";
 import { findDOMNode } from "react-dom";
-import { observable } from "mobx";
-import { observer } from "mobx-react";
 import { Node } from "slate";
 import { Editor } from "slate-react";
 import styled from "styled-components";
@@ -25,22 +23,29 @@ type Props = {
   onBlur: () => *,
 };
 
+type State = {
+  isEditing: boolean,
+  isFetching: boolean,
+  resultIds: string[],
+  searchTerm: ?string,
+};
+
 @keydown
-@observer
-export default class LinkToolbar extends React.Component<Props> {
+export default class LinkToolbar extends React.Component<Props, State> {
   wrapper: ?HTMLElement;
   input: HTMLInputElement;
   firstDocument: HTMLElement;
   originalValue: string = "";
-
-  @observable isEditing: boolean = false;
-  @observable isFetching: boolean = false;
-  @observable resultIds: string[] = [];
-  @observable searchTerm: ?string = null;
+  state = {
+    isEditing: false,
+    isFetching: false,
+    resultIds: [],
+    searchTerm: null,
+  };
 
   componentDidMount() {
     this.originalValue = this.props.link.data.get("href");
-    this.isEditing = !!this.originalValue;
+    this.setState({ isEditing: !!this.originalValue });
 
     setImmediate(() =>
       window.addEventListener("click", this.handleOutsideMouseClick)
@@ -116,7 +121,7 @@ export default class LinkToolbar extends React.Component<Props> {
     //   this.search();
     //   return;
     // }
-    this.resultIds = [];
+    this.setState({ resultIds: [] });
   };
 
   removeLink = () => {
@@ -162,13 +167,13 @@ export default class LinkToolbar extends React.Component<Props> {
             onChange={this.onChange}
             autoFocus={href === ""}
           />
-          {this.isEditing && (
+          {this.state.isEditing && (
             <ToolbarButton onMouseDown={this.openLink}>
               <OpenIcon light />
             </ToolbarButton>
           )}
           <ToolbarButton onMouseDown={this.removeLink}>
-            {this.isEditing ? <TrashIcon light /> : <CloseIcon light />}
+            {this.state.isEditing ? <TrashIcon light /> : <CloseIcon light />}
           </ToolbarButton>
         </LinkEditor>
         {/* {hasResults && (

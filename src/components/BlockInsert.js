@@ -3,8 +3,7 @@ import * as React from "react";
 import { Portal } from "react-portal";
 import { Node } from "slate";
 import { Editor, findDOMNode } from "slate-react";
-import { observable } from "mobx";
-import { observer } from "mobx-react";
+import { isEqual } from "lodash";
 import styled from "styled-components";
 import { color } from "../constants";
 import PlusIcon from "./Icon/PlusIcon";
@@ -26,17 +25,18 @@ function findClosestRootNode(value, ev) {
   return previous;
 }
 
-@observer
-export default class BlockInsert extends React.Component<Props> {
+type State = {
+  closestRootNode: Node,
+  active: boolean,
+  top: number,
+  left: number,
+};
+
+export default class BlockInsert extends React.Component<Props, State> {
   mouseMoveTimeout: ?TimeoutID;
   mouseMovementSinceClick: number = 0;
   lastClientX: number = 0;
   lastClientY: number = 0;
-
-  @observable closestRootNode: Node;
-  @observable active: boolean = false;
-  @observable top: number;
-  @observable left: number;
 
   componentDidMount = () => {
     window.addEventListener("mousemove", this.handleMouseMove);
@@ -47,13 +47,14 @@ export default class BlockInsert extends React.Component<Props> {
   };
 
   setInactive = () => {
-    this.active = false;
+    this.setState({ active: false });
   };
 
   handleMouseMove = (ev: SyntheticMouseEvent<*>) => {
     const windowWidth = window.innerWidth / 2.5;
     const result = findClosestRootNode(this.props.editor.value, ev);
     const movementThreshold = 200;
+    const newState = {};
 
     this.mouseMovementSinceClick +=
       Math.abs(this.lastClientX - ev.clientX) +
@@ -61,12 +62,12 @@ export default class BlockInsert extends React.Component<Props> {
     this.lastClientX = ev.clientX;
     this.lastClientY = ev.clientY;
 
-    this.active =
+    newState.active =
       ev.clientX < windowWidth &&
       this.mouseMovementSinceClick > movementThreshold;
 
     if (result) {
-      this.closestRootNode = result.node;
+      newState.closestRootNode = result.node;
 
       // do not show block menu on title heading or editor
       const firstNode = this.props.editor.value.document.nodes.first();
@@ -75,16 +76,20 @@ export default class BlockInsert extends React.Component<Props> {
         result.node.type === "block-toolbar" ||
         !!result.node.text.trim()
       ) {
-        this.left = -1000;
+        newState.left = -1000;
       } else {
-        this.left = Math.round(result.bounds.left - 20);
-        this.top = Math.round(result.bounds.top + window.scrollY);
+        newState.left = Math.round(result.bounds.left - 20);
+        newState.top = Math.round(result.bounds.top + window.scrollY);
       }
     }
 
-    if (this.active) {
+    if (this.state.active) {
       if (this.mouseMoveTimeout) clearTimeout(this.mouseMoveTimeout);
       this.mouseMoveTimeout = setTimeout(this.setInactive, 2000);
+    }
+
+    if (!isEqual(newState, this.state)) {
+      this.setState(newState);
     }
   };
 
@@ -93,7 +98,7 @@ export default class BlockInsert extends React.Component<Props> {
     ev.stopPropagation();
 
     this.mouseMovementSinceClick = 0;
-    this.active = false;
+    this.setState({ active: false });
 
     const { editor } = this.props;
 
@@ -105,15 +110,15 @@ export default class BlockInsert extends React.Component<Props> {
         }
       });
 
-      change.collapseToStartOf(this.closestRootNode);
+      change.collapseToStartOf(this.state.closestRootNode);
 
       // if we're on an empty paragraph then just replace it with the block
       // toolbar. Otherwise insert the toolbar as an extra Node.
       if (
-        !this.closestRootNode.text.trim() &&
-        this.closestRootNode.type === "paragraph"
+        !this.state.closestRootNode.text.trim() &&
+        this.state.closestRootNode.type === "paragraph"
       ) {
-        change.setNodeByKey(this.closestRootNode.key, {
+        change.setNodeByKey(this.state.closestRootNode.key, {
           type: "block-toolbar",
           isVoid: true,
         });
@@ -122,11 +127,11 @@ export default class BlockInsert extends React.Component<Props> {
   };
 
   render() {
-    const style = { top: `${this.top}px`, left: `${this.left}px` };
+    const style = { top: `${this.state.top}px`, left: `${this.state.left}px` };
 
     return (
       <Portal>
-        <Trigger active={this.active} style={style}>
+        <Trigger active={this.state.active} style={style}>
           <PlusIcon onClick={this.handleClick} color={color.slate} />
         </Trigger>
       </Portal>

@@ -1,29 +1,33 @@
 // @flow
 import * as React from "react";
-import { observable } from "mobx";
-import { observer } from "mobx-react";
 import styled from "styled-components";
 import { color } from "../constants";
 import CopyToClipboard from "./CopyToClipboard";
 
-@observer
-class CopyButton extends React.Component<{}> {
-  @observable copied: boolean = false;
+type State = {
+  copied: boolean,
+};
+
+class CopyButton extends React.Component<*, State> {
   copiedTimeout: ?TimeoutID;
+  state = { copied: true };
 
   componentWillUnmount() {
     if (this.copiedTimeout) clearTimeout(this.copiedTimeout);
   }
 
   handleCopy = () => {
-    this.copied = true;
-    this.copiedTimeout = setTimeout(() => (this.copied = false), 3000);
+    this.setState({ copied: true });
+    this.copiedTimeout = setTimeout(
+      () => this.setState({ copied: false }),
+      3000
+    );
   };
 
   render() {
     return (
       <StyledCopyToClipboard onCopy={this.handleCopy} {...this.props}>
-        <span>{this.copied ? "Copied!" : "Copy"}</span>
+        <span>{this.state.copied ? "Copied!" : "Copy"}</span>
       </StyledCopyToClipboard>
     );
   }

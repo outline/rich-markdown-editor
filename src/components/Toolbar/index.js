@@ -1,11 +1,10 @@
 // @flow
 import * as React from "react";
-import { observable } from "mobx";
-import { observer } from "mobx-react";
 import { Portal } from "react-portal";
 import { Editor, findDOMNode } from "slate-react";
 import { Node, Value } from "slate";
 import styled from "styled-components";
+import { isEqual } from "lodash";
 import FormattingToolbar from "./FormattingToolbar";
 import LinkToolbar from "./LinkToolbar";
 
@@ -29,13 +28,22 @@ type Props = {
   value: Value,
 };
 
-@observer
-export default class Toolbar extends React.Component<Props> {
-  @observable active: boolean = false;
-  @observable link: ?Node;
-  @observable top: string = "";
-  @observable left: string = "";
-  @observable mouseDown: boolean = false;
+type State = {
+  active: boolean,
+  link: ?Node,
+  top: string,
+  left: string,
+  mouseDown: boolean,
+};
+
+export default class Toolbar extends React.Component<Props, State> {
+  state = {
+    active: false,
+    mouseDown: false,
+    link: undefined,
+    top: "",
+    left: "",
+  };
 
   menu: HTMLElement;
 
@@ -55,15 +63,15 @@ export default class Toolbar extends React.Component<Props> {
   };
 
   hideLinkToolbar = () => {
-    this.link = undefined;
+    this.setState({ link: undefined });
   };
 
   handleMouseDown = (e: SyntheticMouseEvent<*>) => {
-    this.mouseDown = true;
+    this.setState({ mouseDown: true });
   };
 
   handleMouseUp = (e: SyntheticMouseEvent<*>) => {
-    this.mouseDown = false;
+    this.setState({ mouseDown: false });
     this.update();
   };
 
@@ -72,7 +80,7 @@ export default class Toolbar extends React.Component<Props> {
     ev.stopPropagation();
 
     const link = getLinkInSelection(this.props.value);
-    this.link = link;
+    this.setState({ link });
   };
 
   update = () => {
@@ -80,11 +88,13 @@ export default class Toolbar extends React.Component<Props> {
     const link = getLinkInSelection(value);
 
     if (value.isBlurred || (value.isCollapsed && !link)) {
-      if (this.active && !this.link) {
-        this.active = false;
-        this.link = undefined;
-        this.top = "";
-        this.left = "";
+      if (this.state.active && !this.state.link) {
+        this.setState({
+          active: false,
+          link: undefined,
+          top: "",
+          left: "",
+        });
       }
       return;
     }
@@ -97,11 +107,14 @@ export default class Toolbar extends React.Component<Props> {
     if (value.startBlock.type.match(/code/)) return;
 
     // don't show until user has released pointing device button
-    if (this.mouseDown) return;
+    if (this.state.mouseDown) return;
 
-    this.active = true;
-    this.link = this.link || link;
-
+    const newState = {
+      active: true,
+      link: this.state.link || link,
+      top: undefined,
+      left: undefined,
+    };
     const padding = 16;
     const selection = window.getSelection();
     let rect;
@@ -119,10 +132,14 @@ export default class Toolbar extends React.Component<Props> {
 
     const left =
       rect.left + window.scrollX - this.menu.offsetWidth / 2 + rect.width / 2;
-    this.top = `${Math.round(
+    newState.top = `${Math.round(
       rect.top + window.scrollY - this.menu.offsetHeight
     )}px`;
-    this.left = `${Math.round(Math.max(padding, left))}px`;
+    newState.left = `${Math.round(Math.max(padding, left))}px`;
+
+    if (!isEqual(this.state, newState)) {
+      this.setState(newState);
+    }
   };
 
   setRef = (ref: HTMLElement) => {
@@ -131,17 +148,17 @@ export default class Toolbar extends React.Component<Props> {
 
   render() {
     const style = {
-      top: this.top,
-      left: this.left,
+      top: this.state.top,
+      left: this.state.left,
     };
 
     return (
       <Portal>
-        <Menu active={this.active} innerRef={this.setRef} style={style}>
-          {this.link ? (
+        <Menu active={this.state.active} innerRef={this.setRef} style={style}>
+          {this.state.link ? (
             <LinkToolbar
               {...this.props}
-              link={this.link}
+              link={this.state.link}
               onBlur={this.hideLinkToolbar}
             />
           ) : (

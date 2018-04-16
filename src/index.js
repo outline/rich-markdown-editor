@@ -1,7 +1,5 @@
 // @flow
 import * as React from "react";
-import { observable } from "mobx";
-import { observer } from "mobx-react";
 import { Value, Change } from "slate";
 import { Editor } from "slate-react";
 import styled from "styled-components";
@@ -33,13 +31,14 @@ type Props = {
   readOnly: boolean,
 };
 
-@observer
-class MarkdownEditor extends React.Component<Props> {
+type State = {
+  editorValue: Value,
+  editorLoaded: boolean,
+};
+class MarkdownEditor extends React.Component<Props, State> {
   editor: Editor;
   renderNode: SlateNodeProps => *;
   plugins: Plugin[];
-  @observable editorValue: Value;
-  @observable editorLoaded: boolean = false;
 
   constructor(props: Props) {
     super(props);
@@ -52,7 +51,7 @@ class MarkdownEditor extends React.Component<Props> {
       onImageUploadStop: props.onImageUploadStop,
     });
 
-    this.editorValue = Markdown.deserialize(props.text);
+    this.setState({ editorValue: Markdown.deserialize(props.text) });
   }
 
   componentDidMount() {
@@ -73,13 +72,13 @@ class MarkdownEditor extends React.Component<Props> {
   setEditorRef = (ref: Editor) => {
     this.editor = ref;
     // Force re-render to show ToC (<Content />)
-    this.editorLoaded = true;
+    this.setState({ editorLoaded: true });
   };
 
   onChange = (change: Change) => {
-    if (this.editorValue !== change.value) {
+    if (this.state.editorValue !== change.value) {
       this.props.onChange(Markdown.serialize(change.value));
-      this.editorValue = change.value;
+      this.setState({ editorValue: change.value });
     }
   };
 
@@ -187,11 +186,11 @@ class MarkdownEditor extends React.Component<Props> {
         <MaxWidth column auto>
           <Header onClick={this.focusAtStart} readOnly={readOnly} />
           {readOnly &&
-            this.editorLoaded &&
+            this.state.editorLoaded &&
             this.editor && <Contents editor={this.editor} />}
           {!readOnly &&
             this.editor && (
-              <Toolbar value={this.editorValue} editor={this.editor} />
+              <Toolbar value={this.state.editorValue} editor={this.editor} />
             )}
           {!readOnly &&
             this.editor && (
@@ -206,7 +205,7 @@ class MarkdownEditor extends React.Component<Props> {
             bodyPlaceholder="…the rest is your canvas"
             plugins={this.plugins}
             emoji={emoji}
-            value={this.editorValue}
+            value={this.state.editorValue}
             renderNode={this.renderNode}
             renderMark={renderMark}
             schema={schema}
