@@ -29,6 +29,7 @@ type Props = {
   onImageUploadStop: () => void,
   emoji?: string,
   readOnly: boolean,
+  plugins?: Plugin[],
 };
 
 type State = {
@@ -50,7 +51,9 @@ class MarkdownEditor extends React.Component<Props, State> {
       onImageUploadStart: props.onImageUploadStart,
       onImageUploadStop: props.onImageUploadStop,
     });
-
+    if (props.plugins) {
+      this.plugins = this.plugins.concat(props.plugins);
+    }
     this.setState({ editorValue: Markdown.deserialize(props.text) });
   }
 
