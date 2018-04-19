@@ -26,7 +26,7 @@ function findClosestRootNode(value, ev) {
 }
 
 type State = {
-  closestRootNode: Node,
+  closestRootNode: ?Node,
   active: boolean,
   top: number,
   left: number,
@@ -37,6 +37,11 @@ export default class BlockInsert extends React.Component<Props, State> {
   mouseMovementSinceClick: number = 0;
   lastClientX: number = 0;
   lastClientY: number = 0;
+  state = {
+    top: 0,
+    left: 0,
+    active: false,
+  };
 
   componentDidMount = () => {
     window.addEventListener("mousemove", this.handleMouseMove);
@@ -110,15 +115,15 @@ export default class BlockInsert extends React.Component<Props, State> {
         }
       });
 
-      change.collapseToStartOf(this.state.closestRootNode);
+      const node = this.state.closestRootNode;
+      if (!node) return;
+
+      change.collapseToStartOf(node);
 
       // if we're on an empty paragraph then just replace it with the block
       // toolbar. Otherwise insert the toolbar as an extra Node.
-      if (
-        !this.state.closestRootNode.text.trim() &&
-        this.state.closestRootNode.type === "paragraph"
-      ) {
-        change.setNodeByKey(this.state.closestRootNode.key, {
+      if (!node.text.trim() && node.type === "paragraph") {
+        change.setNodeByKey(node.key, {
           type: "block-toolbar",
           isVoid: true,
         });

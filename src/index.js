@@ -36,7 +36,7 @@ type State = {
   editorValue: Value,
   editorLoaded: boolean,
 };
-class MarkdownEditor extends React.Component<Props, State> {
+class RichMarkdownEditor extends React.Component<Props, State> {
   editor: Editor;
   renderNode: SlateNodeProps => *;
   plugins: Plugin[];
@@ -54,7 +54,10 @@ class MarkdownEditor extends React.Component<Props, State> {
     if (props.plugins) {
       this.plugins = this.plugins.concat(props.plugins);
     }
-    this.setState({ editorValue: Markdown.deserialize(props.text) });
+    this.state = {
+      editorLoaded: false,
+      editorValue: Markdown.deserialize(props.text),
+    };
   }
 
   componentDidMount() {
@@ -343,4 +346,4 @@ const StyledEditor = styled(Editor)`
   }
 `;
 
-export default MarkdownEditor;
+export default RichMarkdownEditor;
