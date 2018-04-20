@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/outline/rich-markdown-editor.svg?style=svg)](https://circleci.com/gh/outline/rich-markdown-editor)
+
 # rich-markdown-editor
 
 ⚠️ Pre-release. This package is still under development – do not use. ⚠️
