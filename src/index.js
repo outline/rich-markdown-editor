@@ -28,7 +28,9 @@ type Props = {
   onCancel: () => void,
   onImageUploadStart: () => void,
   onImageUploadStop: () => void,
-  theme?: Object,
+  theme: Object,
+  titlePlaceholder: string,
+  bodyPlaceholder: string,
   emoji?: string,
   readOnly?: boolean,
   plugins?: Plugin[],
@@ -39,6 +41,12 @@ type State = {
   editorLoaded: boolean,
 };
 class RichMarkdownEditor extends React.Component<Props, State> {
+  static defaultProps = {
+    theme: defaultTheme,
+    titlePlaceholder: "Your title",
+    bodyPlaceholder: "Write something nice…",
+  };
+
   editor: Editor;
   renderNode: SlateNodeProps => *;
   plugins: Plugin[];
@@ -180,7 +188,14 @@ class RichMarkdownEditor extends React.Component<Props, State> {
   };
 
   render = () => {
-    const { readOnly, emoji, theme, onSave } = this.props;
+    const {
+      readOnly,
+      emoji,
+      theme,
+      titlePlaceholder,
+      bodyPlaceholder,
+      onSave,
+    } = this.props;
 
     return (
       <Flex
@@ -191,7 +206,7 @@ class RichMarkdownEditor extends React.Component<Props, State> {
         justify="center"
         auto
       >
-        <ThemeProvider theme={theme || defaultTheme}>
+        <ThemeProvider theme={theme}>
           <MaxWidth column auto>
             <Header onClick={this.focusAtStart} readOnly={readOnly} />
             {readOnly &&
@@ -210,8 +225,8 @@ class RichMarkdownEditor extends React.Component<Props, State> {
               )}
             <StyledEditor
               innerRef={this.setEditorRef}
-              placeholder="Start with a title…"
-              bodyPlaceholder="…the rest is your canvas"
+              titlePlaceholder={titlePlaceholder}
+              bodyPlaceholder={bodyPlaceholder}
               plugins={this.plugins}
               emoji={emoji}
               value={this.state.editorValue}

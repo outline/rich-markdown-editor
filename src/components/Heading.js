@@ -41,7 +41,7 @@ function Heading(props: Props) {
       <Wrapper hasEmoji={startsWithEmojiAndSpace}>{children}</Wrapper>
       {showPlaceholder && (
         <Placeholder contentEditable={false}>
-          {editor.props.placeholder}
+          {editor.props.titlePlaceholder}
         </Placeholder>
       )}
       {showHash && (
