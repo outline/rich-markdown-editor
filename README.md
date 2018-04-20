@@ -8,8 +8,8 @@
 - [x] piping of plugins
 - [x] Example in repo
 - [x] ThemeProvider
+- [x] Allow passing placeholders
 - [ ] Allow passing schema
-- [ ] Allow passing placeholders
 - [ ] Hook for link search
 - [ ] Hook for link click
 - [ ] Image upload
