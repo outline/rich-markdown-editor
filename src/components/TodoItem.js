@@ -1,7 +1,7 @@
 // @flow
 import * as React from "react";
 import styled from "styled-components";
-import { color } from "../constants";
+
 import type { SlateNodeProps as Props } from "../types";
 
 export default class TodoItem extends React.Component<Props> {
@@ -37,7 +37,7 @@ const ListItem = styled.li`
   position: relative;
 
   > p > span {
-    color: ${props => (props.checked ? color.slateDark : "inherit")};
+    color: ${props => (props.checked ? props.theme.slateDark : "inherit")};
     text-decoration: ${props => (props.checked ? "line-through" : "none")};
   }
 `;

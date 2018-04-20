@@ -2,7 +2,6 @@
 import React from "react";
 import styled from "styled-components";
 import type { SlateNodeProps } from "../types";
-import { color } from "../constants";
 
 function HorizontalRule(props: SlateNodeProps) {
   const { editor, node, attributes } = props;
@@ -16,7 +15,7 @@ const StyledHr = styled.hr`
   margin: 0;
   border: 0;
   border-bottom: 1px solid
-    ${props => (props.active ? color.slate : color.slateLight)};
+    ${props => (props.active ? props.theme.slate : props.theme.slateLight)};
 `;
 
 export default HorizontalRule;

@@ -7,5 +7,5 @@ export default styled.span`
   visibility: hidden;
   pointer-events: none;
   user-select: none;
-  color: #b1becc;
+  color: ${props => props.theme.placeholder};
 `;

@@ -2,7 +2,7 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import keydown from "react-keydown";
-import styled from "styled-components";
+import styled, { withTheme } from "styled-components";
 import getDataTransferFiles from "../../lib/getDataTransferFiles";
 import Heading1Icon from "../Icon/Heading1Icon";
 import Heading2Icon from "../Icon/Heading2Icon";
@@ -15,13 +15,14 @@ import HorizontalRuleIcon from "../Icon/HorizontalRuleIcon";
 import TodoListIcon from "../Icon/TodoListIcon";
 import Flex from "../Flex";
 import type { SlateNodeProps } from "../../types";
-import { color } from "../../constants";
+
 import { fadeIn } from "../../animations";
 import { splitAndInsertBlock } from "../../changes";
 import ToolbarButton from "./ToolbarButton";
 
 type Props = SlateNodeProps & {
   onInsertImage: *,
+  theme: Object,
 };
 
 type Options = {
@@ -140,7 +141,7 @@ class BlockToolbar extends React.Component<Props> {
   renderBlockButton = (type: string, IconClass: Function) => {
     return (
       <ToolbarButton onMouseDown={ev => this.handleClickBlock(ev, type)}>
-        <IconClass color={color.text} />
+        <IconClass color={this.props.theme.text} />
       </ToolbarButton>
     );
   };
@@ -177,7 +178,7 @@ class BlockToolbar extends React.Component<Props> {
 const Separator = styled.div`
   height: 100%;
   width: 1px;
-  background: ${color.smokeDark};
+  background: ${props => props.theme.smokeDark};
   display: inline-block;
   margin-left: 10px;
 `;
@@ -187,7 +188,7 @@ const Bar = styled(Flex)`
   animation: ${fadeIn} 150ms ease-in-out;
   position: relative;
   align-items: center;
-  background: ${color.smoke};
+  background: ${props => props.theme.smoke};
   height: 44px;
 
   &:before,
@@ -197,7 +198,7 @@ const Bar = styled(Flex)`
     left: -100%;
     width: 100%;
     height: 44px;
-    background: ${color.smoke};
+    background: ${props => props.theme.smoke};
   }
 
   &:after {
@@ -217,4 +218,4 @@ const HiddenInput = styled.input`
   visibility: hidden;
 `;
 
-export default BlockToolbar;
+export default withTheme(BlockToolbar);

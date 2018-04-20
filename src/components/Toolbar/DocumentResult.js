@@ -1,7 +1,7 @@
 // @flow
 import * as React from "react";
 import styled from "styled-components";
-import { color } from "../../constants";
+
 import NextIcon from "../Icon/NextIcon";
 
 type Props = {
@@ -26,7 +26,7 @@ const ListItem = styled.a`
   align-items: center;
   height: 28px;
   padding: 6px 8px 6px 0;
-  color: ${color.white};
+  color: ${props => props.theme.white};
   font-size: 15px;
   overflow: hidden;
   white-space: nowrap;

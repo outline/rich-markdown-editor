@@ -2,9 +2,10 @@
 import * as React from "react";
 import { Value, Change } from "slate";
 import { Editor } from "slate-react";
-import styled from "styled-components";
+import styled, { ThemeProvider } from "styled-components";
 import keydown from "react-keydown";
 import type { SlateNodeProps, Plugin } from "./types";
+import defaultTheme from "./theme";
 import getDataTransferFiles from "./lib/getDataTransferFiles";
 import isModKey from "./lib/isModKey";
 import Flex from "./components/Flex";
@@ -27,8 +28,9 @@ type Props = {
   onCancel: () => void,
   onImageUploadStart: () => void,
   onImageUploadStop: () => void,
+  theme?: Object,
   emoji?: string,
-  readOnly: boolean,
+  readOnly?: boolean,
   plugins?: Plugin[],
 };
 
@@ -178,7 +180,7 @@ class RichMarkdownEditor extends React.Component<Props, State> {
   };
 
   render = () => {
-    const { readOnly, emoji, onSave } = this.props;
+    const { readOnly, emoji, theme, onSave } = this.props;
 
     return (
       <Flex
@@ -189,43 +191,45 @@ class RichMarkdownEditor extends React.Component<Props, State> {
         justify="center"
         auto
       >
-        <MaxWidth column auto>
-          <Header onClick={this.focusAtStart} readOnly={readOnly} />
-          {readOnly &&
-            this.state.editorLoaded &&
-            this.editor && <Contents editor={this.editor} />}
-          {!readOnly &&
-            this.editor && (
-              <Toolbar value={this.state.editorValue} editor={this.editor} />
-            )}
-          {!readOnly &&
-            this.editor && (
-              <BlockInsert
-                editor={this.editor}
-                onInsertImage={this.insertImageFile}
-              />
-            )}
-          <StyledEditor
-            innerRef={this.setEditorRef}
-            placeholder="Start with a title…"
-            bodyPlaceholder="…the rest is your canvas"
-            plugins={this.plugins}
-            emoji={emoji}
-            value={this.state.editorValue}
-            renderNode={this.renderNode}
-            renderMark={renderMark}
-            schema={schema}
-            onKeyDown={this.onKeyDown}
-            onChange={this.onChange}
-            onSave={onSave}
-            readOnly={readOnly}
-            spellCheck={!readOnly}
-          />
-          <ClickablePadding
-            onClick={!readOnly ? this.focusAtEnd : undefined}
-            grow
-          />
-        </MaxWidth>
+        <ThemeProvider theme={theme || defaultTheme}>
+          <MaxWidth column auto>
+            <Header onClick={this.focusAtStart} readOnly={readOnly} />
+            {readOnly &&
+              this.state.editorLoaded &&
+              this.editor && <Contents editor={this.editor} />}
+            {!readOnly &&
+              this.editor && (
+                <Toolbar value={this.state.editorValue} editor={this.editor} />
+              )}
+            {!readOnly &&
+              this.editor && (
+                <BlockInsert
+                  editor={this.editor}
+                  onInsertImage={this.insertImageFile}
+                />
+              )}
+            <StyledEditor
+              innerRef={this.setEditorRef}
+              placeholder="Start with a title…"
+              bodyPlaceholder="…the rest is your canvas"
+              plugins={this.plugins}
+              emoji={emoji}
+              value={this.state.editorValue}
+              renderNode={this.renderNode}
+              renderMark={renderMark}
+              schema={schema}
+              onKeyDown={this.onKeyDown}
+              onChange={this.onChange}
+              onSave={onSave}
+              readOnly={readOnly}
+              spellCheck={!readOnly}
+            />
+            <ClickablePadding
+              onClick={!readOnly ? this.focusAtEnd : undefined}
+              grow
+            />
+          </MaxWidth>
+        </ThemeProvider>
       </Flex>
     );
   };
@@ -249,11 +253,12 @@ const Header = styled(Flex)`
 `;
 
 const StyledEditor = styled(Editor)`
-  font-weight: 400;
+  font-family: ${props => props.theme.fontFamily};
+  font-weight: ${props => props.theme.fontWeight};
   font-size: 1em;
   line-height: 1.7em;
   width: 100%;
-  color: #1b2830;
+  color: ${props => props.theme.text};
 
   h1,
   h2,
@@ -317,7 +322,7 @@ const StyledEditor = styled(Editor)`
   }
 
   blockquote {
-    border-left: 3px solid #efefef;
+    border-left: 3px solid ${props => props.theme.slateLight};
     margin: 0;
     padding-left: 10px;
     font-style: italic;

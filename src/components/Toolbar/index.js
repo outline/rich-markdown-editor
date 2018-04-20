@@ -186,7 +186,7 @@ const Menu = styled.div`
   top: -10000px;
   left: -10000px;
   opacity: 0;
-  background-color: #2f3336;
+  background-color: ${props => props.theme.blackLight};
   border-radius: 4px;
   transform: scale(0.95);
   transition: opacity 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275),

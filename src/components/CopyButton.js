@@ -1,7 +1,7 @@
 // @flow
 import * as React from "react";
 import styled from "styled-components";
-import { color } from "../constants";
+
 import CopyToClipboard from "./CopyToClipboard";
 
 type State = {
@@ -42,13 +42,13 @@ const StyledCopyToClipboard = styled(CopyToClipboard)`
   transition: opacity 50ms ease-in-out;
   z-index: 1;
   font-size: 12px;
-  background: ${color.smoke};
+  background: ${props => props.theme.smoke};
   border-radius: 0 2px 0 2px;
   padding: 1px 6px;
   cursor: pointer;
 
   &:hover {
-    background: ${color.smokeDark};
+    background: ${props => props.theme.smokeDark};
   }
 `;
 

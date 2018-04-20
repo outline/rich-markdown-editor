@@ -7,7 +7,7 @@
 - [x] Remove mobx
 - [x] piping of plugins
 - [x] Example in repo
-- [ ] Themeprovider
+- [x] ThemeProvider
 - [ ] Allow passing schema
 - [ ] Allow passing placeholders
 - [ ] Hook for link search

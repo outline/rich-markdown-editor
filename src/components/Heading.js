@@ -61,10 +61,10 @@ const Wrapper = styled.div`
 const Anchor = styled.a`
   visibility: hidden;
   padding-left: 0.25em;
-  color: #dedede;
+  color: ${props => props.theme.slateLight};
 
   &:hover {
-    color: #cdcdcd;
+    color: ${props => props.theme.smokeDark};
   }
 `;
 

@@ -3,7 +3,6 @@ import * as React from "react";
 import ImageZoom from "react-medium-image-zoom";
 import styled from "styled-components";
 import type { SlateNodeProps as Props } from "../types";
-import { color } from "../constants";
 
 class Image extends React.Component<Props> {
   handleChange = (ev: SyntheticInputEvent<*>) => {
@@ -71,7 +70,8 @@ class Image extends React.Component<Props> {
 
 const StyledImg = styled.img`
   max-width: 100%;
-  box-shadow: ${props => (props.active ? `0 0 0 2px ${color.slate}` : "0")};
+  box-shadow: ${props =>
+    props.active ? `0 0 0 2px ${props.theme.slate}` : "0"};
   border-radius: ${props => (props.active ? `2px` : "0")};
   opacity: ${props => (props.loading ? 0.5 : 1)};
 `;
@@ -86,7 +86,7 @@ const Caption = styled.input`
   display: block;
   font-size: 13px;
   font-style: italic;
-  color: ${color.slate};
+  color: ${props => props.theme.slate};
   padding: 2px 0;
   line-height: 16px;
   text-align: center;
@@ -95,7 +95,7 @@ const Caption = styled.input`
   background: none;
 
   &::placeholder {
-    color: ${color.slate};
+    color: ${props => props.theme.slate};
   }
 `;
 

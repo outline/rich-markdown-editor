@@ -2,7 +2,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import type { SlateNodeProps } from "../types";
-import { color } from "../constants";
+
 import CopyButton from "./CopyButton";
 
 function getCopyText(node) {
@@ -29,9 +29,9 @@ export default function Code({
 
 const Container = styled.div`
   position: relative;
-  background: ${color.smokeLight};
+  background: ${props => props.theme.smokeLight};
   border-radius: 4px;
-  border: 1px solid ${color.smokeDark};
+  border: 1px solid ${props => props.theme.smokeDark};
 
   code {
     display: block;

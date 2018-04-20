@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { Editor } from "slate-react";
 import { Block } from "slate";
 import { List } from "immutable";
-import { color } from "../constants";
+
 import headingToSlug from "../lib/headingToSlug";
 
 type Props = {
@@ -103,7 +103,7 @@ const Wrapper = styled.div`
 `;
 
 const Anchor = styled.a`
-  color: ${props => (props.active ? color.slateDark : color.slate)};
+  color: ${props => (props.active ? props.theme.slateDark : props.theme.slate)};
   font-weight: ${props => (props.active ? 500 : 400)};
   opacity: 0;
   transition: all 100ms ease-in-out;
@@ -113,7 +113,7 @@ const Anchor = styled.a`
   text-overflow: ellipsis;
 
   &:hover {
-    color: ${color.primary};
+    color: ${props => props.theme.primary};
   }
 `;
 
@@ -121,12 +121,13 @@ const ListItem = styled.li`
   position: relative;
   margin-left: ${props => (props.type.match(/heading[12]/) ? "8px" : "16px")};
   text-align: right;
-  color: ${color.slate};
+  color: ${props => props.theme.slate};
   padding-right: 16px;
   white-space: nowrap;
 
   &:after {
-    color: ${props => (props.active ? color.slateDark : color.slate)};
+    color: ${props =>
+      props.active ? props.theme.slateDark : props.theme.slate};
     content: "${props => (props.type.match(/heading[12]/) ? "—" : "–")}";
     position: absolute;
     right: 0;
@@ -149,7 +150,7 @@ const Sections = styled.ol`
     ${Anchor} {
       opacity: 1;
       margin-right: 0;
-      background: ${color.white};
+      background: ${props => props.theme.white};
       pointer-events: all;
     }
   }
