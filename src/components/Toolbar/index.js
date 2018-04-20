@@ -89,12 +89,17 @@ export default class Toolbar extends React.Component<Props, State> {
 
     if (value.isBlurred || (value.isCollapsed && !link)) {
       if (this.state.active && !this.state.link) {
-        this.setState({
+        const newState = {
+          ...this.state,
           active: false,
           link: undefined,
           top: "",
           left: "",
-        });
+        };
+
+        if (!isEqual(this.state, newState)) {
+          this.setState(newState);
+        }
       }
       return;
     }
@@ -110,6 +115,7 @@ export default class Toolbar extends React.Component<Props, State> {
     if (this.state.mouseDown) return;
 
     const newState = {
+      ...this.state,
       active: true,
       link: this.state.link || link,
       top: undefined,
@@ -189,6 +195,11 @@ const Menu = styled.div`
   line-height: 0;
   height: 40px;
   min-width: 300px;
+  box-sizing: border-box;
+
+  * {
+    box-sizing: border-box;
+  }
 
   ${({ active }) =>
     active &&

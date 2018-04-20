@@ -41,6 +41,7 @@ export default class BlockInsert extends React.Component<Props, State> {
     top: 0,
     left: 0,
     active: false,
+    closestRootNode: undefined,
   };
 
   componentDidMount = () => {
@@ -59,7 +60,7 @@ export default class BlockInsert extends React.Component<Props, State> {
     const windowWidth = window.innerWidth / 2.5;
     const result = findClosestRootNode(this.props.editor.value, ev);
     const movementThreshold = 200;
-    const newState = {};
+    const newState = this.state;
 
     this.mouseMovementSinceClick +=
       Math.abs(this.lastClientX - ev.clientX) +
@@ -76,11 +77,12 @@ export default class BlockInsert extends React.Component<Props, State> {
 
       // do not show block menu on title heading or editor
       const firstNode = this.props.editor.value.document.nodes.first();
-      if (
+      const hideToolbar =
         result.node === firstNode ||
         result.node.type === "block-toolbar" ||
-        !!result.node.text.trim()
-      ) {
+        !!result.node.text.trim();
+
+      if (hideToolbar) {
         newState.left = -1000;
       } else {
         newState.left = Math.round(result.bounds.left - 20);
@@ -94,6 +96,7 @@ export default class BlockInsert extends React.Component<Props, State> {
     }
 
     if (!isEqual(newState, this.state)) {
+      console.log(newState, this.state);
       this.setState(newState);
     }
   };
