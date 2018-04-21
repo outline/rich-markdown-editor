@@ -13,8 +13,8 @@
 - [x] Allow passing placeholders
 - [x] Allow passing schema
 - [x] Hook for link click
+- [x] Hook up Image upload
 - [ ] Hook for link search
-- [ ] Image upload
 - [ ] extraction of icons
 
 ## Development

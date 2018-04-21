@@ -36,10 +36,16 @@ export function splitAndInsertBlock(change: Change, options: Options) {
 export async function insertImageFile(
   change: Change,
   file: window.File,
-  editor: Editor,
-  onImageUploadStart: () => void,
-  onImageUploadStop: () => void
+  editor: Editor
 ) {
+  const { uploadImage, onImageUploadStart, onImageUploadStop } = editor.props;
+
+  if (!uploadImage) {
+    console.warn(
+      "uploadImage callback must be defined to handle image uploads."
+    );
+  }
+
   onImageUploadStart();
   try {
     // load the file as a data URL
@@ -70,10 +76,10 @@ export async function insertImageFile(
     reader.readAsDataURL(file);
 
     // now we have a placeholder, start the upload
-    // const asset = await uploadFile(file);
-    // const src = asset.url;
-    // TODO NOT IMPLEMENTED
-    const src = "";
+    const src = await uploadImage(file);
+    if (!src) {
+      throw new Error("No image url returned from uploadImage callback");
+    }
 
     // we dont use the original change provided to the callback here
     // as the state may have changed significantly in the time it took to

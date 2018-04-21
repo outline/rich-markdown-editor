@@ -4,26 +4,26 @@ import ReactDOM from "react-dom";
 import Editor from "../../src";
 
 const element = document.getElementById("main");
-const noop = () => {};
-const previousText = localStorage.getItem("saved");
+const savedText = localStorage.getItem("saved");
 const defaultText = `
 # Welcome
 
 This is example content. It is persisted between reloads in localStorage.
 `;
-const text = previousText || defaultText;
+const text = savedText || defaultText;
 
 if (element) {
   ReactDOM.render(
     <Editor
       text={text}
-      readOnly={false}
-      onSave={noop}
+      onSave={() => console.log("Save triggered")}
+      onCancel={() => console.log("Cancel triggered")}
       onChange={text => localStorage.setItem("saved", text)}
-      onCancel={noop}
       onClickLink={href => console.log("Clicked link: ", href)}
-      onImageUploadStart={noop}
-      onImageUploadStop={noop}
+      uploadImage={async file => {
+        console.log("File upload triggered: ", file);
+        return "";
+      }}
     />,
     element
   );

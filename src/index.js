@@ -26,6 +26,7 @@ type Props = {
   onChange: Change => *,
   onSave: ({ redirect?: boolean, publish?: boolean }) => *,
   onCancel: () => *,
+  uploadImage?: (file: File) => Promise<string>,
   onImageUploadStart: () => *,
   onImageUploadStop: () => *,
   onClickLink?: (href: string) => *,
@@ -49,6 +50,8 @@ class RichMarkdownEditor extends React.Component<Props, State> {
     theme: defaultTheme,
     titlePlaceholder: "Your title",
     bodyPlaceholder: "Write something nice…",
+    onImageUploadStart: () => {},
+    onImageUploadStop: () => {},
   };
 
   editor: Editor;
@@ -61,10 +64,7 @@ class RichMarkdownEditor extends React.Component<Props, State> {
     this.renderNode = createRenderNode({
       onInsertImage: this.insertImageFile,
     });
-    this.plugins = createPlugins({
-      onImageUploadStart: props.onImageUploadStart,
-      onImageUploadStop: props.onImageUploadStop,
-    });
+    this.plugins = createPlugins();
     if (props.plugins) {
       this.plugins = this.plugins.concat(props.plugins);
     }
@@ -137,13 +137,7 @@ class RichMarkdownEditor extends React.Component<Props, State> {
 
   insertImageFile = (file: window.File) => {
     this.editor.change(change =>
-      change.call(
-        insertImageFile,
-        file,
-        this.editor,
-        this.props.onImageUploadStart,
-        this.props.onImageUploadStop
-      )
+      change.call(insertImageFile, file, this.editor)
     );
   };
 
@@ -214,6 +208,9 @@ class RichMarkdownEditor extends React.Component<Props, State> {
       titlePlaceholder,
       bodyPlaceholder,
       onSave,
+      uploadImage,
+      onImageUploadStart,
+      onImageUploadStop,
     } = this.props;
 
     return (
@@ -255,8 +252,11 @@ class RichMarkdownEditor extends React.Component<Props, State> {
               onKeyDown={this.onKeyDown}
               onChange={this.onChange}
               onSave={onSave}
+              onImageUploadStart={onImageUploadStart}
+              onImageUploadStop={onImageUploadStop}
               readOnly={readOnly}
               spellCheck={!readOnly}
+              uploadImage={uploadImage}
             />
             <ClickablePadding
               onClick={!readOnly ? this.focusAtEnd : undefined}
@@ -279,7 +279,7 @@ const Header = styled(Flex)`
   height: 60px;
   flex-shrink: 0;
   align-items: flex-end;
-  ${({ readOnly }) => !readOnly && "cursor: text;"};
+  ${props => !props.readOnly && "cursor: text;"};
 
   @media print {
     display: none;

@@ -10,12 +10,7 @@ import KeyboardShortcuts from "./plugins/KeyboardShortcuts";
 import MarkdownShortcuts from "./plugins/MarkdownShortcuts";
 import { insertImageFile } from "./changes";
 
-type Options = {
-  onImageUploadStart: () => void,
-  onImageUploadStop: () => void,
-};
-
-const createPlugins = ({ onImageUploadStart, onImageUploadStop }: Options) => {
+const createPlugins = () => {
   return [
     PasteLinkify({
       type: "link",
@@ -24,13 +19,7 @@ const createPlugins = ({ onImageUploadStart, onImageUploadStop }: Options) => {
     InsertImages({
       extensions: ["png", "jpg", "gif", "webp"],
       insertImage: async (change, file, editor) => {
-        return change.call(
-          insertImageFile,
-          file,
-          editor,
-          onImageUploadStart,
-          onImageUploadStop
-        );
+        return change.call(insertImageFile, file, editor);
       },
     }),
     EditList,
