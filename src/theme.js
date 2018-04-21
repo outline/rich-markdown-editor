@@ -4,6 +4,7 @@ const theme = {
   fontWeight: 400,
 
   text: "#171B35",
+  link: "#1AB6FF",
   primary: "#1AB6FF",
   placeholder: "#b1becc",
 

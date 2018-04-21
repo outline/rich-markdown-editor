@@ -25,9 +25,10 @@ type Props = {
   text: string,
   onChange: Change => *,
   onSave: ({ redirect?: boolean, publish?: boolean }) => *,
-  onCancel: () => void,
-  onImageUploadStart: () => void,
-  onImageUploadStop: () => void,
+  onCancel: () => *,
+  onImageUploadStart: () => *,
+  onImageUploadStop: () => *,
+  onClickLink?: (href: string) => *,
   theme: Object,
   titlePlaceholder: string,
   bodyPlaceholder: string,
@@ -330,8 +331,12 @@ const StyledEditor = styled(Editor)`
     margin: 0;
   }
 
+  a {
+    color: ${props => props.theme.link};
+  }
+
   a:hover {
-    text-decoration: ${({ readOnly }) => (readOnly ? "underline" : "none")};
+    text-decoration: ${props => (props.readOnly ? "underline" : "none")};
   }
 
   li p {

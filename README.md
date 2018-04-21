@@ -12,8 +12,8 @@
 - [x] ThemeProvider
 - [x] Allow passing placeholders
 - [x] Allow passing schema
+- [x] Hook for link click
 - [ ] Hook for link search
-- [ ] Hook for link click
 - [ ] Image upload
 - [ ] extraction of icons
 

@@ -21,6 +21,7 @@ if (element) {
       onSave={noop}
       onChange={text => localStorage.setItem("saved", text)}
       onCancel={noop}
+      onClickLink={href => console.log("Clicked link: ", href)}
       onImageUploadStart={noop}
       onImageUploadStop={noop}
     />,
