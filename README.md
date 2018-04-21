@@ -14,12 +14,15 @@
 - [x] Allow passing schema
 - [x] Hook for link click
 - [x] Hook up Image upload
+- [x] Hide upload functions if callback not present
 - [ ] Hook for link search
+- [ ] Increase documentation on props and usage
 - [ ] extraction of icons
+- [ ] publish
 
 ## Development
 
-```
+```javascript
 import Editor from "rich-markdown-editor";
 
 <Editor
@@ -41,4 +44,4 @@ When running in development webpack-serve is included to serve an example editor
 
 ## License
 
-TBD
+This project is [BSD licensed](/blob/master/LICENSE).

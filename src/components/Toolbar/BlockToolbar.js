@@ -148,6 +148,8 @@ class BlockToolbar extends React.Component<Props> {
 
   render() {
     const { editor, attributes, node } = this.props;
+    const hasImageUpload = !!editor.props.uploadImage;
+
     const active =
       editor.value.isFocused && editor.value.selection.hasEdgeIn(node);
 
@@ -169,7 +171,7 @@ class BlockToolbar extends React.Component<Props> {
         {this.renderBlockButton("block-quote", BlockQuoteIcon)}
         {this.renderBlockButton("code", CodeIcon)}
         {this.renderBlockButton("horizontal-rule", HorizontalRuleIcon)}
-        {this.renderBlockButton("image", ImageIcon)}
+        {hasImageUpload && this.renderBlockButton("image", ImageIcon)}
       </Bar>
     );
   }

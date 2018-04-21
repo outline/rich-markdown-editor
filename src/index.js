@@ -119,6 +119,10 @@ class RichMarkdownEditor extends React.Component<Props, State> {
 
   handleDrop = async (ev: SyntheticDragEvent<*>) => {
     if (this.props.readOnly) return;
+
+    // check an image upload callback is defined
+    if (!this.editor.props.uploadImage) return;
+
     // check if this event was already handled by the Editor
     if (ev.isDefaultPrevented()) return;
 
