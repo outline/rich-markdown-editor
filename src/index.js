@@ -1,11 +1,12 @@
 // @flow
 import * as React from "react";
-import { Value, Change } from "slate";
+import { Value, Change, Schema } from "slate";
 import { Editor } from "slate-react";
 import styled, { ThemeProvider } from "styled-components";
 import keydown from "react-keydown";
 import type { SlateNodeProps, Plugin } from "./types";
 import defaultTheme from "./theme";
+import defaultSchema from "./schema";
 import getDataTransferFiles from "./lib/getDataTransferFiles";
 import isModKey from "./lib/isModKey";
 import Flex from "./components/Flex";
@@ -19,7 +20,6 @@ import createPlugins from "./plugins";
 import { insertImageFile } from "./changes";
 import renderMark from "./marks";
 import createRenderNode from "./nodes";
-import schema from "./schema";
 
 type Props = {
   text: string,
@@ -34,12 +34,15 @@ type Props = {
   emoji?: string,
   readOnly?: boolean,
   plugins?: Plugin[],
+  schema?: Schema,
 };
 
 type State = {
   editorValue: Value,
   editorLoaded: boolean,
+  schema: Schema,
 };
+
 class RichMarkdownEditor extends React.Component<Props, State> {
   static defaultProps = {
     theme: defaultTheme,
@@ -67,6 +70,10 @@ class RichMarkdownEditor extends React.Component<Props, State> {
     this.state = {
       editorLoaded: false,
       editorValue: Markdown.deserialize(props.text),
+      schema: {
+        ...defaultSchema,
+        ...this.props.schema,
+      },
     };
   }
 
@@ -76,6 +83,17 @@ class RichMarkdownEditor extends React.Component<Props, State> {
       this.focusAtEnd();
     } else {
       this.focusAtStart();
+    }
+  }
+
+  componentWillReceiveProps(nextProps: Props) {
+    if (nextProps.schema !== this.props.schema) {
+      this.setState({
+        schema: {
+          ...defaultSchema,
+          ...nextProps.schema,
+        },
+      });
     }
   }
 
@@ -232,7 +250,7 @@ class RichMarkdownEditor extends React.Component<Props, State> {
               value={this.state.editorValue}
               renderNode={this.renderNode}
               renderMark={renderMark}
-              schema={schema}
+              schema={this.state.schema}
               onKeyDown={this.onKeyDown}
               onChange={this.onChange}
               onSave={onSave}

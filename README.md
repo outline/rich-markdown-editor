@@ -11,7 +11,7 @@
 - [x] Example in repo
 - [x] ThemeProvider
 - [x] Allow passing placeholders
-- [ ] Allow passing schema
+- [x] Allow passing schema
 - [ ] Hook for link search
 - [ ] Hook for link click
 - [ ] Image upload
