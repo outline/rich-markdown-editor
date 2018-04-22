@@ -5,17 +5,17 @@ import Editor from "../../src";
 
 const element = document.getElementById("main");
 const savedText = localStorage.getItem("saved");
-const defaultText = `
+const exampleText = `
 # Welcome
 
 This is example content. It is persisted between reloads in localStorage.
 `;
-const text = savedText || defaultText;
+const defaultValue = savedText || exampleText;
 
 if (element) {
   ReactDOM.render(
     <Editor
-      text={text}
+      defaultValue={defaultValue}
       onSave={() => console.log("Save triggered")}
       onCancel={() => console.log("Cancel triggered")}
       onChange={text => localStorage.setItem("saved", text)}

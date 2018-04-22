@@ -22,22 +22,22 @@ import renderMark from "./marks";
 import createRenderNode from "./nodes";
 
 type Props = {
-  text: string,
+  defaultValue: string,
+  titlePlaceholder: string,
+  bodyPlaceholder: string,
+  emoji?: string,
+  plugins?: Plugin[],
+  readOnly?: boolean,
+  schema?: Schema,
+  theme: Object,
+  uploadImage?: (file: File) => Promise<string>,
   onChange: Change => *,
   onSave: ({ redirect?: boolean, publish?: boolean }) => *,
   onCancel: () => *,
-  uploadImage?: (file: File) => Promise<string>,
   onImageUploadStart: () => *,
   onImageUploadStop: () => *,
   onSearchLink?: (term: string) => Promise<SearchResult[]>,
   onClickLink?: (href: string) => *,
-  theme: Object,
-  titlePlaceholder: string,
-  bodyPlaceholder: string,
-  emoji?: string,
-  readOnly?: boolean,
-  plugins?: Plugin[],
-  schema?: Schema,
 };
 
 type State = {
@@ -49,6 +49,7 @@ type State = {
 class RichMarkdownEditor extends React.Component<Props, State> {
   static defaultProps = {
     theme: defaultTheme,
+    defaultValue: "",
     titlePlaceholder: "Your title",
     bodyPlaceholder: "Write something nice…",
     onImageUploadStart: () => {},
@@ -71,7 +72,7 @@ class RichMarkdownEditor extends React.Component<Props, State> {
     }
     this.state = {
       editorLoaded: false,
-      editorValue: Markdown.deserialize(props.text),
+      editorValue: Markdown.deserialize(props.defaultValue),
       schema: {
         ...defaultSchema,
         ...this.props.schema,
@@ -81,7 +82,7 @@ class RichMarkdownEditor extends React.Component<Props, State> {
 
   componentDidMount() {
     if (this.props.readOnly) return;
-    if (this.props.text) {
+    if (this.props.defaultValue) {
       this.focusAtEnd();
     } else {
       this.focusAtStart();
