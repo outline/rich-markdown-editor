@@ -1,8 +1,8 @@
-[![CircleCI](https://circleci.com/gh/outline/rich-markdown-editor.svg?style=svg)](https://circleci.com/gh/outline/rich-markdown-editor)
+[![npm version](https://badge.fury.io/js/rich-markdown-editor.svg)](https://badge.fury.io/js/rich-markdown-editor) [![CircleCI](https://circleci.com/gh/outline/rich-markdown-editor.svg?style=svg)](https://circleci.com/gh/outline/rich-markdown-editor)
 
 # rich-markdown-editor
 
-⚠️ Pre-release. This package is still under development – do not use. ⚠️
+⚠️ Pre-release. This package is still under active development – do not use. ⚠️
 
 ## Usage
 
@@ -10,7 +10,7 @@
 import Editor from "rich-markdown-editor";
 
 <Editor
-  defaultValue="Title \n\nBody"
+  defaultValue="Title\n\nBody"
 />
 ```
 
@@ -90,20 +90,25 @@ Triggered once an image upload has succeeded or failed.
 
 #### `onSearchLink`
 
-The editor provides an ability to search for links to insert from the formatting toolbar. If this callback is provided it should accept a search term as the only parameter and return a promise that resolves to an array of `[SearchResult](/blob/master/src/types.js)`s.
+The editor provides an ability to search for links to insert from the formatting toolbar. If this callback is provided it should accept a search term as the only parameter and return a promise that resolves to an array of [SearchResult](/blob/master/src/types.js) objects. eg:
 
 
 ```javascript
 <Editor
-  onSearchLink={searchTerm => {
-    return MyAPI.search(searchTerm);
+  onSearchLink={async searchTerm => {
+    const results = await MyAPI.search(searchTerm);
+
+    return results.map(result => {
+      title: result.name,
+      url: result.url
+    })
   }}
 />
 ```
 
 #### `onClickLink`
 
-This callback allows overriding of link handling. It's often the case that you want to have external links open a new window whilst internal links may use something like `react-router` to navigate. If no callback is provided then default behavior will apply to all links.
+This callback allows overriding of link handling. It's often the case that you want to have external links open a new window whilst internal links may use something like `react-router` to navigate. If no callback is provided then default behavior will apply to all links. eg:
 
 
 ```javascript
