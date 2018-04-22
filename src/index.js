@@ -25,7 +25,7 @@ type Props = {
   defaultValue: string,
   titlePlaceholder: string,
   bodyPlaceholder: string,
-  emoji?: string,
+  pretitle?: string,
   plugins?: Plugin[],
   readOnly?: boolean,
   schema?: Schema,
@@ -209,7 +209,7 @@ class RichMarkdownEditor extends React.Component<Props, State> {
   render = () => {
     const {
       readOnly,
-      emoji,
+      pretitle,
       theme,
       titlePlaceholder,
       bodyPlaceholder,
@@ -251,7 +251,7 @@ class RichMarkdownEditor extends React.Component<Props, State> {
               titlePlaceholder={titlePlaceholder}
               bodyPlaceholder={bodyPlaceholder}
               plugins={this.plugins}
-              emoji={emoji}
+              pretitle={pretitle}
               value={this.state.editorValue}
               renderNode={this.renderNode}
               renderMark={renderMark}

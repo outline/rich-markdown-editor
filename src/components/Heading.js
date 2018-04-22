@@ -10,7 +10,7 @@ type Props = SlateNodeProps & {
   component: string,
   className: string,
   placeholder: string,
-  hasEmoji: boolean,
+  hasPretitle: boolean,
 };
 
 function Heading(props: Props) {
@@ -31,14 +31,14 @@ function Heading(props: Props) {
   const slugish = headingToSlug(editor.value.document, node);
   const showHash = readOnly && !!slugish;
   const Component = component;
-  const emoji = editor.props.emoji || "";
+  const pretitle = editor.props.pretitle || "";
   const title = node.text.trim();
-  const startsWithEmojiAndSpace =
-    emoji && title.match(new RegExp(`^${emoji}\\s`));
+  const startsWithPretitleAndSpace =
+    pretitle && title.match(new RegExp(`^${pretitle}\\s`));
 
   return (
     <Component {...attributes} id={slugish} className={className}>
-      <Wrapper hasEmoji={startsWithEmojiAndSpace}>{children}</Wrapper>
+      <Wrapper hasPretitle={startsWithPretitleAndSpace}>{children}</Wrapper>
       {showPlaceholder && (
         <Placeholder contentEditable={false}>
           {editor.props.titlePlaceholder}
@@ -55,7 +55,7 @@ function Heading(props: Props) {
 
 const Wrapper = styled.div`
   display: inline;
-  margin-left: ${(props: Props) => (props.hasEmoji ? "-1.2em" : 0)};
+  margin-left: ${(props: Props) => (props.hasPretitle ? "-1.2em" : 0)};
 `;
 
 const Anchor = styled.a`

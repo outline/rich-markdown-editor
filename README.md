@@ -32,9 +32,9 @@ Allows overriding of the placeholder text displayed where a title would be. The 
 
 Allows overriding of the placeholder text displayed in the main body content. The default is "Write something nice…".
 
-#### `emoji`
+#### `pretitle`
 
-An optional emoji character that will be prepended to the title. This allows the main title text to 
+An optional pretitle that will be prepended to the title. This allows the main title text to 
 remain aligned with the body content.
 
 #### `readOnly`
