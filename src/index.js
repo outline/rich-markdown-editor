@@ -4,7 +4,7 @@ import { Value, Change, Schema } from "slate";
 import { Editor } from "slate-react";
 import styled, { ThemeProvider } from "styled-components";
 import keydown from "react-keydown";
-import type { SlateNodeProps, Plugin } from "./types";
+import type { SlateNodeProps, Plugin, SearchResult } from "./types";
 import defaultTheme from "./theme";
 import defaultSchema from "./schema";
 import getDataTransferFiles from "./lib/getDataTransferFiles";
@@ -29,6 +29,7 @@ type Props = {
   uploadImage?: (file: File) => Promise<string>,
   onImageUploadStart: () => *,
   onImageUploadStop: () => *,
+  onSearchLink?: (term: string) => Promise<SearchResult[]>,
   onClickLink?: (href: string) => *,
   theme: Object,
   titlePlaceholder: string,
@@ -213,6 +214,7 @@ class RichMarkdownEditor extends React.Component<Props, State> {
       bodyPlaceholder,
       onSave,
       uploadImage,
+      onSearchLink,
       onImageUploadStart,
       onImageUploadStop,
     } = this.props;
@@ -256,6 +258,7 @@ class RichMarkdownEditor extends React.Component<Props, State> {
               onKeyDown={this.onKeyDown}
               onChange={this.onChange}
               onSave={onSave}
+              onSearchLink={onSearchLink}
               onImageUploadStart={onImageUploadStart}
               onImageUploadStop={onImageUploadStop}
               readOnly={readOnly}

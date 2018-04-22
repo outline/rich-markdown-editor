@@ -1,22 +1,21 @@
 // @flow
 import * as React from "react";
 import styled from "styled-components";
-
 import NextIcon from "../Icon/NextIcon";
 
 type Props = {
   innerRef?: Function,
   onClick: (SyntheticEvent<*>) => *,
-  document: { title: string },
+  title: string,
 };
 
-function DocumentResult({ document, ...rest }: Props) {
+function LinkSearchResult({ title, ...rest }: Props) {
   return (
     <ListItem {...rest} href="">
       <i>
         <NextIcon light />
       </i>
-      {document.title}
+      {title}
     </ListItem>
   );
 }
@@ -47,4 +46,4 @@ const ListItem = styled.a`
   }
 `;
 
-export default DocumentResult;
+export default LinkSearchResult;

@@ -18,3 +18,8 @@ export type Plugin = {
   onClick?: (SyntheticEvent<*>) => *,
   onKeyDown?: (SyntheticKeyboardEvent<*>, Change) => *,
 };
+
+export type SearchResult = {
+  title: string,
+  url: string,
+};

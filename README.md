@@ -15,9 +15,10 @@
 - [x] Hook for link click
 - [x] Hook up Image upload
 - [x] Hide upload functions if callback not present
-- [ ] Hook for link search
+- [x] Hook for link search
 - [ ] Increase documentation on props and usage
 - [ ] extraction of icons
+- [ ] Make title optional
 - [ ] publish
 
 ## Development

@@ -3,12 +3,15 @@ import * as React from "react";
 import { findDOMNode } from "react-dom";
 import { Node } from "slate";
 import { Editor } from "slate-react";
+import ArrowKeyNavigation from "boundless-arrow-key-navigation";
 import styled from "styled-components";
 import keydown from "react-keydown";
+import type { SearchResult } from "../../types";
 import CloseIcon from "../Icon/CloseIcon";
 import OpenIcon from "../Icon/OpenIcon";
 import TrashIcon from "../Icon/TrashIcon";
 import Flex from "../Flex";
+import LinkSearchResult from "./LinkSearchResult";
 import ToolbarButton from "./ToolbarButton";
 
 type Suggestion = {
@@ -26,7 +29,7 @@ type Props = {
 type State = {
   isEditing: boolean,
   isFetching: boolean,
-  resultIds: string[],
+  results: SearchResult[],
   searchTerm: ?string,
 };
 
@@ -39,7 +42,7 @@ export default class LinkToolbar extends React.Component<Props, State> {
   state = {
     isEditing: false,
     isFetching: false,
-    resultIds: [],
+    results: [],
     searchTerm: null,
   };
 
@@ -71,27 +74,30 @@ export default class LinkToolbar extends React.Component<Props, State> {
     this.save(this.input.value);
   };
 
-  // @action
-  // search = async () => {
-  //   this.isFetching = true;
+  search = async () => {
+    const { editor } = this.props;
+    if (!editor.props.onSearchLink) return;
 
-  //   if (this.searchTerm) {
-  //     try {
-  //       this.resultIds = await this.props.documents.search(this.searchTerm);
-  //     } catch (err) {
-  //       console.error(err);
-  //     }
-  //   } else {
-  //     this.resultIds = [];
-  //   }
+    this.setState({ isFetching: true });
 
-  //   this.isFetching = false;
-  // };
+    if (this.state.searchTerm) {
+      try {
+        const results = await editor.props.onSearchLink(this.state.searchTerm);
+        this.setState({ results });
+      } catch (err) {
+        console.error(err);
+      }
+    } else {
+      this.setState({ results: [] });
+    }
 
-  // selectDocument = (ev, document) => {
-  //   ev.preventDefault();
-  //   this.save(document.url);
-  // };
+    this.setState({ isFetching: false });
+  };
+
+  selectSearchResult = (ev: SyntheticEvent<*>, url: string) => {
+    ev.preventDefault();
+    this.save(url);
+  };
 
   onKeyDown = (ev: SyntheticKeyboardEvent<*>) => {
     switch (ev.which) {
@@ -112,16 +118,18 @@ export default class LinkToolbar extends React.Component<Props, State> {
     }
   };
 
-  onChange = (ev: SyntheticKeyboardEvent<*>) => {
-    // try {
-    //   new URL(ev.target.value);
-    // } catch (err) {
-    //   // this is not a valid url, show search suggestions
-    //   this.searchTerm = ev.target.value;
-    //   this.search();
-    //   return;
-    // }
-    this.setState({ resultIds: [] });
+  onChange = (ev: SyntheticInputEvent<*>) => {
+    if (!this.props.editor.props.onSearchLink) return;
+
+    try {
+      new URL(ev.target.value);
+    } catch (err) {
+      // this is not a valid url, show search suggestions
+      this.setState({ searchTerm: ev.target.value });
+      this.search();
+      return;
+    }
+    this.setState({ results: [] });
   };
 
   removeLink = () => {
@@ -148,13 +156,13 @@ export default class LinkToolbar extends React.Component<Props, State> {
     });
   };
 
-  setFirstDocumentRef = (ref: HTMLElement) => {
+  setFirstResultRef = (ref: HTMLElement) => {
     this.firstDocument = ref;
   };
 
   render() {
     const href = this.props.link.data.get("href");
-    // const hasResults = this.resultIds.length > 0;
+    const hasResults = this.state.results.length > 0;
 
     return (
       <span ref={ref => (this.wrapper = ref)}>
@@ -176,47 +184,40 @@ export default class LinkToolbar extends React.Component<Props, State> {
             {this.state.isEditing ? <TrashIcon light /> : <CloseIcon light />}
           </ToolbarButton>
         </LinkEditor>
-        {/* {hasResults && (
+        {hasResults && (
           <SearchResults>
             <ArrowKeyNavigation
               mode={ArrowKeyNavigation.mode.VERTICAL}
               defaultActiveChildIndex={0}
             >
-              {this.resultIds.map((id, index) => {
-                const document = this.props.documents.getById(id);
-                if (!document) return null;
-
-                return (
-                  <DocumentResult
-                    innerRef={ref =>
-                      index === 0 && this.setFirstDocumentRef(ref)
-                    }
-                    document={document}
-                    key={document.id}
-                    onClick={ev => this.selectDocument(ev, document)}
-                  />
-                );
-              })}
+              {this.state.results.map((result, index) => (
+                <LinkSearchResult
+                  innerRef={ref => index === 0 && this.setFirstResultRef(ref)}
+                  title={result.title}
+                  key={result.url}
+                  onClick={ev => this.selectSearchResult(ev, result.url)}
+                />
+              ))}
             </ArrowKeyNavigation>
           </SearchResults>
-        )} */}
+        )}
       </span>
     );
   }
 }
 
-// const SearchResults = styled.div`
-//   background: #2f3336;
-//   position: absolute;
-//   top: 100%;
-//   width: 100%;
-//   height: auto;
-//   left: 0;
-//   padding: 8px;
-//   margin-top: -3px;
-//   margin-bottom: 0;
-//   border-radius: 0 0 4px 4px;
-// `;
+const SearchResults = styled.div`
+  background: ${props => props.theme.blackLight};
+  position: absolute;
+  top: 100%;
+  width: 100%;
+  height: auto;
+  left: 0;
+  padding: 8px;
+  margin-top: -3px;
+  margin-bottom: 0;
+  border-radius: 0 0 4px 4px;
+`;
 
 const LinkEditor = styled(Flex)`
   margin-left: -8px;
@@ -231,6 +232,6 @@ const Input = styled.input`
   border: 0;
   margin: 0;
   outline: none;
-  color: #fff;
+  color: ${props => props.theme.white};
   flex-grow: 1;
 `;
