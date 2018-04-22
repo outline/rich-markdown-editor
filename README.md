@@ -55,6 +55,71 @@ Allows overriding the inbuilt theme to brand the editor, for example use your ow
 
 ### Callbacks
 
+#### `uploadImage`
+
+If you want the editor to support images then this callback must be provided. The callback should accept a single `File` object and return a promise the resolves to a url when the image has been uploaded to a storage location, for example S3. eg:
+
+```javascript
+<Editor
+  uploadImage={async File => {
+    const result = await s3.upload(File);
+    return result.url;
+  }}
+/>
+```
+
+#### `onSave`
+
+This callback is triggered when the user explicitly requests to save using a keyboard shortcut, `META+S` or `META+Enter`. You can use it as a signal to save the document to a remote server.
+
+#### `onCancel`
+
+This callback is triggered when the escape key is hit within the editor. You may use it to cancel editing.
+
+#### `onChange`
+
+This callback is triggered when the contents of the editor changes, usually due to user input such as a keystroke or using formatting options. You may use this to locally persist the editors state, see the [inbuilt example](/blob/master/example/index.js).
+
+#### `onImageUploadStart`
+
+This callback is triggered before `uploadImage` and can be used to show some UI that indicates an upload is in progress.
+
+#### `onImageUploadStop`
+
+Triggered once an image upload has succeeded or failed.
+
+#### `onSearchLink`
+
+The editor provides an ability to search for links to insert from the formatting toolbar. If this callback is provided it should accept a search term as the only parameter and return a promise that resolves to an array of `[SearchResult](/blob/master/src/types.js)`s.
+
+
+```javascript
+<Editor
+  onSearchLink={searchTerm => {
+    return MyAPI.search(searchTerm);
+  }}
+/>
+```
+
+#### `onClickLink`
+
+This callback allows overriding of link handling. It's often the case that you want to have external links open a new window whilst internal links may use something like `react-router` to navigate. If no callback is provided then default behavior will apply to all links.
+
+
+```javascript
+import { history } from "react-router";
+
+<Editor
+  onClickLink={href => {
+    if (isInternalLink(href)) {
+      history.push(href);
+    } else {
+      window.location.href = href;
+    }
+  }}
+/>
+```
+
 ## Contributing
 
 This project uses yarn to manage dependencies. You can use npm however it will not respect the yarn lock file and may install slightly different versions.
