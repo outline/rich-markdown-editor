@@ -8,8 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "yarn eslint src",
     "start": "webpack-serve --config example/webpack.config.js --content example/dist",
-    "build": "babel src/ -d lib/ && yarn build-example",
-    "build-example": "cd example && webpack",
+    "build": "babel src/ -d lib/",
     "prepublish": "yarn build"
   },
   "dependencies": {
