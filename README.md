@@ -14,7 +14,7 @@ import Editor from "rich-markdown-editor";
 />
 ```
 
-See a working example in the [example directory](/blob/master/example).
+See a working example in the [example directory](/example).
 
 
 ### Props
@@ -43,7 +43,7 @@ With `readOnly` set to `false` the editor is optimized for composition. When `tr
 
 #### `plugins`
 
-Allows additional Slate plugins to be passed to the underlying Slate editor.
+Allows additional [Slate plugins](https://github.com/ianstormtaylor/slate/blob/master/docs/general/plugins.md) to be passed to the underlying Slate editor.
 
 #### `schema`
 
@@ -51,7 +51,7 @@ Allows additional Slate schema to be passed to the underlying Slate editor.
 
 #### `theme`
 
-Allows overriding the inbuilt theme to brand the editor, for example use your own font face and brand colors to have the editor fit within your application. See the [inbuilt theme](/blob/master/src/theme.js) for an example of the keys that should be provided.
+Allows overriding the inbuilt theme to brand the editor, for example use your own font face and brand colors to have the editor fit within your application. See the [inbuilt theme](/src/theme.js) for an example of the keys that should be provided.
 
 ### Callbacks
 
@@ -70,7 +70,7 @@ If you want the editor to support images then this callback must be provided. Th
 
 #### `onSave`
 
-This callback is triggered when the user explicitly requests to save using a keyboard shortcut, `META+S` or `META+Enter`. You can use it as a signal to save the document to a remote server.
+This callback is triggered when the user explicitly requests to save using a keyboard shortcut, `Cmd+S` or `Cmd+Enter`. You can use this as a signal to save the document to a remote server.
 
 #### `onCancel`
 
@@ -78,7 +78,7 @@ This callback is triggered when the escape key is hit within the editor. You may
 
 #### `onChange`
 
-This callback is triggered when the contents of the editor changes, usually due to user input such as a keystroke or using formatting options. You may use this to locally persist the editors state, see the [inbuilt example](/blob/master/example/index.js).
+This callback is triggered when the contents of the editor changes, usually due to user input such as a keystroke or using formatting options. You may use this to locally persist the editors state, see the [inbuilt example](/example/index.js).
 
 #### `onImageUploadStart`
 
@@ -90,7 +90,7 @@ Triggered once an image upload has succeeded or failed.
 
 #### `onSearchLink`
 
-The editor provides an ability to search for links to insert from the formatting toolbar. If this callback is provided it should accept a search term as the only parameter and return a promise that resolves to an array of [SearchResult](/blob/master/src/types.js) objects. eg:
+The editor provides an ability to search for links to insert from the formatting toolbar. If this callback is provided it should accept a search term as the only parameter and return a promise that resolves to an array of [SearchResult](/src/types.js) objects. eg:
 
 
 ```javascript
@@ -127,14 +127,14 @@ import { history } from "react-router";
 
 ## Contributing
 
-This project uses yarn to manage dependencies. You can use npm however it will not respect the yarn lock file and may install slightly different versions.
+This project uses [yarn](https://yarnpkg.com) to manage dependencies. You can use npm however it will not respect the yarn lock file and may install slightly different versions.
 
 ```
 yarn install
 ```
 
-When running in development webpack-serve is included to serve an example editor with hot reloading. After installing dependencies run `yarn start` to get going.
+When running in development [webpack-serve](https://github.com/webpack-contrib/webpack-serve) is included to serve an example editor with hot reloading. After installing dependencies run `yarn start` to get going.
 
 ## License
 
-This project is [BSD licensed](/blob/master/LICENSE).
+This project is [BSD licensed](/LICENSE).
