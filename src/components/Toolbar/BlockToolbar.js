@@ -3,16 +3,18 @@ import * as React from "react";
 import { findDOMNode } from "react-dom";
 import keydown from "react-keydown";
 import styled, { withTheme } from "styled-components";
+import {
+  Heading1Icon,
+  Heading2Icon,
+  BlockQuoteIcon,
+  ImageIcon,
+  CodeIcon,
+  BulletedListIcon,
+  OrderedListIcon,
+  HorizontalRuleIcon,
+  TodoListIcon,
+} from "outline-icons";
 import getDataTransferFiles from "../../lib/getDataTransferFiles";
-import Heading1Icon from "../Icon/Heading1Icon";
-import Heading2Icon from "../Icon/Heading2Icon";
-import BlockQuoteIcon from "../Icon/BlockQuoteIcon";
-import ImageIcon from "../Icon/ImageIcon";
-import CodeIcon from "../Icon/CodeIcon";
-import BulletedListIcon from "../Icon/BulletedListIcon";
-import OrderedListIcon from "../Icon/OrderedListIcon";
-import HorizontalRuleIcon from "../Icon/HorizontalRuleIcon";
-import TodoListIcon from "../Icon/TodoListIcon";
 import Flex from "../Flex";
 import type { SlateNodeProps } from "../../types";
 

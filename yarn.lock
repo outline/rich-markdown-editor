@@ -4574,6 +4574,10 @@ osenv@^0.1.4:
     os-homedir "^1.0.0"
     os-tmpdir "^1.0.0"
 
+outline-icons@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/outline-icons/-/outline-icons-1.0.0.tgz#c9aaa3d763278b79a13d60a4299e18cca51ffc86"
+
 output-file-sync@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/output-file-sync/-/output-file-sync-1.1.2.tgz#d0a33eefe61a205facb90092e826598d5245ce76"

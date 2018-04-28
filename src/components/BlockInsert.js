@@ -5,8 +5,7 @@ import { Node } from "slate";
 import { Editor, findDOMNode } from "slate-react";
 import { isEqual } from "lodash";
 import styled from "styled-components";
-
-import PlusIcon from "./Icon/PlusIcon";
+import { PlusIcon } from "outline-icons";
 
 type Props = {
   editor: Editor,

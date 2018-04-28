@@ -2,14 +2,16 @@
 import * as React from "react";
 import styled from "styled-components";
 import { Editor } from "slate-react";
-import BoldIcon from "../Icon/BoldIcon";
-import CodeIcon from "../Icon/CodeIcon";
-import Heading1Icon from "../Icon/Heading1Icon";
-import Heading2Icon from "../Icon/Heading2Icon";
-import ItalicIcon from "../Icon/ItalicIcon";
-import BlockQuoteIcon from "../Icon/BlockQuoteIcon";
-import LinkIcon from "../Icon/LinkIcon";
-import StrikethroughIcon from "../Icon/StrikethroughIcon";
+import {
+  BoldIcon,
+  CodeIcon,
+  Heading1Icon,
+  Heading2Icon,
+  ItalicIcon,
+  BlockQuoteIcon,
+  LinkIcon,
+  StrikethroughIcon,
+} from "outline-icons";
 import ToolbarButton from "./ToolbarButton";
 
 type Props = {
