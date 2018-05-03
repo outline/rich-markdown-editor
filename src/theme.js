@@ -1,6 +1,7 @@
 // @flow
 const theme = {
-  fontFamily: "sans-serif",
+  fontFamily:
+    "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen, Ubuntu,Cantarell,'Open Sans','Helvetica Neue',sans-serif",
   fontWeight: 400,
 
   text: "#171B35",

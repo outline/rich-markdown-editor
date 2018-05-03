@@ -15,6 +15,7 @@ const defaultValue = savedText || exampleText;
 if (element) {
   ReactDOM.render(
     <Editor
+      style={{ marginTop: "60px" }}
       defaultValue={defaultValue}
       onSave={() => console.log("Save triggered")}
       onCancel={() => console.log("Cancel triggered")}

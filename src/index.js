@@ -38,6 +38,8 @@ type Props = {
   onImageUploadStop: () => *,
   onSearchLink?: (term: string) => Promise<SearchResult[]>,
   onClickLink?: (href: string) => *,
+  className?: string,
+  style?: Object,
 };
 
 type State = {
@@ -218,10 +220,14 @@ class RichMarkdownEditor extends React.Component<Props, State> {
       onSearchLink,
       onImageUploadStart,
       onImageUploadStop,
+      className,
+      style,
     } = this.props;
 
     return (
       <Flex
+        style={style}
+        className={className}
         onDrop={this.handleDrop}
         onDragOver={this.cancelEvent}
         onDragEnter={this.cancelEvent}
@@ -230,7 +236,7 @@ class RichMarkdownEditor extends React.Component<Props, State> {
         auto
       >
         <ThemeProvider theme={theme}>
-          <MaxWidth column auto>
+          <React.Fragment>
             <Header onClick={this.focusAtStart} readOnly={readOnly} />
             {readOnly &&
               this.state.editorLoaded &&
@@ -270,18 +276,12 @@ class RichMarkdownEditor extends React.Component<Props, State> {
               onClick={!readOnly ? this.focusAtEnd : undefined}
               grow
             />
-          </MaxWidth>
+          </React.Fragment>
         </ThemeProvider>
       </Flex>
     );
   };
 }
-
-const MaxWidth = styled(Flex)`
-  padding: 0 20px;
-  max-width: 100vw;
-  height: 100%;
-`;
 
 const Header = styled(Flex)`
   height: 60px;

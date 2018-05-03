@@ -4,11 +4,12 @@ import { Portal } from "react-portal";
 import { Node } from "slate";
 import { Editor, findDOMNode } from "slate-react";
 import { isEqual } from "lodash";
-import styled from "styled-components";
+import styled, { withTheme } from "styled-components";
 import { PlusIcon } from "outline-icons";
 
 type Props = {
   editor: Editor,
+  theme: Object,
 };
 
 function findClosestRootNode(value, ev) {
@@ -31,7 +32,7 @@ type State = {
   left: number,
 };
 
-export default class BlockInsert extends React.Component<Props, State> {
+class BlockInsert extends React.Component<Props, State> {
   mouseMoveTimeout: ?TimeoutID;
   mouseMovementSinceClick: number = 0;
   lastClientX: number = 0;
@@ -134,12 +135,13 @@ export default class BlockInsert extends React.Component<Props, State> {
   };
 
   render() {
+    const { theme } = this.props;
     const style = { top: `${this.state.top}px`, left: `${this.state.left}px` };
 
     return (
       <Portal>
         <Trigger active={this.state.active} style={style}>
-          <PlusIcon onClick={this.handleClick} />
+          <PlusIcon onClick={this.handleClick} color={theme.slate} />
         </Trigger>
       </Portal>
     );
@@ -175,3 +177,5 @@ const Trigger = styled.div`
     opacity: .9;
   `};
 `;
+
+export default withTheme(BlockInsert);
