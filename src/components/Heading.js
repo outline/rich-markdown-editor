@@ -61,11 +61,6 @@ const Wrapper = styled.div`
 const Anchor = styled.a`
   visibility: hidden;
   padding-left: 0.25em;
-  color: ${props => props.theme.slateLight};
-
-  &:hover {
-    color: ${props => props.theme.smokeDark};
-  }
 `;
 
 export const StyledHeading = styled(Heading)`
@@ -73,8 +68,13 @@ export const StyledHeading = styled(Heading)`
 
   &:hover {
     ${Anchor} {
+      color: ${props => props.theme.slate};
       visibility: visible;
       text-decoration: none;
+
+      &:hover {
+        color: ${props => props.theme.slateDark};
+      }
     }
   }
 `;

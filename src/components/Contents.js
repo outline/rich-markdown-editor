@@ -15,6 +15,10 @@ type State = {
   activeHeading: ?string,
 };
 class Contents extends React.Component<Props, State> {
+  state = {
+    activeHeading: undefined,
+  };
+
   componentDidMount() {
     window.addEventListener("scroll", this.updateActiveHeading);
     this.updateActiveHeading();
