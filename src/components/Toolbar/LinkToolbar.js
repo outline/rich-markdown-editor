@@ -28,7 +28,6 @@ type State = {
   isEditing: boolean,
   isFetching: boolean,
   results: SearchResult[],
-  searchTerm: ?string,
 };
 
 @keydown
@@ -41,7 +40,6 @@ export default class LinkToolbar extends React.Component<Props, State> {
     isEditing: false,
     isFetching: false,
     results: [],
-    searchTerm: null,
   };
 
   componentDidMount() {
@@ -72,15 +70,15 @@ export default class LinkToolbar extends React.Component<Props, State> {
     this.save(this.input.value);
   };
 
-  search = async () => {
+  search = async (term: string) => {
     const { editor } = this.props;
     if (!editor.props.onSearchLink) return;
 
     this.setState({ isFetching: true });
 
-    if (this.state.searchTerm) {
+    if (term) {
       try {
-        const results = await editor.props.onSearchLink(this.state.searchTerm);
+        const results = await editor.props.onSearchLink(term);
         this.setState({ results });
       } catch (err) {
         console.error(err);
@@ -123,8 +121,7 @@ export default class LinkToolbar extends React.Component<Props, State> {
       new URL(ev.target.value);
     } catch (err) {
       // this is not a valid url, show search suggestions
-      this.setState({ searchTerm: ev.target.value });
-      this.search();
+      this.search(ev.target.value);
       return;
     }
     this.setState({ results: [] });

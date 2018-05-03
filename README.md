@@ -66,8 +66,8 @@ If you want the editor to support images then this callback must be provided. Th
 
 ```javascript
 <Editor
-  uploadImage={async File => {
-    const result = await s3.upload(File);
+  uploadImage={async file => {
+    const result = await s3.upload(file);
     return result.url;
   }}
 />

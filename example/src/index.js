@@ -21,6 +21,15 @@ if (element) {
       onCancel={() => console.log("Cancel triggered")}
       onChange={text => localStorage.setItem("saved", text)}
       onClickLink={href => console.log("Clicked link: ", href)}
+      onSearchLink={async term => {
+        console.log("Searched link: ", term);
+        return [
+          {
+            title: term,
+            url: "localhost",
+          },
+        ];
+      }}
       uploadImage={async file => {
         console.log("File upload triggered: ", file);
         return "";

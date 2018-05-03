@@ -15,11 +15,12 @@ export default function Link({
     <a
       {...attributes}
       href={readOnly ? href : undefined}
-      onClick={
-        editor.props.onClickLink
-          ? editor.props.onClickLink.bind(this, href)
-          : undefined
-      }
+      onClick={ev => {
+        if (editor.props.onClickLink) {
+          ev.preventDefault();
+          editor.props.onClickLink(href);
+        }
+      }}
       target="_blank"
     >
       {children}
