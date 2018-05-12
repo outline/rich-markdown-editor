@@ -218,6 +218,7 @@ class RichMarkdownEditor extends React.Component<Props, State> {
       onSave,
       uploadImage,
       onSearchLink,
+      onClickLink,
       onImageUploadStart,
       onImageUploadStop,
       className,
@@ -266,6 +267,7 @@ class RichMarkdownEditor extends React.Component<Props, State> {
               onChange={this.onChange}
               onSave={onSave}
               onSearchLink={onSearchLink}
+              onClickLink={onClickLink}
               onImageUploadStart={onImageUploadStart}
               onImageUploadStop={onImageUploadStop}
               readOnly={readOnly}
