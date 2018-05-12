@@ -17,13 +17,13 @@ export default function Link({
       href={readOnly ? href : undefined}
       onClick={
         readOnly
-          ? undefined
-          : ev => {
+          ? ev => {
               if (editor.props.onClickLink) {
                 ev.preventDefault();
                 editor.props.onClickLink(href);
               }
             }
+          : undefined
       }
       target="_blank"
     >
