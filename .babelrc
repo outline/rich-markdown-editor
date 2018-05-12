@@ -1,5 +1,5 @@
 {
-  "presets": ["react", "flow"],
+  "presets": ["react", "flow", "env"],
   "plugins": [
     "lodash",
     "styled-components",
