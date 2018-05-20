@@ -5,7 +5,12 @@ import isModKey from "../lib/isModKey";
 export default function KeyboardShortcuts() {
   return {
     onKeyDown(ev: SyntheticKeyboardEvent<*>, change: Change) {
-      if (!isModKey(ev)) return null;
+      if (!isModKey(ev)) {
+        if (ev.key === "Enter") {
+          return this.onEnter(ev, change);
+        }
+        return null;
+      }
 
       switch (ev.key) {
         case "b":
@@ -30,6 +35,39 @@ export default function KeyboardShortcuts() {
       if (firstNode === value.startBlock) return;
 
       change.toggleMark(type);
+    },
+
+    /**
+     * On return, if at the end of a node type that should not be extended,
+     * create a new paragraph below it.
+     */
+    onEnter(ev: SyntheticKeyboardEvent<*>, change: Change) {
+      const { value } = change;
+      if (value.isExpanded) return;
+
+      const { startBlock, startOffset, endOffset } = value;
+      if (startOffset === 0 && startBlock.length === 0)
+        return this.onBackspace(ev, change);
+
+      // Hitting enter at the end of the line reverts to standard behavior
+      if (endOffset === startBlock.length) return;
+
+      // Hitting enter while an image is selected should jump caret below and
+      // insert a new paragraph
+      if (startBlock.type === "image") {
+        ev.preventDefault();
+        return change.collapseToEnd().insertBlock("paragraph");
+      }
+
+      // Hitting enter in a heading or blockquote will split the node at that
+      // point and make the new node a paragraph
+      if (
+        startBlock.type.startsWith("heading") ||
+        startBlock.type === "block-quote"
+      ) {
+        ev.preventDefault();
+        return change.splitBlock().setBlocks("paragraph");
+      }
     },
   };
 }

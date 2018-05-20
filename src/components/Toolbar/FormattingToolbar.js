@@ -48,7 +48,7 @@ class FormattingToolbar extends React.Component<Props> {
 
   onClickBlock = (ev: SyntheticEvent<*>, type: string) => {
     ev.preventDefault();
-    this.props.editor.change(change => change.setBlock(type));
+    this.props.editor.change(change => change.setBlocks(type));
   };
 
   handleCreateLink = (ev: SyntheticEvent<*>) => {

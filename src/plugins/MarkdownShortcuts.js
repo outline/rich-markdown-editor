@@ -11,9 +11,17 @@ const inlineShortcuts = [
   { mark: "deleted", shortcut: "~~" },
 ];
 
+const inactiveTypes = /(heading|code)/;
+
 export default function MarkdownShortcuts() {
   return {
     onKeyDown(ev: SyntheticKeyboardEvent<*>, change: Change) {
+      const { value } = change;
+      const { startBlock } = value;
+
+      // places that markdown shortcuts should not be parsed
+      if (startBlock && startBlock.type.match(inactiveTypes)) return null;
+
       switch (ev.key) {
         case "-":
           return this.onDash(ev, change);
@@ -25,8 +33,6 @@ export default function MarkdownShortcuts() {
           return this.onSpace(ev, change);
         case "Backspace":
           return this.onBackspace(ev, change);
-        case "Enter":
-          return this.onEnter(ev, change);
         default:
           return null;
       }
@@ -40,9 +46,6 @@ export default function MarkdownShortcuts() {
       const { value } = change;
       if (value.isExpanded) return;
       const { startBlock, startOffset } = value;
-
-      // no markdown shortcuts work in headings
-      if (startBlock.type.match(/heading/)) return;
 
       const chars = startBlock.text.slice(0, startOffset).trim();
       const type = this.getType(chars);
@@ -58,7 +61,7 @@ export default function MarkdownShortcuts() {
         change
           .extendToStartOf(startBlock)
           .delete()
-          .setBlock(
+          .setBlocks(
             {
               type,
               data: { checked },
@@ -135,7 +138,7 @@ export default function MarkdownShortcuts() {
         return change
           .extendToStartOf(startBlock)
           .delete()
-          .setBlock(
+          .setBlocks(
             {
               type: "horizontal-rule",
               isVoid: true,
@@ -158,7 +161,7 @@ export default function MarkdownShortcuts() {
         return change
           .extendToStartOf(startBlock)
           .delete()
-          .setBlock({ type: "code" });
+          .setBlocks({ type: "code" });
       }
     },
 
@@ -172,7 +175,7 @@ export default function MarkdownShortcuts() {
         if (startBlock.type === "paragraph") return;
         ev.preventDefault();
 
-        change.setBlock("paragraph");
+        change.setBlocks("paragraph");
 
         if (startBlock.type === "list-item") {
           change.unwrapBlock("bulleted-list");
@@ -216,40 +219,7 @@ export default function MarkdownShortcuts() {
 
       if (value.startBlock.type === "heading1") {
         ev.preventDefault();
-        change.splitBlock().setBlock("paragraph");
-      }
-    },
-
-    /**
-     * On return, if at the end of a node type that should not be extended,
-     * create a new paragraph below it.
-     */
-    onEnter(ev: SyntheticKeyboardEvent<*>, change: Change) {
-      const { value } = change;
-      if (value.isExpanded) return;
-
-      const { startBlock, startOffset, endOffset } = value;
-      if (startOffset === 0 && startBlock.length === 0)
-        return this.onBackspace(ev, change);
-
-      // Hitting enter at the end of the line reverts to standard behavior
-      if (endOffset === startBlock.length) return;
-
-      // Hitting enter while an image is selected should jump caret below and
-      // insert a new paragraph
-      if (startBlock.type === "image") {
-        ev.preventDefault();
-        return change.collapseToEnd().insertBlock("paragraph");
-      }
-
-      // Hitting enter in a heading or blockquote will split the node at that
-      // point and make the new node a paragraph
-      if (
-        startBlock.type.startsWith("heading") ||
-        startBlock.type === "block-quote"
-      ) {
-        ev.preventDefault();
-        return change.splitBlock().setBlock("paragraph");
+        change.splitBlock().setBlocks("paragraph");
       }
     },
 

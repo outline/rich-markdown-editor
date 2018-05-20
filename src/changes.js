@@ -27,7 +27,7 @@ export function splitAndInsertBlock(change: Change, options: Options) {
   if (wrapper) change.collapseToStartOfNextBlock();
 
   // this is a hack as insertBlock with normalize: false does not appear to work
-  change.insertBlock("paragraph").setBlock(type, { normalize: false });
+  change.insertBlock("paragraph").setBlocks(type, { normalize: false });
 
   if (wrapper) change.wrapBlock(wrapper);
   return change;
@@ -66,7 +66,7 @@ export async function insertImageFile(
         !change.value.startBlock.text &&
         change.value.startBlock.type === "paragraph"
       ) {
-        change.setBlock(node);
+        change.setBlocks(node);
       } else {
         change.insertBlock(node);
       }
