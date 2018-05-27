@@ -88,7 +88,7 @@ export default class Toolbar extends React.Component<Props, State> {
     const link = getLinkInSelection(value);
 
     if (value.isBlurred || (value.isCollapsed && !link)) {
-      if (this.state.active && !this.state.link) {
+      if (this.state.active) {
         const newState = {
           ...this.state,
           active: false,
@@ -104,19 +104,21 @@ export default class Toolbar extends React.Component<Props, State> {
       return;
     }
 
+    let active = true;
+
     // don't display toolbar for document title
     const firstNode = value.document.nodes.first();
-    if (firstNode === value.startBlock) return;
+    if (firstNode === value.startBlock) active = false;
 
     // don't display toolbar for code blocks, code-lines inline code.
-    if (value.startBlock.type.match(/code/)) return;
+    if (value.startBlock.type.match(/code/)) active = false;
 
     // don't show until user has released pointing device button
-    if (this.state.mouseDown) return;
+    if (this.state.mouseDown) active = false;
 
     const newState = {
       ...this.state,
-      active: true,
+      active,
       link: this.state.link || link,
       top: undefined,
       left: undefined,
