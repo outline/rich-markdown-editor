@@ -198,6 +198,7 @@ const Menu = styled.div`
   height: 40px;
   min-width: 300px;
   box-sizing: border-box;
+  pointer-events: none;
 
   * {
     box-sizing: border-box;
@@ -207,6 +208,7 @@ const Menu = styled.div`
     active &&
     `
     transform: translateY(-6px) scale(1);
+    pointer-events: all;
     opacity: 1;
   `};
 
