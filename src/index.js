@@ -25,6 +25,7 @@ type Props = {
   defaultValue: string,
   titlePlaceholder: string,
   bodyPlaceholder: string,
+  title?: boolean,
   pretitle?: string,
   plugins?: Plugin[],
   readOnly?: boolean,
@@ -52,6 +53,7 @@ class RichMarkdownEditor extends React.Component<Props, State> {
   static defaultProps = {
     theme: defaultTheme,
     defaultValue: "",
+    title: true,
     titlePlaceholder: "Your title",
     bodyPlaceholder: "Write something nice…",
     onImageUploadStart: () => {},
@@ -76,7 +78,7 @@ class RichMarkdownEditor extends React.Component<Props, State> {
       editorLoaded: false,
       editorValue: Markdown.deserialize(props.defaultValue),
       schema: {
-        ...defaultSchema,
+        ...defaultSchema({ title: props.title }),
         ...this.props.schema,
       },
     };
@@ -95,7 +97,7 @@ class RichMarkdownEditor extends React.Component<Props, State> {
     if (nextProps.schema !== this.props.schema) {
       this.setState({
         schema: {
-          ...defaultSchema,
+          ...defaultSchema({ title: nextProps.title }),
           ...nextProps.schema,
         },
       });
@@ -213,6 +215,7 @@ class RichMarkdownEditor extends React.Component<Props, State> {
       readOnly,
       pretitle,
       theme,
+      title,
       titlePlaceholder,
       bodyPlaceholder,
       onSave,
@@ -255,6 +258,7 @@ class RichMarkdownEditor extends React.Component<Props, State> {
               )}
             <StyledEditor
               innerRef={this.setEditorRef}
+              title={title}
               titlePlaceholder={titlePlaceholder}
               bodyPlaceholder={bodyPlaceholder}
               plugins={this.plugins}
@@ -313,15 +317,23 @@ const StyledEditor = styled(Editor)`
     font-weight: 500;
   }
 
+  /* With title and placeholder (components interpolation not allowed inside props) */
   h1:first-of-type {
     ${Placeholder} {
-      visibility: visible;
+      visibility: ${props => (props.title ? "visible" : "hidden")};
     }
   }
 
   p:nth-child(2) {
     ${Placeholder} {
-      visibility: visible;
+      visibility: ${props => (props.title ? "visible" : "hidden")};
+    }
+  }
+
+  /* Without title */
+  p:first-child {
+    ${Placeholder} {
+      visibility: ${props => (props.title ? "hidden" : "visible")};
     }
   }
 

@@ -78,7 +78,7 @@ class BlockInsert extends React.Component<Props, State> {
       // do not show block menu on title heading or editor
       const firstNode = this.props.editor.value.document.nodes.first();
       const hideToolbar =
-        result.node === firstNode ||
+        (this.props.editor.props.title && result.node === firstNode) ||
         result.node.type === "block-toolbar" ||
         !!result.node.text.trim();
 
@@ -96,7 +96,6 @@ class BlockInsert extends React.Component<Props, State> {
     }
 
     if (!isEqual(newState, this.state)) {
-      console.log(newState, this.state);
       this.setState(newState);
     }
   };
