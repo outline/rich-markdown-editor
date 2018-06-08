@@ -28,6 +28,7 @@ type Props = {
   pretitle?: string,
   plugins?: Plugin[],
   readOnly?: boolean,
+  toc?: boolean,
   schema?: Schema,
   theme: Object,
   uploadImage?: (file: File) => Promise<string>,
@@ -211,6 +212,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   render = () => {
     const {
       readOnly,
+      toc,
       pretitle,
       theme,
       titlePlaceholder,
@@ -240,6 +242,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           <React.Fragment>
             <Header onClick={this.focusAtStart} readOnly={readOnly} />
             {readOnly &&
+              toc &&
               this.state.editorLoaded &&
               this.editor && <Contents editor={this.editor} />}
             {!readOnly &&

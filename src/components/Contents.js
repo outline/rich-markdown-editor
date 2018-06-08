@@ -95,7 +95,10 @@ class Contents extends React.Component<Props, State> {
 }
 
 const Wrapper = styled.div`
-  display: none;
+  font-family: ${props => props.theme.fontFamily};
+  font-weight: ${props => props.theme.fontWeight};
+  font-size: 1em;
+  line-height: 1.4;
   position: fixed;
   right: 0;
   top: 150px;
@@ -115,6 +118,7 @@ const Anchor = styled.a`
   padding: 2px 0;
   pointer-events: none;
   text-overflow: ellipsis;
+  text-decoration: none;
 
   &:hover {
     color: ${props => props.theme.primary};
