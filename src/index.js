@@ -48,7 +48,7 @@ type State = {
   schema: Schema,
 };
 
-class RichMarkdownEditor extends React.Component<Props, State> {
+class RichMarkdownEditor extends React.PureComponent<Props, State> {
   static defaultProps = {
     theme: defaultTheme,
     defaultValue: "",
@@ -115,7 +115,7 @@ class RichMarkdownEditor extends React.Component<Props, State> {
   };
 
   onChange = (change: Change) => {
-    if (this.state.editorValue !== change.value) {
+    if (this.props.onChange && this.state.editorValue !== change.value) {
       this.props.onChange(Markdown.serialize(change.value));
       this.setState({ editorValue: change.value });
     }
