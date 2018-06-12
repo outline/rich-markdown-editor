@@ -19,7 +19,7 @@ import Markdown from "./serializer";
 import createPlugins from "./plugins";
 import { insertImageFile } from "./changes";
 import renderMark from "./marks";
-import createRenderNode from "./nodes";
+import renderNode from "./nodes";
 
 type Props = {
   defaultValue: string,
@@ -39,6 +39,7 @@ type Props = {
   onImageUploadStop: () => *,
   onSearchLink?: (term: string) => Promise<SearchResult[]>,
   onClickLink?: (href: string) => *,
+  renderNode?: SlateNodeProps => ?React.Node,
   className?: string,
   style?: Object,
 };
@@ -60,15 +61,11 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   editor: Editor;
-  renderNode: SlateNodeProps => *;
   plugins: Plugin[];
 
   constructor(props: Props) {
     super(props);
 
-    this.renderNode = createRenderNode({
-      onInsertImage: this.insertImageFile,
-    });
     this.plugins = createPlugins();
     if (props.plugins) {
       this.plugins = this.plugins.concat(props.plugins);
@@ -207,6 +204,13 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     this.editor.change(change =>
       change.collapseToEndOf(change.value.document).focus()
     );
+  };
+
+  renderNode = (props: SlateNodeProps) => {
+    const node = this.props.renderNode && this.props.renderNode(props);
+    if (node) return node;
+
+    return renderNode(props);
   };
 
   render = () => {

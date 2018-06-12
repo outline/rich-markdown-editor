@@ -132,6 +132,11 @@ import { history } from "react-router";
 />
 ```
 
+#### `renderNode`
+
+This callback allows overriding of the [inbuilt renderNode](https://github.com/outline/rich-markdown-editor/blob/master/src/nodes.js) – if a component is returned from the callback then it will be used instead of the default implementation. See the [Slate documentation](https://docs.slatejs.org/guides/rendering#nodes-and-marks) for an example.
+
+
 ## Contributing
 
 This project uses [yarn](https://yarnpkg.com) to manage dependencies. You can use npm however it will not respect the yarn lock file and may install slightly different versions.

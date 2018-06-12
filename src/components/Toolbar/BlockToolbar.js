@@ -19,11 +19,10 @@ import Flex from "../Flex";
 import type { SlateNodeProps } from "../../types";
 
 import { fadeIn } from "../../animations";
-import { splitAndInsertBlock } from "../../changes";
+import { splitAndInsertBlock, insertImageFile } from "../../changes";
 import ToolbarButton from "./ToolbarButton";
 
 type Props = SlateNodeProps & {
-  onInsertImage: *,
   theme: Object,
 };
 
@@ -134,9 +133,11 @@ class BlockToolbar extends React.Component<Props> {
 
   onImagePicked = async (ev: SyntheticInputEvent<*>) => {
     const files = getDataTransferFiles(ev);
+    const { editor } = this.props;
+
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      await this.props.onInsertImage(file);
+      editor.change(change => change.call(insertImageFile, file, editor));
     }
   };
 
