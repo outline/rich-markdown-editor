@@ -6,8 +6,12 @@ export default function KeyboardShortcuts() {
   return {
     onKeyDown(ev: SyntheticKeyboardEvent<*>, change: Change) {
       if (!isModKey(ev)) {
-        if (ev.key === "Enter") {
-          return this.onEnter(ev, change);
+        switch (ev.key) {
+          case "Enter":
+            return this.onEnter(ev, change);
+          case "Tab":
+            return this.onTab(ev, change);
+          default:
         }
         return null;
       }
@@ -67,6 +71,19 @@ export default function KeyboardShortcuts() {
       ) {
         ev.preventDefault();
         return change.splitBlock().setBlocks("paragraph");
+      }
+    },
+
+    /**
+     * On tab, if at the end of the heading jump to the main body content
+     * as if it is another input field (act the same as enter).
+     */
+    onTab(ev: SyntheticKeyboardEvent<*>, change: Change) {
+      const { value } = change;
+
+      if (value.startBlock.type === "heading1") {
+        ev.preventDefault();
+        change.splitBlock().setBlocks("paragraph");
       }
     },
   };
