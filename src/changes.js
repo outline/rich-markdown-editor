@@ -94,8 +94,7 @@ export async function insertImageFile(
       node => node.data && node.data.get("id") === id
     );
     change.setNodeByKey(placeholder.key, props);
-
-    return change;
+    editor.onChange(change);
   } catch (err) {
     throw err;
   } finally {
