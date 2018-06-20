@@ -51,47 +51,51 @@ export async function insertImageFile(
     // load the file as a data URL
     const id = uuid.v4();
     const alt = "";
-    const reader = new FileReader();
-    reader.addEventListener("load", () => {
-      const src = reader.result;
-      const node = {
-        type: "image",
-        isVoid: true,
-        data: { src, id, alt, loading: true },
-      };
+    const placeholderSrc = URL.createObjectURL(file);
+    const node = {
+      type: "image",
+      isVoid: true,
+      data: { src: placeholderSrc, id, alt, loading: true },
+    };
 
-      // insert / replace into document as uploading placeholder replacing
-      // empty paragraphs if available.
-      if (
-        !change.value.startBlock.text &&
-        change.value.startBlock.type === "paragraph"
-      ) {
-        change.setBlocks(node);
-      } else {
-        change.insertBlock(node);
-      }
-
-      editor.onChange(change);
-    });
-    reader.readAsDataURL(file);
-
-    // now we have a placeholder, start the upload
-    const src = await uploadImage(file);
-    if (!src) {
-      throw new Error("No image url returned from uploadImage callback");
+    // insert / replace into document as uploading placeholder replacing
+    // empty paragraphs if available.
+    if (
+      !change.value.startBlock.text &&
+      change.value.startBlock.type === "paragraph"
+    ) {
+      change.setBlocks(node);
+    } else {
+      change.insertBlock(node);
     }
 
-    // we dont use the original change provided to the callback here
-    // as the state may have changed significantly in the time it took to
-    // upload the file.
+    change.insertBlock("paragraph");
+    editor.onChange(change);
+
+    let props;
+
+    // now we have a placeholder, start the upload
+    try {
+      const src = await uploadImage(file);
+      if (!src) {
+        throw new Error("No image url returned from uploadImage callback");
+      }
+
+      props = {
+        data: { src, alt, loading: false },
+      };
+    } catch (error) {
+      props = {
+        data: { alt, src: placeholderSrc, loading: false, error },
+      };
+    }
+
     const placeholder = editor.value.document.findDescendant(
       node => node.data && node.data.get("id") === id
     );
+    change.setNodeByKey(placeholder.key, props);
 
-    change.setNodeByKey(placeholder.key, {
-      data: { src, alt, loading: false },
-    });
-    editor.onChange(change);
+    return change;
   } catch (err) {
     throw err;
   } finally {
