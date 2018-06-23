@@ -10,7 +10,7 @@ type State = {
 
 class CopyButton extends React.Component<*, State> {
   copiedTimeout: ?TimeoutID;
-  state = { copied: true };
+  state = { copied: false };
 
   componentWillUnmount() {
     if (this.copiedTimeout) clearTimeout(this.copiedTimeout);
