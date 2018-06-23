@@ -9,6 +9,7 @@ import EditList from "./plugins/EditList";
 import KeyboardShortcuts from "./plugins/KeyboardShortcuts";
 import MarkdownShortcuts from "./plugins/MarkdownShortcuts";
 import MarkdownPaste from "./plugins/MarkdownPaste";
+import Ellipsis from "./plugins/Ellipsis";
 import { insertImageFile } from "./changes";
 
 const createPlugins = () => {
@@ -40,6 +41,7 @@ const createPlugins = () => {
     KeyboardShortcuts(),
     MarkdownShortcuts(),
     MarkdownPaste(),
+    Ellipsis(),
   ];
 };
 
