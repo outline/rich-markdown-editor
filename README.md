@@ -75,7 +75,7 @@ If you want the editor to support images then this callback must be provided. Th
 />
 ```
 
-#### `onSave`
+#### `onSave({ done: boolean })`
 
 This callback is triggered when the user explicitly requests to save using a keyboard shortcut, `Cmd+S` or `Cmd+Enter`. You can use this as a signal to save the document to a remote server.
 
@@ -95,7 +95,7 @@ This callback is triggered before `uploadImage` and can be used to show some UI 
 
 Triggered once an image upload has succeeded or failed.
 
-#### `onSearchLink`
+#### `onSearchLink(term: string)`
 
 The editor provides an ability to search for links to insert from the formatting toolbar. If this callback is provided it should accept a search term as the only parameter and return a promise that resolves to an array of [SearchResult](/src/types.js) objects. eg:
 
@@ -113,7 +113,7 @@ The editor provides an ability to search for links to insert from the formatting
 />
 ```
 
-#### `onClickLink`
+#### `onClickLink(href: string)`
 
 This callback allows overriding of link handling. It's often the case that you want to have external links open a new window whilst internal links may use something like `react-router` to navigate. If no callback is provided then default behavior will apply to all links. eg:
 

@@ -31,7 +31,7 @@ type Props = {
   schema?: Schema,
   theme: Object,
   uploadImage?: (file: File) => Promise<string>,
-  onSave: ({ redirect?: boolean }) => *,
+  onSave: ({ done?: boolean }) => *,
   onCancel: () => *,
   onChange: string => *,
   onImageUploadStart: () => *,
@@ -162,13 +162,13 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   onSave(ev: SyntheticKeyboardEvent<*>) {
     ev.preventDefault();
     ev.stopPropagation();
-    this.props.onSave({ redirect: false });
+    this.props.onSave({ done: false });
   }
 
   onSaveAndExit(ev: SyntheticKeyboardEvent<*>) {
     ev.preventDefault();
     ev.stopPropagation();
-    this.props.onSave({ redirect: true });
+    this.props.onSave({ done: true });
   }
 
   onCancel(ev: SyntheticKeyboardEvent<*>) {
