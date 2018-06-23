@@ -17,6 +17,8 @@ export default function Ellipsis() {
       if (value.isExpanded) return;
 
       const { startBlock } = value;
+      if (startBlock.type.match(/code/)) return;
+
       const startOffset = value.startOffset - 3;
       const textNode = startBlock.getFirstText();
       if (!textNode) return;
