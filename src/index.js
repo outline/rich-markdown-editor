@@ -3,7 +3,6 @@ import * as React from "react";
 import { Value, Change, Schema } from "slate";
 import { Editor } from "slate-react";
 import styled, { ThemeProvider } from "styled-components";
-import keydown from "react-keydown";
 import type { SlateNodeProps, Plugin, SearchResult } from "./types";
 import defaultTheme from "./theme";
 import defaultSchema from "./schema";
@@ -87,6 +86,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     } else {
       this.focusAtStart();
     }
+
+    window.addEventListener("keydown", this.handleKeyDown);
   }
 
   componentWillReceiveProps(nextProps: Props) {
@@ -106,13 +107,17 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     }
   }
 
+  componentWillUnmount() {
+    window.removeEventListener("keydown", this.handleKeyDown);
+  }
+
   setEditorRef = (ref: Editor) => {
     this.editor = ref;
     // Force re-render to show ToC (<Content />)
     this.setState({ editorLoaded: true });
   };
 
-  onChange = (change: Change) => {
+  handleChange = (change: Change) => {
     if (this.state.editorValue !== change.value) {
       if (this.props.onChange && !this.props.readOnly) {
         this.props.onChange(Markdown.serialize(change.value));
@@ -154,45 +159,37 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     ev.preventDefault();
   };
 
-  // Handling of keyboard shortcuts outside of editor focus
-  @keydown("meta+s")
   onSave(ev: SyntheticKeyboardEvent<*>) {
-    if (this.props.readOnly) return;
-
     ev.preventDefault();
     ev.stopPropagation();
     this.props.onSave({ redirect: false });
   }
 
-  @keydown("meta+enter")
   onSaveAndExit(ev: SyntheticKeyboardEvent<*>) {
-    if (this.props.readOnly) return;
-
     ev.preventDefault();
     ev.stopPropagation();
     this.props.onSave({ redirect: true });
   }
 
-  @keydown("esc")
-  onCancel() {
-    if (this.props.readOnly) return;
+  onCancel(ev: SyntheticKeyboardEvent<*>) {
+    ev.preventDefault();
+    ev.stopPropagation();
     this.props.onCancel();
   }
 
-  // Handling of keyboard shortcuts within editor focus
-  onKeyDown = (ev: SyntheticKeyboardEvent<*>, change: Change) => {
-    if (!isModKey(ev)) return;
+  handleKeyDown = (ev: SyntheticKeyboardEvent<*>) => {
+    if (this.props.readOnly) return;
 
     switch (ev.key) {
       case "s":
-        this.onSave(ev);
-        return change;
+        if (isModKey(ev)) this.onSave(ev);
+        return;
       case "Enter":
-        this.onSaveAndExit(ev);
-        return change;
+        if (isModKey(ev)) this.onSaveAndExit(ev);
+        return;
       case "Escape":
-        this.onCancel();
-        return change;
+        this.onCancel(ev);
+        return;
       default:
     }
   };
@@ -273,8 +270,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
               renderNode={this.renderNode}
               renderMark={renderMark}
               schema={this.state.schema}
-              onKeyDown={this.onKeyDown}
-              onChange={this.onChange}
+              onKeyDown={this.handleKeyDown}
+              onChange={this.handleChange}
               onSave={onSave}
               onSearchLink={onSearchLink}
               onClickLink={onClickLink}

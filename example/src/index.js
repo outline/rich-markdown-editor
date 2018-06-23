@@ -29,7 +29,7 @@ class Example extends React.Component<*, { readOnly: boolean }> {
         <Editor
           readOnly={this.state.readOnly}
           defaultValue={defaultValue}
-          onSave={() => console.log("Save triggered")}
+          onSave={options => console.log("Save triggered", options)}
           onCancel={() => console.log("Cancel triggered")}
           onChange={text => localStorage.setItem("saved", text)}
           onClickLink={href => console.log("Clicked link: ", href)}
