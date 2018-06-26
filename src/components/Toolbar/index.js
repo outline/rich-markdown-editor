@@ -87,7 +87,7 @@ export default class Toolbar extends React.Component<Props, State> {
     const { value } = this.props;
     const link = getLinkInSelection(value);
 
-    if (value.isBlurred || (value.isCollapsed && !link)) {
+    if (value.isCollapsed && !link) {
       if (this.state.active) {
         const newState = {
           ...this.state,

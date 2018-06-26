@@ -2,7 +2,7 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import { Node } from "slate";
-import { Editor } from "slate-react";
+import { Editor, findDOMNode as slateFindDOMNode } from "slate-react";
 import ArrowKeyNavigation from "boundless-arrow-key-navigation";
 import styled from "styled-components";
 import keydown from "react-keydown";
@@ -56,8 +56,8 @@ export default class LinkToolbar extends React.Component<Props, State> {
   }
 
   handleOutsideMouseClick = (ev: SyntheticMouseEvent<*>) => {
+    // check if we're clicking inside the link toolbar
     const element = findDOMNode(this.wrapper);
-
     if (
       !element ||
       (ev.target instanceof HTMLElement && element.contains(ev.target)) ||
@@ -66,6 +66,17 @@ export default class LinkToolbar extends React.Component<Props, State> {
       return;
     }
 
+    // check if we're clicking inside the link text
+    const linkElement = slateFindDOMNode(this.props.link);
+    if (
+      !linkElement ||
+      (ev.target instanceof HTMLElement && linkElement.contains(ev.target)) ||
+      (ev.button && ev.button !== 0)
+    ) {
+      return;
+    }
+
+    // otherwise, we're clicking outside
     ev.preventDefault();
     this.save(this.input.value);
   };
