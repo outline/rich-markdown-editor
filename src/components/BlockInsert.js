@@ -34,9 +34,6 @@ type State = {
 
 class BlockInsert extends React.Component<Props, State> {
   mouseMoveTimeout: ?TimeoutID;
-  mouseMovementSinceClick: number = 0;
-  lastClientX: number = 0;
-  lastClientY: number = 0;
   state = {
     top: 0,
     left: 0,
@@ -57,20 +54,11 @@ class BlockInsert extends React.Component<Props, State> {
   };
 
   handleMouseMove = (ev: SyntheticMouseEvent<*>) => {
-    const windowWidth = window.innerWidth / 2.5;
+    const windowWidth = window.innerWidth * 0.33;
     const result = findClosestRootNode(this.props.editor.value, ev);
-    const movementThreshold = 200;
-    const newState = this.state;
+    const newState = { ...this.state };
 
-    this.mouseMovementSinceClick +=
-      Math.abs(this.lastClientX - ev.clientX) +
-      Math.abs(this.lastClientY - ev.clientY);
-    this.lastClientX = ev.clientX;
-    this.lastClientY = ev.clientY;
-
-    newState.active =
-      ev.clientX < windowWidth &&
-      this.mouseMovementSinceClick > movementThreshold;
+    newState.active = ev.clientX < windowWidth;
 
     if (result) {
       newState.closestRootNode = result.node;
@@ -84,6 +72,7 @@ class BlockInsert extends React.Component<Props, State> {
 
       if (hideToolbar) {
         newState.left = -1000;
+        newState.active = false;
       } else {
         newState.left = Math.round(result.bounds.left - 20);
         newState.top = Math.round(result.bounds.top + window.scrollY);
@@ -96,7 +85,6 @@ class BlockInsert extends React.Component<Props, State> {
     }
 
     if (!isEqual(newState, this.state)) {
-      console.log(newState, this.state);
       this.setState(newState);
     }
   };
@@ -105,7 +93,6 @@ class BlockInsert extends React.Component<Props, State> {
     ev.preventDefault();
     ev.stopPropagation();
 
-    this.mouseMovementSinceClick = 0;
     this.setState({ active: false });
 
     const { editor } = this.props;
@@ -114,7 +101,10 @@ class BlockInsert extends React.Component<Props, State> {
       // remove any existing toolbars in the document as a fail safe
       editor.value.document.nodes.forEach(node => {
         if (node.type === "block-toolbar") {
-          change.removeNodeByKey(node.key);
+          change.setNodeByKey(node.key, {
+            type: "paragraph",
+            isVoid: false,
+          });
         }
       });
 
@@ -123,8 +113,7 @@ class BlockInsert extends React.Component<Props, State> {
 
       change.collapseToStartOf(node);
 
-      // if we're on an empty paragraph then just replace it with the block
-      // toolbar. Otherwise insert the toolbar as an extra Node.
+      // we're on an empty paragraph. just replace it with the block toolbar
       if (!node.text.trim() && node.type === "paragraph") {
         change.setNodeByKey(node.key, {
           type: "block-toolbar",
