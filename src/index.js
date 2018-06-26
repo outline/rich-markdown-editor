@@ -238,11 +238,11 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         onDragEnter={this.cancelEvent}
         align="flex-start"
         justify="center"
+        column
         auto
       >
         <ThemeProvider theme={theme}>
           <React.Fragment>
-            <Header onClick={this.focusAtStart} readOnly={readOnly} />
             {readOnly &&
               toc &&
               this.state.editorLoaded &&
@@ -289,17 +289,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     );
   };
 }
-
-const Header = styled(Flex)`
-  height: 60px;
-  flex-shrink: 0;
-  align-items: flex-end;
-  ${props => !props.readOnly && "cursor: text;"};
-
-  @media print {
-    display: none;
-  }
-`;
 
 const StyledEditor = styled(Editor)`
   font-family: ${props => props.theme.fontFamily};
