@@ -27,7 +27,7 @@ export default function Link({
       {children}
       {showPlaceholder && (
         <Placeholder contentEditable={false}>
-          {editor.props.bodyPlaceholder}
+          {editor.props.placeholder}
         </Placeholder>
       )}
     </p>

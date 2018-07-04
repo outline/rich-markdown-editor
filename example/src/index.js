@@ -23,9 +23,11 @@ class Example extends React.Component<*, { readOnly: boolean }> {
   render() {
     return (
       <div style={{ marginTop: "60px" }}>
-        <button type="button" onClick={this.handleToggle}>
-          {this.state.readOnly ? "Editable" : "Read Only"}
-        </button>
+        <p>
+          <button type="button" onClick={this.handleToggle}>
+            {this.state.readOnly ? "Editable" : "Read Only"}
+          </button>
+        </p>
         <Editor
           readOnly={this.state.readOnly}
           defaultValue={defaultValue}

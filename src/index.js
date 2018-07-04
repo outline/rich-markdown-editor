@@ -9,7 +9,6 @@ import defaultSchema from "./schema";
 import getDataTransferFiles from "./lib/getDataTransferFiles";
 import isModKey from "./lib/isModKey";
 import Flex from "./components/Flex";
-import ClickablePadding from "./components/ClickablePadding";
 import Toolbar from "./components/Toolbar";
 import BlockInsert from "./components/BlockInsert";
 import Placeholder from "./components/Placeholder";
@@ -20,11 +19,12 @@ import { insertImageFile } from "./changes";
 import renderMark from "./marks";
 import renderNode from "./nodes";
 
+export const theme = defaultTheme;
+export const schema = defaultSchema;
+
 type Props = {
   defaultValue: string,
-  titlePlaceholder: string,
-  bodyPlaceholder: string,
-  pretitle?: string,
+  placeholder: string,
   plugins?: Plugin[],
   readOnly?: boolean,
   toc?: boolean,
@@ -53,8 +53,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   static defaultProps = {
     theme: defaultTheme,
     defaultValue: "",
-    titlePlaceholder: "Your title",
-    bodyPlaceholder: "Write something nice…",
+    placeholder: "Write something nice…",
     onImageUploadStart: () => {},
     onImageUploadStop: () => {},
   };
@@ -215,10 +214,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     const {
       readOnly,
       toc,
-      pretitle,
       theme,
-      titlePlaceholder,
-      bodyPlaceholder,
+      placeholder,
       onSave,
       uploadImage,
       onSearchLink,
@@ -260,10 +257,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
               )}
             <StyledEditor
               innerRef={this.setEditorRef}
-              titlePlaceholder={titlePlaceholder}
-              bodyPlaceholder={bodyPlaceholder}
+              placeholder={placeholder}
               plugins={this.plugins}
-              pretitle={pretitle}
               value={this.state.editorValue}
               renderNode={this.renderNode}
               renderMark={renderMark}
@@ -278,10 +273,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
               readOnly={readOnly}
               spellCheck={!readOnly}
               uploadImage={uploadImage}
-            />
-            <ClickablePadding
-              onClick={!readOnly ? this.focusAtEnd : undefined}
-              grow
             />
           </React.Fragment>
         </ThemeProvider>

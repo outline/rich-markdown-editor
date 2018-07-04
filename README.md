@@ -27,18 +27,9 @@ See a working example in the [example directory](/example).
 A markdown string that represents the initial value of the editor. Use this to prop to restore
 previously saved content for the user to continue editing.
 
-#### `titlePlaceholder`
-
-Allows overriding of the placeholder text displayed where a title would be. The default is "Your title".
-
-#### `bodyPlaceholder`
+#### `placeholder`
 
 Allows overriding of the placeholder text displayed in the main body content. The default is "Write something nice…".
-
-#### `pretitle`
-
-An optional pretitle that will be prepended to the title. This allows the main title text to 
-remain aligned with the body content.
 
 #### `readOnly`
 
