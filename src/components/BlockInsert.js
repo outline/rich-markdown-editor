@@ -63,12 +63,9 @@ class BlockInsert extends React.Component<Props, State> {
     if (result) {
       newState.closestRootNode = result.node;
 
-      // do not show block menu on title heading or editor
-      const firstNode = this.props.editor.value.document.nodes.first();
+      // do not show block menu when it's open
       const hideToolbar =
-        result.node === firstNode ||
-        result.node.type === "block-toolbar" ||
-        !!result.node.text.trim();
+        result.node.type === "block-toolbar" || !!result.node.text.trim();
 
       if (hideToolbar) {
         newState.left = -1000;

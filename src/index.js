@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import { Value, Change, Schema } from "slate";
+import { Value, Change, Schema, Text } from "slate";
 import { Editor } from "slate-react";
 import styled, { ThemeProvider } from "styled-components";
 import type { SlateNodeProps, Plugin, SearchResult } from "./types";
@@ -210,6 +210,18 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     return renderNode(props);
   };
 
+  renderPlaceholder = (props: SlateNodeProps) => {
+    const { editor, node } = props;
+    if (!editor.props.placeholder) return;
+    if (editor.state.isComposing) return;
+    if (node.object !== "block") return;
+    if (!Text.isTextList(node.nodes)) return;
+    if (node.text !== "") return;
+    if (editor.value.document.getBlocks().size > 1) return;
+
+    return <Placeholder>{editor.props.placeholder}</Placeholder>;
+  };
+
   render = () => {
     const {
       readOnly,
@@ -257,9 +269,10 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
               )}
             <StyledEditor
               innerRef={this.setEditorRef}
-              placeholder={placeholder}
               plugins={this.plugins}
               value={this.state.editorValue}
+              placeholder={placeholder}
+              renderPlaceholder={this.renderPlaceholder}
               renderNode={this.renderNode}
               renderMark={renderMark}
               schema={this.state.schema}
@@ -296,18 +309,6 @@ const StyledEditor = styled(Editor)`
   h5,
   h6 {
     font-weight: 500;
-  }
-
-  h1:first-of-type {
-    ${Placeholder} {
-      visibility: visible;
-    }
-  }
-
-  p:nth-child(2) {
-    ${Placeholder} {
-      visibility: visible;
-    }
   }
 
   ul,

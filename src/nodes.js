@@ -55,7 +55,7 @@ function renderNode(props: SlateNodeProps) {
     case "link":
       return <Link {...props} />;
     case "heading1":
-      return <Heading1 placeholder {...props} />;
+      return <Heading1 {...props} />;
     case "heading2":
       return <Heading2 {...props} />;
     case "heading3":
