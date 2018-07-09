@@ -4,7 +4,7 @@ import { Document } from "slate";
 import type { SlateNodeProps } from "../types";
 import Placeholder from "./Placeholder";
 
-export default function Link({
+export default function Paragraph({
   attributes,
   editor,
   node,
@@ -13,7 +13,8 @@ export default function Link({
   readOnly,
 }: SlateNodeProps) {
   const parentIsDocument = parent instanceof Document;
-  const firstParagraph = parent && parent.nodes.get(1) === node;
+  const firstParagraph =
+    parent && parent.nodes.get(editor.props.title ? 1 : 0) === node;
   const lastParagraph = parent && parent.nodes.last() === node;
   const showPlaceholder =
     !readOnly &&

@@ -27,6 +27,10 @@ See a working example in the [example directory](/example).
 A markdown string that represents the initial value of the editor. Use this to prop to restore
 previously saved content for the user to continue editing.
 
+#### `title`
+
+With `title` set to `false` the editor won't require title at the beginning of the document. The default is `true`.
+
 #### `titlePlaceholder`
 
 Allows overriding of the placeholder text displayed where a title would be. The default is "Your title".
