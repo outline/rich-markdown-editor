@@ -125,7 +125,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     }
   };
 
-  handleDrop = async (ev: SyntheticDragEvent<*>) => {
+  handleDrop = (ev: SyntheticDragEvent<*>) => {
     if (this.props.readOnly) return;
 
     // check an image upload callback is defined
@@ -139,12 +139,14 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     ev.stopPropagation();
 
     const files = getDataTransferFiles(ev);
+    const uploads = [];
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       if (file.type.startsWith("image/")) {
-        await this.insertImageFile(file);
+        uploads.push(this.insertImageFile(file));
       }
     }
+    Promise.all(uploads);
   };
 
   insertImageFile = (file: window.File) => {

@@ -81,19 +81,17 @@ export default class LinkToolbar extends React.Component<Props, State> {
     this.save(this.input.value);
   };
 
-  search = async (term: string) => {
+  search = (term: string) => {
     const { editor } = this.props;
     if (!editor.props.onSearchLink) return;
 
     this.setState({ isFetching: true });
 
     if (term) {
-      try {
-        const results = await editor.props.onSearchLink(term);
-        this.setState({ results });
-      } catch (err) {
-        console.error(err);
-      }
+      editor.props
+        .onSearchLink(term)
+        .then(results => this.setState({ results }))
+        .catch(err => console.error(err));
     } else {
       this.setState({ results: [] });
     }

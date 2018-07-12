@@ -20,7 +20,7 @@ const createPlugins = () => {
     }),
     InsertImages({
       extensions: ["png", "jpg", "gif", "webp"],
-      insertImage: async (change, file, editor) => {
+      insertImage: (change, file, editor) => {
         return change.call(insertImageFile, file, editor);
       },
     }),

@@ -33,71 +33,76 @@ export function splitAndInsertBlock(change: Change, options: Options) {
   return change;
 }
 
-export async function insertImageFile(
+export function insertImageFile(
   change: Change,
   file: window.File,
   editor: Editor
 ) {
-  const { uploadImage, onImageUploadStart, onImageUploadStop } = editor.props;
+  return new Promise((resolve, reject) => {
+    const { uploadImage, onImageUploadStart, onImageUploadStop } = editor.props;
 
-  if (!uploadImage) {
-    console.warn(
-      "uploadImage callback must be defined to handle image uploads."
-    );
-  }
-
-  onImageUploadStart();
-  try {
-    // load the file as a data URL
-    const id = uuid.v4();
-    const alt = "";
-    const placeholderSrc = URL.createObjectURL(file);
-    const node = {
-      type: "image",
-      isVoid: true,
-      data: { src: placeholderSrc, id, alt, loading: true },
-    };
-
-    // insert / replace into document as uploading placeholder replacing
-    // empty paragraphs if available.
-    if (
-      !change.value.startBlock.text &&
-      change.value.startBlock.type === "paragraph"
-    ) {
-      change.setBlocks(node);
-    } else {
-      change.insertBlock(node);
+    if (!uploadImage) {
+      console.warn(
+        "uploadImage callback must be defined to handle image uploads."
+      );
     }
 
-    change.insertBlock("paragraph");
-    editor.onChange(change);
-
-    let props;
-
-    // now we have a placeholder, start the upload
+    onImageUploadStart();
     try {
-      const src = await uploadImage(file);
-      if (!src) {
-        throw new Error("No image url returned from uploadImage callback");
+      // load the file as a data URL
+      const id = uuid.v4();
+      const alt = "";
+      const placeholderSrc = URL.createObjectURL(file);
+      const node = {
+        type: "image",
+        isVoid: true,
+        data: { src: placeholderSrc, id, alt, loading: true },
+      };
+
+      // insert / replace into document as uploading placeholder replacing
+      // empty paragraphs if available.
+      if (
+        !change.value.startBlock.text &&
+        change.value.startBlock.type === "paragraph"
+      ) {
+        change.setBlocks(node);
+      } else {
+        change.insertBlock(node);
       }
 
-      props = {
-        data: { src, alt, loading: false },
-      };
-    } catch (error) {
-      props = {
-        data: { alt, src: placeholderSrc, loading: false, error },
-      };
-    }
+      change.insertBlock("paragraph");
+      editor.onChange(change);
 
-    const placeholder = editor.value.document.findDescendant(
-      node => node.data && node.data.get("id") === id
-    );
-    change.setNodeByKey(placeholder.key, props);
-    editor.onChange(change);
-  } catch (err) {
-    throw err;
-  } finally {
-    onImageUploadStop();
-  }
+      let props;
+
+      // now we have a placeholder, start the upload
+      uploadImage(file)
+        .then(src => {
+          if (!src) {
+            reject(
+              new Error("No image url returned from uploadImage callback")
+            );
+          }
+
+          props = {
+            data: { src, alt, loading: false },
+          };
+        })
+        .reject(error => {
+          props = {
+            data: { alt, src: placeholderSrc, loading: false, error },
+          };
+        });
+
+      const placeholder = editor.value.document.findDescendant(
+        node => node.data && node.data.get("id") === id
+      );
+      change.setNodeByKey(placeholder.key, props);
+      editor.onChange(change);
+    } catch (err) {
+      reject(err);
+    } finally {
+      onImageUploadStop();
+    }
+  });
 }

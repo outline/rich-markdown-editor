@@ -131,7 +131,7 @@ class BlockToolbar extends React.Component<Props> {
     this.file.click();
   };
 
-  onImagePicked = async (ev: SyntheticInputEvent<*>) => {
+  onImagePicked = (ev: SyntheticInputEvent<*>) => {
     const files = getDataTransferFiles(ev);
     const { editor } = this.props;
 
