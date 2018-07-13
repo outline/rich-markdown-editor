@@ -46,6 +46,7 @@ class BlockInsert extends React.Component<Props, State> {
   };
 
   componentWillUnmount = () => {
+    if (this.mouseMoveTimeout) clearTimeout(this.mouseMoveTimeout);
     window.removeEventListener("mousemove", this.handleMouseMove);
   };
 
