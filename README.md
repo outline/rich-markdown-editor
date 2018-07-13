@@ -81,7 +81,7 @@ This callback is triggered when the user explicitly requests to save using a key
 
 #### `onCancel`
 
-This callback is triggered when the escape key is hit within the editor. You may use it to cancel editing.
+This callback is triggered when the `Cmd+Escape` is hit within the editor. You may use it to cancel editing.
 
 #### `onChange`
 
