@@ -185,7 +185,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         if (isModKey(ev)) this.onSaveAndExit(ev);
         return;
       case "Escape":
-        this.onCancel(ev);
+        if (isModKey(ev)) this.onCancel(ev);
         return;
       default:
     }
