@@ -26,7 +26,9 @@ const ListItem = styled.a`
   height: 28px;
   padding: 6px 8px 6px 0;
   color: ${props => props.theme.white};
+  font-family: ${props => props.theme.fontFamily};
   font-size: 15px;
+  text-decoration: none;
   overflow: hidden;
   white-space: nowrap;
 

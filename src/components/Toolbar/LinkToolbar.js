@@ -106,15 +106,21 @@ export default class LinkToolbar extends React.Component<Props, State> {
     this.save(url);
   };
 
+  cancel = () => {
+    this.save(this.originalValue);
+  };
+
   onKeyDown = (ev: SyntheticKeyboardEvent<*>) => {
-    switch (ev.which) {
-      case 13: // enter
+    switch (ev.key) {
+      case "Enter":
         ev.preventDefault();
         if (!(ev.target instanceof HTMLInputElement)) return;
         return this.save(ev.target.value);
-      case 27: // escape
-        return this.save(this.originalValue);
-      case 40: // down
+      case "Escape":
+        ev.preventDefault();
+        ev.stopPropagation();
+        return this.cancel();
+      case "ArrowDown":
         ev.preventDefault();
         if (this.firstDocument) {
           const element = findDOMNode(this.firstDocument);
@@ -136,6 +142,14 @@ export default class LinkToolbar extends React.Component<Props, State> {
       return;
     }
     this.setState({ results: [] });
+  };
+
+  onResultKeyDown = (ev: SyntheticKeyboardEvent<*>) => {
+    if (ev.key === "Escape") {
+      ev.preventDefault();
+      ev.stopPropagation();
+      this.cancel();
+    }
   };
 
   removeLink = () => {
@@ -202,6 +216,7 @@ export default class LinkToolbar extends React.Component<Props, State> {
                   title={result.title}
                   key={result.url}
                   onClick={ev => this.selectSearchResult(ev, result.url)}
+                  onKeyDown={this.onResultKeyDown}
                 />
               ))}
             </ArrowKeyNavigation>
