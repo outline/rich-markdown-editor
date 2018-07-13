@@ -127,6 +127,11 @@ import { history } from "react-router";
 
 This callback allows overriding of the [inbuilt renderNode](https://github.com/outline/rich-markdown-editor/blob/master/src/nodes.js) – if a component is returned from the callback then it will be used instead of the default implementation. See the [Slate documentation](https://docs.slatejs.org/guides/rendering#nodes-and-marks) for an example.
 
+#### `renderPlaceholder`
+
+This callback allows overriding of the [inbuilt renderPlaceholder](https://github.com/outline/rich-markdown-editor/blob/master/src/index.js) – if a callback is provided then it will be used instead of the default implementation. See the [Slate documentation](https://docs.slatejs.org/guides/rendering#placeholders) for an example.
+
+
 
 ## Contributing
 

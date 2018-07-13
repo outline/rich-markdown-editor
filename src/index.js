@@ -39,6 +39,7 @@ type Props = {
   onSearchLink?: (term: string) => Promise<SearchResult[]>,
   onClickLink?: (href: string) => *,
   renderNode?: SlateNodeProps => ?React.Node,
+  renderPlaceholder?: SlateNodeProps => ?React.Node,
   className?: string,
   style?: Object,
 };
@@ -211,7 +212,11 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   renderPlaceholder = (props: SlateNodeProps) => {
+    if (this.props.renderPlaceholder) {
+      return this.props.renderPlaceholder(props);
+    }
     const { editor, node } = props;
+
     if (!editor.props.placeholder) return;
     if (editor.state.isComposing) return;
     if (node.object !== "block") return;
@@ -219,7 +224,11 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     if (node.text !== "") return;
     if (editor.value.document.getBlocks().size > 1) return;
 
-    return <Placeholder>{editor.props.placeholder}</Placeholder>;
+    return (
+      <Placeholder>
+        {editor.props.readOnly ? "" : editor.props.placeholder}
+      </Placeholder>
+    );
   };
 
   render = () => {
