@@ -35,8 +35,8 @@ type State = {
 class BlockInsert extends React.Component<Props, State> {
   mouseMoveTimeout: ?TimeoutID;
   state = {
-    top: 0,
-    left: 0,
+    top: -1000,
+    left: -1000,
     active: false,
     closestRootNode: undefined,
   };
