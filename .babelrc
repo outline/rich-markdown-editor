@@ -6,7 +6,7 @@
     "transform-decorators-legacy",
     "transform-es2015-destructuring",
     "transform-object-rest-spread",
-    "transform-regenerator",
+    "transform-async-to-generator",
     "transform-class-properties"
   ]
 }
