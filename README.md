@@ -13,7 +13,7 @@ shortcuts inline and output Markdown.
 import Editor from "rich-markdown-editor";
 
 <Editor
-  defaultValue="Title\n\nBody"
+  defaultValue="Hello world!"
 />
 ```
 
