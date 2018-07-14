@@ -3,7 +3,7 @@ import * as React from "react";
 import { findDOMNode } from "react-dom";
 import { Node } from "slate";
 import { Editor, findDOMNode as slateFindDOMNode } from "slate-react";
-import ArrowKeyNavigation from "boundless-arrow-key-navigation";
+import ArrowKeyNavigation from "boundless-arrow-key-navigation/build";
 import styled from "styled-components";
 import keydown from "react-keydown";
 import { CloseIcon, OpenIcon, TrashIcon } from "outline-icons";

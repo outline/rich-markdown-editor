@@ -14,6 +14,7 @@
   "dependencies": {
     "@tommoor/slate-drop-or-paste-images": "^0.8.1",
     "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "boundless-arrow-key-navigation": "^1.1.0",
     "copy-to-clipboard": "^3.0.8",
     "eslint-plugin-flowtype": "^2.46.1",
