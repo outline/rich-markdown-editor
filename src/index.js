@@ -11,7 +11,7 @@ import isModKey from "./lib/isModKey";
 import Flex from "./components/Flex";
 import Toolbar from "./components/Toolbar";
 import BlockInsert from "./components/BlockInsert";
-import Placeholder from "./components/Placeholder";
+import InternalPlaceholder from "./components/Placeholder";
 import Contents from "./components/Contents";
 import Markdown from "./serializer";
 import createPlugins from "./plugins";
@@ -21,6 +21,7 @@ import renderNode from "./nodes";
 
 export const theme = defaultTheme;
 export const schema = defaultSchema;
+export const Placeholder = InternalPlaceholder;
 
 type Props = {
   defaultValue: string,
