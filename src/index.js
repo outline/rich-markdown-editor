@@ -26,6 +26,7 @@ export const Placeholder = InternalPlaceholder;
 type Props = {
   defaultValue: string,
   placeholder: string,
+  pretitle?: string,
   plugins?: Plugin[],
   readOnly?: boolean,
   toc?: boolean,
@@ -237,6 +238,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       readOnly,
       toc,
       theme,
+      pretitle,
       placeholder,
       onSave,
       uploadImage,
@@ -296,6 +298,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
               readOnly={readOnly}
               spellCheck={!readOnly}
               uploadImage={uploadImage}
+              pretitle={pretitle}
             />
           </React.Fragment>
         </ThemeProvider>
