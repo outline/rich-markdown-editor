@@ -19,13 +19,15 @@ export default class TodoItem extends React.Component<Props> {
 
     return (
       <ListItem checked={checked} {...attributes}>
-        <Input
-          type="checkbox"
-          checked={checked}
-          onChange={this.handleChange}
-          disabled={readOnly}
-          contentEditable={false}
-        />
+        <span contentEditable={false}>
+          <Input
+            type="checkbox"
+            checked={checked}
+            onChange={this.handleChange}
+            disabled={readOnly}
+          />
+        </span>
+
         {children}
       </ListItem>
     );
