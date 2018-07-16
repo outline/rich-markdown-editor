@@ -176,8 +176,12 @@ export default class LinkToolbar extends React.Component<Props, State> {
     });
   };
 
-  setFirstResultRef = (ref: HTMLElement) => {
+  setFirstResultRef = (ref: *) => {
     this.firstDocument = ref;
+  };
+
+  setWrapperRef = (ref: *) => {
+    this.wrapper = ref;
   };
 
   render() {
@@ -185,7 +189,7 @@ export default class LinkToolbar extends React.Component<Props, State> {
     const hasResults = this.state.results.length > 0;
 
     return (
-      <span ref={ref => (this.wrapper = ref)}>
+      <span ref={this.setWrapperRef}>
         <LinkEditor>
           <Input
             innerRef={ref => (this.input = ref)}

@@ -66,13 +66,12 @@ export default class Toolbar extends React.Component<Props, State> {
     this.setState({ link: undefined });
   };
 
-  handleMouseDown = (e: SyntheticMouseEvent<*>) => {
+  handleMouseDown = () => {
     this.setState({ mouseDown: true });
   };
 
-  handleMouseUp = (e: SyntheticMouseEvent<*>) => {
+  handleMouseUp = () => {
     this.setState({ mouseDown: false });
-    this.update();
   };
 
   showLinkToolbar = (ev: SyntheticEvent<*>) => {
@@ -107,14 +106,13 @@ export default class Toolbar extends React.Component<Props, State> {
     let active = true;
 
     // don't display toolbar for document title
-    const firstNode = value.document.nodes.first();
-    if (firstNode === value.startBlock) active = false;
+    if (value.startBlock.type === "heading1") active = false;
 
     // don't display toolbar for code blocks, code-lines inline code.
     if (value.startBlock.type.match(/code/)) active = false;
 
     // don't show until user has released pointing device button
-    if (this.state.mouseDown) active = false;
+    if (this.state.mouseDown && !link) active = false;
 
     const newState = {
       ...this.state,
