@@ -67,13 +67,18 @@ export default class LinkToolbar extends React.Component<Props, State> {
     }
 
     // check if we're clicking inside the link text
-    const linkElement = slateFindDOMNode(this.props.link);
-    if (
-      !linkElement ||
-      (ev.target instanceof HTMLElement && linkElement.contains(ev.target)) ||
-      (ev.button && ev.button !== 0)
-    ) {
-      return;
+    try {
+      const linkElement = slateFindDOMNode(this.props.link);
+
+      if (
+        !linkElement ||
+        (ev.target instanceof HTMLElement && linkElement.contains(ev.target)) ||
+        (ev.button && ev.button !== 0)
+      ) {
+        return;
+      }
+    } catch (err) {
+      // errors finding dom node result in toolbar closing
     }
 
     // otherwise, we're clicking outside
