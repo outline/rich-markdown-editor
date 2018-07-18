@@ -33,7 +33,7 @@ class Image extends React.Component<Props, State> {
   render() {
     const { attributes, editor, node, readOnly } = this.props;
     const loading = node.data.get("loading");
-    const caption = node.data.get("alt");
+    const caption = node.data.get("alt") || "";
     const src = node.data.get("src");
     const error = node.data.get("error");
     const active =
@@ -41,7 +41,7 @@ class Image extends React.Component<Props, State> {
     const showCaption = !readOnly || caption;
 
     return (
-      <CenteredImage>
+      <CenteredImage contentEditable={false}>
         {this.state.hasError ? (
           <React.Fragment>
             <StyledImg width={200} height={100} active={active} />

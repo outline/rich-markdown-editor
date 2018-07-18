@@ -60,7 +60,7 @@ export default function KeyboardShortcuts() {
       // insert a new paragraph
       if (startBlock.type === "image") {
         ev.preventDefault();
-        return change.collapseToEnd().insertBlock("paragraph");
+        return change.collapseToStartOfNextBlock().insertBlock("paragraph");
       }
 
       // Hitting enter in a heading or blockquote will split the node at that
