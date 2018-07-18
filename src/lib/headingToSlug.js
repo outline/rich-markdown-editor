@@ -9,7 +9,9 @@ function indexOfType(document, heading) {
   const slugified = escape(slugify(heading.text));
   const headings = document.nodes.filter((node: Block) => {
     if (!node.text) return false;
-    return node.type.match(/^heading/) && slugified === escape(slugify(node.text));
+    return (
+      node.type.match(/^heading/) && slugified === escape(slugify(node.text))
+    );
   });
 
   return headings.indexOf(heading);
