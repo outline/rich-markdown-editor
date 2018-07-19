@@ -49,9 +49,7 @@ export default function KeyboardShortcuts() {
       const { value } = change;
       if (value.isExpanded) return;
 
-      const { startBlock, startOffset, endOffset } = value;
-      if (startOffset === 0 && startBlock.length === 0)
-        return this.onBackspace(ev, change);
+      const { startBlock, endOffset } = value;
 
       // Hitting enter at the end of the line reverts to standard behavior
       if (endOffset === startBlock.length) return;
@@ -60,7 +58,11 @@ export default function KeyboardShortcuts() {
       // insert a new paragraph
       if (startBlock.type === "image") {
         ev.preventDefault();
-        return change.collapseToStartOfNextBlock().insertBlock("paragraph");
+        return change.splitBlock(10).setBlocks({
+          type: "paragraph",
+          text: "",
+          isVoid: false,
+        });
       }
 
       // Hitting enter in a heading or blockquote will split the node at that

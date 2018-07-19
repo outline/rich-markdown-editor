@@ -105,6 +105,8 @@ export default class Toolbar extends React.Component<Props, State> {
 
     let active = true;
 
+    if (!value.startBlock) return;
+
     // don't display toolbar for document title
     if (value.startBlock.type === "heading1") active = false;
 

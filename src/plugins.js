@@ -37,11 +37,11 @@ const createPlugins = () => {
       getSyntax: node => "javascript",
     }),
     CollapseOnEscape({ toEdge: "end" }),
-    TrailingBlock({ type: "paragraph" }),
     KeyboardShortcuts(),
     MarkdownShortcuts(),
     MarkdownPaste(),
     Ellipsis(),
+    TrailingBlock({ type: "paragraph" }),
   ];
 };
 

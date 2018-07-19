@@ -27,7 +27,11 @@ class FormattingToolbar extends React.Component<Props> {
    * @return {Boolean}
    */
   hasMark = (type: string) => {
-    return this.props.editor.value.marks.some(mark => mark.type === type);
+    try {
+      return this.props.editor.value.marks.some(mark => mark.type === type);
+    } catch (_err) {
+      return false;
+    }
   };
 
   isBlock = (type: string) => {
