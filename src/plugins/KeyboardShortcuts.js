@@ -18,14 +18,19 @@ export default function KeyboardShortcuts() {
 
       switch (ev.key) {
         case "b":
+          ev.preventDefault();
           return this.toggleMark(change, "bold");
         case "i":
+          ev.preventDefault();
           return this.toggleMark(change, "italic");
         case "u":
+          ev.preventDefault();
           return this.toggleMark(change, "underlined");
         case "d":
+          ev.preventDefault();
           return this.toggleMark(change, "deleted");
         case "k":
+          ev.preventDefault();
           return change.wrapInline({ type: "link", data: { href: "" } });
         default:
           return null;
