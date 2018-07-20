@@ -11,16 +11,15 @@ const inlineShortcuts = [
   { mark: "deleted", shortcut: "~~" },
 ];
 
-const inactiveTypes = /(heading|code)/;
-
 export default function MarkdownShortcuts() {
   return {
     onKeyDown(ev: SyntheticKeyboardEvent<*>, change: Change) {
       const { value } = change;
       const { startBlock } = value;
+      if (!startBlock) return null;
 
-      // places that markdown shortcuts should not be parsed
-      if (startBlock && startBlock.type.match(inactiveTypes)) return null;
+      // markdown shortcuts should not be parsed in code
+      if (startBlock.type.match(/code/)) return null;
 
       switch (ev.key) {
         case "-":
@@ -80,6 +79,9 @@ export default function MarkdownShortcuts() {
         return true;
       }
 
+      // no inline shortcuts should work in headings
+      if (startBlock.type.match(/heading/)) return null;
+
       for (const key of inlineShortcuts) {
         // find all inline characters
         let { mark, shortcut } = key;
@@ -129,6 +131,8 @@ export default function MarkdownShortcuts() {
       const { value } = change;
       if (value.isExpanded) return;
       const { startBlock, startOffset } = value;
+      if (startBlock.type.match(/heading/)) return null;
+
       const chars = startBlock.text.slice(0, startOffset).replace(/\s*/g, "");
 
       if (chars === "--") {
@@ -152,6 +156,8 @@ export default function MarkdownShortcuts() {
       const { value } = change;
       if (value.isExpanded) return;
       const { startBlock, startOffset } = value;
+      if (startBlock.type.match(/heading/)) return null;
+
       const chars = startBlock.text.slice(0, startOffset).replace(/\s*/g, "");
 
       if (chars === "``") {

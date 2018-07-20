@@ -67,10 +67,7 @@ export default function KeyboardShortcuts() {
 
       // Hitting enter in a heading or blockquote will split the node at that
       // point and make the new node a paragraph
-      if (
-        startBlock.type.startsWith("heading") ||
-        startBlock.type === "block-quote"
-      ) {
+      if (startBlock.type.match(/(heading|block-quote)/) && endOffset > 0) {
         ev.preventDefault();
         return change.splitBlock().setBlocks("paragraph");
       }
