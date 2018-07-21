@@ -1,10 +1,10 @@
 // @flow
 import { Change } from "slate";
 import { Editor } from "slate-react";
-import uuid from "uuid";
 import EditList from "./plugins/EditList";
 
 const { changes } = EditList;
+let uploadCount = 0;
 
 type Options = {
   type: string | Object,
@@ -49,7 +49,7 @@ export async function insertImageFile(
   onImageUploadStart();
   try {
     // load the file as a data URL
-    const id = uuid.v4();
+    const id = `rme-upload-${++uploadCount}`;
     const alt = "";
     const placeholderSrc = URL.createObjectURL(file);
     const node = {
