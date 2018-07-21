@@ -5577,9 +5577,9 @@ slate-base64-serializer@^0.2.28:
   dependencies:
     isomorphic-base64 "^1.0.2"
 
-slate-collapse-on-escape@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/slate-collapse-on-escape/-/slate-collapse-on-escape-0.6.0.tgz#668f2318770608a09a25a95623f5fb4329a277bf"
+slate-collapse-on-escape@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/slate-collapse-on-escape/-/slate-collapse-on-escape-0.6.1.tgz#404da2e2a1773fc140c7a8230e4ef50b0459d1ed"
   dependencies:
     to-pascal-case "^1.0.0"
 
@@ -5587,26 +5587,26 @@ slate-dev-logger@^0.1.0, slate-dev-logger@^0.1.39:
   version "0.1.39"
   resolved "https://registry.yarnpkg.com/slate-dev-logger/-/slate-dev-logger-0.1.39.tgz#744a69b85034244713e6de51483af5713c345af4"
 
-slate-edit-code@^0.14.0:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/slate-edit-code/-/slate-edit-code-0.14.0.tgz#8fec510957eaef9a861746d0c7f10c3ede3998d0"
+slate-edit-code@^0.15.5:
+  version "0.15.5"
+  resolved "https://registry.yarnpkg.com/slate-edit-code/-/slate-edit-code-0.15.5.tgz#9b64ad7150a6eaaa8212d7a2200e1c6ae2332b63"
   dependencies:
     detect-indent "^4.0.0"
     detect-newline "^2.1.0"
     ends-with "^0.2.0"
     is-hotkey "^0.1.1"
 
-slate-edit-list@^0.11.2:
-  version "0.11.2"
-  resolved "https://registry.yarnpkg.com/slate-edit-list/-/slate-edit-list-0.11.2.tgz#c67b961d98435f9f7747d20b870cbc51d25af7a8"
+slate-edit-list@^0.11.3:
+  version "0.11.3"
+  resolved "https://registry.yarnpkg.com/slate-edit-list/-/slate-edit-list-0.11.3.tgz#d27ff2ff93a83bef49131a6a44b87a9558c9d44c"
 
 slate-md-serializer@4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/slate-md-serializer/-/slate-md-serializer-4.0.0.tgz#b70550431a63991eee6e9ad5ea056f477f19ce5f"
 
-slate-paste-linkify@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/slate-paste-linkify/-/slate-paste-linkify-0.5.0.tgz#fbb52216ae4c02475b42b3de3609de0ad6b07fd1"
+slate-paste-linkify@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/slate-paste-linkify/-/slate-paste-linkify-0.5.1.tgz#6988a76f121fd1fa26fed06a93892f91208c37df"
   dependencies:
     is-url "^1.2.2"
     to-pascal-case "^1.0.0"
