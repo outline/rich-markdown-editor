@@ -51,6 +51,11 @@ Allows additional Slate schema to be passed to the underlying Slate editor.
 
 Allows overriding the inbuilt theme to brand the editor, for example use your own font face and brand colors to have the editor fit within your application. See the [inbuilt theme](/src/theme.js) for an example of the keys that should be provided.
 
+#### `dark`
+
+With `dark` set to `true` the editor will use a default dark theme that's included. See the [source here](/src/theme.js).
+
+
 ### Callbacks
 
 #### `uploadImage`

@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import styled from "styled-components";
+import styled, { withTheme } from "styled-components";
 import { Editor } from "slate-react";
 import {
   BoldIcon,
@@ -17,6 +17,7 @@ import ToolbarButton from "./ToolbarButton";
 type Props = {
   editor: Editor,
   onCreateLink: (SyntheticEvent<*>) => *,
+  theme: *,
 };
 
 class FormattingToolbar extends React.Component<Props> {
@@ -76,7 +77,7 @@ class FormattingToolbar extends React.Component<Props> {
 
     return (
       <ToolbarButton onMouseDown={onMouseDown} active={isActive}>
-        <IconClass light />
+        <IconClass color={this.props.theme.toolbarItem} />
       </ToolbarButton>
     );
   };
@@ -88,7 +89,7 @@ class FormattingToolbar extends React.Component<Props> {
 
     return (
       <ToolbarButton onMouseDown={onMouseDown} active={isActive}>
-        <IconClass light />
+        <IconClass color={this.props.theme.toolbarItem} />
       </ToolbarButton>
     );
   };
@@ -106,7 +107,7 @@ class FormattingToolbar extends React.Component<Props> {
         {this.renderBlockButton("block-quote", BlockQuoteIcon)}
         <Separator />
         <ToolbarButton onMouseDown={this.handleCreateLink}>
-          <LinkIcon light />
+          <LinkIcon color={this.props.theme.toolbarItem} />
         </ToolbarButton>
       </span>
     );
@@ -116,10 +117,10 @@ class FormattingToolbar extends React.Component<Props> {
 const Separator = styled.div`
   height: 100%;
   width: 1px;
-  background: #fff;
+  background: ${props => props.theme.toolbarItem};
   opacity: 0.2;
   display: inline-block;
   margin-left: 10px;
 `;
 
-export default FormattingToolbar;
+export default withTheme(FormattingToolbar);

@@ -4,7 +4,7 @@ import { Value, Change, Schema, Text } from "slate";
 import { Editor } from "slate-react";
 import styled, { ThemeProvider } from "styled-components";
 import type { SlateNodeProps, Plugin, SearchResult } from "./types";
-import defaultTheme from "./theme";
+import { light as lightTheme, dark as darkTheme } from "./theme";
 import defaultSchema from "./schema";
 import getDataTransferFiles from "./lib/getDataTransferFiles";
 import isModKey from "./lib/isModKey";
@@ -19,7 +19,7 @@ import { insertImageFile } from "./changes";
 import renderMark from "./marks";
 import renderNode from "./nodes";
 
-export const theme = defaultTheme;
+export const theme = lightTheme;
 export const schema = defaultSchema;
 export const Placeholder = InternalPlaceholder;
 
@@ -30,8 +30,9 @@ type Props = {
   plugins?: Plugin[],
   readOnly?: boolean,
   toc?: boolean,
+  dark?: boolean,
   schema?: Schema,
-  theme: Object,
+  theme?: Object,
   uploadImage?: (file: File) => Promise<string>,
   onSave: ({ done?: boolean }) => *,
   onCancel: () => *,
@@ -54,7 +55,6 @@ type State = {
 
 class RichMarkdownEditor extends React.PureComponent<Props, State> {
   static defaultProps = {
-    theme: defaultTheme,
     defaultValue: "",
     placeholder: "Write something nice…",
     onImageUploadStart: () => {},
@@ -237,7 +237,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     const {
       readOnly,
       toc,
-      theme,
       pretitle,
       placeholder,
       onSave,
@@ -248,7 +247,10 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       onImageUploadStop,
       className,
       style,
+      dark,
     } = this.props;
+
+    const theme = this.props.theme || (dark ? darkTheme : lightTheme);
 
     return (
       <Flex
@@ -308,6 +310,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 }
 
 const StyledEditor = styled(Editor)`
+  background: ${props => props.theme.background};
   font-family: ${props => props.theme.fontFamily};
   font-weight: ${props => props.theme.fontWeight};
   font-size: 1em;

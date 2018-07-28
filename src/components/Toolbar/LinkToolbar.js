@@ -4,7 +4,7 @@ import { findDOMNode } from "react-dom";
 import { Node } from "slate";
 import { Editor, findDOMNode as slateFindDOMNode } from "slate-react";
 import ArrowKeyNavigation from "boundless-arrow-key-navigation/build";
-import styled from "styled-components";
+import styled, { withTheme } from "styled-components";
 import keydown from "react-keydown";
 import { CloseIcon, OpenIcon, TrashIcon } from "outline-icons";
 import type { SearchResult } from "../../types";
@@ -22,6 +22,7 @@ type Props = {
   link: Node,
   suggestions?: Suggestion[],
   onBlur: () => *,
+  theme: *,
 };
 
 type State = {
@@ -31,7 +32,7 @@ type State = {
 };
 
 @keydown
-export default class LinkToolbar extends React.Component<Props, State> {
+class LinkToolbar extends React.Component<Props, State> {
   wrapper: ?HTMLElement;
   input: HTMLInputElement;
   firstDocument: HTMLElement;
@@ -206,11 +207,15 @@ export default class LinkToolbar extends React.Component<Props, State> {
           />
           {this.state.isEditing && (
             <ToolbarButton onMouseDown={this.openLink}>
-              <OpenIcon light />
+              <OpenIcon color={this.props.theme.toolbarItem} />
             </ToolbarButton>
           )}
           <ToolbarButton onMouseDown={this.removeLink}>
-            {this.state.isEditing ? <TrashIcon light /> : <CloseIcon light />}
+            {this.state.isEditing ? (
+              <TrashIcon color={this.props.theme.toolbarItem} />
+            ) : (
+              <CloseIcon color={this.props.theme.toolbarItem} />
+            )}
           </ToolbarButton>
         </LinkEditor>
         {hasResults && (
@@ -257,11 +262,13 @@ const LinkEditor = styled(Flex)`
 const Input = styled.input`
   font-size: 15px;
   background: ${props => props.theme.toolbarInput};
+  color: ${props => props.theme.toolbarItem};
   border-radius: 2px;
   padding: 4px 8px;
   border: 0;
   margin: 0;
   outline: none;
-  color: ${props => props.theme.toolbarItem};
   flex-grow: 1;
 `;
+
+export default withTheme(LinkToolbar);

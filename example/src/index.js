@@ -11,21 +11,29 @@ const exampleText = `
 This is example content. It is persisted between reloads in localStorage.
 `;
 const defaultValue = savedText || exampleText;
-class Example extends React.Component<*, { readOnly: boolean }> {
+class Example extends React.Component<*, { readOnly: boolean, dark: boolean }> {
   state = {
     readOnly: false,
+    dark: false,
   };
 
-  handleToggle = () => {
+  handleToggleReadOnly = () => {
     this.setState({ readOnly: !this.state.readOnly });
+  };
+
+  handleToggleDark = () => {
+    this.setState({ dark: !this.state.dark });
   };
 
   render() {
     return (
       <div style={{ marginTop: "60px" }}>
         <p>
-          <button type="button" onClick={this.handleToggle}>
+          <button type="button" onClick={this.handleToggleReadOnly}>
             {this.state.readOnly ? "Editable" : "Read Only"}
+          </button>
+          <button type="button" onClick={this.handleToggleDark}>
+            {this.state.dark ? "Light Theme" : "Dark Theme"}
           </button>
         </p>
         <Editor
@@ -48,6 +56,8 @@ class Example extends React.Component<*, { readOnly: boolean }> {
             console.log("File upload triggered: ", file);
             return "";
           }}
+          dark={this.state.dark}
+          toc
         />
       </div>
     );

@@ -1,30 +1,65 @@
 // @flow
-const theme = {
+const colors = {
+  almostBlack: "#181A1B",
+  lightBlack: "#2F3336",
+  almostWhite: "#E6E6E6",
+  white: "#FFF",
+  white10: "rgba(255, 255, 255, 0.1)",
+  black: "#000",
+  black10: "rgba(0, 0, 0, 0.1)",
+  primary: "#1AB6FF",
+  greyLight: "#F4F7FA",
+  grey: "#E8EBED",
+  greyMid: "#9BA6B2",
+  greyDark: "#DAE1E9",
+};
+
+export const base = {
+  ...colors,
   fontFamily:
     "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen, Ubuntu,Cantarell,'Open Sans','Helvetica Neue',sans-serif",
   fontWeight: 400,
-  background: "#FFF",
-
-  text: "#171B35",
+  link: colors.primary,
+  placeholder: "#B1BECC",
   textSecondary: "#4E5C6E",
-  textLight: "#FFF",
-  link: "#1AB6FF",
-  primary: "#1AB6FF",
-  placeholder: "#b1becc",
-
-  toolbarBackground: "#2F3336",
-  toolbarInput: "rgba(255, 255, 255, 0.1)",
-  toolbarItem: "#FFF",
-
-  blockToolbarBackground: "#F4F7FA",
-  blockToolbarTrigger: "#9BA6B2",
-  blockToolbarTriggerIcon: "#FFF",
-
-  quote: "#DAE1E9",
-  selected: "#1AB6FF",
-  codeBackground: "#F4F7FA",
-  codeBorder: "#E8EBED",
-  horizontalRule: "#E8EBED",
+  textLight: colors.white,
+  selected: colors.primary,
 };
 
-export default theme;
+export const light = {
+  ...base,
+  background: colors.white,
+  text: colors.almostBlack,
+
+  toolbarBackground: colors.lightBlack,
+  toolbarInput: colors.white10,
+  toolbarItem: colors.white,
+
+  blockToolbarBackground: colors.greyLight,
+  blockToolbarTrigger: colors.greyMid,
+  blockToolbarTriggerIcon: colors.white,
+
+  quote: colors.greyDark,
+  codeBackground: colors.greyLight,
+  codeBorder: colors.grey,
+  horizontalRule: colors.grey,
+};
+
+export const dark = {
+  ...base,
+  background: colors.almostBlack,
+  text: colors.almostWhite,
+
+  toolbarBackground: colors.white,
+  toolbarInput: colors.black10,
+  toolbarItem: colors.lightBlack,
+
+  blockToolbarBackground: colors.white,
+  blockToolbarTrigger: colors.almostWhite,
+  blockToolbarTriggerIcon: colors.almostBlack,
+
+  quote: colors.almostWhite,
+  horizontalRule: colors.almostWhite,
+};
+
+export default light;

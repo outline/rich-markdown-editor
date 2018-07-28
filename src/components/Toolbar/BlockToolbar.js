@@ -144,7 +144,7 @@ class BlockToolbar extends React.Component<Props> {
   renderBlockButton = (type: string, IconClass: Function) => {
     return (
       <ToolbarButton onMouseDown={ev => this.handleClickBlock(ev, type)}>
-        <IconClass color={this.props.theme.text} />
+        <IconClass color={this.props.theme.toolbarItem} />
       </ToolbarButton>
     );
   };
