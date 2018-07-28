@@ -237,7 +237,7 @@ export default class LinkToolbar extends React.Component<Props, State> {
 }
 
 const SearchResults = styled.div`
-  background: ${props => props.theme.blackLight};
+  background: ${props => props.theme.toolbarBackground};
   position: absolute;
   top: 100%;
   width: 100%;
@@ -256,12 +256,12 @@ const LinkEditor = styled(Flex)`
 
 const Input = styled.input`
   font-size: 15px;
-  background: rgba(255, 255, 255, 0.1);
+  background: ${props => props.theme.toolbarInput};
   border-radius: 2px;
   padding: 4px 8px;
   border: 0;
   margin: 0;
   outline: none;
-  color: ${props => props.theme.white};
+  color: ${props => props.theme.toolbarItem};
   flex-grow: 1;
 `;

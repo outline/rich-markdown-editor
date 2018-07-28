@@ -29,9 +29,9 @@ export default function Code({
 
 const Container = styled.div`
   position: relative;
-  background: ${props => props.theme.smokeLight};
+  background: ${props => props.theme.codeBackground};
   border-radius: 4px;
-  border: 1px solid ${props => props.theme.smokeDark};
+  border: 1px solid ${props => props.theme.codeBorder};
 
   code {
     display: block;

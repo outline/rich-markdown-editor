@@ -42,14 +42,11 @@ const StyledCopyToClipboard = styled(CopyToClipboard)`
   transition: opacity 50ms ease-in-out;
   z-index: 1;
   font-size: 12px;
-  background: ${props => props.theme.smoke};
-  border-radius: 0 2px 0 2px;
-  padding: 1px 6px;
+  color: ${props => props.theme.textLight};
+  background: ${props => props.theme.primary};
+  border-radius: 0 4px 0 4px;
+  padding: 1px 8px;
   cursor: pointer;
-
-  &:hover {
-    background: ${props => props.theme.smokeDark};
-  }
 `;
 
 export default CopyButton;

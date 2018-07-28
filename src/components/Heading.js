@@ -68,12 +68,12 @@ export const StyledHeading = styled(Heading)`
 
   &:hover {
     ${Anchor} {
-      color: ${props => props.theme.slate};
+      color: ${props => props.theme.textSecondary};
       visibility: visible;
       text-decoration: none;
 
       &:hover {
-        color: ${props => props.theme.slateDark};
+        color: ${props => props.theme.text};
       }
     }
   }

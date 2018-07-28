@@ -369,7 +369,7 @@ const StyledEditor = styled(Editor)`
   }
 
   blockquote {
-    border-left: 3px solid ${props => props.theme.slateLight};
+    border-left: 3px solid ${props => props.theme.quote};
     margin: 0;
     padding-left: 10px;
     font-style: italic;

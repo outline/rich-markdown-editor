@@ -110,7 +110,8 @@ const Wrapper = styled.div`
 `;
 
 const Anchor = styled.a`
-  color: ${props => (props.active ? props.theme.slateDark : props.theme.slate)};
+  color: ${props =>
+    props.active ? props.theme.text : props.theme.textSecondary};
   font-weight: ${props => (props.active ? 500 : 400)};
   opacity: 0;
   transition: all 100ms ease-in-out;
@@ -129,13 +130,13 @@ const ListItem = styled.li`
   position: relative;
   margin-left: ${props => (props.type.match(/heading[12]/) ? "8px" : "16px")};
   text-align: right;
-  color: ${props => props.theme.slate};
+  color: ${props => props.theme.textSecondary};
   padding-right: 16px;
   white-space: nowrap;
 
   &:after {
     color: ${props =>
-      props.active ? props.theme.slateDark : props.theme.slate};
+      props.active ? props.theme.text : props.theme.textSecondary};
     content: "${props => (props.type.match(/heading[12]/) ? "—" : "–")}";
     position: absolute;
     right: 0;
@@ -158,7 +159,7 @@ const Sections = styled.ol`
     ${Anchor} {
       opacity: 1;
       margin-right: 0;
-      background: ${props => props.theme.white};
+      background: ${props => props.theme.background};
       pointer-events: all;
     }
   }

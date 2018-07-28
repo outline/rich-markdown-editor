@@ -5,9 +5,9 @@ const InlineCode = styled.code.attrs({
   spellCheck: false,
 })`
   padding: 0.15em;
-  background: ${props => props.theme.smoke};
+  background: ${props => props.theme.codeBackground};
   border-radius: 4px;
-  border: 1px solid ${props => props.theme.smokeDark};
+  border: 1px solid ${props => props.theme.codeBorder};
 `;
 
 export default InlineCode;

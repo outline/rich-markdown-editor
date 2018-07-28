@@ -128,7 +128,10 @@ class BlockInsert extends React.Component<Props, State> {
     return (
       <Portal>
         <Trigger active={this.state.active} style={style}>
-          <PlusIcon onClick={this.handleClick} color={theme.slate} />
+          <PlusIcon
+            onClick={this.handleClick}
+            color={theme.blockToolbarTrigger}
+          />
         </Trigger>
       </Portal>
     );
@@ -139,21 +142,21 @@ const Trigger = styled.div`
   position: absolute;
   z-index: 1;
   opacity: 0;
-  background-color: ${props => props.theme.white};
+  background-color: ${props => props.theme.background};
   transition: opacity 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275),
     transform 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
   line-height: 0;
   margin-left: -10px;
-  box-shadow: inset 0 0 0 2px ${props => props.theme.slate};
+  box-shadow: inset 0 0 0 2px ${props => props.theme.blockToolbarTrigger};
   border-radius: 100%;
   transform: scale(0.9);
   cursor: pointer;
 
   &:hover {
-    background-color: ${props => props.theme.slate};
+    background-color: ${props => props.theme.blockToolbarTrigger};
 
     svg {
-      fill: ${props => props.theme.white};
+      fill: ${props => props.theme.blockToolbarTriggerIcon};
     }
   }
 

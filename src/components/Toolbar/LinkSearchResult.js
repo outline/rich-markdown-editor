@@ -25,7 +25,7 @@ const ListItem = styled.a`
   align-items: center;
   height: 28px;
   padding: 6px 8px 6px 0;
-  color: ${props => props.theme.white};
+  color: ${props => props.theme.toolbarItem};
   font-family: ${props => props.theme.fontFamily};
   font-size: 15px;
   text-decoration: none;

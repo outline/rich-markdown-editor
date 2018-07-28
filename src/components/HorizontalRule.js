@@ -15,7 +15,8 @@ const StyledHr = styled.hr`
   margin: 0;
   border: 0;
   border-bottom: 1px solid
-    ${props => (props.active ? props.theme.slate : props.theme.slateLight)};
+    ${props =>
+      props.active ? props.theme.selected : props.theme.horizontalRule};
 `;
 
 export default HorizontalRule;

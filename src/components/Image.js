@@ -115,7 +115,7 @@ const Error = styled.div`
 const StyledImg = styled.img`
   max-width: 100%;
   box-shadow: ${props =>
-    props.active ? `0 0 0 2px ${props.theme.slate}` : "none"};
+    props.active ? `0 0 0 2px ${props.theme.selected}` : "none"};
   border-radius: ${props => (props.active ? `2px` : "0")};
   opacity: ${props => (props.loading ? 0.5 : 1)};
 `;
@@ -131,7 +131,7 @@ const Caption = styled.input`
   display: block;
   font-size: 13px;
   font-style: italic;
-  color: ${props => props.theme.slate};
+  color: ${props => props.theme.textSecondary};
   padding: 2px 0;
   line-height: 16px;
   text-align: center;
@@ -140,7 +140,7 @@ const Caption = styled.input`
   background: none;
 
   &::placeholder {
-    color: ${props => props.theme.slate};
+    color: ${props => props.theme.placeholder};
   }
 `;
 

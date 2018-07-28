@@ -183,7 +183,7 @@ class BlockToolbar extends React.Component<Props> {
 const Separator = styled.div`
   height: 100%;
   width: 1px;
-  background: ${props => props.theme.smokeDark};
+  background: rgba(0, 0, 0, 0.1);
   display: inline-block;
   margin-left: 10px;
 `;
@@ -193,7 +193,7 @@ const Bar = styled(Flex)`
   animation: ${fadeIn} 150ms ease-in-out;
   position: relative;
   align-items: center;
-  background: ${props => props.theme.smoke};
+  background: ${props => props.theme.blockToolbarBackground};
   height: 44px;
 
   &:before,
@@ -203,7 +203,7 @@ const Bar = styled(Flex)`
     left: -100%;
     width: 100%;
     height: 44px;
-    background: ${props => props.theme.smoke};
+    background: ${props => props.theme.blockToolbarBackground};
   }
 
   &:after {
