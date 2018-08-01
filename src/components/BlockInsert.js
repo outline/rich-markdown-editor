@@ -4,7 +4,8 @@ import { Portal } from "react-portal";
 import { Node } from "slate";
 import { Editor, findDOMNode } from "slate-react";
 import { isEqual } from "lodash";
-import styled, { withTheme } from "styled-components";
+import styled from "react-emotion";
+import { withTheme } from "emotion-theming";
 import { PlusIcon } from "outline-icons";
 
 type Props = {

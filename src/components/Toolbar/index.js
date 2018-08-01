@@ -3,7 +3,7 @@ import * as React from "react";
 import { Portal } from "react-portal";
 import { Editor, findDOMNode } from "slate-react";
 import { Node, Value } from "slate";
-import styled from "styled-components";
+import styled from "react-emotion";
 import { isEqual } from "lodash";
 import FormattingToolbar from "./FormattingToolbar";
 import LinkToolbar from "./LinkToolbar";

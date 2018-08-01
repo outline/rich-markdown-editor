@@ -1,9 +1,9 @@
 // @flow
-import styled from "styled-components";
+import React from "react";
+import styled from "react-emotion";
+const Code = props => <code spellCheck={false} {...props} />;
 
-const InlineCode = styled.code.attrs({
-  spellCheck: false,
-})`
+const InlineCode = styled(Code)`
   padding: 0.15em;
   background: ${props => props.theme.codeBackground};
   border-radius: 4px;

@@ -1,9 +1,10 @@
 // @flow
-import styled from "styled-components";
+import React from "react";
+import styled from "react-emotion";
 
-export default styled.span.attrs({
-  contentEditable: false,
-})`
+const Span = props => <span contentEditable={false} {...props} />;
+
+export default styled(Span)`
   display: inline-block;
   width: 0;
   white-space: nowrap;

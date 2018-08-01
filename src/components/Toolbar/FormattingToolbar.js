@@ -1,6 +1,7 @@
 // @flow
 import * as React from "react";
-import styled, { withTheme } from "styled-components";
+import styled from "react-emotion";
+import { withTheme } from "emotion-theming";
 import { Editor } from "slate-react";
 import {
   BoldIcon,

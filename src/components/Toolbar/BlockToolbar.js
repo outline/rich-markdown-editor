@@ -2,7 +2,8 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import keydown from "react-keydown";
-import styled, { withTheme } from "styled-components";
+import styled from "react-emotion";
+import { withTheme } from "emotion-theming";
 import {
   Heading1Icon,
   Heading2Icon,
