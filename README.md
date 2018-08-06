@@ -95,6 +95,12 @@ Triggered once an image upload has succeeded or failed.
 
 The editor provides an ability to search for links to insert from the formatting toolbar. If this callback is provided it should accept a search term as the only parameter and return a promise that resolves to an array of [SearchResult](/src/types.js) objects. eg:
 
+#### `onShowToast(message: string)`
+
+Triggered when the editor wishes to show a toast message to the user. Hook into your apps
+notification system, or simplisticly use `window.alert(message)`.
+
+
 
 ```javascript
 <Editor

@@ -5,6 +5,7 @@ import { Document } from "slate";
 import type { SlateNodeProps } from "../types";
 import headingToSlug from "../lib/headingToSlug";
 import Placeholder from "./Placeholder";
+import CopyToClipboard from "./CopyToClipboard";
 
 type Props = SlateNodeProps & {
   component: string,
@@ -35,6 +36,9 @@ function Heading(props: Props) {
   const title = node.text.trim();
   const startsWithPretitleAndSpace =
     pretitle && title.match(new RegExp(`^${pretitle}\\s`));
+  const linkToHeading = `${window.location.origin}${
+    window.location.pathname
+  }#${slugish}`;
 
   return (
     <Component {...attributes} id={slugish} className={className}>
@@ -45,8 +49,15 @@ function Heading(props: Props) {
         </Placeholder>
       )}
       {showHash && (
-        <Anchor name={slugish} href={`#${slugish}`}>
-          #
+        <Anchor
+          name={slugish}
+          onCopy={() =>
+            editor.props.onShowToast &&
+            editor.props.onShowToast("Link copied to clipboard")
+          }
+          text={linkToHeading}
+        >
+          <span>#</span>
         </Anchor>
       )}
     </Component>
@@ -58,7 +69,7 @@ const Wrapper = styled.div`
   margin-left: ${(props: Props) => (props.hasPretitle ? "-1.2em" : 0)};
 `;
 
-const Anchor = styled.a`
+const Anchor = styled(CopyToClipboard)`
   visibility: hidden;
   padding-left: 0.25em;
 `;
@@ -68,9 +79,10 @@ export const StyledHeading = styled(Heading)`
 
   &:hover {
     ${Anchor} {
-      color: ${props => props.theme.textSecondary};
+      color: ${props => props.theme.placeholder};
       visibility: visible;
       text-decoration: none;
+      cursor: pointer;
 
       &:hover {
         color: ${props => props.theme.text};
