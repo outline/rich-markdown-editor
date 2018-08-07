@@ -41,7 +41,8 @@ function Heading(props: Props) {
   }#${slugish}`;
 
   return (
-    <Component {...attributes} id={slugish} className={className}>
+    <Component {...attributes} className={className}>
+      <HiddenAnchor id={slugish} />
       <Wrapper hasPretitle={startsWithPretitleAndSpace}>{children}</Wrapper>
       {showPlaceholder && (
         <Placeholder contentEditable={false}>
@@ -67,6 +68,13 @@ function Heading(props: Props) {
 const Wrapper = styled.div`
   display: inline;
   margin-left: ${(props: Props) => (props.hasPretitle ? "-1.2em" : 0)};
+`;
+
+const HiddenAnchor = styled.a`
+  visibility: hidden;
+  display: block;
+  position: relative;
+  top: -50px;
 `;
 
 const Anchor = styled(CopyToClipboard)`
