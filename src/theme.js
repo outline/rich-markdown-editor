@@ -31,9 +31,9 @@ export const light = {
   background: colors.white,
   text: colors.almostBlack,
 
-  toolbarBackground: colors.lightBlack,
+  toolbarBackground: colors.greyLight,
   toolbarInput: colors.white10,
-  toolbarItem: colors.white,
+  toolbarItem: colors.lightBlack,
 
   blockToolbarBackground: colors.greyLight,
   blockToolbarTrigger: colors.greyMid,
