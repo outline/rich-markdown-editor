@@ -43,6 +43,7 @@ class Example extends React.Component<*, { readOnly: boolean, dark: boolean }> {
           onCancel={() => console.log("Cancel triggered")}
           onChange={text => localStorage.setItem("saved", text)}
           onClickLink={href => console.log("Clicked link: ", href)}
+          onShowToast={message => window.alert(message)}
           onSearchLink={async term => {
             console.log("Searched link: ", term);
             return [

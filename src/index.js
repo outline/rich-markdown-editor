@@ -42,6 +42,7 @@ type Props = {
   onImageUploadStop: () => *,
   onSearchLink?: (term: string) => Promise<SearchResult[]>,
   onClickLink?: (href: string) => *,
+  onShowToast?: (message: string) => *,
   renderNode?: SlateNodeProps => ?React.Node,
   renderPlaceholder?: SlateNodeProps => ?React.Node,
   className?: string,
@@ -246,6 +247,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       onClickLink,
       onImageUploadStart,
       onImageUploadStop,
+      onShowToast,
       className,
       style,
       dark,
@@ -298,6 +300,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
               onClickLink={onClickLink}
               onImageUploadStart={onImageUploadStart}
               onImageUploadStop={onImageUploadStop}
+              onShowToast={onShowToast}
               readOnly={readOnly}
               spellCheck={!readOnly}
               uploadImage={uploadImage}
