@@ -31,13 +31,14 @@ export const light = {
   background: colors.white,
   text: colors.almostBlack,
 
-  toolbarBackground: colors.greyLight,
+  toolbarBackground: colors.lightBlack,
   toolbarInput: colors.white10,
-  toolbarItem: colors.lightBlack,
+  toolbarItem: colors.white,
 
   blockToolbarBackground: colors.greyLight,
   blockToolbarTrigger: colors.greyMid,
   blockToolbarTriggerIcon: colors.white,
+  blockToolbarItem: colors.text,
 
   quote: colors.greyDark,
   codeBackground: colors.greyLight,
