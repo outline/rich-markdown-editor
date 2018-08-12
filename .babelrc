@@ -1,17 +1,20 @@
 {
   "presets": ["react", "flow", "env"],
   "plugins": [
+    ["emotion", { "hoist": true }],
     "lodash",
-    "styled-components",
     "transform-decorators-legacy",
     "transform-es2015-destructuring",
     "transform-object-rest-spread",
     "transform-async-to-generator",
     "transform-class-properties",
-    ["transform-runtime", {
-      "helpers": false,
-      "polyfill": false,
-      "regenerator": true
-    }]
+    [
+      "transform-runtime",
+      {
+        "helpers": false,
+        "polyfill": false,
+        "regenerator": true
+      }
+    ]
   ]
 }

@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import styled from "styled-components";
+import styled from "react-emotion";
 import type { SlateNodeProps } from "../types";
 
 import CopyButton from "./CopyButton";

@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import styled from "styled-components";
+import styled from "react-emotion";
 import { NextIcon } from "outline-icons";
 
 type Props = {
