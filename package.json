@@ -26,7 +26,7 @@
     "react-keydown": "^1.9.7",
     "react-medium-image-zoom": "^3.0.10",
     "react-portal": "^4.1.4",
-    "slate": "^0.34.5",
+    "slate": "^0.36.2",
     "slate-collapse-on-escape": "^0.6.1",
     "slate-edit-code": "^0.15.5",
     "slate-edit-list": "^0.11.3",

@@ -5587,6 +5587,10 @@ slate-dev-logger@^0.1.0, slate-dev-logger@^0.1.39:
   version "0.1.39"
   resolved "https://registry.yarnpkg.com/slate-dev-logger/-/slate-dev-logger-0.1.39.tgz#744a69b85034244713e6de51483af5713c345af4"
 
+slate-dev-logger@^0.1.42:
+  version "0.1.42"
+  resolved "https://registry.yarnpkg.com/slate-dev-logger/-/slate-dev-logger-0.1.42.tgz#922c4693469e6d60deaa10adfd22b627c9632fbf"
+
 slate-edit-code@^0.15.5:
   version "0.15.5"
   resolved "https://registry.yarnpkg.com/slate-edit-code/-/slate-edit-code-0.15.5.tgz#9b64ad7150a6eaaa8212d7a2200e1c6ae2332b63"
@@ -5655,17 +5659,17 @@ slate-react@^0.12.3:
     slate-plain-serializer "^0.5.9"
     slate-prop-types "^0.4.26"
 
-slate-schema-violations@^0.1.18:
-  version "0.1.18"
-  resolved "https://registry.yarnpkg.com/slate-schema-violations/-/slate-schema-violations-0.1.18.tgz#bc760e17dab85a613cd9a5399b98cbf867db0eb7"
+slate-schema-violations@^0.1.24:
+  version "0.1.28"
+  resolved "https://registry.yarnpkg.com/slate-schema-violations/-/slate-schema-violations-0.1.28.tgz#58cd64c3c54680f5e88dc0ca75e93d3a7e41581e"
 
 slate-trailing-block@^0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/slate-trailing-block/-/slate-trailing-block-0.5.0.tgz#cedb4f2975f1167e0fb9d259ce1252b82f4d74ff"
 
-slate@^0.34.5:
-  version "0.34.5"
-  resolved "https://registry.yarnpkg.com/slate/-/slate-0.34.5.tgz#4bc30dc300c924193d42371a7afcc168676f2798"
+slate@^0.36.2:
+  version "0.36.2"
+  resolved "https://registry.yarnpkg.com/slate/-/slate-0.36.2.tgz#63640fde050aa3b88342c2ffb665bc0e00be6239"
   dependencies:
     debug "^3.1.0"
     direction "^0.1.5"
@@ -5673,8 +5677,8 @@ slate@^0.34.5:
     is-empty "^1.0.0"
     is-plain-object "^2.0.4"
     lodash "^4.17.4"
-    slate-dev-logger "^0.1.39"
-    slate-schema-violations "^0.1.18"
+    slate-dev-logger "^0.1.42"
+    slate-schema-violations "^0.1.24"
     type-of "^2.0.1"
 
 slice-ansi@0.0.4:
