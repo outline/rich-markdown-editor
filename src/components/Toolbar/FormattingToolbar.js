@@ -50,7 +50,18 @@ class FormattingToolbar extends React.Component<Props> {
     ev.preventDefault();
     ev.stopPropagation();
 
-    this.props.editor.change(change => change.toggleMark(type));
+    this.props.editor.change(change => {
+      change.toggleMark(type);
+
+      // ensure we remove any other marks on inline code
+      // we don't allow bold / italic / strikethrough code.
+      const isInlineCode = this.hasMark("code") || type === "code";
+      if (isInlineCode) {
+        change.value.marks.map(mark => {
+          if (mark.type !== "code") change.removeMark(mark);
+        })
+      }
+    });
   };
 
   onClickBlock = (ev: SyntheticEvent<*>, type: string) => {

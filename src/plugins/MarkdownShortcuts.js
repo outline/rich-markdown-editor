@@ -108,7 +108,7 @@ export default function MarkdownShortcuts() {
           }
         }
 
-        // if we have multiple tags then mark the text between as inline code
+        // if we have multiple tags then mark the text between
         if (inlineTags.length > 1) {
           const firstText = startBlock.getFirstText();
           const firstCodeTagIndex = inlineTags[0];
