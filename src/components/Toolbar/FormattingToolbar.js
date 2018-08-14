@@ -57,9 +57,9 @@ class FormattingToolbar extends React.Component<Props> {
       // we don't allow bold / italic / strikethrough code.
       const isInlineCode = this.hasMark("code") || type === "code";
       if (isInlineCode) {
-        change.value.marks.map(mark => {
+        change.value.marks.forEach(mark => {
           if (mark.type !== "code") change.removeMark(mark);
-        })
+        });
       }
     });
   };
