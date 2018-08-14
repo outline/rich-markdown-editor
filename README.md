@@ -79,9 +79,11 @@ This callback is triggered when the user explicitly requests to save using a key
 
 This callback is triggered when the `Cmd+Escape` is hit within the editor. You may use it to cancel editing.
 
-#### `onChange`
+#### `onChange(() => value)`
 
 This callback is triggered when the contents of the editor changes, usually due to user input such as a keystroke or using formatting options. You may use this to locally persist the editors state, see the [inbuilt example](/example/index.js).
+
+As of `v4.0.0` this callback returns a function which when called returns the current text value of the document. This optimization is made to avoid serializing the state of the document to text on every change event, allowing the host app to choose when it needs this value.
 
 #### `onImageUploadStart`
 
