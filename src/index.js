@@ -268,8 +268,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       >
         <ThemeProvider theme={theme}>
           <React.Fragment>
-            {readOnly &&
-              toc &&
+            {toc &&
               this.state.editorLoaded &&
               this.editor && <Contents editor={this.editor} />}
             {!readOnly &&
