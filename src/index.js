@@ -70,7 +70,11 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
     this.plugins = createPlugins();
     if (props.plugins) {
-      this.plugins = this.plugins.concat(props.plugins);
+      if (Array.isArray(props.plugins)) {
+        this.plugins = props.plugins.concat(this.plugins);
+      } else {
+        console.warn("Editor.plugins prop must be an array of Slate plugins");
+      }
     }
     this.state = {
       editorLoaded: false,
