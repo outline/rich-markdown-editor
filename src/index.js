@@ -170,26 +170,29 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   onSave(ev: SyntheticKeyboardEvent<*>) {
-    if (this.props.onSave) {
+    const { onSave } = this.props;
+    if (onSave) {
       ev.preventDefault();
       ev.stopPropagation();
-      this.props.onSave({ done: false });
+      onSave({ done: false });
     }
   }
 
   onSaveAndExit(ev: SyntheticKeyboardEvent<*>) {
-    if (this.props.onSave) {
+    const { onSave } = this.props;
+    if (onSave) {
       ev.preventDefault();
       ev.stopPropagation();
-      this.props.onSave({ done: true });
+      onSave({ done: true });
     }
   }
 
   onCancel(ev: SyntheticKeyboardEvent<*>) {
-    if (this.props.onCancel) {
+    const { onCancel } = this.props;
+    if (onCancel) {
       ev.preventDefault();
       ev.stopPropagation();
-      this.props.onCancel();
+      onCancel();
     }
   }
 
