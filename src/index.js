@@ -91,8 +91,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     if (this.props.readOnly) return;
     window.addEventListener("keydown", this.handleKeyDown);
 
-    if (!this.props.defaultValue && this.props.autoFocus) {
-      this.focusAtStart();
+    if (this.props.autoFocus) {
+      this.focusAtEnd();
     }
   }
 
