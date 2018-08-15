@@ -28,6 +28,7 @@ type Props = {
   placeholder: string,
   pretitle?: string,
   plugins?: Plugin[],
+  autoFocus?: boolean,
   readOnly?: boolean,
   toc?: boolean,
   dark?: boolean,
@@ -90,7 +91,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     if (this.props.readOnly) return;
     window.addEventListener("keydown", this.handleKeyDown);
 
-    if (!this.props.defaultValue) {
+    if (!this.props.defaultValue && this.props.autoFocus) {
       this.focusAtStart();
     }
   }
@@ -107,7 +108,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   }
 
   componentDidUpdate(prevProps: Props) {
-    if (prevProps.readOnly && !this.props.readOnly) {
+    if (prevProps.readOnly && !this.props.readOnly && this.props.autoFocus) {
       this.focusAtEnd();
     }
   }

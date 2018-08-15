@@ -35,6 +35,11 @@ Allows overriding of the placeholder text displayed in the main body content. Th
 
 With `readOnly` set to `false` the editor is optimized for composition. When `true` the editor can be used to display previously written content – headings gain anchors, a table of contents displays and links become clickable.
 
+#### `autoFocus`
+
+When set `true` together with `readOnly` set to `false`, focus at the
+document automatically.
+
 #### `toc`
 
 With `toc` set to `true` the editor will display a table of contents for headings in the document. This is particularly useful for larger documents and allows quick jumping to key sections.
