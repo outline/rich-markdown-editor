@@ -35,8 +35,8 @@ type Props = {
   schema?: Schema,
   theme?: Object,
   uploadImage?: (file: File) => Promise<string>,
-  onSave: ({ done?: boolean }) => *,
-  onCancel: () => *,
+  onSave?: ({ done?: boolean }) => *,
+  onCancel?: () => *,
   onChange: (value: () => string) => *,
   onImageUploadStart: () => *,
   onImageUploadStop: () => *,
@@ -170,21 +170,27 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   onSave(ev: SyntheticKeyboardEvent<*>) {
-    ev.preventDefault();
-    ev.stopPropagation();
-    this.props.onSave({ done: false });
+    if (this.props.onSave) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      this.props.onSave({ done: false });
+    }
   }
 
   onSaveAndExit(ev: SyntheticKeyboardEvent<*>) {
-    ev.preventDefault();
-    ev.stopPropagation();
-    this.props.onSave({ done: true });
+    if (this.props.onSave) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      this.props.onSave({ done: true });
+    }
   }
 
   onCancel(ev: SyntheticKeyboardEvent<*>) {
-    ev.preventDefault();
-    ev.stopPropagation();
-    this.props.onCancel();
+    if (this.props.onCancel) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      this.props.onCancel();
+    }
   }
 
   handleKeyDown = (ev: SyntheticKeyboardEvent<*>) => {
