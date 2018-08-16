@@ -63,6 +63,7 @@ class Example extends React.Component<*, { readOnly: boolean, dark: boolean }> {
             return "";
           }}
           dark={this.state.dark}
+          autoFocus
           toc
         />
       </div>

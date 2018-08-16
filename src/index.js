@@ -28,17 +28,18 @@ type Props = {
   placeholder: string,
   pretitle?: string,
   plugins?: Plugin[],
+  autoFocus?: boolean,
   readOnly?: boolean,
   toc?: boolean,
   dark?: boolean,
   schema?: Schema,
   theme?: Object,
   uploadImage?: (file: File) => Promise<string>,
-  onSave: ({ done?: boolean }) => *,
-  onCancel: () => *,
+  onSave?: ({ done?: boolean }) => *,
+  onCancel?: () => *,
   onChange: (value: () => string) => *,
-  onImageUploadStart: () => *,
-  onImageUploadStop: () => *,
+  onImageUploadStart?: () => *,
+  onImageUploadStop?: () => *,
   onSearchLink?: (term: string) => Promise<SearchResult[]>,
   onClickLink?: (href: string) => *,
   onShowToast?: (message: string) => *,
@@ -90,8 +91,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     if (this.props.readOnly) return;
     window.addEventListener("keydown", this.handleKeyDown);
 
-    if (!this.props.defaultValue) {
-      this.focusAtStart();
+    if (this.props.autoFocus) {
+      this.focusAtEnd();
     }
   }
 
@@ -107,7 +108,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   }
 
   componentDidUpdate(prevProps: Props) {
-    if (prevProps.readOnly && !this.props.readOnly) {
+    if (prevProps.readOnly && !this.props.readOnly && this.props.autoFocus) {
       this.focusAtEnd();
     }
   }
@@ -169,21 +170,30 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   onSave(ev: SyntheticKeyboardEvent<*>) {
-    ev.preventDefault();
-    ev.stopPropagation();
-    this.props.onSave({ done: false });
+    const { onSave } = this.props;
+    if (onSave) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      onSave({ done: false });
+    }
   }
 
   onSaveAndExit(ev: SyntheticKeyboardEvent<*>) {
-    ev.preventDefault();
-    ev.stopPropagation();
-    this.props.onSave({ done: true });
+    const { onSave } = this.props;
+    if (onSave) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      onSave({ done: true });
+    }
   }
 
   onCancel(ev: SyntheticKeyboardEvent<*>) {
-    ev.preventDefault();
-    ev.stopPropagation();
-    this.props.onCancel();
+    const { onCancel } = this.props;
+    if (onCancel) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      onCancel();
+    }
   }
 
   handleKeyDown = (ev: SyntheticKeyboardEvent<*>) => {
