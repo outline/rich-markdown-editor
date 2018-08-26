@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import type { Mark, Block } from "../../types";
+import type { Theme, Mark, Block } from "../../types";
 import styled, { withTheme } from "styled-components";
 import { Editor } from "slate-react";
 import {
@@ -11,14 +11,14 @@ import {
   ItalicIcon,
   BlockQuoteIcon,
   LinkIcon,
-  StrikethroughIcon,
+  StrikethroughIcon
 } from "outline-icons";
 import ToolbarButton from "./ToolbarButton";
 
 type Props = {
   editor: Editor,
   onCreateLink: (SyntheticEvent<*>) => *,
-  theme: *,
+  theme: Theme
 };
 
 class FormattingToolbar extends React.Component<Props> {
@@ -89,7 +89,7 @@ class FormattingToolbar extends React.Component<Props> {
     if (
       hiddenToolbarButtons &&
       hiddenToolbarButtons.marks &&
-      hiddenToolbarButtons.marks[type]
+      hiddenToolbarButtons.marks.includes(type)
     )
       return null;
 
@@ -108,7 +108,7 @@ class FormattingToolbar extends React.Component<Props> {
     if (
       hiddenToolbarButtons &&
       hiddenToolbarButtons.blocks &&
-      hiddenToolbarButtons.blocks[type]
+      hiddenToolbarButtons.blocks.includes(type)
     )
       return null;
 
