@@ -10,7 +10,7 @@ import {
   ItalicIcon,
   BlockQuoteIcon,
   LinkIcon,
-  StrikethroughIcon
+  StrikethroughIcon,
 } from "outline-icons";
 import type { Theme, Mark, Block } from "../../types";
 import ToolbarButton from "./ToolbarButton";
@@ -18,7 +18,7 @@ import ToolbarButton from "./ToolbarButton";
 type Props = {
   editor: Editor,
   onCreateLink: (SyntheticEvent<*>) => *,
-  theme: Theme
+  theme: Theme,
 };
 
 class FormattingToolbar extends React.Component<Props> {
