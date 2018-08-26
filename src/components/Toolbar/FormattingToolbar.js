@@ -1,6 +1,5 @@
 // @flow
 import * as React from "react";
-import type { Theme, Mark, Block } from "../../types";
 import styled, { withTheme } from "styled-components";
 import { Editor } from "slate-react";
 import {
@@ -13,6 +12,7 @@ import {
   LinkIcon,
   StrikethroughIcon
 } from "outline-icons";
+import type { Theme, Mark, Block } from "../../types";
 import ToolbarButton from "./ToolbarButton";
 
 type Props = {
