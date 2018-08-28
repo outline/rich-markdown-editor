@@ -52,7 +52,6 @@ type Props = {
 type State = {
   editorValue: Value,
   editorLoaded: boolean,
-  schema: Schema,
 };
 
 class RichMarkdownEditor extends React.PureComponent<Props, State> {
@@ -65,6 +64,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
   editor: Editor;
   plugins: Plugin[];
+  prevSchema: ?Schema = null;
+  schema: ?Schema = null;
 
   constructor(props: Props) {
     super(props);
@@ -80,10 +81,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     this.state = {
       editorLoaded: false,
       editorValue: Markdown.deserialize(props.defaultValue),
-      schema: {
-        ...defaultSchema,
-        ...this.props.schema,
-      },
     };
   }
 
@@ -93,17 +90,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
     if (this.props.autoFocus) {
       this.focusAtEnd();
-    }
-  }
-
-  componentWillReceiveProps(nextProps: Props) {
-    if (nextProps.schema !== this.props.schema) {
-      this.setState({
-        schema: {
-          ...defaultSchema,
-          ...nextProps.schema,
-        },
-      });
     }
   }
 
@@ -252,6 +238,17 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     );
   };
 
+  getSchema = () => {
+    if (this.prevSchema !== this.props.schema) {
+      this.schema = {
+        ...defaultSchema,
+        ...(this.props.schema || {}),
+      };
+      this.prevSchema = this.props.schema;
+    }
+    return this.schema;
+  };
+
   render = () => {
     const {
       readOnly,
@@ -308,7 +305,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
               renderPlaceholder={this.renderPlaceholder}
               renderNode={this.renderNode}
               renderMark={renderMark}
-              schema={this.state.schema}
+              schema={this.getSchema()}
               onKeyDown={this.handleKeyDown}
               onChange={this.handleChange}
               onSave={onSave}
