@@ -257,6 +257,7 @@ const SearchResults = styled.div`
 const LinkEditor = styled(Flex)`
   margin-left: -8px;
   margin-right: -8px;
+  min-width: 300px;
 `;
 
 const Input = styled.input`
