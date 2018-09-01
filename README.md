@@ -35,6 +35,11 @@ Allows overriding of the placeholder text displayed in the main body content. Th
 
 With `readOnly` set to `false` the editor is optimized for composition. When `true` the editor can be used to display previously written content – headings gain anchors, a table of contents displays and links become clickable.
 
+#### `autoFocus`
+
+When set `true` together with `readOnly` set to `false`, focus at the
+document automatically.
+
 #### `toc`
 
 With `toc` set to `true` the editor will display a table of contents for headings in the document. This is particularly useful for larger documents and allows quick jumping to key sections.
@@ -79,9 +84,11 @@ This callback is triggered when the user explicitly requests to save using a key
 
 This callback is triggered when the `Cmd+Escape` is hit within the editor. You may use it to cancel editing.
 
-#### `onChange`
+#### `onChange(() => value)`
 
 This callback is triggered when the contents of the editor changes, usually due to user input such as a keystroke or using formatting options. You may use this to locally persist the editors state, see the [inbuilt example](/example/index.js).
+
+As of `v4.0.0` this callback returns a function which when called returns the current text value of the document. This optimization is made to avoid serializing the state of the document to text on every change event, allowing the host app to choose when it needs this value.
 
 #### `onImageUploadStart`
 

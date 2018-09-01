@@ -12,12 +12,13 @@ import {
   LinkIcon,
   StrikethroughIcon,
 } from "outline-icons";
+import type { Theme, Mark, Block } from "../../types";
 import ToolbarButton from "./ToolbarButton";
 
 type Props = {
   editor: Editor,
   onCreateLink: (SyntheticEvent<*>) => *,
-  theme: *,
+  theme: Theme,
 };
 
 class FormattingToolbar extends React.Component<Props> {
@@ -50,7 +51,18 @@ class FormattingToolbar extends React.Component<Props> {
     ev.preventDefault();
     ev.stopPropagation();
 
-    this.props.editor.change(change => change.toggleMark(type));
+    this.props.editor.change(change => {
+      change.toggleMark(type);
+
+      // ensure we remove any other marks on inline code
+      // we don't allow bold / italic / strikethrough code.
+      const isInlineCode = this.hasMark("code") || type === "code";
+      if (isInlineCode) {
+        change.value.marks.forEach(mark => {
+          if (mark.type !== "code") change.removeMark(mark);
+        });
+      }
+    });
   };
 
   onClickBlock = (ev: SyntheticEvent<*>, type: string) => {
@@ -71,7 +83,16 @@ class FormattingToolbar extends React.Component<Props> {
     });
   };
 
-  renderMarkButton = (type: string, IconClass: Function) => {
+  renderMarkButton = (type: Mark, IconClass: Function) => {
+    const { hiddenToolbarButtons } = this.props.theme;
+
+    if (
+      hiddenToolbarButtons &&
+      hiddenToolbarButtons.marks &&
+      hiddenToolbarButtons.marks.includes(type)
+    )
+      return null;
+
     const isActive = this.hasMark(type);
     const onMouseDown = ev => this.onClickMark(ev, type);
 
@@ -82,7 +103,15 @@ class FormattingToolbar extends React.Component<Props> {
     );
   };
 
-  renderBlockButton = (type: string, IconClass: Function) => {
+  renderBlockButton = (type: Block, IconClass: Function) => {
+    const { hiddenToolbarButtons } = this.props.theme;
+    if (
+      hiddenToolbarButtons &&
+      hiddenToolbarButtons.blocks &&
+      hiddenToolbarButtons.blocks.includes(type)
+    )
+      return null;
+
     const isActive = this.isBlock(type);
     const onMouseDown = ev =>
       this.onClickBlock(ev, isActive ? "paragraph" : type);

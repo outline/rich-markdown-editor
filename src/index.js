@@ -28,17 +28,18 @@ type Props = {
   placeholder: string,
   pretitle?: string,
   plugins?: Plugin[],
+  autoFocus?: boolean,
   readOnly?: boolean,
   toc?: boolean,
   dark?: boolean,
   schema?: Schema,
   theme?: Object,
   uploadImage?: (file: File) => Promise<string>,
-  onSave: ({ done?: boolean }) => *,
-  onCancel: () => *,
-  onChange: string => *,
-  onImageUploadStart: () => *,
-  onImageUploadStop: () => *,
+  onSave?: ({ done?: boolean }) => *,
+  onCancel?: () => *,
+  onChange: (value: () => string) => *,
+  onImageUploadStart?: () => *,
+  onImageUploadStop?: () => *,
   onSearchLink?: (term: string) => Promise<SearchResult[]>,
   onClickLink?: (href: string) => *,
   onShowToast?: (message: string) => *,
@@ -51,7 +52,6 @@ type Props = {
 type State = {
   editorValue: Value,
   editorLoaded: boolean,
-  schema: Schema,
 };
 
 class RichMarkdownEditor extends React.PureComponent<Props, State> {
@@ -64,21 +64,23 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
   editor: Editor;
   plugins: Plugin[];
+  prevSchema: ?Schema = null;
+  schema: ?Schema = null;
 
   constructor(props: Props) {
     super(props);
 
     this.plugins = createPlugins();
     if (props.plugins) {
-      this.plugins = this.plugins.concat(props.plugins);
+      if (Array.isArray(props.plugins)) {
+        this.plugins = props.plugins.concat(this.plugins);
+      } else {
+        console.warn("Editor.plugins prop must be an array of Slate plugins");
+      }
     }
     this.state = {
       editorLoaded: false,
       editorValue: Markdown.deserialize(props.defaultValue),
-      schema: {
-        ...defaultSchema,
-        ...this.props.schema,
-      },
     };
   }
 
@@ -86,24 +88,13 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     if (this.props.readOnly) return;
     window.addEventListener("keydown", this.handleKeyDown);
 
-    if (!this.props.defaultValue) {
-      this.focusAtStart();
-    }
-  }
-
-  componentWillReceiveProps(nextProps: Props) {
-    if (nextProps.schema !== this.props.schema) {
-      this.setState({
-        schema: {
-          ...defaultSchema,
-          ...nextProps.schema,
-        },
-      });
+    if (this.props.autoFocus) {
+      this.focusAtEnd();
     }
   }
 
   componentDidUpdate(prevProps: Props) {
-    if (prevProps.readOnly && !this.props.readOnly) {
+    if (prevProps.readOnly && !this.props.readOnly && this.props.autoFocus) {
       this.focusAtEnd();
     }
   }
@@ -118,13 +109,17 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     this.setState({ editorLoaded: true });
   };
 
+  value = (): string => {
+    return Markdown.serialize(this.state.editorValue);
+  };
+
   handleChange = (change: Change) => {
     if (this.state.editorValue !== change.value) {
-      if (this.props.onChange && !this.props.readOnly) {
-        this.props.onChange(Markdown.serialize(change.value));
-      }
-
-      this.setState({ editorValue: change.value });
+      this.setState({ editorValue: change.value }, state => {
+        if (this.props.onChange && !this.props.readOnly) {
+          this.props.onChange(this.value);
+        }
+      });
     }
   };
 
@@ -161,21 +156,30 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   onSave(ev: SyntheticKeyboardEvent<*>) {
-    ev.preventDefault();
-    ev.stopPropagation();
-    this.props.onSave({ done: false });
+    const { onSave } = this.props;
+    if (onSave) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      onSave({ done: false });
+    }
   }
 
   onSaveAndExit(ev: SyntheticKeyboardEvent<*>) {
-    ev.preventDefault();
-    ev.stopPropagation();
-    this.props.onSave({ done: true });
+    const { onSave } = this.props;
+    if (onSave) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      onSave({ done: true });
+    }
   }
 
   onCancel(ev: SyntheticKeyboardEvent<*>) {
-    ev.preventDefault();
-    ev.stopPropagation();
-    this.props.onCancel();
+    const { onCancel } = this.props;
+    if (onCancel) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      onCancel();
+    }
   }
 
   handleKeyDown = (ev: SyntheticKeyboardEvent<*>) => {
@@ -234,6 +238,17 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     );
   };
 
+  getSchema = () => {
+    if (this.prevSchema !== this.props.schema) {
+      this.schema = {
+        ...defaultSchema,
+        ...(this.props.schema || {}),
+      };
+      this.prevSchema = this.props.schema;
+    }
+    return this.schema;
+  };
+
   render = () => {
     const {
       readOnly,
@@ -268,8 +283,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       >
         <ThemeProvider theme={theme}>
           <React.Fragment>
-            {readOnly &&
-              toc &&
+            {toc &&
               this.state.editorLoaded &&
               this.editor && <Contents editor={this.editor} />}
             {!readOnly &&
@@ -291,7 +305,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
               renderPlaceholder={this.renderPlaceholder}
               renderNode={this.renderNode}
               renderMark={renderMark}
-              schema={this.state.schema}
+              schema={this.getSchema()}
               onKeyDown={this.handleKeyDown}
               onChange={this.handleChange}
               onSave={onSave}

@@ -196,7 +196,6 @@ const Menu = styled.div`
   transition-delay: 250ms;
   line-height: 0;
   height: 40px;
-  min-width: 300px;
   box-sizing: border-box;
   pointer-events: none;
 

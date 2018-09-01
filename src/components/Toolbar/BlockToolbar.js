@@ -16,14 +16,14 @@ import {
 } from "outline-icons";
 import getDataTransferFiles from "../../lib/getDataTransferFiles";
 import Flex from "../Flex";
-import type { SlateNodeProps } from "../../types";
+import type { SlateNodeProps, Theme } from "../../types";
 
 import { fadeIn } from "../../animations";
 import { splitAndInsertBlock, insertImageFile } from "../../changes";
 import ToolbarButton from "./ToolbarButton";
 
 type Props = SlateNodeProps & {
-  theme: Object,
+  theme: Theme,
 };
 
 type Options = {
@@ -142,6 +142,14 @@ class BlockToolbar extends React.Component<Props> {
   };
 
   renderBlockButton = (type: string, IconClass: Function) => {
+    const { hiddenToolbarButtons } = this.props.theme;
+    if (
+      hiddenToolbarButtons &&
+      hiddenToolbarButtons.blocks &&
+      hiddenToolbarButtons.blocks.includes(type)
+    )
+      return null;
+
     return (
       <ToolbarButton onMouseDown={ev => this.handleClickBlock(ev, type)}>
         <IconClass color={this.props.theme.blockToolbarItem} />

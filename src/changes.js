@@ -46,7 +46,7 @@ export async function insertImageFile(
     );
   }
 
-  onImageUploadStart();
+  if (onImageUploadStart) onImageUploadStart();
   try {
     // load the file as a data URL
     const id = `rme-upload-${++uploadCount}`;
@@ -98,6 +98,6 @@ export async function insertImageFile(
   } catch (err) {
     throw err;
   } finally {
-    onImageUploadStop();
+    if (onImageUploadStop) onImageUploadStop();
   }
 }
