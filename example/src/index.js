@@ -58,9 +58,13 @@ class Example extends React.Component<*, { readOnly: boolean, dark: boolean }> {
               },
             ];
           }}
-          uploadImage={async file => {
+          uploadImage={file => {
             console.log("File upload triggered: ", file);
-            return "";
+
+            // Delay to simulate time taken to upload
+            return new Promise(resolve => {
+              setTimeout(() => resolve(""), 3000);
+            });
           }}
           dark={this.state.dark}
           autoFocus
