@@ -35,7 +35,6 @@ class Image extends React.Component<Props, State> {
     const loading = node.data.get("loading");
     const caption = node.data.get("alt") || "";
     const src = node.data.get("src");
-    const error = node.data.get("error");
     const active =
       editor.value.isFocused && editor.value.selection.hasEdgeIn(node);
     const showCaption = !readOnly || caption;
@@ -82,9 +81,6 @@ class Image extends React.Component<Props, State> {
                 disabled={readOnly}
                 tabIndex={-1}
               />
-            )}
-            {error && (
-              <Error>Sorry, an error occurred uploading the image.</Error>
             )}
           </React.Fragment>
         )}
