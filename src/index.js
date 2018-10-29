@@ -416,10 +416,6 @@ const StyledEditor = styled(Editor)`
   strong {
     font-weight: 600;
   }
-
-  span[data-slate-zero-width] {
-    display: inline-block;
-  }
 `;
 
 export default RichMarkdownEditor;
