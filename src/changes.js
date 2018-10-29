@@ -85,9 +85,11 @@ export async function insertImageFile(
         data: { src, alt, loading: false },
       };
     } catch (error) {
-      props = {
-        data: { alt, src: placeholderSrc, loading: false, error },
-      };
+      if (editor.props.onShowToast) {
+        editor.props.onShowToast(
+          "Sorry, an error occurred uploading the image"
+        );
+      }
     }
 
     const placeholder = editor.value.document.findDescendant(
@@ -98,9 +100,16 @@ export async function insertImageFile(
     // case we can quietly prevent updating the image.
     if (!placeholder) return;
 
-    editor.change(change => {
-      change.setNodeByKey(placeholder.key, props);
-    });
+    // if there was an error during upload, remove the placeholder image
+    if (!props) {
+      editor.change(change => {
+        change.removeNodeByKey(placeholder.key);
+      });
+    } else {
+      editor.change(change => {
+        change.setNodeByKey(placeholder.key, props);
+      });
+    }
   } catch (err) {
     throw err;
   } finally {
