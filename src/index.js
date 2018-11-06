@@ -298,7 +298,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                 />
               )}
             <StyledEditor
-              innerRef={this.setEditorRef}
+              ref={this.setEditorRef}
               plugins={this.plugins}
               value={this.state.editorValue}
               placeholder={placeholder}

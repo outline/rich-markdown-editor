@@ -32,8 +32,8 @@ type Options = {
 };
 
 class BlockToolbar extends React.Component<Props> {
-  bar: HTMLDivElement;
-  file: HTMLInputElement;
+  bar: ?HTMLDivElement;
+  file: ?HTMLInputElement;
 
   componentDidMount() {
     window.addEventListener("click", this.handleOutsideMouseClick);
@@ -128,7 +128,7 @@ class BlockToolbar extends React.Component<Props> {
 
   onPickImage = () => {
     // simulate a click on the file upload input element
-    this.file.click();
+    if (this.file) this.file.click();
   };
 
   onImagePicked = async (ev: SyntheticInputEvent<*>) => {
@@ -168,7 +168,7 @@ class BlockToolbar extends React.Component<Props> {
       <Bar active={active} {...attributes} ref={ref => (this.bar = ref)}>
         <HiddenInput
           type="file"
-          innerRef={ref => (this.file = ref)}
+          ref={ref => (this.file = ref)}
           onChange={this.onImagePicked}
           accept="image/*"
         />
