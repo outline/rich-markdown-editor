@@ -188,7 +188,7 @@ export default class Toolbar extends React.Component<Props, State> {
 const Menu = styled.div`
   padding: 8px 16px;
   position: absolute;
-  z-index: 2;
+  z-index: 200;
   top: -10000px;
   left: -10000px;
   opacity: 0;
