@@ -66,6 +66,8 @@ function renderNode(props: SlateNodeProps) {
       return <Heading5 {...props} />;
     case "heading6":
       return <Heading6 {...props} />;
+    case "hashtag":
+      return <span {...props} />;
     default:
       return props.children;
   }

@@ -11,6 +11,7 @@ import isModKey from "./lib/isModKey";
 import Flex from "./components/Flex";
 import Toolbar from "./components/Toolbar";
 import BlockInsert from "./components/BlockInsert";
+import Reader from "./components/Reader";
 import InternalPlaceholder from "./components/Placeholder";
 import Contents from "./components/Contents";
 import Markdown from "./serializer";
@@ -298,6 +299,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                 />
               )}
             <StyledEditor
+              as={readOnly ? Reader : undefined}
               ref={this.setEditorRef}
               plugins={this.plugins}
               value={this.state.editorValue}
