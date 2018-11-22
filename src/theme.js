@@ -65,6 +65,7 @@ export const light: Theme = {
   codeBackground: colors.greyLight,
   codeBorder: colors.grey,
   horizontalRule: colors.grey,
+  imageErrorBackground: colors.greyLight,
 };
 
 export const dark: Theme = {
@@ -87,6 +88,7 @@ export const dark: Theme = {
   codeBorder: colors.lightBlack,
   codeString: "#3d8fd1",
   horizontalRule: colors.almostWhite,
+  imageErrorBackground: "rgba(0, 0, 0, 0.5)",
 };
 
 export default light;
