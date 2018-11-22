@@ -58,12 +58,12 @@ export default function CodeBlock({
 }
 
 /*
-Based on Prism template by Bram de Haan (http://atelierbram.github.io/syntax-highlighting/prism/)
-Original Base16 color scheme by Chris Kempson (https://github.com/chriskempson/base16)
+  Based on Prism template by Bram de Haan (http://atelierbram.github.io/syntax-highlighting/prism/)
+  Original Base16 color scheme by Chris Kempson (https://github.com/chriskempson/base16)
 */
 const Code = styled.code`
   display: block;
-  overflow-x: scroll;
+  overflow-x: auto;
   padding: 0.5em 1em;
   line-height: 1.4em;
 
@@ -92,11 +92,11 @@ const Code = styled.code`
   .token.prolog,
   .token.doctype,
   .token.cdata {
-    color: #6a737d;
+    color: ${props => props.theme.codeComment};
   }
 
   .token.punctuation {
-    color: #5e6687;
+    color: ${props => props.theme.codePunctuation};
   }
 
   .token.namespace {
@@ -106,34 +106,34 @@ const Code = styled.code`
   .token.operator,
   .token.boolean,
   .token.number {
-    color: #d73a49;
+    color: ${props => props.theme.codeNumber};
   }
 
   .token.property {
-    color: #c08b30;
+    color: ${props => props.theme.codeProperty};
   }
 
   .token.tag {
-    color: #3d8fd1;
+    color: ${props => props.theme.codeTag};
   }
 
   .token.string {
-    color: #032f62;
+    color: ${props => props.theme.codeString};
   }
 
   .token.selector {
-    color: #6679cc;
+    color: ${props => props.theme.codeSelector};
   }
 
   .token.attr-name {
-    color: #c76b29;
+    color: ${props => props.theme.codeAttr};
   }
 
   .token.entity,
   .token.url,
   .language-css .token.string,
   .style .token.string {
-    color: #22a2c9;
+    color: ${props => props.theme.codeEntity};
   }
 
   .token.attr-value,
@@ -141,22 +141,22 @@ const Code = styled.code`
   .token.control,
   .token.directive,
   .token.unit {
-    color: #d73a49;
+    color: ${props => props.theme.codeKeyword};
   }
 
   .token.function {
-    color: #6f42c1;
+    color: ${props => props.theme.codeFunction};
   }
 
   .token.statement,
   .token.regex,
   .token.atrule {
-    color: #22a2c9;
+    color: ${props => props.theme.codeStatement};
   }
 
   .token.placeholder,
   .token.variable {
-    color: #3d8fd1;
+    color: ${props => props.theme.codePlaceholder};
   }
 
   .token.deleted {
@@ -164,7 +164,7 @@ const Code = styled.code`
   }
 
   .token.inserted {
-    border-bottom: 1px dotted #202746;
+    border-bottom: 1px dotted ${props => props.theme.codeInserted};
     text-decoration: none;
   }
 
@@ -178,7 +178,7 @@ const Code = styled.code`
   }
 
   .token.important {
-    color: #c94922;
+    color: ${props => props.theme.codeImportant};
   }
 
   .token.entity {

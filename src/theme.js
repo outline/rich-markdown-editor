@@ -29,6 +29,21 @@ export const base = {
   textSecondary: "#4E5C6E",
   textLight: colors.white,
   selected: colors.primary,
+  codeComment: "#6a737d",
+  codePunctuation: "#5e6687",
+  codeNumber: "#d73a49",
+  codeProperty: "#c08b30",
+  codeTag: "#3d8fd1",
+  codeString: "#032f62",
+  codeSelector: "#6679cc",
+  codeAttr: "#c76b29",
+  codeEntity: "#22a2c9",
+  codeKeyword: "#d73a49",
+  codeFunction: "#6f42c1",
+  codeStatement: "#22a2c9",
+  codePlaceholder: "#3d8fd1",
+  codeInserted: "#202746",
+  codeImportant: "#c94922",
 };
 
 export const light: Theme = {
@@ -70,6 +85,7 @@ export const dark: Theme = {
   quote: colors.almostWhite,
   codeBackground: colors.almostBlack,
   codeBorder: colors.lightBlack,
+  codeString: "#3d8fd1",
   horizontalRule: colors.almostWhite,
 };
 
