@@ -45,9 +45,13 @@ export default function CodeBlock({
       {readOnly && <CopyButton text={getCopyText(node)} />}
       <Code>{children}</Code>
       {!readOnly && (
-        <Language onChange={onSelectLanguage} contentEditable={false}>
+        <Language
+          onChange={onSelectLanguage}
+          value={language}
+          contentEditable={false}
+        >
           {map(languages, (name, value) => (
-            <option key={value} value={value} selected={language === value}>
+            <option key={value} value={value}>
               {name}
             </option>
           ))}
