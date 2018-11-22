@@ -12,6 +12,14 @@ import MarkdownPaste from "./plugins/MarkdownPaste";
 import Ellipsis from "./plugins/Ellipsis";
 import { insertImageFile } from "./changes";
 
+// additional language support based on the most popular programming languages
+import "prismjs/components/prism-ruby";
+import "prismjs/components/prism-typescript";
+import "prismjs/components/prism-csharp";
+import "prismjs/components/prism-php";
+import "prismjs/components/prism-python";
+import "prismjs/components/prism-java";
+
 const createPlugins = () => {
   return [
     PasteLinkify({
@@ -34,7 +42,7 @@ const createPlugins = () => {
     }),
     Prism({
       onlyIn: node => node.type === "code",
-      getSyntax: node => "javascript",
+      getSyntax: node => node.data.get("language") || "javascript",
     }),
     CollapseOnEscape({ toEdge: "end" }),
     KeyboardShortcuts(),

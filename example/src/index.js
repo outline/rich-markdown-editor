@@ -31,6 +31,9 @@ class Example extends React.Component<*, { readOnly: boolean, dark: boolean }> {
   }, 250);
 
   render() {
+    const { body } = document;
+    if (body) body.style.backgroundColor = this.state.dark ? "#181A1B" : "#FFF";
+
     return (
       <div style={{ marginTop: "60px" }}>
         <p>
