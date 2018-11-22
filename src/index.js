@@ -18,7 +18,6 @@ import createPlugins from "./plugins";
 import { insertImageFile } from "./changes";
 import renderMark from "./marks";
 import renderNode from "./nodes";
-import "./prism.css";
 
 export const theme = lightTheme;
 export const schema = defaultSchema;

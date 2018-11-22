@@ -21,6 +21,8 @@ export const base = {
   ...colors,
   fontFamily:
     "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen, Ubuntu,Cantarell,'Open Sans','Helvetica Neue',sans-serif",
+  fontFamilyMono:
+    "'SFMono-Regular',Consolas,'Liberation Mono', Menlo, Courier,monospace",
   fontWeight: 400,
   link: colors.primary,
   placeholder: "#B1BECC",
@@ -33,6 +35,7 @@ export const light: Theme = {
   ...base,
   background: colors.white,
   text: colors.almostBlack,
+  code: colors.lightBlack,
 
   toolbarBackground: colors.lightBlack,
   toolbarInput: colors.white10,
@@ -53,6 +56,7 @@ export const dark: Theme = {
   ...base,
   background: colors.almostBlack,
   text: colors.almostWhite,
+  code: colors.almostWhite,
 
   toolbarBackground: colors.white,
   toolbarInput: colors.black10,
@@ -64,6 +68,8 @@ export const dark: Theme = {
   blockToolbarItem: colors.lightBlack,
 
   quote: colors.almostWhite,
+  codeBackground: colors.almostBlack,
+  codeBorder: colors.lightBlack,
   horizontalRule: colors.almostWhite,
 };
 
