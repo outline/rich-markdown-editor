@@ -2,14 +2,15 @@
 import * as React from "react";
 import type { SlateNodeProps as Props } from "../types";
 
-export default function Link({
-  attributes,
-  node,
-  children,
-  editor,
-  readOnly,
-}: Props) {
+export default function Link(props: Props) {
+  const { attributes, node, children, editor, readOnly } = props;
+  const embed = node.data.get("embed");
+  const Component = node.data.get("component");
   const href = node.data.get("href");
+
+  if (embed && Component) {
+    return <Component {...props} />;
+  }
 
   return (
     <a

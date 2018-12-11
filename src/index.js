@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import { Value, Change, Schema, Text } from "slate";
+import { Value, Change, Schema, Text, Node } from "slate";
 import { Editor } from "slate-react";
 import styled, { ThemeProvider } from "styled-components";
 import type { SlateNodeProps, Plugin, SearchResult } from "./types";

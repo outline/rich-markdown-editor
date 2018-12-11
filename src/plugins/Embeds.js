@@ -16,13 +16,14 @@ export default function Embeds({ getComponent }: Options) {
       const component = getComponent(node);
       if (!component) return;
 
+      // TODO: Remove entire para if link is the only item
       return (change: Change) =>
         change
           .removeNodeByKey(node.key)
           .insertBlock({
-            ...node,
             type: "link",
-            data: { ...node.data, embed: true, component },
+            isVoid: true,
+            data: { ...node.data.toJS(), embed: true, component },
           })
           .insertText(node.text);
     },
