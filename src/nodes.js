@@ -66,6 +66,10 @@ function renderNode(props: SlateNodeProps) {
       return <Heading5 {...props} />;
     case "heading6":
       return <Heading6 {...props} />;
+    case "embed":
+      return (
+        <div {...attributes}>EMBED GOES HERE {props.node.data.get("href")}</div>
+      );
     default:
       return props.children;
   }
