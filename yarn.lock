@@ -5591,9 +5591,9 @@ slate-edit-list@^0.11.3:
   version "0.11.3"
   resolved "https://registry.yarnpkg.com/slate-edit-list/-/slate-edit-list-0.11.3.tgz#d27ff2ff93a83bef49131a6a44b87a9558c9d44c"
 
-slate-md-serializer@^5.2.1:
-  version "5.2.1"
-  resolved "https://registry.yarnpkg.com/slate-md-serializer/-/slate-md-serializer-5.2.1.tgz#b9d6d4f4f706c118274f59dc2a40b6d9a2b8ce63"
+slate-md-serializer@^5.2.2:
+  version "5.2.2"
+  resolved "https://registry.yarnpkg.com/slate-md-serializer/-/slate-md-serializer-5.2.2.tgz#86003e476746af3361d6ccf61c1cb41e9494eb6e"
   dependencies:
     hashtag-regex "^2.0.0"
 
