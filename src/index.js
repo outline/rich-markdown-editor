@@ -45,7 +45,7 @@ type Props = {
   onShowToast?: (message: string) => *,
   renderNode?: SlateNodeProps => ?React.Node,
   renderPlaceholder?: SlateNodeProps => ?React.Node,
-  getLinkComponent?: Node => ?React.Component<*>,
+  getLinkComponent?: Node => ?React.ComponentType<*>,
   className?: string,
   style?: Object,
 };

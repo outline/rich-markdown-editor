@@ -174,7 +174,7 @@ export default function MarkdownShortcuts() {
       const { startBlock, selection, startOffset } = value;
 
       // If image is selected delete the whole thing
-      if (startBlock.type === "image") {
+      if (startBlock.type === "image" || startBlock.type === "link") {
         ev.preventDefault();
         change.removeNodeByKey(startBlock.key).collapseToStartOfNextBlock();
         return change;
