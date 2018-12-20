@@ -7,11 +7,12 @@ import type { SlateNodeProps as Props } from "../types";
 
 type State = {
   hasError?: boolean,
-  imageWidth?: number
+  imageWidth?: number,
 };
 class Image extends React.Component<Props, State> {
   state = {
     hasError: false,
+    imageWidth: undefined,
   };
 
   /**
@@ -19,7 +20,7 @@ class Image extends React.Component<Props, State> {
    *
    * PNG Chunk documentation: https://www.w3.org/TR/PNG-Chunks.html
    */
-  onImgLoad = async (ev: React.SyntheticEvent<HTMLImageElement>) => {
+  onImgLoad = async (ev: SyntheticEvent<HTMLImageElement>) => {
     const image = ev.target;
     const url = this.props.node.data.get("src");
     // Skip upload stage
@@ -45,7 +46,7 @@ class Image extends React.Component<Props, State> {
           yDpu,
           xDpi,
           yDpi,
-          unit
+          unit,
         };
       }
 
@@ -55,6 +56,7 @@ class Image extends React.Component<Props, State> {
         pHYs.xDpi >= 144 &&
         pHYs.yDpi >= 144
       ) {
+        // $FlowIssue naturalWidth exists
         this.setState({ imageWidth: image.naturalWidth / 2 });
       }
     }
@@ -114,7 +116,9 @@ class Image extends React.Component<Props, State> {
                   alt: caption,
                   style: {
                     width: this.state.imageWidth || "auto",
-                    maxWidth: this.state.retina ? "50%" : "100%",
+                    maxWidth: this.state.imageWidth
+                      ? this.state.imageWidth
+                      : "100%",
                   },
                   ...attributes,
                 }}
