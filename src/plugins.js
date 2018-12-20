@@ -27,7 +27,7 @@ const createPlugins = () => {
       collapseTo: "end",
     }),
     InsertImages({
-      extensions: ["png", "jpg", "gif", "webp"],
+      extensions: ["png", "jpg", "jpeg", "gif", "webp"],
       insertImage: async (change, file, editor) => {
         return change.call(insertImageFile, file, editor);
       },
