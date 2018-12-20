@@ -2,14 +2,62 @@
 import * as React from "react";
 import ImageZoom from "react-medium-image-zoom";
 import styled from "styled-components";
+import extract from "png-chunks-extract";
 import type { SlateNodeProps as Props } from "../types";
 
 type State = {
   hasError?: boolean,
+  imageWidth?: number
 };
 class Image extends React.Component<Props, State> {
   state = {
     hasError: false,
+  };
+
+  /**
+   * Detect if PNG image is in retina resolution.
+   *
+   * PNG Chunk documentation: https://www.w3.org/TR/PNG-Chunks.html
+   */
+  onImgLoad = async (ev: React.SyntheticEvent<HTMLImageElement>) => {
+    const image = ev.target;
+    const url = this.props.node.data.get("src");
+    // Skip upload stage
+    if (url.startsWith("blob:")) return;
+
+    const response = await fetch(url);
+    if (response.ok && response.headers.get("content-type") === "image/png") {
+      const buffer = await response.arrayBuffer();
+      const chunks = extract(new Uint8Array(buffer));
+      // Decode physical pixel dimensions chunk
+      let pHYs;
+      const pHYsChunk = chunks.find(chunk => chunk.name === "pHYs");
+      if (pHYsChunk) {
+        const metersToInchMultiplies = 39.3701;
+        const buffer = Buffer.from(pHYsChunk.data);
+        const xDpu = buffer.readUIntBE(0, 4);
+        const yDpu = buffer.readUIntBE(4, 4);
+        const xDpi = Math.round(xDpu / metersToInchMultiplies);
+        const yDpi = Math.round(yDpu / metersToInchMultiplies);
+        const unit = buffer.readUIntBE(8, 1) === 1 ? "meter" : undefined;
+        pHYs = {
+          xDpu,
+          yDpu,
+          xDpi,
+          yDpi,
+          unit
+        };
+      }
+
+      if (
+        pHYs &&
+        pHYs.unit === "meter" &&
+        pHYs.xDpi >= 144 &&
+        pHYs.yDpi >= 144
+      ) {
+        this.setState({ imageWidth: image.naturalWidth / 2 });
+      }
+    }
   };
 
   handleChange = (ev: SyntheticInputEvent<*>) => {
@@ -56,6 +104,8 @@ class Image extends React.Component<Props, State> {
                 alt={caption}
                 active={active}
                 loading={loading}
+                onLoad={this.onImgLoad}
+                width={this.state.imageWidth}
               />
             ) : (
               <ImageZoom
@@ -63,7 +113,8 @@ class Image extends React.Component<Props, State> {
                   src,
                   alt: caption,
                   style: {
-                    maxWidth: "100%",
+                    width: this.state.imageWidth || "auto",
+                    maxWidth: this.state.retina ? "50%" : "100%",
                   },
                   ...attributes,
                 }}
@@ -110,6 +161,7 @@ const HiddenImg = styled.img`
 `;
 
 const StyledImg = styled.img`
+  ${props => props.width && `width: ${props.width}px;`};
   max-width: 100%;
   box-shadow: ${props =>
     props.active ? `0 0 0 2px ${props.theme.selected}` : "none"};
