@@ -2,8 +2,8 @@
 import * as React from "react";
 import ImageZoom from "react-medium-image-zoom";
 import styled from "styled-components";
-import extract from "png-chunks-extract";
 import type { SlateNodeProps as Props } from "../types";
+import { isRetinaImage } from "../lib/imageHelpers";
 
 type State = {
   hasError?: boolean,
@@ -15,50 +15,15 @@ class Image extends React.Component<Props, State> {
     imageWidth: undefined,
   };
 
-  /**
-   * Detect if PNG image is in retina resolution.
-   *
-   * PNG Chunk documentation: https://www.w3.org/TR/PNG-Chunks.html
-   */
   onImgLoad = async (ev: SyntheticEvent<HTMLImageElement>) => {
     const image = ev.target;
     const url = this.props.node.data.get("src");
     // Skip upload stage
     if (url.startsWith("blob:")) return;
 
-    const response = await fetch(url);
-    if (response.ok && response.headers.get("content-type") === "image/png") {
-      const buffer = await response.arrayBuffer();
-      const chunks = extract(new Uint8Array(buffer));
-      // Decode physical pixel dimensions chunk
-      let pHYs;
-      const pHYsChunk = chunks.find(chunk => chunk.name === "pHYs");
-      if (pHYsChunk) {
-        const metersToInchMultiplies = 39.3701;
-        const buffer = Buffer.from(pHYsChunk.data);
-        const xDpu = buffer.readUIntBE(0, 4);
-        const yDpu = buffer.readUIntBE(4, 4);
-        const xDpi = Math.round(xDpu / metersToInchMultiplies);
-        const yDpi = Math.round(yDpu / metersToInchMultiplies);
-        const unit = buffer.readUIntBE(8, 1) === 1 ? "meter" : undefined;
-        pHYs = {
-          xDpu,
-          yDpu,
-          xDpi,
-          yDpi,
-          unit,
-        };
-      }
-
-      if (
-        pHYs &&
-        pHYs.unit === "meter" &&
-        pHYs.xDpi >= 144 &&
-        pHYs.yDpi >= 144
-      ) {
-        // $FlowIssue naturalWidth exists
-        this.setState({ imageWidth: image.naturalWidth / 2 });
-      }
+    if (await isRetinaImage(url)) {
+      // $FlowIssue naturalWidth exists
+      this.setState({ imageWidth: image.naturalWidth / 2 });
     }
   };
 
