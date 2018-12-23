@@ -11,6 +11,7 @@ export type SlateNodeProps = {
   editor: Editor,
   node: Node,
   parent: Node,
+  isSelected: boolean,
 };
 
 export type Plugin = {

@@ -1,7 +1,7 @@
 {
   "name": "rich-markdown-editor",
   "description": "A rich text editor with Markdown shortcuts built on Slate",
-  "version": "6.1.1",
+  "version": "7.0.0-2",
   "main": "lib/index.js",
   "license": "BSD-3-Clause",
   "scripts": {
@@ -31,7 +31,7 @@
     "slate-collapse-on-escape": "^0.6.1",
     "slate-edit-code": "^0.15.5",
     "slate-edit-list": "^0.11.3",
-    "slate-md-serializer": "^5.2.0",
+    "slate-md-serializer": "^5.2.2",
     "slate-paste-linkify": "^0.5.1",
     "slate-plain-serializer": "0.5.4",
     "slate-prism": "^0.5.0",

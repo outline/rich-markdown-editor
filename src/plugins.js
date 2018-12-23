@@ -10,6 +10,7 @@ import KeyboardShortcuts from "./plugins/KeyboardShortcuts";
 import MarkdownShortcuts from "./plugins/MarkdownShortcuts";
 import MarkdownPaste from "./plugins/MarkdownPaste";
 import Ellipsis from "./plugins/Ellipsis";
+import Embeds from "./plugins/Embeds";
 import { insertImageFile } from "./changes";
 
 // additional language support based on the most popular programming languages
@@ -20,7 +21,7 @@ import "prismjs/components/prism-php";
 import "prismjs/components/prism-python";
 import "prismjs/components/prism-java";
 
-const createPlugins = () => {
+const createPlugins = ({ getLinkComponent }: *) => {
   return [
     PasteLinkify({
       type: "link",
@@ -50,6 +51,7 @@ const createPlugins = () => {
     MarkdownPaste(),
     Ellipsis(),
     TrailingBlock({ type: "paragraph" }),
+    Embeds({ getComponent: getLinkComponent }),
   ];
 };
 

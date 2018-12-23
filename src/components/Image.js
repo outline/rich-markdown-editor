@@ -31,19 +31,17 @@ class Image extends React.Component<Props, State> {
   };
 
   render() {
-    const { attributes, editor, node, readOnly } = this.props;
+    const { attributes, node, isSelected, readOnly } = this.props;
     const loading = node.data.get("loading");
     const caption = node.data.get("alt") || "";
     const src = node.data.get("src");
-    const active =
-      editor.value.isFocused && editor.value.selection.hasEdgeIn(node);
     const showCaption = !readOnly || caption;
 
     return (
       <CenteredImage contentEditable={false}>
         {this.state.hasError ? (
           <React.Fragment>
-            <ErrorImg as="div" active={active} />
+            <ErrorImg as="div" isSelected={isSelected} />
             <ErrorMessage>Could not load image</ErrorMessage>
           </React.Fragment>
         ) : (
@@ -54,7 +52,7 @@ class Image extends React.Component<Props, State> {
                 {...attributes}
                 src={src}
                 alt={caption}
-                active={active}
+                isSelected={isSelected}
                 loading={loading}
               />
             ) : (
@@ -112,8 +110,8 @@ const HiddenImg = styled.img`
 const StyledImg = styled.img`
   max-width: 100%;
   box-shadow: ${props =>
-    props.active ? `0 0 0 2px ${props.theme.selected}` : "none"};
-  border-radius: ${props => (props.active ? `2px` : "0")};
+    props.isSelected ? `0 0 0 2px ${props.theme.selected}` : "none"};
+  border-radius: ${props => (props.isSelected ? `2px` : "0")};
   opacity: ${props => (props.loading ? 0.5 : 1)};
 `;
 
