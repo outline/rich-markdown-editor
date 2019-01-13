@@ -116,7 +116,7 @@ export default function MarkdownShortcuts() {
           return editor
             .removeTextByKey(firstText.key, lastCodeTagIndex, shortcut.length)
             .removeTextByKey(firstText.key, firstCodeTagIndex, shortcut.length)
-            .moveOffsetsTo(
+            .moveAnchorTo(
               firstCodeTagIndex,
               lastCodeTagIndex - shortcut.length
             )
