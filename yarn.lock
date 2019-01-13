@@ -140,6 +140,19 @@
     mime-types "^2.1.11"
     slate-dev-logger "^0.1.0"
 
+"@wikifactory/slate-edit-code@^0.16.0":
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/@wikifactory/slate-edit-code/-/slate-edit-code-0.16.0.tgz#226cb4f064a97800fd6bc50b94d86bb913ad8799"
+  dependencies:
+    detect-indent "^4.0.0"
+    detect-newline "^2.1.0"
+    ends-with "^0.2.0"
+    is-hotkey "^0.1.1"
+
+"@wikifactory/slate-trailing-block@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@wikifactory/slate-trailing-block/-/slate-trailing-block-0.6.0.tgz#7cfba15707f55ea41583e03e809c8f3cc9b8b77f"
+
 abbrev@1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
@@ -2229,6 +2242,10 @@ end-of-stream@^1.0.0, end-of-stream@^1.1.0:
   dependencies:
     once "^1.4.0"
 
+ends-with@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/ends-with/-/ends-with-0.2.0.tgz#2f9da98d57a50cfda4571ce4339000500f4e6b8a"
+
 ends-with@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/ends-with/-/ends-with-1.0.1.tgz#5265697706c6ac5150d6649a89ec2d019c25af90"
@@ -3463,7 +3480,7 @@ is-glob@^4.0.0:
   dependencies:
     is-extglob "^2.1.1"
 
-is-hotkey@0.1.4, is-hotkey@^0.1.3:
+is-hotkey@0.1.4, is-hotkey@^0.1.1, is-hotkey@^0.1.3:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/is-hotkey/-/is-hotkey-0.1.4.tgz#c34d2c85d6ec8d09a871dcf71931c8067a824c7d"
 
@@ -5614,6 +5631,10 @@ slate-react@^0.21.15:
     slate-react-placeholder "^0.1.12"
     tiny-invariant "^1.0.1"
     tiny-warning "^0.0.3"
+
+slate-schema-violations@^0.1.39:
+  version "0.1.39"
+  resolved "https://registry.yarnpkg.com/slate-schema-violations/-/slate-schema-violations-0.1.39.tgz#854ab5624136419cef4c803b1823acabe11f1c15"
 
 slate-trailing-block@^0.5.0:
   version "0.5.0"

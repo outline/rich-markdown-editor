@@ -56,7 +56,7 @@ export default function MarkdownShortcuts() {
         if (chars === "[ ]") checked = false;
 
         editor
-          .extendToStartOf(startBlock)
+          .moveFocusToStartOfNode(startBlock)
           .delete()
           .setBlocks(
             {
@@ -142,7 +142,7 @@ export default function MarkdownShortcuts() {
       if (chars === "--") {
         ev.preventDefault();
         return editor
-          .extendToStartOf(startBlock)
+          .moveFocusToStartOfNode(startBlock)
           .delete()
           .setBlocks(
             {
@@ -171,7 +171,7 @@ export default function MarkdownShortcuts() {
       if (chars === "``") {
         ev.preventDefault();
         return editor
-          .extendToStartOf(startBlock)
+          .moveFocusToStartOfNode(startBlock)
           .delete()
           .setBlocks({ type: "code" });
       }

@@ -1,8 +1,9 @@
 // @flow
 // import InsertImages from "@tommoor/slate-drop-or-paste-images";
+import TrailingBlock from "@wikifactory/slate-trailing-block";
+import EditCode from "@wikifactory/slate-edit-code";
 import PasteLinkify from "slate-paste-linkify";
 import CollapseOnEscape from "slate-collapse-on-escape";
-// import EditCode from "slate-edit-code";
 // import Prism from "slate-prism";
 // import EditList from "./plugins/EditList";
 import KeyboardShortcuts from "./plugins/KeyboardShortcuts";
@@ -33,13 +34,13 @@ const createPlugins = ({ getLinkComponent }: *) => {
     //   },
     // }),
     // EditList,
-    // EditCode({
-    //   containerType: "code",
-    //   lineType: "code-line",
-    //   exitBlocktype: "paragraph",
-    //   allowMarks: false,
-    //   selectAll: true,
-    // }),
+    EditCode({
+      containerType: "code",
+      lineType: "code-line",
+      exitBlocktype: "paragraph",
+      allowMarks: false,
+      selectAll: true,
+    }),
     // Prism({
     //   onlyIn: node => node.type === "code",
     //   getSyntax: node => node.data.get("language") || "javascript",
@@ -49,7 +50,7 @@ const createPlugins = ({ getLinkComponent }: *) => {
     MarkdownShortcuts(),
     MarkdownPaste(),
     Ellipsis(),
-    // TrailingBlock({ type: "paragraph" }),
+    TrailingBlock({ type: "paragraph" }),
     Embeds({ getComponent: getLinkComponent }),
   ];
 };
