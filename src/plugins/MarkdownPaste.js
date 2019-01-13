@@ -1,19 +1,17 @@
 // @flow
-import { Change } from "slate";
+import { Editor } from "slate";
 import { getEventTransfer } from "slate-react";
 import Markdown from "../serializer";
 
 export default function MarkdownPaste() {
   return {
-    onPaste(ev: SyntheticKeyboardEvent<*>, change: Change) {
+    onPaste(ev: SyntheticKeyboardEvent<*>, editor: Editor, next: Function) {
       const transfer = getEventTransfer(ev);
       const { text } = transfer;
-      if (transfer.type !== "text" && transfer.type !== "html") return;
+      if (transfer.type !== "text" && transfer.type !== "html") return next();
 
       const fragment = Markdown.deserialize(text);
-      change.insertFragment(fragment.document);
-
-      return change;
+      return editor.insertFragment(fragment.document);
     },
   };
 }

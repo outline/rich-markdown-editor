@@ -77,13 +77,13 @@ class BlockToolbar extends React.Component<Props> {
 
     editor.change(change => {
       change
-        .collapseToEndOf(this.props.node)
+        .moveToEndOfNode(this.props.node)
         .call(splitAndInsertBlock, options)
         .removeNodeByKey(this.props.node.key)
         .collapseToEnd();
 
-      if (cursorPosition === "before") change.collapseToStartOfPreviousBlock();
-      if (cursorPosition === "after") change.collapseToStartOfNextBlock();
+      if (cursorPosition === "before") change.moveToStartOfNodePreviousBlock();
+      if (cursorPosition === "after") change.moveToStartOfNodeNextBlock();
       return change.focus();
     });
   };

@@ -1,36 +1,32 @@
 // @flow
-import { Change } from "slate";
+import { Editor } from "slate";
 import isModKey from "../lib/isModKey";
 
 export default function Ellipsis() {
   return {
-    onKeyDown(ev: SyntheticKeyboardEvent<*>, change: Change) {
-      if (!isModKey(ev) && ev.key === " ") {
-        return this.onSpace(ev, change);
-      }
+    onKeyDown(ev: SyntheticKeyboardEvent<*>, editor: Editor, next: Function) {
+      if (isModKey(ev) || ev.key !== " ") return next();
 
-      return null;
-    },
-
-    onSpace(ev: SyntheticKeyboardEvent<*>, change: Change) {
-      const { value } = change;
-      if (value.isExpanded) return;
+      const { value } = editor;
+      if (value.isExpanded) return next();
 
       const { startBlock } = value;
-      if (startBlock.type.match(/code/)) return;
+      if (startBlock.type.match(/code/)) return next();
 
-      const startOffset = value.startOffset - 3;
+      const startOffset = value.selection.start.offset - 3;
       const textNode = startBlock.getFirstText();
-      if (!textNode) return;
+      if (!textNode) return next();
 
       const chars = textNode.text.slice(startOffset, startOffset + 3);
 
-      // replaces three periods with the proper ellipsis character.
+      // replaces three periods with a real ellipsis character
       if (chars === "...") {
-        return change
+        return editor
           .removeTextByKey(textNode.key, startOffset, 3)
           .insertTextByKey(textNode.key, startOffset, "…");
       }
+
+      return next();
     },
   };
 }

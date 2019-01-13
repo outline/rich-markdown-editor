@@ -1,5 +1,5 @@
 // @flow
-import { Change } from "slate";
+import { Editor } from "slate";
 
 const inlineShortcuts = [
   { mark: "bold", shortcut: "**" },
@@ -12,26 +12,26 @@ const inlineShortcuts = [
 ];
 
 export default function MarkdownShortcuts() {
-  return {
-    onKeyDown(ev: SyntheticKeyboardEvent<*>, change: Change) {
-      const { value } = change;
+  const plugin = {
+    onKeyDown(ev: SyntheticKeyboardEvent<*>, editor: Editor, next: Function) {
+      const { value } = editor;
       const { startBlock } = value;
-      if (!startBlock) return null;
+      if (!startBlock) return next();
 
       // markdown shortcuts should not be parsed in code
-      if (startBlock.type.match(/code/)) return null;
+      if (startBlock.type.match(/code/)) return next();
 
       switch (ev.key) {
         case "-":
-          return this.onDash(ev, change);
+          return plugin.onDash(ev, editor, next);
         case "`":
-          return this.onBacktick(ev, change);
+          return plugin.onBacktick(ev, editor, next);
         case " ":
-          return this.onSpace(ev, change);
+          return plugin.onSpace(ev, editor, next);
         case "Backspace":
-          return this.onBackspace(ev, change);
+          return plugin.onBackspace(ev, editor, next);
         default:
-          return null;
+          return next();
       }
     },
 
@@ -39,23 +39,23 @@ export default function MarkdownShortcuts() {
      * On space, if it was after an auto-markdown shortcut, convert the current
      * node into the shortcut's corresponding type.
      */
-    onSpace(ev: SyntheticKeyboardEvent<*>, change: Change) {
-      const { value } = change;
-      if (value.isExpanded) return;
-      const { startBlock, startOffset } = value;
-
-      const chars = startBlock.text.slice(0, startOffset).trim();
-      const type = this.getType(chars);
+    onSpace(ev: SyntheticKeyboardEvent<*>, editor: Editor, next: Function) {
+      const { value } = editor;
+      if (value.isExpanded) return next();
+      const { selection, startBlock } = value;
+      const chars = startBlock.text.slice(0, selection.start.offset).trim();
+      const type = plugin.getType(chars);
 
       if (type) {
-        if (type === "list-item" && startBlock.type === "list-item") return;
+        if (type === "list-item" && startBlock.type === "list-item")
+          return next();
         ev.preventDefault();
 
         let checked;
         if (chars === "[x]") checked = true;
         if (chars === "[ ]") checked = false;
 
-        change
+        editor
           .extendToStartOf(startBlock)
           .delete()
           .setBlocks(
@@ -68,19 +68,19 @@ export default function MarkdownShortcuts() {
 
         if (type === "list-item") {
           if (checked !== undefined) {
-            change.wrapBlock("todo-list");
+            return editor.wrapBlock("todo-list");
           } else if (chars === "1.") {
-            change.wrapBlock("ordered-list");
+            return editor.wrapBlock("ordered-list");
           } else {
-            change.wrapBlock("bulleted-list");
+            return editor.wrapBlock("bulleted-list");
           }
         }
 
-        return true;
+        return next();
       }
 
       // no inline shortcuts should work in headings
-      if (startBlock.type.match(/heading/)) return null;
+      if (startBlock.type.match(/heading/)) return next();
 
       for (const key of inlineShortcuts) {
         // find all inline characters
@@ -113,7 +113,7 @@ export default function MarkdownShortcuts() {
           const firstText = startBlock.getFirstText();
           const firstCodeTagIndex = inlineTags[0];
           const lastCodeTagIndex = inlineTags[inlineTags.length - 1];
-          return change
+          return editor
             .removeTextByKey(firstText.key, lastCodeTagIndex, shortcut.length)
             .removeTextByKey(firstText.key, firstCodeTagIndex, shortcut.length)
             .moveOffsetsTo(
@@ -125,19 +125,23 @@ export default function MarkdownShortcuts() {
             .removeMark(mark);
         }
       }
+
+      return next();
     },
 
-    onDash(ev: SyntheticKeyboardEvent<*>, change: Change) {
-      const { value } = change;
-      if (value.isExpanded) return;
-      const { startBlock, startOffset } = value;
-      if (startBlock.type.match(/heading/)) return null;
+    onDash(ev: SyntheticKeyboardEvent<*>, editor: Editor, next: Function) {
+      const { value } = editor;
+      if (value.isExpanded) return next();
+      const { startBlock, selection } = value;
+      if (startBlock.type.match(/heading/)) return next();
 
-      const chars = startBlock.text.slice(0, startOffset).replace(/\s*/g, "");
+      const chars = startBlock.text
+        .slice(0, selection.start.offset)
+        .replace(/\s*/g, "");
 
       if (chars === "--") {
         ev.preventDefault();
-        return change
+        return editor
           .extendToStartOf(startBlock)
           .delete()
           .setBlocks(
@@ -150,50 +154,56 @@ export default function MarkdownShortcuts() {
           .insertBlock("paragraph")
           .collapseToStart();
       }
+
+      return next();
     },
 
-    onBacktick(ev: SyntheticKeyboardEvent<*>, change: Change) {
-      const { value } = change;
-      if (value.isExpanded) return;
-      const { startBlock, startOffset } = value;
-      if (startBlock.type.match(/heading/)) return null;
+    onBacktick(ev: SyntheticKeyboardEvent<*>, editor: Editor, next: Function) {
+      const { value } = editor;
+      if (value.isExpanded) return next();
+      const { startBlock, selection } = value;
+      if (startBlock.type.match(/heading/)) return next();
 
-      const chars = startBlock.text.slice(0, startOffset).replace(/\s*/g, "");
+      const chars = startBlock.text
+        .slice(0, selection.start.offset)
+        .replace(/\s*/g, "");
 
       if (chars === "``") {
         ev.preventDefault();
-        return change
+        return editor
           .extendToStartOf(startBlock)
           .delete()
           .setBlocks({ type: "code" });
       }
+
+      return next();
     },
 
-    onBackspace(ev: SyntheticKeyboardEvent<*>, change: Change) {
-      const { value } = change;
-      const { startBlock, selection, startOffset } = value;
+    onBackspace(ev: SyntheticKeyboardEvent<*>, editor: Editor, next: Function) {
+      const { value } = editor;
+      const { startBlock, selection } = value;
 
       // If image is selected delete the whole thing
       if (startBlock.type === "image" || startBlock.type === "link") {
         ev.preventDefault();
-        change.removeNodeByKey(startBlock.key).collapseToStartOfNextBlock();
-        return change;
+        editor.removeNodeByKey(startBlock.key).moveToStartOfNodeNextBlock();
+        return editor;
       }
 
-      if (value.isExpanded) return;
+      if (value.isExpanded) return next();
 
       // If at the start of a non-paragraph, convert it back into a paragraph
-      if (startOffset === 0) {
-        if (startBlock.type === "paragraph") return;
+      if (selection.start.offset === 0) {
+        if (startBlock.type === "paragraph") return next();
         ev.preventDefault();
 
-        change.setBlocks("paragraph");
+        editor.setBlocks("paragraph");
 
         if (startBlock.type === "list-item") {
-          change.unwrapBlock("bulleted-list");
+          editor.unwrapBlock("bulleted-list");
         }
 
-        return change;
+        return;
       }
 
       // If at the end of a code mark hitting backspace should remove the mark
@@ -206,19 +216,22 @@ export default function MarkdownShortcuts() {
         if (codeMarksAtCursor.size > 0) {
           ev.preventDefault();
 
+          const startOffset = selection.start.offset;
           const textNode = startBlock.getTextAtOffset(startOffset);
           const charsInCodeBlock = textNode.characters
             .takeUntil((v, k) => k === startOffset)
             .reverse()
             .takeUntil((v, k) => !v.marks.some(mark => mark.type === "code"));
 
-          change.removeMarkByKey(
+          return editor.removeMarkByKey(
             textNode.key,
             startOffset - charsInCodeBlock.size,
             startOffset,
             "code"
           );
         }
+
+        return next();
       }
     },
 
@@ -253,4 +266,6 @@ export default function MarkdownShortcuts() {
       }
     },
   };
+
+  return plugin;
 }

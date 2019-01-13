@@ -1,69 +1,69 @@
 // @flow
-import { Change } from "slate";
+import { Editor } from "slate";
 import isModKey from "../lib/isModKey";
 
 export default function KeyboardShortcuts() {
-  return {
-    onKeyDown(ev: SyntheticKeyboardEvent<*>, change: Change) {
+  const plugin = {
+    onKeyDown(ev: SyntheticKeyboardEvent<*>, editor: Editor, next: Function) {
       if (!isModKey(ev)) {
         switch (ev.key) {
           case "Enter":
-            return this.onEnter(ev, change);
+            return plugin.onEnter(ev, editor, next);
           case "Tab":
-            return this.onTab(ev, change);
+            return plugin.onTab(ev, editor, next);
           default:
+            return next();
         }
-        return null;
       }
 
       switch (ev.key) {
         case "b":
           ev.preventDefault();
-          return this.toggleMark(change, "bold");
+          return plugin.toggleMark(editor, "bold", next);
         case "i":
           ev.preventDefault();
-          return this.toggleMark(change, "italic");
+          return plugin.toggleMark(editor, "italic", next);
         case "u":
           ev.preventDefault();
-          return this.toggleMark(change, "underlined");
+          return plugin.toggleMark(editor, "underlined", next);
         case "d":
           ev.preventDefault();
-          return this.toggleMark(change, "deleted");
+          return plugin.toggleMark(editor, "deleted", next);
         case "k":
           ev.preventDefault();
-          return change.wrapInline({ type: "link", data: { href: "" } });
+          return editor.wrapInline({ type: "link", data: { href: "" } });
         default:
-          return null;
+          return next();
       }
     },
 
-    toggleMark(change: Change, type: string) {
-      const { value } = change;
+    toggleMark(editor: Editor, type: string, next: Function) {
+      const { value } = editor;
       // don't allow formatting of document title
       const firstNode = value.document.nodes.first();
-      if (firstNode === value.startBlock) return;
+      if (firstNode === value.startBlock) return next();
 
-      change.toggleMark(type);
+      editor.toggleMark(type);
     },
 
     /**
      * On return, if at the end of a node type that should not be extended,
      * create a new paragraph below it.
      */
-    onEnter(ev: SyntheticKeyboardEvent<*>, change: Change) {
-      const { value } = change;
-      if (value.isExpanded) return;
+    onEnter(ev: SyntheticKeyboardEvent<*>, editor: Editor, next: Function) {
+      const { value } = editor;
+      if (value.isExpanded) return next();
 
       const { startBlock, endOffset } = value;
 
       // Hitting enter at the end of the line reverts to standard behavior
-      if (endOffset === startBlock.length) return;
+      if (endOffset === startBlock.length) return next();
 
       // Hitting enter while an image is selected should jump caret below and
       // insert a new paragraph
       if (startBlock.type === "image") {
         ev.preventDefault();
-        return change.splitBlock(10).setBlocks({
+        return editor.splitBlock(10).setBlocks({
           type: "paragraph",
           text: "",
           isVoid: false,
@@ -74,7 +74,7 @@ export default function KeyboardShortcuts() {
       // point and make the new node a paragraph
       if (startBlock.type.match(/(heading|block-quote)/) && endOffset > 0) {
         ev.preventDefault();
-        return change.splitBlock().setBlocks("paragraph");
+        return editor.splitBlock().setBlocks("paragraph");
       }
     },
 
@@ -82,13 +82,17 @@ export default function KeyboardShortcuts() {
      * On tab, if at the end of the heading jump to the main body content
      * as if it is another input field (act the same as enter).
      */
-    onTab(ev: SyntheticKeyboardEvent<*>, change: Change) {
-      const { value } = change;
+    onTab(ev: SyntheticKeyboardEvent<*>, editor: Editor, next: Function) {
+      const { value } = editor;
 
       if (value.startBlock.type === "heading1") {
         ev.preventDefault();
-        change.splitBlock().setBlocks("paragraph");
+        return editor.splitBlock().setBlocks("paragraph");
       }
+
+      return next();
     },
   };
+
+  return plugin;
 }

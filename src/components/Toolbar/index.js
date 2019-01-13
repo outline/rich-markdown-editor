@@ -11,7 +11,7 @@ import LinkToolbar from "./LinkToolbar";
 function getLinkInSelection(value): any {
   try {
     const selectedLinks = value.document
-      .getInlinesAtRange(value.selection)
+      .getLeafInlinesAtRange(value.selection)
       .filter(node => node.type === "link");
 
     if (selectedLinks.size) {

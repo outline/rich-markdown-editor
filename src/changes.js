@@ -20,11 +20,11 @@ export function splitAndInsertBlock(change: Change, options: Options) {
     change
       .collapseToStart()
       .call(changes.splitListItem)
-      .collapseToEndOfPreviousBlock()
+      .moveToEndOfNodePreviousBlock()
       .call(changes.unwrapList);
   }
 
-  if (wrapper) change.collapseToStartOfNextBlock();
+  if (wrapper) change.moveToStartOfNodeNextBlock();
 
   // this is a hack as insertBlock with normalize: false does not appear to work
   change.insertBlock("paragraph").setBlocks(type, { normalize: false });

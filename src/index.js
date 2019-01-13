@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import { Value, Change, Schema, Text, Node } from "slate";
+import { Value, Editor as TEditor, Schema, Text, Node } from "slate";
 import { Editor } from "slate-react";
 import styled, { ThemeProvider } from "styled-components";
 import type { SlateNodeProps, Plugin, SearchResult } from "./types";
@@ -116,9 +116,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     return Markdown.serialize(this.state.editorValue);
   };
 
-  handleChange = (change: Change) => {
-    if (this.state.editorValue !== change.value) {
-      this.setState({ editorValue: change.value }, state => {
+  handleChange = ({ value }: { value: Value }) => {
+    if (this.state.editorValue !== value) {
+      this.setState({ editorValue: value }, state => {
         if (this.props.onChange && !this.props.readOnly) {
           this.props.onChange(this.value);
         }
@@ -149,9 +149,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   insertImageFile = (file: window.File) => {
-    this.editor.change(change =>
-      change.call(insertImageFile, file, this.editor)
-    );
+    this.editor.call(insertImageFile, file, this.editor);
   };
 
   cancelEvent = (ev: SyntheticEvent<*>) => {
@@ -185,33 +183,37 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     }
   }
 
-  handleKeyDown = (ev: SyntheticKeyboardEvent<*>) => {
-    if (this.props.readOnly) return;
+  handleKeyDown = (
+    ev: SyntheticKeyboardEvent<*>,
+    editor: TEditor,
+    next: Function = () => {}
+  ) => {
+    if (this.props.readOnly) return next();
 
     switch (ev.key) {
       case "s":
-        if (isModKey(ev)) this.onSave(ev);
-        return;
+        if (isModKey(ev)) return this.onSave(ev);
+        break;
       case "Enter":
-        if (isModKey(ev)) this.onSaveAndExit(ev);
-        return;
+        if (isModKey(ev)) return this.onSaveAndExit(ev);
+        break;
       case "Escape":
-        if (isModKey(ev)) this.onCancel(ev);
-        return;
+        if (isModKey(ev)) return this.onCancel(ev);
+        break;
       default:
     }
+
+    return next();
   };
 
   focusAtStart = () => {
-    this.editor.change(change =>
-      change.collapseToStartOf(change.value.document).focus()
-    );
+    const { editor } = this;
+    editor.moveToStartOfNode(editor.value.document).focus();
   };
 
   focusAtEnd = () => {
-    this.editor.change(change =>
-      change.collapseToEndOf(change.value.document).focus()
-    );
+    const { editor } = this;
+    editor.moveToEndOfNode(editor.value.document).focus();
   };
 
   renderNode = (props: SlateNodeProps) => {
