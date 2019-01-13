@@ -12,6 +12,14 @@ const exampleText = `
 This is example content. It is persisted between reloads in localStorage.
 `;
 const defaultValue = savedText || exampleText;
+
+class GoogleEmbed extends React.Component<*> {
+  render() {
+    const { attributes, node } = this.props;
+    return <p {...attributes}>Google Embed ({node.data.get("href")})</p>;
+  }
+}
+
 class Example extends React.Component<*, { readOnly: boolean, dark: boolean }> {
   state = {
     readOnly: false,
@@ -31,6 +39,9 @@ class Example extends React.Component<*, { readOnly: boolean, dark: boolean }> {
   }, 250);
 
   render() {
+    const { body } = document;
+    if (body) body.style.backgroundColor = this.state.dark ? "#181A1B" : "#FFF";
+
     return (
       <div style={{ marginTop: "60px" }}>
         <p>
@@ -58,9 +69,18 @@ class Example extends React.Component<*, { readOnly: boolean, dark: boolean }> {
               },
             ];
           }}
-          uploadImage={async file => {
+          uploadImage={file => {
             console.log("File upload triggered: ", file);
-            return "";
+
+            // Delay to simulate time taken to upload
+            return new Promise(resolve => {
+              setTimeout(() => resolve(""), 3000);
+            });
+          }}
+          getLinkComponent={node => {
+            if (node.data.get("href").match(/google/)) {
+              return GoogleEmbed;
+            }
           }}
           dark={this.state.dark}
           autoFocus

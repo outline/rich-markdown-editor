@@ -70,12 +70,12 @@ export async function insertImageFile(
     }
 
     change.insertBlock("paragraph");
-    editor.onChange(change);
 
     let props;
 
-    // now we have a placeholder, start the upload
     try {
+      // now we have a placeholder, start the image upload. This could be very fast
+      // or take multiple seconds. The user can further edit the content during this time.
       const src = await uploadImage(file);
       if (!src) {
         throw new Error("No image url returned from uploadImage callback");
@@ -85,16 +85,31 @@ export async function insertImageFile(
         data: { src, alt, loading: false },
       };
     } catch (error) {
-      props = {
-        data: { alt, src: placeholderSrc, loading: false, error },
-      };
+      if (editor.props.onShowToast) {
+        editor.props.onShowToast(
+          "Sorry, an error occurred uploading the image"
+        );
+      }
     }
 
     const placeholder = editor.value.document.findDescendant(
       node => node.data && node.data.get("id") === id
     );
-    change.setNodeByKey(placeholder.key, props);
-    editor.onChange(change);
+
+    // the user may have removed the placeholder while the image was uploaded. In this
+    // case we can quietly prevent updating the image.
+    if (!placeholder) return;
+
+    // if there was an error during upload, remove the placeholder image
+    if (!props) {
+      editor.change(change => {
+        change.removeNodeByKey(placeholder.key);
+      });
+    } else {
+      editor.change(change => {
+        change.setNodeByKey(placeholder.key, props);
+      });
+    }
   } catch (err) {
     throw err;
   } finally {

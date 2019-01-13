@@ -66,7 +66,9 @@ class BlockInsert extends React.Component<Props, State> {
 
       // do not show block menu when it's open
       const hideToolbar =
-        result.node.type === "block-toolbar" || !!result.node.text.trim();
+        result.node.type === "block-toolbar" ||
+        !!result.node.text.trim() ||
+        result.node.isVoid;
 
       if (hideToolbar) {
         newState.left = -1000;

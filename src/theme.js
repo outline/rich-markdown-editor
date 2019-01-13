@@ -21,18 +21,36 @@ export const base = {
   ...colors,
   fontFamily:
     "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen, Ubuntu,Cantarell,'Open Sans','Helvetica Neue',sans-serif",
+  fontFamilyMono:
+    "'SFMono-Regular',Consolas,'Liberation Mono', Menlo, Courier,monospace",
   fontWeight: 400,
   link: colors.primary,
   placeholder: "#B1BECC",
   textSecondary: "#4E5C6E",
   textLight: colors.white,
   selected: colors.primary,
+  codeComment: "#6a737d",
+  codePunctuation: "#5e6687",
+  codeNumber: "#d73a49",
+  codeProperty: "#c08b30",
+  codeTag: "#3d8fd1",
+  codeString: "#032f62",
+  codeSelector: "#6679cc",
+  codeAttr: "#c76b29",
+  codeEntity: "#22a2c9",
+  codeKeyword: "#d73a49",
+  codeFunction: "#6f42c1",
+  codeStatement: "#22a2c9",
+  codePlaceholder: "#3d8fd1",
+  codeInserted: "#202746",
+  codeImportant: "#c94922",
 };
 
 export const light: Theme = {
   ...base,
   background: colors.white,
   text: colors.almostBlack,
+  code: colors.lightBlack,
 
   toolbarBackground: colors.lightBlack,
   toolbarInput: colors.white10,
@@ -47,12 +65,14 @@ export const light: Theme = {
   codeBackground: colors.greyLight,
   codeBorder: colors.grey,
   horizontalRule: colors.grey,
+  imageErrorBackground: colors.greyLight,
 };
 
 export const dark: Theme = {
   ...base,
   background: colors.almostBlack,
   text: colors.almostWhite,
+  code: colors.almostWhite,
 
   toolbarBackground: colors.white,
   toolbarInput: colors.black10,
@@ -64,7 +84,11 @@ export const dark: Theme = {
   blockToolbarItem: colors.lightBlack,
 
   quote: colors.almostWhite,
+  codeBackground: colors.almostBlack,
+  codeBorder: colors.lightBlack,
+  codeString: "#3d8fd1",
   horizontalRule: colors.almostWhite,
+  imageErrorBackground: "rgba(0, 0, 0, 0.5)",
 };
 
 export default light;

@@ -34,8 +34,8 @@ type State = {
 @keydown
 class LinkToolbar extends React.Component<Props, State> {
   wrapper: ?HTMLElement;
-  input: HTMLInputElement;
-  firstDocument: HTMLElement;
+  input: ?HTMLInputElement;
+  firstDocument: ?HTMLElement;
   originalValue: string = "";
   state = {
     isEditing: false,
@@ -84,7 +84,7 @@ class LinkToolbar extends React.Component<Props, State> {
 
     // otherwise, we're clicking outside
     ev.preventDefault();
-    this.save(this.input.value);
+    this.save(this.input ? this.input.value : "");
   };
 
   search = async (term: string) => {
@@ -198,7 +198,7 @@ class LinkToolbar extends React.Component<Props, State> {
       <span ref={this.setWrapperRef}>
         <LinkEditor>
           <Input
-            innerRef={ref => (this.input = ref)}
+            ref={ref => (this.input = ref)}
             defaultValue={href}
             placeholder="Search or paste a link…"
             onKeyDown={this.onKeyDown}
@@ -226,7 +226,7 @@ class LinkToolbar extends React.Component<Props, State> {
             >
               {this.state.results.map((result, index) => (
                 <LinkSearchResult
-                  innerRef={ref => index === 0 && this.setFirstResultRef(ref)}
+                  ref={ref => index === 0 && this.setFirstResultRef(ref)}
                   title={result.title}
                   key={result.url}
                   onClick={ev => this.selectSearchResult(ev, result.url)}

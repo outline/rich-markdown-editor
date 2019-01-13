@@ -171,8 +171,16 @@ export default function MarkdownShortcuts() {
 
     onBackspace(ev: SyntheticKeyboardEvent<*>, change: Change) {
       const { value } = change;
-      if (value.isExpanded) return;
       const { startBlock, selection, startOffset } = value;
+
+      // If image is selected delete the whole thing
+      if (startBlock.type === "image" || startBlock.type === "link") {
+        ev.preventDefault();
+        change.removeNodeByKey(startBlock.key).collapseToStartOfNextBlock();
+        return change;
+      }
+
+      if (value.isExpanded) return;
 
       // If at the start of a non-paragraph, convert it back into a paragraph
       if (startOffset === 0) {

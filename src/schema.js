@@ -1,4 +1,5 @@
 // @flow
+
 const schema = {
   blocks: {
     heading1: {
@@ -40,6 +41,7 @@ const schema = {
     "horizontal-rule": {
       isVoid: true,
     },
+    link: { nodes: [{ objects: ["text"] }] },
     "block-toolbar": {
       isVoid: true,
     },
@@ -64,6 +66,7 @@ const schema = {
           { type: "todo-list" },
           { type: "block-toolbar" },
           { type: "table" },
+          { type: "link" },
         ],
         min: 1,
       },

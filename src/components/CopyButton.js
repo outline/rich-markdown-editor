@@ -26,7 +26,7 @@ class CopyButton extends React.Component<*, State> {
   render() {
     return (
       <StyledCopyToClipboard onCopy={this.handleCopy} {...this.props}>
-        <span>{this.state.copied ? "Copied!" : "Copy"}</span>
+        <span>{this.state.copied ? "Copied" : "Copy"}</span>
       </StyledCopyToClipboard>
     );
   }
@@ -41,10 +41,11 @@ const StyledCopyToClipboard = styled(CopyToClipboard)`
   transition: opacity 50ms ease-in-out;
   z-index: 1;
   font-size: 12px;
-  color: ${props => props.theme.textLight};
-  background: ${props => props.theme.primary};
-  border-radius: 0 4px 0 4px;
-  padding: 1px 8px;
+  font-weight: 500;
+  color: ${props => props.theme.text};
+  background: ${props => props.theme.codeBorder};
+  border-radius: 0 4px 0 0;
+  padding: 2px 6px;
   cursor: pointer;
 `;
 

@@ -4,7 +4,7 @@ import { Portal } from "react-portal";
 import { Editor, findDOMNode } from "slate-react";
 import { Node, Value } from "slate";
 import styled from "styled-components";
-import { isEqual } from "lodash";
+import { isEqual, debounce } from "lodash";
 import FormattingToolbar from "./FormattingToolbar";
 import LinkToolbar from "./LinkToolbar";
 
@@ -45,7 +45,7 @@ export default class Toolbar extends React.Component<Props, State> {
     left: "",
   };
 
-  menu: HTMLElement;
+  menu: ?HTMLElement;
 
   componentDidMount = () => {
     this.update();
@@ -58,9 +58,9 @@ export default class Toolbar extends React.Component<Props, State> {
     window.removeEventListener("mouseup", this.handleMouseUp);
   };
 
-  componentDidUpdate = () => {
+  componentWillUpdate = debounce(() => {
     this.update();
-  };
+  }, 100);
 
   hideLinkToolbar = () => {
     this.setState({ link: undefined });
@@ -85,8 +85,13 @@ export default class Toolbar extends React.Component<Props, State> {
   update = () => {
     const { value } = this.props;
     const link = getLinkInSelection(value);
+    const selection = window.getSelection();
 
-    if (value.isCollapsed && !link) {
+    // value.isCollapsed is not correct when the user clicks outside of the Slate bounds
+    // checking the window selection collapsed state as a fallback for this case
+    const isCollapsed = value.isCollapsed || selection.isCollapsed;
+
+    if (isCollapsed && !link) {
       if (this.state.active) {
         const newState = {
           ...this.state,
@@ -110,7 +115,7 @@ export default class Toolbar extends React.Component<Props, State> {
     // don't display toolbar for document title
     if (value.startBlock.type === "heading1") active = false;
 
-    // don't display toolbar for code blocks, code-lines inline code.
+    // don't display toolbar for code blocks, code-lines or inline code
     if (value.startBlock.type.match(/code/)) active = false;
 
     // don't show until user has released pointing device button
@@ -124,7 +129,6 @@ export default class Toolbar extends React.Component<Props, State> {
       left: undefined,
     };
     const padding = 16;
-    const selection = window.getSelection();
     let rect;
 
     if (link) {
@@ -134,7 +138,7 @@ export default class Toolbar extends React.Component<Props, State> {
       rect = range.getBoundingClientRect();
     }
 
-    if (!rect || (rect.top === 0 && rect.left === 0)) {
+    if (!rect || !this.menu || (rect.top === 0 && rect.left === 0)) {
       return;
     }
 
@@ -150,10 +154,6 @@ export default class Toolbar extends React.Component<Props, State> {
     }
   };
 
-  setRef = (ref: HTMLElement) => {
-    this.menu = ref;
-  };
-
   render() {
     const style = {
       top: this.state.top,
@@ -162,7 +162,11 @@ export default class Toolbar extends React.Component<Props, State> {
 
     return (
       <Portal>
-        <Menu active={this.state.active} innerRef={this.setRef} style={style}>
+        <Menu
+          active={this.state.active}
+          ref={ref => (this.menu = ref)}
+          style={style}
+        >
           {this.state.link ? (
             <LinkToolbar
               {...this.props}
@@ -184,7 +188,7 @@ export default class Toolbar extends React.Component<Props, State> {
 const Menu = styled.div`
   padding: 8px 16px;
   position: absolute;
-  z-index: 2;
+  z-index: 200;
   top: -10000px;
   left: -10000px;
   opacity: 0;
