@@ -28,7 +28,7 @@
     "react-medium-image-zoom": "^3.0.10",
     "react-portal": "^4.1.4",
     "slate": "^0.44.0",
-    "slate-collapse-on-escape": "^0.6.1",
+    "slate-collapse-on-escape": "^0.8.1",
     "slate-edit-code": "golery/golery-slate-code-block#cdunn-update-slate-0.44",
     "slate-edit-list": "^0.11.3",
     "slate-md-serializer": "^5.2.2",

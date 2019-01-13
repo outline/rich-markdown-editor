@@ -1,8 +1,7 @@
 // @flow
 // import InsertImages from "@tommoor/slate-drop-or-paste-images";
 // import PasteLinkify from "slate-paste-linkify";
-// import CollapseOnEscape from "slate-collapse-on-escape";
-// import TrailingBlock from "slate-trailing-block";
+import CollapseOnEscape from "slate-collapse-on-escape";
 // import EditCode from "slate-edit-code";
 // import Prism from "slate-prism";
 // import EditList from "./plugins/EditList";
@@ -45,7 +44,7 @@ const createPlugins = ({ getLinkComponent }: *) => {
     //   onlyIn: node => node.type === "code",
     //   getSyntax: node => node.data.get("language") || "javascript",
     // }),
-    // CollapseOnEscape({ toEdge: "end" }),
+    CollapseOnEscape({ toEdge: "end" }),
     KeyboardShortcuts(),
     MarkdownShortcuts(),
     MarkdownPaste(),

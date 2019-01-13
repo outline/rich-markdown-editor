@@ -121,7 +121,7 @@ export default function MarkdownShortcuts() {
               lastCodeTagIndex - shortcut.length
             )
             .addMark(mark)
-            .collapseToEnd()
+            .moveToEnd()
             .removeMark(mark);
         }
       }
@@ -152,7 +152,7 @@ export default function MarkdownShortcuts() {
             { normalize: false }
           )
           .insertBlock("paragraph")
-          .collapseToStart();
+          .moveToStart();
       }
 
       return next();
@@ -186,7 +186,7 @@ export default function MarkdownShortcuts() {
       // If image is selected delete the whole thing
       if (startBlock.type === "image" || startBlock.type === "link") {
         ev.preventDefault();
-        editor.removeNodeByKey(startBlock.key).moveToStartOfNodeNextBlock();
+        editor.removeNodeByKey(startBlock.key).moveToStartOfNextBlock();
         return editor;
       }
 

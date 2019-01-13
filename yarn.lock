@@ -5530,9 +5530,9 @@ slate-base64-serializer@^0.2.94:
   dependencies:
     isomorphic-base64 "^1.0.2"
 
-slate-collapse-on-escape@^0.6.1:
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/slate-collapse-on-escape/-/slate-collapse-on-escape-0.6.1.tgz#404da2e2a1773fc140c7a8230e4ef50b0459d1ed"
+slate-collapse-on-escape@^0.8.1:
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/slate-collapse-on-escape/-/slate-collapse-on-escape-0.8.1.tgz#a264c6c407cdf4bbe5013aae6c6571d613b58713"
   dependencies:
     to-pascal-case "^1.0.0"
 

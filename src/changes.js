@@ -18,13 +18,13 @@ export function splitAndInsertBlock(change: Change, options: Options) {
   // lists get some special treatment
   if (parent && parent.type === "list-item") {
     change
-      .collapseToStart()
+      .moveToStart()
       .call(changes.splitListItem)
       .moveToEndOfNodePreviousBlock()
       .call(changes.unwrapList);
   }
 
-  if (wrapper) change.moveToStartOfNodeNextBlock();
+  if (wrapper) change.moveToStartOfNextBlock();
 
   // this is a hack as insertBlock with normalize: false does not appear to work
   change.insertBlock("paragraph").setBlocks(type, { normalize: false });
