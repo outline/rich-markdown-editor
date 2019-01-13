@@ -18,6 +18,8 @@ import createPlugins from "./plugins";
 import { insertImageFile } from "./changes";
 import renderMark from "./marks";
 import renderNode from "./nodes";
+import commands from "./commands";
+import queries from "./queries";
 
 export const theme = lightTheme;
 export const schema = defaultSchema;
@@ -306,6 +308,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
               ref={this.setEditorRef}
               plugins={this.plugins}
               value={this.state.editorValue}
+              commands={commands}
+              queries={queries}
               placeholder={placeholder}
               renderPlaceholder={this.renderPlaceholder}
               renderNode={this.renderNode}

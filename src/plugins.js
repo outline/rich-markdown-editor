@@ -1,6 +1,6 @@
 // @flow
 // import InsertImages from "@tommoor/slate-drop-or-paste-images";
-// import PasteLinkify from "slate-paste-linkify";
+import PasteLinkify from "slate-paste-linkify";
 import CollapseOnEscape from "slate-collapse-on-escape";
 // import EditCode from "slate-edit-code";
 // import Prism from "slate-prism";
@@ -9,7 +9,7 @@ import KeyboardShortcuts from "./plugins/KeyboardShortcuts";
 import MarkdownShortcuts from "./plugins/MarkdownShortcuts";
 import MarkdownPaste from "./plugins/MarkdownPaste";
 import Ellipsis from "./plugins/Ellipsis";
-// import Embeds from "./plugins/Embeds";
+import Embeds from "./plugins/Embeds";
 // import { insertImageFile } from "./changes";
 
 // additional language support based on the most popular programming languages
@@ -22,10 +22,10 @@ import Ellipsis from "./plugins/Ellipsis";
 
 const createPlugins = ({ getLinkComponent }: *) => {
   return [
-    // PasteLinkify({
-    //   type: "link",
-    //   collapseTo: "end",
-    // }),
+    PasteLinkify({
+      type: "link",
+      collapseTo: "end",
+    }),
     // InsertImages({
     //   extensions: ["png", "jpg", "gif", "webp"],
     //   insertImage: async (change, file, editor) => {
@@ -50,7 +50,7 @@ const createPlugins = ({ getLinkComponent }: *) => {
     MarkdownPaste(),
     Ellipsis(),
     // TrailingBlock({ type: "paragraph" }),
-    // Embeds({ getComponent: getLinkComponent }),
+    Embeds({ getComponent: getLinkComponent }),
   ];
 };
 

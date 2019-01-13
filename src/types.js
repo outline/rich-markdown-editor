@@ -1,14 +1,14 @@
 // @flow
 import * as React from "react";
-import { Value, Change, Node } from "slate";
-import { Editor } from "slate-react";
+import { Value, Editor, Node } from "slate";
+import { ReactEditor } from "slate-react";
 
 export type SlateNodeProps = {
   children: React.Node,
   readOnly: boolean,
   attributes: Object,
   value: Value,
-  editor: Editor,
+  editor: ReactEditor,
   node: Node,
   parent: Node,
   isSelected: boolean,
@@ -17,7 +17,7 @@ export type SlateNodeProps = {
 export type Plugin = {
   validateNode?: Node => *,
   onClick?: (SyntheticEvent<*>) => *,
-  onKeyDown?: (SyntheticKeyboardEvent<*>, Change) => *,
+  onKeyDown?: (SyntheticKeyboardEvent<*>, Editor, Function) => *,
 };
 
 export type SearchResult = {

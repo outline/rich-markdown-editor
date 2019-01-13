@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import { Change, Node, Range } from "slate";
+import { Editor, Node, Range } from "slate";
 
 type Options = {
   getComponent?: Node => ?React.ComponentType<*>,
@@ -26,7 +26,7 @@ export default function Embeds({ getComponent }: Options) {
       const component = getComponent(node);
       if (!component) return;
 
-      return (change: Change) => {
+      return (change: Editor) => {
         const document = change.value.document;
         const parent = findTopParent(document, node);
         if (!parent) return;
