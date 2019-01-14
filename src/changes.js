@@ -1,6 +1,5 @@
 // @flow
-import { Change } from "slate";
-import { Editor } from "slate-react";
+import { Editor } from "slate";
 import EditList from "./plugins/EditList";
 
 const { changes } = EditList;
@@ -11,34 +10,35 @@ type Options = {
   wrapper?: string | Object,
 };
 
-export function splitAndInsertBlock(change: Change, options: Options) {
+export function splitAndInsertBlock(editor: Editor, options: Options) {
   const { type, wrapper } = options;
-  const parent = change.value.document.getParent(change.value.startBlock.key);
+  const parent = editor.value.document.getParent(editor.value.startBlock.key);
 
   // lists get some special treatment
   if (parent && parent.type === "list-item") {
-    change
+    editor
       .moveToStart()
       .call(changes.splitListItem)
       .moveToEndOfNodePreviousBlock()
       .call(changes.unwrapList);
   }
 
-  if (wrapper) change.moveToStartOfNextBlock();
+  if (wrapper) editor.moveToStartOfNextBlock();
 
   // this is a hack as insertBlock with normalize: false does not appear to work
-  change.insertBlock("paragraph").setBlocks(type, { normalize: false });
+  editor.insertBlock("paragraph").setBlocks(type, { normalize: false });
 
-  if (wrapper) change.wrapBlock(wrapper);
-  return change;
+  if (wrapper) editor.wrapBlock(wrapper);
+  return editor;
 }
 
-export async function insertImageFile(
-  change: Change,
-  file: window.File,
-  editor: Editor
-) {
-  const { uploadImage, onImageUploadStart, onImageUploadStop } = editor.props;
+export async function insertImageFile(editor: Editor, file: window.File) {
+  const {
+    uploadImage,
+    onImageUploadStart,
+    onShowToast,
+    onImageUploadStop,
+  } = editor.props;
 
   if (!uploadImage) {
     console.warn(
@@ -61,15 +61,15 @@ export async function insertImageFile(
     // insert / replace into document as uploading placeholder replacing
     // empty paragraphs if available.
     if (
-      !change.value.startBlock.text &&
-      change.value.startBlock.type === "paragraph"
+      !editor.value.startBlock.text &&
+      editor.value.startBlock.type === "paragraph"
     ) {
-      change.setBlocks(node);
+      editor.setBlocks(node);
     } else {
-      change.insertBlock(node);
+      editor.insertBlock(node);
     }
 
-    change.insertBlock("paragraph");
+    editor.insertBlock("paragraph");
 
     let props;
 
@@ -85,10 +85,8 @@ export async function insertImageFile(
         data: { src, alt, loading: false },
       };
     } catch (error) {
-      if (editor.props.onShowToast) {
-        editor.props.onShowToast(
-          "Sorry, an error occurred uploading the image"
-        );
+      if (onShowToast) {
+        onShowToast("Sorry, an error occurred uploading the image");
       }
     }
 
@@ -102,13 +100,9 @@ export async function insertImageFile(
 
     // if there was an error during upload, remove the placeholder image
     if (!props) {
-      editor.change(change => {
-        change.removeNodeByKey(placeholder.key);
-      });
+      editor.removeNodeByKey(placeholder.key);
     } else {
-      editor.change(change => {
-        change.setNodeByKey(placeholder.key, props);
-      });
+      editor.setNodeByKey(placeholder.key, props);
     }
   } catch (err) {
     throw err;

@@ -128,17 +128,9 @@
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.7.0.tgz#9a06f4f137ee84d7df0460c1fdb1135ffa6c50fd"
 
-"@tommoor/slate-drop-or-paste-images@^0.8.1":
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/@tommoor/slate-drop-or-paste-images/-/slate-drop-or-paste-images-0.8.1.tgz#4d94b5c1dd2de109546ee1f38a1e4a18df078c1e"
-  dependencies:
-    es6-promise "^4.0.5"
-    image-to-data-uri "^1.0.0"
-    is-data-uri "^0.1.0"
-    is-image "^1.0.1"
-    is-url "^1.2.2"
-    mime-types "^2.1.11"
-    slate-dev-logger "^0.1.0"
+"@wikifactory/slate-edit-blockquote@^0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@wikifactory/slate-edit-blockquote/-/slate-edit-blockquote-0.7.1.tgz#dffb4a3a69dfe6dc35198465be92daa999533357"
 
 "@wikifactory/slate-edit-code@^0.16.0":
   version "0.16.0"
@@ -1663,6 +1655,14 @@ cli-width@^2.0.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/cli-width/-/cli-width-2.2.0.tgz#ff19ede8a9a5e579324147b0c11f0fbcbabed639"
 
+clipboard@^2.0.0:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/clipboard/-/clipboard-2.0.4.tgz#836dafd66cf0fea5d71ce5d5b0bf6e958009112d"
+  dependencies:
+    good-listener "^1.2.2"
+    select "^1.1.2"
+    tiny-emitter "^2.0.0"
+
 clipboardy@^1.2.2:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/clipboardy/-/clipboardy-1.2.3.tgz#0526361bf78724c1f20be248d428e365433c07ef"
@@ -2091,6 +2091,10 @@ delayed-stream@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/delayed-stream/-/delayed-stream-1.0.0.tgz#df3ae199acadfb7d440aaae0b29e2272b24ec619"
 
+delegate@^3.1.2:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/delegate/-/delegate-3.2.0.tgz#b66b71c3158522e8ab5744f720d8ca0c2af59166"
+
 delegates@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/delegates/-/delegates-1.0.0.tgz#84c6e159b81904fdca59a0ef44cd870d31250f9a"
@@ -2119,10 +2123,6 @@ detect-indent@^4.0.0:
   resolved "https://registry.yarnpkg.com/detect-indent/-/detect-indent-4.0.0.tgz#f76d064352cdf43a1cb6ce619c4ee3a9475de208"
   dependencies:
     repeating "^2.0.0"
-
-detect-indent@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/detect-indent/-/detect-indent-5.0.0.tgz#3871cc0a6a002e8c3e5b3cf7f336264675f06b9d"
 
 detect-libc@^1.0.2:
   version "1.0.3"
@@ -2245,10 +2245,6 @@ end-of-stream@^1.0.0, end-of-stream@^1.1.0:
 ends-with@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/ends-with/-/ends-with-0.2.0.tgz#2f9da98d57a50cfda4571ce4339000500f4e6b8a"
-
-ends-with@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/ends-with/-/ends-with-1.0.1.tgz#5265697706c6ac5150d6649a89ec2d019c25af90"
 
 enhanced-resolve@^4.0.0:
   version "4.0.0"
@@ -2963,6 +2959,20 @@ globby@^6.1.0:
     pify "^2.0.0"
     pinkie-promise "^2.0.0"
 
+golery-slate-edit-list@^0.18.0-golery.4:
+  version "0.18.0-golery.4"
+  resolved "https://registry.yarnpkg.com/golery-slate-edit-list/-/golery-slate-edit-list-0.18.0-golery.4.tgz#4452588b0571ece63bcf62e5d0dbd0018cbc2a12"
+
+golery-slate-prism@0.6.0-golery.2:
+  version "0.6.0-golery.2"
+  resolved "https://registry.yarnpkg.com/golery-slate-prism/-/golery-slate-prism-0.6.0-golery.2.tgz#d56ae8f2dc8056c752da18cb06298dbf84a3d1b4"
+
+good-listener@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/good-listener/-/good-listener-1.2.2.tgz#d53b30cdf9313dffb7dc9a0d477096aa6d145c50"
+  dependencies:
+    delegate "^3.1.2"
+
 got@^6.7.1:
   version "6.7.1"
   resolved "https://registry.yarnpkg.com/got/-/got-6.7.1.tgz#240cd05785a9a18e561dc1b44b41c763ef1e8db0"
@@ -3480,7 +3490,7 @@ is-glob@^4.0.0:
   dependencies:
     is-extglob "^2.1.1"
 
-is-hotkey@0.1.4, is-hotkey@^0.1.1, is-hotkey@^0.1.3:
+is-hotkey@0.1.4, is-hotkey@^0.1.1:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/is-hotkey/-/is-hotkey-0.1.4.tgz#c34d2c85d6ec8d09a871dcf71931c8067a824c7d"
 
@@ -4206,7 +4216,7 @@ mime-db@~1.33.0:
   version "1.33.0"
   resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.33.0.tgz#a3492050a5cb9b63450541e39d9788d2272783db"
 
-mime-types@^2.0.7, mime-types@^2.1.11, mime-types@^2.1.12, mime-types@~2.1.18, mime-types@~2.1.7:
+mime-types@^2.0.7, mime-types@^2.1.12, mime-types@~2.1.18, mime-types@~2.1.7:
   version "2.1.18"
   resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.18.tgz#6f323f60a83d11146f831ff11fd66e2fe5503bb8"
   dependencies:
@@ -4611,9 +4621,9 @@ osenv@^0.1.4:
     os-homedir "^1.0.0"
     os-tmpdir "^1.0.0"
 
-outline-icons@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/outline-icons/-/outline-icons-1.0.0.tgz#c9aaa3d763278b79a13d60a4299e18cca51ffc86"
+outline-icons@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/outline-icons/-/outline-icons-1.6.0.tgz#6c7897d354e6bd77ca5498cd3a989b8cb9482574"
 
 output-file-sync@^1.1.2:
   version "1.1.2"
@@ -4879,6 +4889,12 @@ prettier@^1.5.3:
 pretty-bytes@^4.0.2:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/pretty-bytes/-/pretty-bytes-4.0.2.tgz#b2bf82e7350d65c6c33aa95aaa5a4f6327f61cd9"
+
+prismjs@^1.15.0:
+  version "1.15.0"
+  resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.15.0.tgz#8801d332e472091ba8def94976c8877ad60398d9"
+  optionalDependencies:
+    clipboard "^2.0.0"
 
 private@^0.1.6, private@^0.1.7, private@~0.1.5:
   version "0.1.8"
@@ -5456,6 +5472,10 @@ scoped-regex@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/scoped-regex/-/scoped-regex-1.0.0.tgz#a346bb1acd4207ae70bd7c0c7ca9e566b6baddb8"
 
+select@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/select/-/select-1.1.2.tgz#0e7350acdec80b1108528786ec1d4418d11b396d"
+
 selection-is-backward@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/selection-is-backward/-/selection-is-backward-1.0.0.tgz#97a54633188a511aba6419fc5c1fa91b467e6be1"
@@ -5563,18 +5583,16 @@ slate-dev-logger@^0.1.0:
   version "0.1.39"
   resolved "https://registry.yarnpkg.com/slate-dev-logger/-/slate-dev-logger-0.1.39.tgz#744a69b85034244713e6de51483af5713c345af4"
 
-slate-edit-code@golery/golery-slate-code-block#cdunn-update-slate-0.44:
-  version "0.16.0"
-  resolved "https://codeload.github.com/golery/golery-slate-code-block/tar.gz/c2296f71fdbd45a8b9dbe3d0077232bf4db65813"
+slate-drop-or-paste-images@^0.9.1:
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/slate-drop-or-paste-images/-/slate-drop-or-paste-images-0.9.1.tgz#bc3b171ff63e85af91972d79f0751616a00e6ad4"
   dependencies:
-    detect-indent "^5.0.0"
-    detect-newline "^2.1.0"
-    ends-with "^1.0.1"
-    is-hotkey "^0.1.3"
-
-slate-edit-list@^0.11.3:
-  version "0.11.3"
-  resolved "https://registry.yarnpkg.com/slate-edit-list/-/slate-edit-list-0.11.3.tgz#d27ff2ff93a83bef49131a6a44b87a9558c9d44c"
+    es6-promise "^4.0.5"
+    image-to-data-uri "^1.0.0"
+    is-data-uri "^0.1.0"
+    is-image "^1.0.1"
+    is-url "^1.2.2"
+    slate-dev-logger "^0.1.0"
 
 slate-hotkeys@^0.2.8:
   version "0.2.8"
@@ -5598,10 +5616,6 @@ slate-paste-linkify@^0.7.0:
 slate-plain-serializer@0.6.33, slate-plain-serializer@^0.6.33:
   version "0.6.33"
   resolved "https://registry.yarnpkg.com/slate-plain-serializer/-/slate-plain-serializer-0.6.33.tgz#b731ecd8757f0d402ab36823f4be641c3f11a229"
-
-slate-prism@golery/golery-slate-prism:
-  version "0.6.0"
-  resolved "https://codeload.github.com/golery/golery-slate-prism/tar.gz/b9c8ddbc750dda68dfb7bc09f9748bc1cdfa7c12"
 
 slate-prop-types@^0.5.24:
   version "0.5.24"
@@ -5635,10 +5649,6 @@ slate-react@^0.21.15:
 slate-schema-violations@^0.1.39:
   version "0.1.39"
   resolved "https://registry.yarnpkg.com/slate-schema-violations/-/slate-schema-violations-0.1.39.tgz#854ab5624136419cef4c803b1823acabe11f1c15"
-
-slate-trailing-block@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/slate-trailing-block/-/slate-trailing-block-0.5.0.tgz#cedb4f2975f1167e0fb9d259ce1252b82f4d74ff"
 
 slate@^0.44.0:
   version "0.44.9"
@@ -6062,6 +6072,10 @@ timers-browserify@^2.0.4:
   resolved "https://registry.yarnpkg.com/timers-browserify/-/timers-browserify-2.0.10.tgz#1d28e3d2aadf1d5a5996c4e9f95601cd053480ae"
   dependencies:
     setimmediate "^1.0.4"
+
+tiny-emitter@^2.0.0:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/tiny-emitter/-/tiny-emitter-2.0.2.tgz#82d27468aca5ade8e5fd1e6d22b57dd43ebdfb7c"
 
 tiny-invariant@^1.0.1:
   version "1.0.3"
