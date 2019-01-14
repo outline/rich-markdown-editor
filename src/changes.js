@@ -18,9 +18,9 @@ export function splitAndInsertBlock(editor: Editor, options: Options) {
   if (parent && parent.type === "list-item") {
     editor
       .moveToStart()
-      .call(changes.splitListItem)
+      .command(changes.splitListItem)
       .moveToEndOfNodePreviousBlock()
-      .call(changes.unwrapList);
+      .command(changes.unwrapList);
   }
 
   if (wrapper) editor.moveToStartOfNextBlock();

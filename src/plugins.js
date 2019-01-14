@@ -31,7 +31,7 @@ const createPlugins = ({ getLinkComponent }: *) => {
     InsertImages({
       extensions: ["png", "jpg", "gif", "webp"],
       insertImage: async (editor, file) => {
-        return editor.call(insertImageFile, file);
+        return editor.command(insertImageFile, file);
       },
     }),
     EditList,

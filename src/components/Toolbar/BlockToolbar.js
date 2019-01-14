@@ -75,7 +75,7 @@ class BlockToolbar extends React.Component<Props> {
 
     editor
       .moveToEndOfNode(this.props.node)
-      .call(splitAndInsertBlock, options)
+      .command(splitAndInsertBlock, options)
       .removeNodeByKey(this.props.node.key)
       .moveToEnd();
 
@@ -86,6 +86,7 @@ class BlockToolbar extends React.Component<Props> {
 
   handleClickBlock = (ev: SyntheticEvent<*>, type: string) => {
     ev.preventDefault();
+    ev.stopPropagation();
 
     switch (type) {
       case "heading1":
@@ -132,7 +133,7 @@ class BlockToolbar extends React.Component<Props> {
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      editor.call(insertImageFile, file, editor);
+      editor.command(insertImageFile, file, editor);
     }
   };
 

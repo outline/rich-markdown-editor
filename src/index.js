@@ -151,7 +151,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   insertImageFile = (file: window.File) => {
-    this.editor.call(insertImageFile, file, this.editor);
+    this.editor.command(insertImageFile, file, this.editor);
   };
 
   cancelEvent = (ev: SyntheticEvent<*>) => {

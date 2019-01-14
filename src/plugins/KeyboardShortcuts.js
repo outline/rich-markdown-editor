@@ -39,9 +39,9 @@ export default function KeyboardShortcuts() {
 
     toggleMark(editor: Editor, type: string, next: Function) {
       const { value } = editor;
-      // don't allow formatting of document title
-      const firstNode = value.document.nodes.first();
-      if (firstNode === value.startBlock) return next();
+
+      // don't allow formatting of main document title
+      if (value.startBlock.type === "heading1") return next();
 
       editor.toggleMark(type);
     },
