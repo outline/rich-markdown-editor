@@ -60,13 +60,11 @@ class BlockToolbar extends React.Component<Props> {
     ev.preventDefault();
     ev.stopPropagation();
 
-    this.props.editor.change(change =>
-      change.setNodeByKey(this.props.node.key, {
-        type: "paragraph",
-        text: "",
-        isVoid: false,
-      })
-    );
+    this.props.editor.setNodeByKey(this.props.node.key, {
+      type: "paragraph",
+      text: "",
+      isVoid: false,
+    });
   }
 
   insertBlock = (
@@ -75,17 +73,15 @@ class BlockToolbar extends React.Component<Props> {
   ) => {
     const { editor } = this.props;
 
-    editor.change(change => {
-      change
-        .moveToEndOfNode(this.props.node)
-        .call(splitAndInsertBlock, options)
-        .removeNodeByKey(this.props.node.key)
-        .moveToEnd();
+    editor
+      .moveToEndOfNode(this.props.node)
+      .call(splitAndInsertBlock, options)
+      .removeNodeByKey(this.props.node.key)
+      .moveToEnd();
 
-      if (cursorPosition === "before") change.moveToStartOfPreviousBlock();
-      if (cursorPosition === "after") change.moveToStartOfNextBlock();
-      return change.focus();
-    });
+    if (cursorPosition === "before") editor.moveToStartOfPreviousBlock();
+    if (cursorPosition === "after") editor.moveToStartOfNextBlock();
+    return editor.focus();
   };
 
   handleClickBlock = (ev: SyntheticEvent<*>, type: string) => {
@@ -136,7 +132,7 @@ class BlockToolbar extends React.Component<Props> {
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      editor.change(change => change.call(insertImageFile, file, editor));
+      editor.call(insertImageFile, file, editor);
     }
   };
 

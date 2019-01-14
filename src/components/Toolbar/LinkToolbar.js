@@ -171,15 +171,13 @@ class LinkToolbar extends React.Component<Props, State> {
     const { editor, link } = this.props;
     href = href.trim();
 
-    editor.change(change => {
-      if (href) {
-        change.setNodeByKey(link.key, { type: "link", data: { href } });
-      } else if (link) {
-        change.unwrapInlineByKey(link.key);
-      }
-      change.deselect();
-      this.props.onBlur();
-    });
+    if (href) {
+      editor.setNodeByKey(link.key, { type: "link", data: { href } });
+    } else if (link) {
+      editor.unwrapInlineByKey(link.key);
+    }
+    editor.deselect();
+    this.props.onBlur();
   };
 
   setFirstResultRef = (ref: *) => {

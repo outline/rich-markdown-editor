@@ -8,9 +8,7 @@ export default class TodoItem extends React.Component<Props> {
   handleChange = (ev: SyntheticInputEvent<*>) => {
     const checked = ev.target.checked;
     const { editor, node } = this.props;
-    editor.change(change =>
-      change.setNodeByKey(node.key, { data: { checked } })
-    );
+    editor.setNodeByKey(node.key, { data: { checked } });
   };
 
   render() {
