@@ -54,7 +54,8 @@ export default function KeyboardShortcuts() {
       const { value } = editor;
       if (value.isExpanded) return next();
 
-      const { startBlock, endOffset } = value;
+      const { startBlock, selection } = value;
+      const endOffset = selection.end.offset;
 
       // Hitting enter at the end of the line reverts to standard behavior
       if (endOffset === startBlock.length) return next();
@@ -76,6 +77,8 @@ export default function KeyboardShortcuts() {
         ev.preventDefault();
         return editor.splitBlock().setBlocks("paragraph");
       }
+
+      return next();
     },
 
     /**
