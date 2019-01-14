@@ -42,9 +42,13 @@ export default function MarkdownShortcuts() {
     onSpace(ev: SyntheticKeyboardEvent<*>, editor: Editor, next: Function) {
       const { value } = editor;
       if (value.isExpanded) return next();
+
       const { selection, startBlock } = value;
       const chars = startBlock.text.slice(0, selection.start.offset).trim();
       const type = plugin.getType(chars);
+
+      // no inline shortcuts should work in headings
+      if (startBlock.type.match(/heading/)) return next();
 
       if (type) {
         if (type === "list-item" && startBlock.type === "list-item")
@@ -78,9 +82,6 @@ export default function MarkdownShortcuts() {
 
         return next();
       }
-
-      // no inline shortcuts should work in headings
-      if (startBlock.type.match(/heading/)) return next();
 
       for (const key of inlineShortcuts) {
         // find all inline characters
@@ -183,8 +184,7 @@ export default function MarkdownShortcuts() {
       // If image is selected delete the whole thing
       if (startBlock.type === "image" || startBlock.type === "link") {
         ev.preventDefault();
-        editor.removeNodeByKey(startBlock.key).moveToStartOfNextBlock();
-        return editor;
+        return editor.removeNodeByKey(startBlock.key).moveToStartOfNextBlock();
       }
 
       if (value.isExpanded) return next();
@@ -227,9 +227,8 @@ export default function MarkdownShortcuts() {
             "code"
           );
         }
-
-        return next();
       }
+      return next();
     },
 
     /**

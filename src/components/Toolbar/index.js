@@ -134,7 +134,11 @@ export default class Toolbar extends React.Component<Props, State> {
     let rect;
 
     if (link) {
-      rect = findDOMNode(link).getBoundingClientRect();
+      try {
+        rect = findDOMNode(link).getBoundingClientRect();
+      } catch (err) {
+        // TODO
+      }
     } else if (selection.rangeCount > 0) {
       const range = selection.getRangeAt(0);
       rect = range.getBoundingClientRect();

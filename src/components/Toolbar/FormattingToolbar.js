@@ -128,8 +128,8 @@ class FormattingToolbar extends React.Component<Props> {
         {this.renderMarkButton("deleted", StrikethroughIcon)}
         {this.renderMarkButton("code", CodeIcon)}
         <Separator />
-        {this.renderBlockButton("heading1", Heading1Icon)}
-        {this.renderBlockButton("heading2", Heading2Icon)}
+        {this.renderBlockButton("heading2", Heading1Icon)}
+        {this.renderBlockButton("heading3", Heading2Icon)}
         {this.renderBlockButton("block-quote", BlockQuoteIcon)}
         <Separator />
         <ToolbarButton onMouseDown={this.handleCreateLink}>

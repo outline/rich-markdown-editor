@@ -28,6 +28,7 @@ export type SearchResult = {
 export type Block =
   | "heading1"
   | "heading2"
+  | "heading3"
   | "block-quote"
   | "code"
   | "code"
