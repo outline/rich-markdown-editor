@@ -17,7 +17,7 @@ function getLinkInSelection(value): any {
     if (selectedLinks.size) {
       const link = selectedLinks.first();
       const { selection } = value;
-      if (selection.anchor.isInNode(link) && selection.focus.isInNode(link))
+      if (selection.anchor.isInNode(link) || selection.focus.isInNode(link))
         return link;
     }
   } catch (err) {
