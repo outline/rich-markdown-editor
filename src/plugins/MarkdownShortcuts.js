@@ -51,36 +51,37 @@ export default function MarkdownShortcuts() {
       if (startBlock.type.match(/heading/)) return next();
 
       if (type) {
-        if (type === "list-item" && startBlock.type === "list-item")
+        // don't allow doubling up a list item
+        if (type === "list-item" && startBlock.type === "list-item") {
           return next();
+        }
         ev.preventDefault();
 
         let checked;
         if (chars === "[x]") checked = true;
         if (chars === "[ ]") checked = false;
 
-        editor
-          .moveFocusToStartOfNode(startBlock)
-          .delete()
-          .setBlocks(
-            {
+        editor.withoutNormalizing(c => {
+          c
+            .moveToRangeOfNode(startBlock)
+            .delete()
+            .setBlocks({
               type,
               data: { checked },
-            },
-            { normalize: false }
-          );
+            });
 
-        if (type === "list-item") {
-          if (checked !== undefined) {
-            return editor.wrapBlock("todo-list");
-          } else if (chars === "1.") {
-            return editor.wrapBlock("ordered-list");
-          } else {
-            return editor.wrapBlock("bulleted-list");
+          if (type === "list-item") {
+            if (checked !== undefined) {
+              return c.wrapBlock("todo-list");
+            } else if (chars === "1.") {
+              return c.wrapBlock("ordered-list");
+            } else {
+              return c.wrapBlock("bulleted-list");
+            }
           }
-        }
 
-        return next();
+          return next();
+        });
       }
 
       for (const key of inlineShortcuts) {
