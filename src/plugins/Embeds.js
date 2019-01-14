@@ -17,29 +17,27 @@ function findTopParent(document, node): ?Node {
 
 export default function Embeds({ getComponent }: Options) {
   return {
-    validateNode(node: Node) {
-      if (!getComponent) return;
-      if (node.object !== "inline") return;
-      if (node.type !== "link") return;
-      if (node.text !== node.data.get("href")) return;
+    normalizeNode(node: Node, editor: Editor, next: Function) {
+      if (!getComponent) return next();
+      if (node.type === "block") return next();
+      if (node.type !== "link") return next();
+      if (node.text !== node.data.get("href")) return next();
 
       const component = getComponent(node);
-      if (!component) return;
+      if (!component) return next();
 
-      return (change: Editor) => {
-        const document = change.value.document;
+      return (editor: Editor) => {
+        const document = editor.value.document;
         const parent = findTopParent(document, node);
-        if (!parent) return;
+        if (!parent) return next();
 
         const firstText = parent.getFirstText();
         const range = Range.create({
-          anchorKey: firstText.key,
-          anchorOffset: parent.text.length,
-          focusKey: firstText.key,
-          focusOffset: parent.text.length,
+          anchor: { key: firstText.key, offset: parent.text.length },
+          focus: { key: firstText.key, offset: parent.text.length },
         });
 
-        return change.withoutNormalization(c => {
+        return editor.withoutNormalizing(c => {
           c.removeNodeByKey(node.key).insertBlockAtRange(range, {
             object: "block",
             type: "link",
@@ -58,7 +56,7 @@ export default function Embeds({ getComponent }: Options) {
             c.removeNodeByKey(parent.key);
           }
 
-          return change;
+          return editor;
         });
       };
     },

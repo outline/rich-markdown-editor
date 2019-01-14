@@ -15,7 +15,7 @@ export type SlateNodeProps = {
 };
 
 export type Plugin = {
-  validateNode?: Node => *,
+  validateNode?: (Node, Editor, Function) => *,
   onClick?: (SyntheticEvent<*>) => *,
   onKeyDown?: (SyntheticKeyboardEvent<*>, Editor, Function) => *,
 };

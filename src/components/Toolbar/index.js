@@ -16,7 +16,9 @@ function getLinkInSelection(value): any {
 
     if (selectedLinks.size) {
       const link = selectedLinks.first();
-      if (value.selection.hasEdgeIn(link)) return link;
+      const { selection } = value;
+      if (selection.anchor.isInNode(link) && selection.focus.isInNode(link))
+        return link;
     }
   } catch (err) {
     // It's okay.

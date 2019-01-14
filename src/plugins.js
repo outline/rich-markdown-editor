@@ -47,13 +47,13 @@ const createPlugins = ({ getLinkComponent }: *) => {
       onlyIn: node => node.type === "code",
       getSyntax: node => node.data.get("language") || "javascript",
     }),
+    Embeds({ getComponent: getLinkComponent }),
     CollapseOnEscape({ toEdge: "end" }),
     KeyboardShortcuts(),
     MarkdownShortcuts(),
     MarkdownPaste(),
     Ellipsis(),
     TrailingBlock({ type: "paragraph" }),
-    Embeds({ getComponent: getLinkComponent }),
   ];
 };
 
