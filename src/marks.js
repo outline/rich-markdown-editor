@@ -22,6 +22,12 @@ export default function renderMark(props: Props) {
       return <del>{props.children}</del>;
     case "added":
       return <mark>{props.children}</mark>;
+    case "prism-token":
+      return (
+        <span className={props.mark.data.get("className")}>
+          {props.children}
+        </span>
+      );
     default:
   }
 }
