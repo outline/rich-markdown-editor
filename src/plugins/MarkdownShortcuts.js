@@ -41,9 +41,9 @@ export default function MarkdownShortcuts() {
      */
     onSpace(ev: SyntheticKeyboardEvent<*>, editor: Editor, next: Function) {
       const { value } = editor;
-      if (value.isExpanded) return next();
-
       const { selection, startBlock } = value;
+      if (selection.isExpanded) return next();
+
       const chars = startBlock.text.slice(0, selection.start.offset).trim();
       const type = plugin.getType(chars);
 
@@ -132,8 +132,8 @@ export default function MarkdownShortcuts() {
 
     onDash(ev: SyntheticKeyboardEvent<*>, editor: Editor, next: Function) {
       const { value } = editor;
-      if (value.isExpanded) return next();
       const { startBlock, selection } = value;
+      if (selection.isExpanded) return next();
       if (startBlock.type.match(/heading/)) return next();
 
       const chars = startBlock.text
@@ -161,8 +161,8 @@ export default function MarkdownShortcuts() {
 
     onBacktick(ev: SyntheticKeyboardEvent<*>, editor: Editor, next: Function) {
       const { value } = editor;
-      if (value.isExpanded) return next();
       const { startBlock, selection } = value;
+      if (selection.isExpanded) return next();
       if (startBlock.type.match(/heading/)) return next();
 
       const chars = startBlock.text
@@ -190,7 +190,7 @@ export default function MarkdownShortcuts() {
         return editor.removeNodeByKey(startBlock.key).moveToStartOfNextBlock();
       }
 
-      if (value.isExpanded) return next();
+      if (selection.isExpanded) return next();
 
       // If at the start of a non-paragraph, convert it back into a paragraph
       if (selection.start.offset === 0) {

@@ -52,9 +52,9 @@ export default function KeyboardShortcuts() {
      */
     onEnter(ev: SyntheticKeyboardEvent<*>, editor: Editor, next: Function) {
       const { value } = editor;
-      if (value.isExpanded) return next();
-
       const { startBlock, selection } = value;
+      if (selection.isExpanded) return next();
+
       const endOffset = selection.end.offset;
 
       // Hitting enter at the end of the line reverts to standard behavior

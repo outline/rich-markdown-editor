@@ -8,9 +8,8 @@ export default function Ellipsis() {
       if (isModKey(ev) || ev.key !== " ") return next();
 
       const { value } = editor;
-      if (value.isExpanded) return next();
-
-      const { startBlock } = value;
+      const { startBlock, selection } = value;
+      if (selection.isExpanded) return next();
       if (startBlock.type.match(/code/)) return next();
 
       const startOffset = value.selection.start.offset - 3;

@@ -91,7 +91,7 @@ export default class Toolbar extends React.Component<Props, State> {
 
     // value.isCollapsed is not correct when the user clicks outside of the Slate bounds
     // checking the window selection collapsed state as a fallback for this case
-    const isCollapsed = value.isCollapsed || selection.isCollapsed;
+    const isCollapsed = value.selection.isCollapsed || selection.isCollapsed;
 
     if (isCollapsed && !link) {
       if (this.state.active) {
