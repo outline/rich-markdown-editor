@@ -67,8 +67,7 @@ class BlockInsert extends React.Component<Props, State> {
       // do not show block menu when it's open, the paragraph isn't empty
       // or the current node is an embed.
       const hideToolbar =
-        result.node.type === "link" ||
-        result.node.type === "block-toolbar" ||
+        result.node.type !== "paragraph" ||
         !!result.node.text.trim() ||
         result.node.isVoid;
 
