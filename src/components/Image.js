@@ -13,6 +13,7 @@ class Image extends React.Component<Props, State> {
   };
 
   handleChange = (ev: SyntheticInputEvent<*>) => {
+    ev.stopPropagation();
     const alt = ev.target.value;
     const { editor, node } = this.props;
     const data = node.data.toObject();

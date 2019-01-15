@@ -74,7 +74,7 @@ class Example extends React.Component<*, { readOnly: boolean, dark: boolean }> {
 
             // Delay to simulate time taken to upload
             return new Promise(resolve => {
-              setTimeout(() => resolve(""), 3000);
+              setTimeout(() => resolve("http://lorempixel.com/400/200/"), 1500);
             });
           }}
           getLinkComponent={node => {

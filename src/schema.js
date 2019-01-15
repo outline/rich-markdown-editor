@@ -41,6 +41,9 @@ const schema = {
     "horizontal-rule": {
       isVoid: true,
     },
+    image: {
+      isVoid: true,
+    },
     link: { nodes: [{ objects: ["text"] }] },
     "block-toolbar": {
       isVoid: true,
