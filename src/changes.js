@@ -32,7 +32,7 @@ export function splitAndInsertBlock(editor: Editor, options: Options) {
   return editor;
 }
 
-export async function insertImageFile(editor: Editor, file: window.File) {
+export function insertImageFile(editor: Editor, file: window.File) {
   const {
     uploadImage,
     onImageUploadStart,
@@ -47,36 +47,36 @@ export async function insertImageFile(editor: Editor, file: window.File) {
   }
 
   if (onImageUploadStart) onImageUploadStart();
-  try {
-    // load the file as a data URL
-    const id = `rme-upload-${++uploadCount}`;
-    const alt = "";
-    const placeholderSrc = URL.createObjectURL(file);
-    const node = {
-      type: "image",
-      isVoid: true,
-      data: { src: placeholderSrc, id, alt, loading: true },
-    };
 
-    // insert / replace into document as uploading placeholder replacing
-    // empty paragraphs if available.
-    if (
-      !editor.value.startBlock.text &&
-      editor.value.startBlock.type === "paragraph"
-    ) {
-      editor.setBlocks(node);
-    } else {
-      editor.insertBlock(node);
-    }
+  // load the file as a data URL
+  const id = `rme-upload-${++uploadCount}`;
+  const alt = "";
+  const placeholderSrc = URL.createObjectURL(file);
+  const node = {
+    type: "image",
+    isVoid: true,
+    data: { src: placeholderSrc, id, alt, loading: true },
+  };
 
-    editor.insertBlock("paragraph");
+  // insert / replace into document as uploading placeholder replacing
+  // empty paragraphs if available.
+  if (
+    !editor.value.startBlock.text &&
+    editor.value.startBlock.type === "paragraph"
+  ) {
+    editor.setBlocks(node);
+  } else {
+    editor.insertBlock(node);
+  }
 
-    let props;
+  editor.insertBlock("paragraph");
 
-    try {
+  let props;
+
+  uploadImage(file)
+    .then(src => {
       // now we have a placeholder, start the image upload. This could be very fast
       // or take multiple seconds. The user can further edit the content during this time.
-      const src = await uploadImage(file);
       if (!src) {
         throw new Error("No image url returned from uploadImage callback");
       }
@@ -84,29 +84,34 @@ export async function insertImageFile(editor: Editor, file: window.File) {
       props = {
         data: { src, alt, loading: false },
       };
-    } catch (error) {
+    })
+    .catch(err => {
       if (onShowToast) {
         onShowToast("Sorry, an error occurred uploading the image");
       }
-    }
+      throw err;
+    })
+    .finally(() => {
+      const placeholder = editor.value.document.findDescendant(
+        node => node.data && node.data.get("id") === id
+      );
 
-    const placeholder = editor.value.document.findDescendant(
-      node => node.data && node.data.get("id") === id
-    );
+      // the user may have removed the placeholder while the image was uploaded. In this
+      // case we can quietly prevent updating the image.
+      if (!placeholder) {
+        console.warn("Placeholder could not be found");
+        return;
+      }
 
-    // the user may have removed the placeholder while the image was uploaded. In this
-    // case we can quietly prevent updating the image.
-    if (!placeholder) return;
+      // if there was an error during upload, remove the placeholder image
+      if (!props) {
+        editor.removeNodeByKey(placeholder.key);
+      } else {
+        editor.setNodeByKey(placeholder.key, props);
+      }
 
-    // if there was an error during upload, remove the placeholder image
-    if (!props) {
-      editor.removeNodeByKey(placeholder.key);
-    } else {
-      editor.setNodeByKey(placeholder.key, props);
-    }
-  } catch (err) {
-    throw err;
-  } finally {
-    if (onImageUploadStop) onImageUploadStop();
-  }
+      if (onImageUploadStop) onImageUploadStop();
+    });
+
+  return editor;
 }
