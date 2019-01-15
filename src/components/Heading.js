@@ -17,7 +17,6 @@ type Props = SlateNodeProps & {
 function Heading(props: Props) {
   const {
     parent,
-    placeholder,
     node,
     editor,
     readOnly,
@@ -26,6 +25,7 @@ function Heading(props: Props) {
     className,
     attributes,
   } = props;
+  const { placeholder } = editor.props;
   const parentIsDocument = parent instanceof Document;
   const firstHeading = parentIsDocument && parent.nodes.first() === node;
   const showPlaceholder = placeholder && firstHeading && !node.text;
