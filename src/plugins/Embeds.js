@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import { Editor, Node, Range } from "slate";
+import { Editor, Node } from "slate";
 
 type Options = {
   getComponent?: Node => ?React.ComponentType<*>,

@@ -47,10 +47,12 @@ export default function MarkdownShortcuts() {
       const chars = startBlock.text.slice(0, selection.start.offset).trim();
       const type = plugin.getType(chars);
 
-      // no inline shortcuts should work in headings
-      if (startBlock.type.match(/heading/)) return next();
-
       if (type) {
+        // only shortcuts to change heading size should work in headings
+        if (startBlock.type.match(/heading/) && !type.match(/heading/)) {
+          return next();
+        }
+
         // don't allow doubling up a list item
         if (type === "list-item" && startBlock.type === "list-item") {
           return next();
@@ -63,7 +65,7 @@ export default function MarkdownShortcuts() {
 
         editor.withoutNormalizing(c => {
           c
-            .moveToRangeOfNode(startBlock)
+            .moveFocusToStartOfNode(startBlock)
             .delete()
             .setBlocks({
               type,
