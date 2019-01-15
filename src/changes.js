@@ -92,6 +92,8 @@ export function insertImageFile(editor: Editor, file: window.File) {
       throw err;
     })
     .finally(() => {
+      if (onImageUploadStop) onImageUploadStop();
+
       const placeholder = editor.value.document.findDescendant(
         node => node.data && node.data.get("id") === id
       );
@@ -109,9 +111,8 @@ export function insertImageFile(editor: Editor, file: window.File) {
       } else {
         editor.setNodeByKey(placeholder.key, props);
       }
-
-      if (onImageUploadStop) onImageUploadStop();
     });
 
+  editor.flush();
   return editor;
 }
