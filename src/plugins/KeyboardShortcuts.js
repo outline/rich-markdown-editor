@@ -58,7 +58,7 @@ export default function KeyboardShortcuts() {
       const endOffset = selection.end.offset;
 
       // Hitting enter at the end of the line reverts to standard behavior
-      if (endOffset === startBlock.length) return next();
+      if (!startBlock || endOffset === startBlock.length) return next();
 
       // Hitting enter while an image is selected should jump caret below and
       // insert a new paragraph
