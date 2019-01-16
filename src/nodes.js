@@ -1,5 +1,6 @@
 // @flow
 import * as React from "react";
+import { Editor } from "slate";
 import Code from "./components/Code";
 import BlockToolbar from "./components/Toolbar/BlockToolbar";
 import HorizontalRule from "./components/HorizontalRule";
@@ -18,7 +19,7 @@ import {
 import Paragraph from "./components/Paragraph";
 import type { SlateNodeProps } from "./types";
 
-function renderNode(props: SlateNodeProps) {
+function renderNode(props: SlateNodeProps, editor: Editor, next: Function) {
   const { attributes } = props;
 
   switch (props.node.type) {
@@ -67,7 +68,7 @@ function renderNode(props: SlateNodeProps) {
     case "heading6":
       return <Heading6 {...props} />;
     default:
-      return props.children;
+      return next();
   }
 }
 

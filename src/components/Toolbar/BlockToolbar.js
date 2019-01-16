@@ -16,8 +16,6 @@ import {
 } from "outline-icons";
 import getDataTransferFiles from "../../lib/getDataTransferFiles";
 import type { SlateNodeProps, Theme } from "../../types";
-
-import { fadeIn } from "../../animations";
 import { splitAndInsertBlock, insertImageFile } from "../../changes";
 import ToolbarButton from "./ToolbarButton";
 
@@ -192,7 +190,6 @@ const Separator = styled.div`
 const Bar = styled.div`
   display: flex;
   z-index: 100;
-  animation: ${fadeIn} 150ms ease-in-out;
   position: relative;
   align-items: center;
   background: ${props => props.theme.blockToolbarBackground};

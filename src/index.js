@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import { Value, Editor as TEditor, Schema, Text, Node } from "slate";
+import { Value, Editor as TEditor, Schema, Node } from "slate";
 import { Editor } from "slate-react";
 import styled, { ThemeProvider } from "styled-components";
 import type { SlateNodeProps, Plugin, SearchResult } from "./types";
@@ -46,7 +46,6 @@ type Props = {
   onClickLink?: (href: string) => *,
   onShowToast?: (message: string) => *,
   renderNode?: SlateNodeProps => ?React.Node,
-  renderPlaceholder?: SlateNodeProps => ?React.Node,
   getLinkComponent?: Node => ?React.ComponentType<*>,
   className?: string,
   style?: Object,
@@ -74,6 +73,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     super(props);
 
     this.plugins = createPlugins({
+      placeholder: props.placeholder,
       getLinkComponent: props.getLinkComponent,
     });
     if (props.plugins) {
@@ -218,31 +218,10 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     editor.moveToEndOfNode(editor.value.document).focus();
   };
 
-  renderNode = (props: SlateNodeProps) => {
-    const node = this.props.renderNode && this.props.renderNode(props);
+  renderNode = (...args: *) => {
+    const node = this.props.renderNode && this.props.renderNode(...args);
     if (node) return node;
-
-    return renderNode(props);
-  };
-
-  renderPlaceholder = (props: SlateNodeProps) => {
-    if (this.props.renderPlaceholder) {
-      return this.props.renderPlaceholder(props);
-    }
-    const { editor, node } = props;
-
-    if (!editor.props.placeholder) return;
-    if (editor.state.isComposing) return;
-    if (node.object !== "block") return;
-    if (!Text.isTextList(node.nodes)) return;
-    if (node.text !== "") return;
-    if (editor.value.document.getBlocks().size > 1) return;
-
-    return (
-      <Placeholder>
-        {editor.props.readOnly ? "" : editor.props.placeholder}
-      </Placeholder>
-    );
+    return renderNode(...args);
   };
 
   getSchema = () => {
@@ -263,6 +242,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       pretitle,
       placeholder,
       onSave,
+      onChange,
+      onCancel,
       uploadImage,
       onSearchLink,
       onClickLink,
@@ -272,6 +253,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       className,
       style,
       dark,
+      defaultValue,
+      autoFocus,
+      ...rest
     } = this.props;
 
     const theme = this.props.theme || (dark ? darkTheme : lightTheme);
@@ -311,7 +295,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
               commands={commands}
               queries={queries}
               placeholder={placeholder}
-              renderPlaceholder={this.renderPlaceholder}
               renderNode={this.renderNode}
               renderMark={renderMark}
               schema={this.getSchema()}
@@ -327,6 +310,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
               spellCheck={!readOnly}
               uploadImage={uploadImage}
               pretitle={pretitle}
+              {...rest}
             />
           </React.Fragment>
         </ThemeProvider>

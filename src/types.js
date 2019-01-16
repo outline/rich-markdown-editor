@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import { Value, Editor, Node } from "slate";
+import { Value, Editor, Node, Mark as TMark } from "slate";
 import { ReactEditor } from "slate-react";
 
 export type SlateNodeProps = {
@@ -11,6 +11,7 @@ export type SlateNodeProps = {
   editor: ReactEditor,
   node: Node,
   parent: Node,
+  mark: TMark,
   isSelected: boolean,
 };
 
