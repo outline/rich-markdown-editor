@@ -1,9 +1,8 @@
 // @flow
-import { Editor } from "slate";
+import { Editor, Block, KeyUtils } from "slate";
 import EditList from "./plugins/EditList";
 
 const { changes } = EditList;
-let uploadCount = 0;
 
 type Options = {
   type: string | Object,
@@ -49,27 +48,17 @@ export function insertImageFile(editor: Editor, file: window.File) {
   if (onImageUploadStart) onImageUploadStart();
 
   // load the file as a data URL
-  const id = `rme-upload-${++uploadCount}`;
+  let key = KeyUtils.create();
   const alt = "";
   const placeholderSrc = URL.createObjectURL(file);
-  const node = {
+  const node = Block.create({
+    key,
     type: "image",
     isVoid: true,
-    data: { src: placeholderSrc, id, alt, loading: true },
-  };
+    data: { src: placeholderSrc, alt, loading: true },
+  });
 
-  // insert / replace into document as uploading placeholder replacing
-  // empty paragraphs if available.
-  if (
-    !editor.value.startBlock.text &&
-    editor.value.startBlock.type === "paragraph"
-  ) {
-    editor.setBlocks(node);
-  } else {
-    editor.insertBlock(node);
-  }
-
-  editor.insertBlock("paragraph");
+  editor.insertBlock(node).insertBlock("paragraph");
 
   let props;
 
@@ -94,25 +83,13 @@ export function insertImageFile(editor: Editor, file: window.File) {
     .finally(() => {
       if (onImageUploadStop) onImageUploadStop();
 
-      const placeholder = editor.value.document.findDescendant(
-        node => node.data && node.data.get("id") === id
-      );
-
-      // the user may have removed the placeholder while the image was uploaded. In this
-      // case we can quietly prevent updating the image.
-      if (!placeholder) {
-        console.warn("Placeholder could not be found");
-        return;
-      }
-
       // if there was an error during upload, remove the placeholder image
       if (!props) {
-        editor.removeNodeByKey(placeholder.key);
+        editor.removeNodeByKey(key);
       } else {
-        editor.setNodeByKey(placeholder.key, props);
+        editor.setNodeByKey(key, props);
       }
     });
 
-  editor.flush();
   return editor;
 }
