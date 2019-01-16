@@ -1,22 +1,18 @@
 // @flow
 import * as React from "react";
 import styled from "styled-components";
-import { Document } from "slate";
 import type { SlateNodeProps } from "../types";
 import headingToSlug from "../lib/headingToSlug";
-import Placeholder from "./Placeholder";
 import CopyToClipboard from "./CopyToClipboard";
 
 type Props = SlateNodeProps & {
   component: string,
   className: string,
-  placeholder: string,
   hasPretitle: boolean,
 };
 
 function Heading(props: Props) {
   const {
-    parent,
     node,
     editor,
     readOnly,
@@ -25,10 +21,6 @@ function Heading(props: Props) {
     className,
     attributes,
   } = props;
-  const { placeholder } = editor.props;
-  const parentIsDocument = parent instanceof Document;
-  const firstHeading = parentIsDocument && parent.nodes.first() === node;
-  const showPlaceholder = placeholder && firstHeading && !node.text;
   const slugish = headingToSlug(editor.value.document, node);
   const showHash = readOnly && !!slugish;
   const Component = component;
@@ -44,11 +36,6 @@ function Heading(props: Props) {
     <Component {...attributes} className={className}>
       <HiddenAnchor id={slugish} />
       <Wrapper hasPretitle={startsWithPretitleAndSpace}>{children}</Wrapper>
-      {showPlaceholder && (
-        <Placeholder contentEditable={false}>
-          {editor.props.titlePlaceholder}
-        </Placeholder>
-      )}
       {showHash && (
         <Anchor
           name={slugish}
