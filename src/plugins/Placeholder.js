@@ -1,5 +1,6 @@
 //@flow
 import invariant from "invariant";
+import styled from "styled-components";
 import React from "react";
 import { Node, Editor } from "slate";
 import type { SlateNodeProps } from "../types";
@@ -49,22 +50,11 @@ function SlateReactPlaceholder(
     const { children, mark } = props;
 
     if (mark.type === "placeholder") {
-      const style = {
-        pointerEvents: "none",
-        display: "inline-block",
-        width: "0",
-        maxWidth: "100%",
-        whiteSpace: "nowrap",
-        float: "left",
-        opacity: "0.333",
-      };
       const content = mark.data.get("placeholder");
 
       return (
         <span>
-          <span contentEditable={false} style={style}>
-            {content}
-          </span>
+          <Placeholder contentEditable={false}>{content}</Placeholder>
           {children}
         </span>
       );
@@ -75,5 +65,15 @@ function SlateReactPlaceholder(
 
   return { decorateNode, renderMark };
 }
+
+const Placeholder = styled.span`
+  pointer-events: none;
+  display: inline-block;
+  width: 0;
+  max-width: 100%;
+  white-space: nowrap;
+  float: left;
+  color: ${props => props.theme.placeholder};
+`;
 
 export default SlateReactPlaceholder;
