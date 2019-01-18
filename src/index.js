@@ -75,7 +75,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       getLinkComponent: props.getLinkComponent,
     });
 
-    this.plugins = [...builtInPlugins, ...props.plugins];
+    // in Slate plugins earlier in the stack can opt not to continue
+    // to later ones. By adding overrides first we give more control
+    this.plugins = [...props.plugins, ...builtInPlugins];
 
     this.state = {
       editorLoaded: false,
