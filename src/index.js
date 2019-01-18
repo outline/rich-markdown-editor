@@ -14,7 +14,6 @@ import BlockInsert from "./components/BlockInsert";
 import Contents from "./components/Contents";
 import Markdown from "./serializer";
 import createPlugins from "./plugins";
-import { insertImageFile } from "./changes";
 import renderMark from "./marks";
 import renderNode from "./nodes";
 import commands from "./commands";
@@ -149,7 +148,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   insertImageFile = (file: window.File) => {
-    this.editor.command(insertImageFile, file, this.editor);
+    this.editor.insertImageFile(file);
   };
 
   cancelEvent = (ev: SyntheticEvent<*>) => {

@@ -16,7 +16,6 @@ import {
 } from "outline-icons";
 import getDataTransferFiles from "../../lib/getDataTransferFiles";
 import type { SlateNodeProps, Theme } from "../../types";
-import { splitAndInsertBlock, insertImageFile } from "../../changes";
 import ToolbarButton from "./ToolbarButton";
 
 type Props = SlateNodeProps & {
@@ -73,7 +72,7 @@ class BlockToolbar extends React.Component<Props> {
 
     editor
       .moveToEndOfNode(this.props.node)
-      .command(splitAndInsertBlock, options)
+      .splitAndInsertBlock(options)
       .removeNodeByKey(this.props.node.key)
       .moveToEnd();
 
@@ -131,7 +130,7 @@ class BlockToolbar extends React.Component<Props> {
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      editor.command(insertImageFile, file, editor);
+      editor.insertImageFile(file);
     }
   };
 

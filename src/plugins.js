@@ -14,7 +14,6 @@ import MarkdownShortcuts from "./plugins/MarkdownShortcuts";
 import MarkdownPaste from "./plugins/MarkdownPaste";
 import Ellipsis from "./plugins/Ellipsis";
 import Embeds from "./plugins/Embeds";
-import { insertImageFile } from "./changes";
 
 // additional language support based on the most popular programming languages
 import "prismjs/components/prism-ruby";
@@ -43,9 +42,7 @@ const createPlugins = ({ placeholder, getLinkComponent }: *) => {
     }),
     InsertImages({
       extensions: ["png", "jpg", "gif", "webp"],
-      insertImage: async (editor, file) => {
-        return editor.command(insertImageFile, file);
-      },
+      insertImage: (editor, file) => editor.insertImageFile(file),
     }),
     EditList,
     EditCode({
