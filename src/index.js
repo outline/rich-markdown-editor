@@ -26,7 +26,7 @@ type Props = {
   defaultValue: string,
   placeholder: string,
   pretitle?: string,
-  plugins?: Plugin[],
+  plugins: Plugin[],
   autoFocus?: boolean,
   readOnly?: boolean,
   toc?: boolean,
@@ -59,6 +59,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     placeholder: "Write something nice…",
     onImageUploadStart: () => {},
     onImageUploadStop: () => {},
+    plugins: [],
   };
 
   editor: Editor;
@@ -69,17 +70,13 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    this.plugins = createPlugins({
+    const builtInPlugins = createPlugins({
       placeholder: props.placeholder,
       getLinkComponent: props.getLinkComponent,
     });
-    if (props.plugins) {
-      if (Array.isArray(props.plugins)) {
-        this.plugins = props.plugins.concat(this.plugins);
-      } else {
-        console.warn("Editor.plugins prop must be an array of Slate plugins");
-      }
-    }
+
+    this.plugins = [...builtInPlugins, ...props.plugins];
+
     this.state = {
       editorLoaded: false,
       editorValue: Markdown.deserialize(props.defaultValue),
@@ -252,6 +249,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       dark,
       defaultValue,
       autoFocus,
+      plugins,
       ...rest
     } = this.props;
 
