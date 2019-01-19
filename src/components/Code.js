@@ -33,11 +33,9 @@ export default function CodeBlock({
   const language = data.get("language") || "javascript";
 
   const onSelectLanguage = ev => {
-    editor.change(change =>
-      change.setNodeByKey(node.key, {
-        data: { ...data, language: ev.target.value },
-      })
-    );
+    editor.setNodeByKey(node.key, {
+      data: { ...data, language: ev.target.value },
+    });
   };
 
   return (

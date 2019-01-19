@@ -1,23 +1,24 @@
 // @flow
 import * as React from "react";
-import { Value, Change, Node } from "slate";
-import { Editor } from "slate-react";
+import { Value, Editor, Node, Mark as TMark } from "slate";
+import { ReactEditor } from "slate-react";
 
 export type SlateNodeProps = {
   children: React.Node,
   readOnly: boolean,
   attributes: Object,
   value: Value,
-  editor: Editor,
+  editor: ReactEditor,
   node: Node,
   parent: Node,
+  mark: TMark,
   isSelected: boolean,
 };
 
 export type Plugin = {
-  validateNode?: Node => *,
+  validateNode?: (Node, Editor, Function) => *,
   onClick?: (SyntheticEvent<*>) => *,
-  onKeyDown?: (SyntheticKeyboardEvent<*>, Change) => *,
+  onKeyDown?: (SyntheticKeyboardEvent<*>, Editor, Function) => *,
 };
 
 export type SearchResult = {
@@ -28,6 +29,7 @@ export type SearchResult = {
 export type Block =
   | "heading1"
   | "heading2"
+  | "heading3"
   | "block-quote"
   | "code"
   | "code"

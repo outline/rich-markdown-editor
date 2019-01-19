@@ -1,14 +1,16 @@
 // @flow
 import styled from "styled-components";
 
-export default styled.span.attrs({
+const Placeholder = styled.span.attrs({
   contentEditable: false,
 })`
+  pointer-events: none;
   display: inline-block;
   width: 0;
+  max-width: 100%;
   white-space: nowrap;
-  float: left; // https://github.com/ianstormtaylor/slate/issues/1436
-  pointer-events: none;
-  user-select: none;
+  line-height: 1.2em;
   color: ${props => props.theme.placeholder};
 `;
+
+export default Placeholder;

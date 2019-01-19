@@ -64,9 +64,10 @@ class BlockInsert extends React.Component<Props, State> {
     if (result) {
       newState.closestRootNode = result.node;
 
-      // do not show block menu when it's open
+      // do not show block menu when it's open, the paragraph isn't empty
+      // or the current node is an embed.
       const hideToolbar =
-        result.node.type === "block-toolbar" ||
+        result.node.type !== "paragraph" ||
         !!result.node.text.trim() ||
         result.node.isVoid;
 
@@ -97,30 +98,28 @@ class BlockInsert extends React.Component<Props, State> {
 
     const { editor } = this.props;
 
-    editor.change(change => {
-      // remove any existing toolbars in the document as a fail safe
-      editor.value.document.nodes.forEach(node => {
-        if (node.type === "block-toolbar") {
-          change.setNodeByKey(node.key, {
-            type: "paragraph",
-            isVoid: false,
-          });
-        }
-      });
-
-      const node = this.state.closestRootNode;
-      if (!node) return;
-
-      change.collapseToStartOf(node);
-
-      // we're on an empty paragraph. just replace it with the block toolbar
-      if (!node.text.trim() && node.type === "paragraph") {
-        change.setNodeByKey(node.key, {
-          type: "block-toolbar",
-          isVoid: true,
+    // remove any existing toolbars in the document as a fail safe
+    editor.value.document.nodes.forEach(node => {
+      if (node.type === "block-toolbar") {
+        editor.setNodeByKey(node.key, {
+          type: "paragraph",
+          isVoid: false,
         });
       }
     });
+
+    const node = this.state.closestRootNode;
+    if (!node) return;
+
+    editor.moveToStartOfNode(node);
+
+    // we're on an empty paragraph. just replace it with the block toolbar
+    if (!node.text.trim() && node.type === "paragraph") {
+      editor.setNodeByKey(node.key, {
+        type: "block-toolbar",
+        isVoid: true,
+      });
+    }
   };
 
   render() {

@@ -11,12 +11,14 @@ import LinkToolbar from "./LinkToolbar";
 function getLinkInSelection(value): any {
   try {
     const selectedLinks = value.document
-      .getInlinesAtRange(value.selection)
+      .getLeafInlinesAtRange(value.selection)
       .filter(node => node.type === "link");
 
     if (selectedLinks.size) {
       const link = selectedLinks.first();
-      if (value.selection.hasEdgeIn(link)) return link;
+      const { selection } = value;
+      if (selection.anchor.isInNode(link) || selection.focus.isInNode(link))
+        return link;
     }
   } catch (err) {
     // It's okay.
@@ -89,7 +91,7 @@ export default class Toolbar extends React.Component<Props, State> {
 
     // value.isCollapsed is not correct when the user clicks outside of the Slate bounds
     // checking the window selection collapsed state as a fallback for this case
-    const isCollapsed = value.isCollapsed || selection.isCollapsed;
+    const isCollapsed = value.selection.isCollapsed || selection.isCollapsed;
 
     if (isCollapsed && !link) {
       if (this.state.active) {
@@ -132,7 +134,11 @@ export default class Toolbar extends React.Component<Props, State> {
     let rect;
 
     if (link) {
-      rect = findDOMNode(link).getBoundingClientRect();
+      try {
+        rect = findDOMNode(link).getBoundingClientRect();
+      } catch (err) {
+        // TODO
+      }
     } else if (selection.rangeCount > 0) {
       const range = selection.getRangeAt(0);
       rect = range.getBoundingClientRect();
@@ -197,7 +203,7 @@ const Menu = styled.div`
   transform: scale(0.95);
   transition: opacity 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275),
     transform 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  transition-delay: 250ms;
+  transition-delay: 150ms;
   line-height: 0;
   height: 40px;
   box-sizing: border-box;

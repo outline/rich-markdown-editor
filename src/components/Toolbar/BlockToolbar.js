@@ -16,9 +16,6 @@ import {
 } from "outline-icons";
 import getDataTransferFiles from "../../lib/getDataTransferFiles";
 import type { SlateNodeProps, Theme } from "../../types";
-
-import { fadeIn } from "../../animations";
-import { splitAndInsertBlock, insertImageFile } from "../../changes";
 import ToolbarButton from "./ToolbarButton";
 
 type Props = SlateNodeProps & {
@@ -60,13 +57,11 @@ class BlockToolbar extends React.Component<Props> {
     ev.preventDefault();
     ev.stopPropagation();
 
-    this.props.editor.change(change =>
-      change.setNodeByKey(this.props.node.key, {
-        type: "paragraph",
-        text: "",
-        isVoid: false,
-      })
-    );
+    this.props.editor.setNodeByKey(this.props.node.key, {
+      type: "paragraph",
+      text: "",
+      isVoid: false,
+    });
   }
 
   insertBlock = (
@@ -75,21 +70,20 @@ class BlockToolbar extends React.Component<Props> {
   ) => {
     const { editor } = this.props;
 
-    editor.change(change => {
-      change
-        .collapseToEndOf(this.props.node)
-        .call(splitAndInsertBlock, options)
-        .removeNodeByKey(this.props.node.key)
-        .collapseToEnd();
+    editor
+      .moveToEndOfNode(this.props.node)
+      .splitAndInsertBlock(options)
+      .removeNodeByKey(this.props.node.key)
+      .moveToEnd();
 
-      if (cursorPosition === "before") change.collapseToStartOfPreviousBlock();
-      if (cursorPosition === "after") change.collapseToStartOfNextBlock();
-      return change.focus();
-    });
+    if (cursorPosition === "before") editor.moveToStartOfPreviousBlock();
+    if (cursorPosition === "after") editor.moveToStartOfNextBlock();
+    return editor.focus();
   };
 
   handleClickBlock = (ev: SyntheticEvent<*>, type: string) => {
     ev.preventDefault();
+    ev.stopPropagation();
 
     switch (type) {
       case "heading1":
@@ -136,7 +130,7 @@ class BlockToolbar extends React.Component<Props> {
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      editor.change(change => change.call(insertImageFile, file, editor));
+      editor.insertImageFile(file);
     }
   };
 
@@ -195,7 +189,6 @@ const Separator = styled.div`
 const Bar = styled.div`
   display: flex;
   z-index: 100;
-  animation: ${fadeIn} 150ms ease-in-out;
   position: relative;
   align-items: center;
   background: ${props => props.theme.blockToolbarBackground};

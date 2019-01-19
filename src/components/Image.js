@@ -13,13 +13,12 @@ class Image extends React.Component<Props, State> {
   };
 
   handleChange = (ev: SyntheticInputEvent<*>) => {
+    ev.stopPropagation();
     const alt = ev.target.value;
     const { editor, node } = this.props;
     const data = node.data.toObject();
 
-    editor.change(change =>
-      change.setNodeByKey(node.key, { data: { ...data, alt } })
-    );
+    editor.setNodeByKey(node.key, { data: { ...data, alt } });
   };
 
   handleClick = (ev: SyntheticInputEvent<*>) => {

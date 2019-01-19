@@ -1,17 +1,19 @@
 // @flow
-import InsertImages from "@tommoor/slate-drop-or-paste-images";
+import { Node, Editor } from "slate";
+import TrailingBlock from "@wikifactory/slate-trailing-block";
+import EditCode from "@wikifactory/slate-edit-code";
+import EditBlockquote from "@wikifactory/slate-edit-blockquote";
+import InsertImages from "slate-drop-or-paste-images";
 import PasteLinkify from "slate-paste-linkify";
 import CollapseOnEscape from "slate-collapse-on-escape";
-import TrailingBlock from "slate-trailing-block";
-import EditCode from "slate-edit-code";
-import Prism from "slate-prism";
+import Prism from "golery-slate-prism";
+import Placeholder from "./plugins/Placeholder";
 import EditList from "./plugins/EditList";
 import KeyboardShortcuts from "./plugins/KeyboardShortcuts";
 import MarkdownShortcuts from "./plugins/MarkdownShortcuts";
 import MarkdownPaste from "./plugins/MarkdownPaste";
 import Ellipsis from "./plugins/Ellipsis";
 import Embeds from "./plugins/Embeds";
-import { insertImageFile } from "./changes";
 
 // additional language support based on the most popular programming languages
 import "prismjs/components/prism-ruby";
@@ -21,17 +23,26 @@ import "prismjs/components/prism-php";
 import "prismjs/components/prism-python";
 import "prismjs/components/prism-java";
 
-const createPlugins = ({ getLinkComponent }: *) => {
+const createPlugins = ({ placeholder, getLinkComponent }: *) => {
   return [
     PasteLinkify({
       type: "link",
       collapseTo: "end",
     }),
+    Placeholder({
+      placeholder,
+      when: (editor: Editor, node: Node) => {
+        if (editor.readOnly) return false;
+        if (node.object !== "block") return false;
+        if (node.type !== "paragraph") return false;
+        if (node.text !== "") return false;
+        if (editor.value.document.getBlocks().size > 1) return false;
+        return true;
+      },
+    }),
     InsertImages({
       extensions: ["png", "jpg", "gif", "webp"],
-      insertImage: async (change, file, editor) => {
-        return change.call(insertImageFile, file, editor);
-      },
+      insertImage: (editor, file) => editor.insertImageFile(file),
     }),
     EditList,
     EditCode({
@@ -41,17 +52,18 @@ const createPlugins = ({ getLinkComponent }: *) => {
       allowMarks: false,
       selectAll: true,
     }),
+    EditBlockquote(),
     Prism({
       onlyIn: node => node.type === "code",
       getSyntax: node => node.data.get("language") || "javascript",
     }),
+    Embeds({ getComponent: getLinkComponent }),
     CollapseOnEscape({ toEdge: "end" }),
     KeyboardShortcuts(),
     MarkdownShortcuts(),
     MarkdownPaste(),
     Ellipsis(),
     TrailingBlock({ type: "paragraph" }),
-    Embeds({ getComponent: getLinkComponent }),
   ];
 };
 

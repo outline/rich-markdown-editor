@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import { Change, Node, Range } from "slate";
+import { Editor, Node } from "slate";
 
 type Options = {
   getComponent?: Node => ?React.ComponentType<*>,
@@ -17,48 +17,36 @@ function findTopParent(document, node): ?Node {
 
 export default function Embeds({ getComponent }: Options) {
   return {
-    validateNode(node: Node) {
-      if (!getComponent) return;
-      if (node.object !== "inline") return;
-      if (node.type !== "link") return;
-      if (node.text !== node.data.get("href")) return;
+    normalizeNode(node: Node, editor: Editor, next: Function) {
+      if (
+        !getComponent ||
+        node.type === "block" ||
+        node.type !== "link" ||
+        node.text !== node.data.get("href")
+      )
+        return next();
 
       const component = getComponent(node);
-      if (!component) return;
+      if (!component) return next();
 
-      return (change: Change) => {
-        const document = change.value.document;
-        const parent = findTopParent(document, node);
-        if (!parent) return;
+      const parent = findTopParent(editor.value.document, node);
+      if (!parent) return next();
 
-        const firstText = parent.getFirstText();
-        const range = Range.create({
-          anchorKey: firstText.key,
-          anchorOffset: parent.text.length,
-          focusKey: firstText.key,
-          focusOffset: parent.text.length,
-        });
+      if (parent.type !== "paragraph" || parent.text !== node.text)
+        return next();
 
-        return change.withoutNormalization(c => {
-          c.removeNodeByKey(node.key).insertBlockAtRange(range, {
-            object: "block",
-            type: "link",
-            isVoid: true,
-            nodes: [
-              {
-                object: "text",
-                leaves: [{ text: "" }],
-              },
-            ],
-            data: { ...node.data.toJS(), embed: true, component },
-          });
-
-          // Remove entire paragraph if link is the only item
-          if (parent.type === "paragraph" && parent.text === node.text) {
-            c.removeNodeByKey(parent.key);
-          }
-
-          return change;
+      return (editor: Editor) => {
+        return editor.replaceNodeByKey(parent.key, {
+          object: "block",
+          type: "link",
+          isVoid: true,
+          nodes: [
+            {
+              object: "text",
+              leaves: [{ text: "" }],
+            },
+          ],
+          data: { ...node.data.toJS(), embed: true, component },
         });
       };
     },

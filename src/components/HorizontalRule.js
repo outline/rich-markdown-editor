@@ -4,10 +4,8 @@ import styled from "styled-components";
 import type { SlateNodeProps } from "../types";
 
 function HorizontalRule(props: SlateNodeProps) {
-  const { editor, node, attributes } = props;
-  const active =
-    editor.value.isFocused && editor.value.selection.hasEdgeIn(node);
-  return <StyledHr active={active} {...attributes} />;
+  const { isSelected, attributes } = props;
+  return <StyledHr isSelected={isSelected} {...attributes} />;
 }
 
 const StyledHr = styled.hr`
@@ -16,7 +14,7 @@ const StyledHr = styled.hr`
   border: 0;
   border-bottom: 1px solid
     ${props =>
-      props.active ? props.theme.selected : props.theme.horizontalRule};
+      props.isSelected ? props.theme.selected : props.theme.horizontalRule};
 `;
 
 export default HorizontalRule;

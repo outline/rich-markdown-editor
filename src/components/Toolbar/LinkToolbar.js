@@ -162,24 +162,29 @@ class LinkToolbar extends React.Component<Props, State> {
     this.save("");
   };
 
-  openLink = () => {
-    const href = this.props.link.data.get("href");
-    window.open(href, "_blank");
+  openLink = (ev: SyntheticMouseEvent<*>) => {
+    const { link, editor } = this.props;
+    const href = link.data.get("href");
+
+    if (editor.props.onClickLink) {
+      ev.preventDefault();
+      editor.props.onClickLink(href);
+    } else {
+      window.open(href, "_blank");
+    }
   };
 
   save = (href: string) => {
     const { editor, link } = this.props;
     href = href.trim();
 
-    editor.change(change => {
-      if (href) {
-        change.setNodeByKey(link.key, { type: "link", data: { href } });
-      } else if (link) {
-        change.unwrapInlineByKey(link.key);
-      }
-      change.deselect();
-      this.props.onBlur();
-    });
+    if (href) {
+      editor.setNodeByKey(link.key, { type: "link", data: { href } });
+    } else if (link) {
+      editor.unwrapInlineByKey(link.key);
+    }
+    editor.deselect();
+    this.props.onBlur();
   };
 
   setFirstResultRef = (ref: *) => {

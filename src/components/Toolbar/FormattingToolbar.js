@@ -51,25 +51,24 @@ class FormattingToolbar extends React.Component<Props> {
     ev.preventDefault();
     ev.stopPropagation();
 
-    this.props.editor.change(change => {
-      change.toggleMark(type);
+    const { editor } = this.props;
+    editor.toggleMark(type);
 
-      // ensure we remove any other marks on inline code
-      // we don't allow bold / italic / strikethrough code.
-      const isInlineCode = this.hasMark("code") || type === "code";
-      if (isInlineCode) {
-        change.value.marks.forEach(mark => {
-          if (mark.type !== "code") change.removeMark(mark);
-        });
-      }
-    });
+    // ensure we remove any other marks on inline code
+    // we don't allow bold / italic / strikethrough code.
+    const isInlineCode = this.hasMark("code") || type === "code";
+    if (isInlineCode) {
+      editor.value.marks.forEach(mark => {
+        if (mark.type !== "code") editor.removeMark(mark);
+      });
+    }
   };
 
   onClickBlock = (ev: SyntheticEvent<*>, type: string) => {
     ev.preventDefault();
     ev.stopPropagation();
 
-    this.props.editor.change(change => change.setBlocks(type));
+    this.props.editor.setBlocks(type);
   };
 
   handleCreateLink = (ev: SyntheticEvent<*>) => {
@@ -77,10 +76,8 @@ class FormattingToolbar extends React.Component<Props> {
     ev.stopPropagation();
 
     const data = { href: "" };
-    this.props.editor.change(change => {
-      change.wrapInline({ type: "link", data });
-      this.props.onCreateLink(ev);
-    });
+    this.props.editor.wrapInline({ type: "link", data });
+    this.props.onCreateLink(ev);
   };
 
   renderMarkButton = (type: Mark, IconClass: Function) => {
@@ -131,8 +128,8 @@ class FormattingToolbar extends React.Component<Props> {
         {this.renderMarkButton("deleted", StrikethroughIcon)}
         {this.renderMarkButton("code", CodeIcon)}
         <Separator />
-        {this.renderBlockButton("heading1", Heading1Icon)}
-        {this.renderBlockButton("heading2", Heading2Icon)}
+        {this.renderBlockButton("heading2", Heading1Icon)}
+        {this.renderBlockButton("heading3", Heading2Icon)}
         {this.renderBlockButton("block-quote", BlockQuoteIcon)}
         <Separator />
         <ToolbarButton onMouseDown={this.handleCreateLink}>
