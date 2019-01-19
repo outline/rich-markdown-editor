@@ -216,16 +216,20 @@ export default function MarkdownShortcuts() {
         if (codeMarksAtCursor.size > 0) {
           ev.preventDefault();
 
+          let iterationOffset = 0;
           const startOffset = selection.start.offset;
           const textNode = startBlock.getTextAtOffset(startOffset);
-          const charsInCodeBlock = textNode.characters
-            .takeUntil((v, k) => k === startOffset)
+          const codeLeaf = textNode.leaves
+            .takeUntil(v => {
+              iterationOffset += v.text.length;
+              return iterationOffset > startOffset;
+            })
             .reverse()
-            .takeUntil((v, k) => !v.marks.some(mark => mark.type === "code"));
+            .first();
 
           return editor.removeMarkByKey(
             textNode.key,
-            startOffset - charsInCodeBlock.size,
+            startOffset - codeLeaf.text.length,
             startOffset,
             "code"
           );
