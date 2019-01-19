@@ -8,6 +8,7 @@ import PasteLinkify from "slate-paste-linkify";
 import CollapseOnEscape from "slate-collapse-on-escape";
 import Prism from "golery-slate-prism";
 import Placeholder from "./plugins/Placeholder";
+import ColorSwatch from "./plugins/ColorSwatch";
 import EditList from "./plugins/EditList";
 import KeyboardShortcuts from "./plugins/KeyboardShortcuts";
 import MarkdownShortcuts from "./plugins/MarkdownShortcuts";
@@ -25,6 +26,7 @@ import "prismjs/components/prism-java";
 
 const createPlugins = ({ placeholder, getLinkComponent }: *) => {
   return [
+    ColorSwatch(),
     PasteLinkify({
       type: "link",
       collapseTo: "end",

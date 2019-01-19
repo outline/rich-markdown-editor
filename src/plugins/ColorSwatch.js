@@ -1,24 +1,18 @@
 // @flow
-import invariant from "invariant";
 import React from "react";
 import { Node, Editor } from "slate";
 import type { SlateNodeProps } from "../types";
-import Placeholder from "../components/Placeholder";
+import ColorSwatch from "../components/ColorSwatch";
 
-function PlaceholderPlugin(
-  options: {
-    placeholder?: string,
-    when?: (editor: Editor, node: Node) => boolean,
-  } = {}
-) {
-  const { placeholder, when } = options;
+const hexRegex = /^#(?:[0-9a-fA-F]{3}){1,2}$/;
 
-  invariant(
-    placeholder,
-    "You must pass `PlaceholderPlugin` an `options.placeholder` string."
-  );
-
-  invariant(when, "You must pass `PlaceholderPlugin` an `options.when` query.");
+function ColorSwatchPlugin() {
+  function when(editor: Editor, node: Node) {
+    if (node.object !== "inline") return false;
+    if (node.type !== "hashtag") return false;
+    if (!node.text.match(hexRegex)) return false;
+    return true;
+  }
 
   /**
    * Decorate a match node with a placeholder mark when it fits the query.
@@ -31,10 +25,11 @@ function PlaceholderPlugin(
     const others = next() || [];
     const first = node.getFirstText();
     const last = node.getLastText();
+
     const decoration = {
       anchor: { key: first.key, offset: 0 },
       focus: { key: last.key, offset: last.text.length },
-      mark: { type: "placeholder", data: { placeholder } },
+      mark: { type: "color", data: { hex: node.text } },
     };
 
     return [...others, decoration];
@@ -46,12 +41,12 @@ function PlaceholderPlugin(
   function renderMark(props: SlateNodeProps, editor: Editor, next: Function) {
     const { children, mark } = props;
 
-    if (mark.type === "placeholder") {
-      const content = mark.data.get("placeholder");
+    if (mark.type === "color") {
+      const hex = mark.data.get("hex");
 
       return (
         <span>
-          <Placeholder>{content}</Placeholder>
+          <ColorSwatch hex={hex} />
           {children}
         </span>
       );
@@ -63,4 +58,4 @@ function PlaceholderPlugin(
   return { decorateNode, renderMark };
 }
 
-export default PlaceholderPlugin;
+export default ColorSwatchPlugin;
