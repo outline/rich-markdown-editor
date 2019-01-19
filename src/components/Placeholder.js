@@ -9,7 +9,7 @@ const Placeholder = styled.span.attrs({
   width: 0;
   max-width: 100%;
   white-space: nowrap;
-  float: left;
+  line-height: 1.2em;
   color: ${props => props.theme.placeholder};
 `;
 

@@ -206,12 +206,12 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
   focusAtStart = () => {
     const { editor } = this;
-    editor.moveToStartOfNode(editor.value.document).focus();
+    editor.moveToStartOfDocument().focus();
   };
 
   focusAtEnd = () => {
     const { editor } = this;
-    editor.moveToEndOfNode(editor.value.document).focus();
+    editor.moveToEndOfDocument().focus();
   };
 
   renderNode = (...args: *) => {
