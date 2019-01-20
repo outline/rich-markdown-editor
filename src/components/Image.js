@@ -1,6 +1,7 @@
 // @flow
 import * as React from "react";
 import ImageZoom from "react-medium-image-zoom";
+import TextareaAutosize from "react-autosize-textarea";
 import styled from "styled-components";
 import type { SlateNodeProps as Props } from "../types";
 
@@ -10,6 +11,17 @@ type State = {
 class Image extends React.Component<Props, State> {
   state = {
     hasError: false,
+  };
+
+  handleKeyDown = (ev: SyntheticKeyboardEvent<*>) => {
+    if (ev.key === "Enter" || ev.key === "ArrowDown") {
+      ev.preventDefault();
+      const { editor, node } = this.props;
+      return editor
+        .moveToRangeOfNode(node)
+        .moveToStartOfNextBlock()
+        .focus();
+    }
   };
 
   handleChange = (ev: SyntheticInputEvent<*>) => {
@@ -71,12 +83,14 @@ class Image extends React.Component<Props, State> {
               <Caption
                 type="text"
                 placeholder="Write a caption"
+                onKeyDown={this.handleKeyDown}
                 onChange={this.handleChange}
                 onClick={this.handleClick}
                 defaultValue={caption}
                 contentEditable={false}
                 disabled={readOnly}
                 tabIndex={-1}
+                async
               />
             )}
           </React.Fragment>
@@ -126,7 +140,7 @@ const CenteredImage = styled.span`
   position: relative;
 `;
 
-const Caption = styled.input`
+const Caption = styled(TextareaAutosize)`
   border: 0;
   display: block;
   font-size: 13px;
@@ -138,6 +152,7 @@ const Caption = styled.input`
   width: 100%;
   outline: none;
   background: none;
+  resize: none;
 
   &::placeholder {
     color: ${props => props.theme.placeholder};

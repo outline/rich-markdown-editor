@@ -28,6 +28,7 @@
     "outline-icons": "^1.6.0",
     "prismjs": "^1.15.0",
     "react": "^16.6.0",
+    "react-autosize-textarea": "^6.0.0",
     "react-dom": "^16.6.0",
     "react-keydown": "^1.9.7",
     "react-medium-image-zoom": "^3.0.10",
