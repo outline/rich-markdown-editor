@@ -3,6 +3,13 @@ import { Editor, Node } from "slate";
 import headingToSlug from "../lib/headingToSlug";
 
 export default function CollapsableHeadings() {
+  const queries = {
+    getPathForHeadingNode(editor: Editor, node: Node) {
+      const slugish = headingToSlug(editor.value.document, node);
+      return `${window.location.pathname}#${slugish}`;
+    },
+  };
+
   const commands = {
     showContentBelow(editor: Editor, node: Node) {
       return editor.updateContentBelow(node, false);
@@ -14,8 +21,7 @@ export default function CollapsableHeadings() {
 
     toggleContentBelow(editor: Editor, node: Node) {
       const collapsed = node.data.get("collapsed");
-      const slugish = headingToSlug(editor.value.document, node);
-      const persistKey = `${window.location.pathname}#${slugish}`;
+      const persistKey = editor.getPathForHeadingNode(node);
 
       if (collapsed) {
         localStorage.removeItem(persistKey);
@@ -45,16 +51,35 @@ export default function CollapsableHeadings() {
     },
   };
 
+  function onKeyDown(
+    ev: SyntheticKeyboardEvent<*>,
+    editor: Editor,
+    next: Function
+  ) {
+    const { startBlock } = editor.value;
+    if (
+      !startBlock ||
+      !startBlock.type.match(/heading/) ||
+      !startBlock.data.get("collapsed")
+    )
+      return next();
+
+    // editing a heading will always uncollapse the contents beneath as the persist
+    // key is based on the slug which is based on the heading contents
+    editor.toggleContentBelow(startBlock);
+    return next();
+  }
+
   function normalizeNode(node: Node, editor: Editor, next: Function) {
     if (node.object !== "block") return next();
 
     if (node.type.match(/heading/)) {
-      const slugish = headingToSlug(editor.value.document, node);
-      const pathToHeading = `${window.location.pathname}#${slugish}`;
       const collapsed = node.data.get("collapsed");
-      const persistedState = localStorage.getItem(pathToHeading);
+      const persistKey = editor.getPathForHeadingNode(node);
+      const persistedState = localStorage.getItem(persistKey);
       const shouldBeCollapsed = persistedState === "collapsed";
 
+      // ensures that on load content under collapsed headings is correctly hidden
       if (collapsed !== shouldBeCollapsed) {
         return (editor: Editor) => {
           return editor
@@ -67,5 +92,5 @@ export default function CollapsableHeadings() {
     }
   }
 
-  return { commands, normalizeNode };
+  return { queries, commands, normalizeNode, onKeyDown };
 }
