@@ -1,14 +1,15 @@
 // @flow
 import * as React from "react";
 import styled from "styled-components";
+import { CollapsedIcon } from "outline-icons";
 import type { SlateNodeProps } from "../types";
 import headingToSlug from "../lib/headingToSlug";
 import CopyToClipboard from "./CopyToClipboard";
 
 type Props = SlateNodeProps & {
   component: string,
-  className: string,
   hasPretitle: boolean,
+  className: string,
 };
 
 function Heading(props: Props) {
@@ -18,9 +19,11 @@ function Heading(props: Props) {
     readOnly,
     children,
     component = "h1",
-    className,
     attributes,
+    className,
   } = props;
+
+  const collapsed = node.data.get("collapsed");
   const slugish = headingToSlug(editor.value.document, node);
   const showHash = readOnly && !!slugish;
   const Component = component;
@@ -28,13 +31,18 @@ function Heading(props: Props) {
   const title = node.text.trim();
   const startsWithPretitleAndSpace =
     pretitle && title.match(new RegExp(`^${pretitle}\\s`));
-  const linkToHeading = `${window.location.origin}${
-    window.location.pathname
-  }#${slugish}`;
+  const pathToHeading = `${window.location.pathname}#${slugish}`;
 
   return (
     <Component {...attributes} className={className}>
       <HiddenAnchor id={slugish} />
+      <CollapseToggle
+        onClick={() => editor.toggleContentBelow(node)}
+        contentEditable={false}
+        collapsed={collapsed}
+      >
+        <CollapsedIcon />
+      </CollapseToggle>
       <Wrapper hasPretitle={startsWithPretitleAndSpace}>{children}</Wrapper>
       {showHash && (
         <Anchor
@@ -43,7 +51,7 @@ function Heading(props: Props) {
             editor.props.onShowToast &&
             editor.props.onShowToast("Link copied to clipboard")
           }
-          text={linkToHeading}
+          text={`${window.location.origin}${pathToHeading}`}
         >
           <span>#</span>
         </Anchor>
@@ -51,6 +59,19 @@ function Heading(props: Props) {
     </Component>
   );
 }
+
+const CollapseToggle = styled.a`
+  visibility: ${props => (props.collapsed ? "visible" : "hidden")};
+  user-select: none;
+  position: absolute;
+  left: -24px;
+
+  svg {
+    ${props => props.collapsed && "transform: rotate(-90deg);"};
+    fill: ${props => props.theme.text};
+    transition: transform 100ms ease-in-out;
+  }
+`;
 
 const Wrapper = styled.div`
   display: inline;
@@ -73,6 +94,10 @@ export const StyledHeading = styled(Heading)`
   position: relative;
 
   &:hover {
+    ${CollapseToggle} {
+      visibility: visible;
+    }
+
     ${Anchor} {
       color: ${props => props.theme.placeholder};
       visibility: visible;

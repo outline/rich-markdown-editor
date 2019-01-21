@@ -1,5 +1,5 @@
 // @flow
-import { Editor, Block, KeyUtils } from "slate";
+import { Editor, Block, Node, KeyUtils } from "slate";
 import EditList from "./plugins/EditList";
 
 const { changes } = EditList;
@@ -16,6 +16,40 @@ const commands = {
 
   unwrapLink(editor: Editor) {
     editor.unwrapInline("link");
+  },
+
+  showContentBelow(editor: Editor, node: Node) {
+    return editor.updateContentBelow(node, false);
+  },
+
+  hideContentBelow(editor: Editor, node: Node) {
+    return editor.updateContentBelow(node, true);
+  },
+
+  toggleContentBelow(editor: Editor, node: Node) {
+    if (node.data.get("collapsed")) {
+      return editor.showContentBelow(node);
+    } else {
+      return editor.hideContentBelow(node);
+    }
+  },
+
+  updateContentBelow(editor: Editor, node: Node, hidden: boolean) {
+    const { document } = editor.value;
+
+    editor.setNodeByKey(node.key, { data: { collapsed: hidden } });
+
+    let active;
+    document.nodes.forEach(n => {
+      if (active && n.type.match(/heading/)) {
+        active = false;
+        return;
+      }
+      if (active) {
+        editor.setNodeByKey(n.key, { data: { hidden } });
+      }
+      if (n === node) active = true;
+    });
   },
 
   splitAndInsertBlock(editor: Editor, options: SplitOptions) {

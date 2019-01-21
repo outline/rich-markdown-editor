@@ -23,7 +23,7 @@ class GoogleEmbed extends React.Component<*> {
 class Example extends React.Component<*, { readOnly: boolean, dark: boolean }> {
   state = {
     readOnly: false,
-    dark: false,
+    dark: localStorage.getItem("dark") === "enabled",
   };
 
   handleToggleReadOnly = () => {
@@ -31,7 +31,9 @@ class Example extends React.Component<*, { readOnly: boolean, dark: boolean }> {
   };
 
   handleToggleDark = () => {
-    this.setState({ dark: !this.state.dark });
+    const dark = !this.state.dark;
+    this.setState({ dark });
+    localStorage.setItem("dark", dark ? "enabled" : "disabled");
   };
 
   handleChange = debounce(value => {

@@ -5,23 +5,20 @@ import { Node, Editor } from "slate";
 import type { SlateNodeProps } from "../types";
 import Placeholder from "../components/Placeholder";
 
-function SlateReactPlaceholder(
+function PlaceholderPlugin(
   options: {
     placeholder?: string,
-    when?: (node: Node, editor: Editor) => boolean,
+    when?: (editor: Editor, node: Node) => boolean,
   } = {}
 ) {
   const { placeholder, when } = options;
 
   invariant(
     placeholder,
-    "You must pass `SlateReactPlaceholder` an `options.placeholder` string."
+    "You must pass `PlaceholderPlugin` an `options.placeholder` string."
   );
 
-  invariant(
-    when,
-    "You must pass `SlateReactPlaceholder` an `options.when` query."
-  );
+  invariant(when, "You must pass `PlaceholderPlugin` an `options.when` query.");
 
   /**
    * Decorate a match node with a placeholder mark when it fits the query.
@@ -66,4 +63,4 @@ function SlateReactPlaceholder(
   return { decorateNode, renderMark };
 }
 
-export default SlateReactPlaceholder;
+export default PlaceholderPlugin;

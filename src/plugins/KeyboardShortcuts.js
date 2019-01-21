@@ -71,11 +71,23 @@ export default function KeyboardShortcuts() {
         });
       }
 
-      // Hitting enter in a heading or blockquote will split the node at that
-      // point and make the new node a paragraph
-      if (startBlock.type.match(/(heading|block-quote)/) && endOffset > 0) {
+      if (startBlock.type.match(/(heading|block-quote)/)) {
         ev.preventDefault();
-        return editor.splitBlock().setBlocks("paragraph");
+
+        // if the heading is collapsed then show everything now so the user
+        // isn't editing in a weird state with some content hidden
+        editor.showContentBelow(startBlock);
+
+        // Hitting enter in a heading or blockquote will split the node at that
+        // point and make the new node a paragraph
+        if (endOffset > 0) {
+          return editor.splitBlock().setBlocks("paragraph");
+        } else {
+          return editor
+            .splitBlock()
+            .moveToStartOfPreviousBlock()
+            .setBlocks("paragraph");
+        }
       }
 
       return next();
