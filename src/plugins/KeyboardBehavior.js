@@ -94,19 +94,34 @@ export default function KeyboardBehavior() {
 
     if (!startBlock) return next();
 
-    // If image is selected delete the whole thing
+    // If image or embed is selected go ahead and delete the whole block
     if (startBlock.type === "image" || startBlock.type === "link") {
       ev.preventDefault();
       return editor.removeNodeByKey(startBlock.key).moveToStartOfNextBlock();
     }
 
-    if (selection.isExpanded) return next();
+    if (selection.isExpanded) {
+      // If we're about to remove a heading then ensure that its not collapsed
+      if (
+        selection.start.offset === 0 &&
+        selection.end.offset === startBlock.text.length &&
+        startBlock.type.match(/heading/)
+      ) {
+        editor.showContentBelow(startBlock);
+      }
+
+      return next();
+    }
 
     // If at the start of a non-paragraph, convert it back into a paragraph
     if (selection.start.offset === 0) {
       if (startBlock.type === "paragraph") return next();
       ev.preventDefault();
 
+      // If we're about to remove a heading then ensure that its not collapsed
+      if (startBlock.type.match(/heading/)) {
+        editor.showContentBelow(startBlock);
+      }
       editor.setBlocks("paragraph");
 
       if (startBlock.type === "list-item") {
@@ -116,13 +131,13 @@ export default function KeyboardBehavior() {
       return;
     }
 
-    // If at the end of a code mark hitting backspace should remove the mark
     if (selection.isCollapsed) {
       const marksAtCursor = startBlock.getMarksAtRange(selection);
       const codeMarksAtCursor = marksAtCursor.filter(
         mark => mark.type === "code"
       );
 
+      // If at the end of a code mark hitting backspace should remove the mark
       if (codeMarksAtCursor.size > 0) {
         ev.preventDefault();
 
