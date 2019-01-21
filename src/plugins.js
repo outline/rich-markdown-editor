@@ -9,6 +9,7 @@ import CollapseOnEscape from "slate-collapse-on-escape";
 import Prism from "golery-slate-prism";
 import Placeholder from "./plugins/Placeholder";
 import EditList from "./plugins/EditList";
+import KeyboardBehavior from "./plugins/KeyboardBehavior";
 import KeyboardShortcuts from "./plugins/KeyboardShortcuts";
 import MarkdownShortcuts from "./plugins/MarkdownShortcuts";
 import MarkdownPaste from "./plugins/MarkdownPaste";
@@ -59,6 +60,7 @@ const createPlugins = ({ placeholder, getLinkComponent }: *) => {
     }),
     Embeds({ getComponent: getLinkComponent }),
     CollapseOnEscape({ toEdge: "end" }),
+    KeyboardBehavior(),
     KeyboardShortcuts(),
     MarkdownShortcuts(),
     MarkdownPaste(),

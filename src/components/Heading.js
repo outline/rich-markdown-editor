@@ -7,7 +7,7 @@ import headingToSlug from "../lib/headingToSlug";
 import CopyToClipboard from "./CopyToClipboard";
 
 type Props = SlateNodeProps & {
-  component: string,
+  component: "h1" | "h2" | "h3" | "h4" | "h5" | "h6",
   hasPretitle: boolean,
   className: string,
 };
@@ -73,7 +73,8 @@ const CollapseToggle = styled.a`
 
   svg {
     ${props => props.collapsed && "transform: rotate(-90deg);"};
-    fill: ${props => props.theme.placeholder};
+    fill: ${props =>
+      props.collapsed ? props.theme.text : props.theme.placeholder};
     transition: transform 100ms ease-in-out;
   }
 
