@@ -54,11 +54,9 @@ export default function KeyboardShortcuts() {
       const { value } = editor;
       const { startBlock, selection } = value;
       if (selection.isExpanded) return next();
+      if (!startBlock) return next();
 
       const endOffset = selection.end.offset;
-
-      // Hitting enter at the end of the line reverts to standard behavior
-      if (!startBlock || endOffset === startBlock.length) return next();
 
       // Hitting enter while an image is selected should jump caret below and
       // insert a new paragraph

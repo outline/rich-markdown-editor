@@ -23,6 +23,7 @@ function Heading(props: Props) {
     className,
   } = props;
 
+  const firstNode = editor.value.document.nodes.first() === node;
   const collapsed = node.data.get("collapsed");
   const slugish = headingToSlug(editor.value.document, node);
   const showHash = readOnly && !!slugish;
@@ -36,13 +37,15 @@ function Heading(props: Props) {
   return (
     <Component {...attributes} className={className}>
       <HiddenAnchor id={slugish} />
-      <CollapseToggle
-        onClick={() => editor.toggleContentBelow(node)}
-        contentEditable={false}
-        collapsed={collapsed}
-      >
-        <CollapsedIcon />
-      </CollapseToggle>
+      {!firstNode && (
+        <CollapseToggle
+          onClick={() => editor.toggleContentBelow(node)}
+          contentEditable={false}
+          collapsed={collapsed}
+        >
+          <CollapsedIcon />
+        </CollapseToggle>
+      )}
       <Wrapper hasPretitle={startsWithPretitleAndSpace}>{children}</Wrapper>
       {showHash && (
         <Anchor
@@ -65,11 +68,19 @@ const CollapseToggle = styled.a`
   user-select: none;
   position: absolute;
   left: -24px;
+  cursor: pointer;
+  transform: scale(1.1);
 
   svg {
     ${props => props.collapsed && "transform: rotate(-90deg);"};
-    fill: ${props => props.theme.text};
+    fill: ${props => props.theme.placeholder};
     transition: transform 100ms ease-in-out;
+  }
+
+  &:hover {
+    svg {
+      fill: ${props => props.theme.text};
+    }
   }
 `;
 
