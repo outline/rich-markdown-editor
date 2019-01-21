@@ -55,6 +55,7 @@ class Example extends React.Component<*, { readOnly: boolean, dark: boolean }> {
           </button>
         </p>
         <Editor
+          id="example"
           readOnly={this.state.readOnly}
           defaultValue={defaultValue}
           onSave={options => console.log("Save triggered", options)}

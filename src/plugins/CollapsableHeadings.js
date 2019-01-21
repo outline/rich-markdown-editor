@@ -6,7 +6,7 @@ export default function CollapsableHeadings() {
   const queries = {
     getPathForHeadingNode(editor: Editor, node: Node) {
       const slugish = headingToSlug(editor.value.document, node);
-      return `${window.location.pathname}#${slugish}`;
+      return `${editor.props.id || window.location.pathname}#${slugish}`;
     },
   };
 

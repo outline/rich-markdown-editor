@@ -37,15 +37,14 @@ function Heading(props: Props) {
   return (
     <Component {...attributes} className={className}>
       <HiddenAnchor id={slugish} />
-      {!firstNode && (
-        <CollapseToggle
-          onClick={() => editor.toggleContentBelow(node)}
-          contentEditable={false}
-          collapsed={collapsed}
-        >
-          <CollapsedIcon />
-        </CollapseToggle>
-      )}
+      <CollapseToggle
+        onClick={() => editor.toggleContentBelow(node)}
+        contentEditable={false}
+        collapsed={collapsed}
+        disabled={firstNode}
+      >
+        <CollapsedIcon />
+      </CollapseToggle>
       <Wrapper hasPretitle={startsWithPretitleAndSpace}>{children}</Wrapper>
       {showHash && (
         <Anchor
@@ -64,12 +63,13 @@ function Heading(props: Props) {
 }
 
 const CollapseToggle = styled.a`
+  opacity: ${props => (props.disabled ? "0" : "1")};
+  pointer-events: ${props => (props.disabled ? "none" : "all")};
   visibility: ${props => (props.collapsed ? "visible" : "hidden")};
   user-select: none;
-  position: absolute;
-  left: 0;
   cursor: pointer;
-  transform: scale(1.1);
+  width: 24px;
+  height: 24px;
 
   svg {
     ${props => props.collapsed && "transform: rotate(-90deg);"};
@@ -103,9 +103,9 @@ const Anchor = styled(CopyToClipboard)`
 `;
 
 export const StyledHeading = styled(Heading)`
+  display: flex;
   position: relative;
   margin-left: -24px;
-  padding-left: 24px;
 
   &:hover {
     ${CollapseToggle} {

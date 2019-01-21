@@ -22,6 +22,10 @@ See a working example in the [example directory](/example).
 
 ### Props
 
+#### `id`
+
+A unique id for this editor, used to persist settings such as collapsed headings. If no `id` is passed then the editor will default to using the location pathname.
+
 #### `defaultValue`
 
 A markdown string that represents the initial value of the editor. Use this to prop to restore
@@ -39,6 +43,10 @@ With `readOnly` set to `false` the editor is optimized for composition. When `tr
 
 When set `true` together with `readOnly` set to `false`, focus at the
 document automatically.
+
+#### `spellCheck`
+
+Set to false to prevent spellchecking – defaults to true.
 
 #### `toc`
 

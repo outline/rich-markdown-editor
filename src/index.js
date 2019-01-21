@@ -23,6 +23,7 @@ export const theme = lightTheme;
 export const schema = defaultSchema;
 
 type Props = {
+  id?: string,
   defaultValue: string,
   placeholder: string,
   pretitle?: string,
