@@ -9,6 +9,7 @@ import CollapseOnEscape from "slate-collapse-on-escape";
 import Prism from "golery-slate-prism";
 import Placeholder from "./plugins/Placeholder";
 import EditList from "./plugins/EditList";
+import CollapsableHeadings from "./plugins/CollapsableHeadings";
 import KeyboardBehavior from "./plugins/KeyboardBehavior";
 import KeyboardShortcuts from "./plugins/KeyboardShortcuts";
 import MarkdownShortcuts from "./plugins/MarkdownShortcuts";
@@ -45,7 +46,6 @@ const createPlugins = ({ placeholder, getLinkComponent }: *) => {
       extensions: ["png", "jpg", "gif", "webp"],
       insertImage: (editor, file) => editor.insertImageFile(file),
     }),
-    EditList,
     EditCode({
       containerType: "code",
       lineType: "code-line",
@@ -60,10 +60,12 @@ const createPlugins = ({ placeholder, getLinkComponent }: *) => {
     }),
     Embeds({ getComponent: getLinkComponent }),
     CollapseOnEscape({ toEdge: "end" }),
+    CollapsableHeadings(),
     KeyboardBehavior(),
     KeyboardShortcuts(),
     MarkdownShortcuts(),
     MarkdownPaste(),
+    EditList,
     Ellipsis(),
     TrailingBlock({ type: "paragraph" }),
   ];

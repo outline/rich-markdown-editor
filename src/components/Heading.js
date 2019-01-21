@@ -24,7 +24,6 @@ function Heading(props: Props) {
   } = props;
 
   const firstNode = editor.value.document.nodes.first() === node;
-  const collapsed = node.data.get("collapsed");
   const slugish = headingToSlug(editor.value.document, node);
   const showHash = readOnly && !!slugish;
   const Component = component;
@@ -33,6 +32,7 @@ function Heading(props: Props) {
   const startsWithPretitleAndSpace =
     pretitle && title.match(new RegExp(`^${pretitle}\\s`));
   const pathToHeading = `${window.location.pathname}#${slugish}`;
+  const collapsed = node.data.get("collapsed");
 
   return (
     <Component {...attributes} className={className}>
@@ -67,7 +67,7 @@ const CollapseToggle = styled.a`
   visibility: ${props => (props.collapsed ? "visible" : "hidden")};
   user-select: none;
   position: absolute;
-  left: -24px;
+  left: 0;
   cursor: pointer;
   transform: scale(1.1);
 
@@ -104,6 +104,8 @@ const Anchor = styled(CopyToClipboard)`
 
 export const StyledHeading = styled(Heading)`
   position: relative;
+  margin-left: -24px;
+  padding-left: 24px;
 
   &:hover {
     ${CollapseToggle} {
