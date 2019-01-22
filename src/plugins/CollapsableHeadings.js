@@ -44,7 +44,7 @@ export default function CollapsableHeadings() {
           return;
         }
         if (active) {
-          editor.setNodeByKey(n.key, { data: { hidden } });
+          editor.setNodeByKey(n.key, { data: { ...n.data.toJS(), hidden } });
         }
         if (n === node) active = true;
       });
@@ -80,7 +80,7 @@ export default function CollapsableHeadings() {
       const shouldBeCollapsed = persistedState === "collapsed";
 
       // ensures that on load content under collapsed headings is correctly hidden
-      if (collapsed !== shouldBeCollapsed) {
+      if (shouldBeCollapsed && !collapsed) {
         return (editor: Editor) => {
           return editor
             .updateContentBelow(node, shouldBeCollapsed)
