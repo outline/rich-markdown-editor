@@ -31,6 +31,8 @@ function PlaceholderPlugin(
     const others = next() || [];
     const first = node.getFirstText();
     const last = node.getLastText();
+    if (!first || !last) return next();
+
     const decoration = {
       anchor: { key: first.key, offset: 0 },
       focus: { key: last.key, offset: last.text.length },
