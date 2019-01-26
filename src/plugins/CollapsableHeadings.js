@@ -59,6 +59,7 @@ export default function CollapsableHeadings() {
     const { startBlock } = editor.value;
     if (
       !startBlock ||
+      !startBlock.type ||
       !startBlock.type.match(/heading/) ||
       !startBlock.data.get("collapsed")
     )

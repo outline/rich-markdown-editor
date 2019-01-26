@@ -10,7 +10,9 @@ export default function MarkdownPaste() {
       const { text } = transfer;
       if (transfer.type !== "text" && transfer.type !== "html") return next();
 
-      const fragment = Markdown.deserialize(text);
+      const fragment = Markdown.deserialize(text || "");
+      if (!fragment) return;
+
       return editor.insertFragment(fragment.document);
     },
   };
