@@ -36,7 +36,7 @@
     "slate": "^0.44.0",
     "slate-collapse-on-escape": "^0.8.1",
     "slate-drop-or-paste-images": "^0.9.1",
-    "slate-md-serializer": "^5.2.2",
+    "slate-md-serializer": "^5.2.3",
     "slate-paste-linkify": "^0.7.0",
     "slate-plain-serializer": "0.6.33",
     "slate-react": "^0.21.15",

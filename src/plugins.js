@@ -53,7 +53,10 @@ const createPlugins = ({ placeholder, getLinkComponent }: *) => {
       allowMarks: false,
       selectAll: true,
     }),
-    EditBlockquote(),
+    EditBlockquote({
+      type: "block-quote",
+      typeDefault: "paragraph",
+    }),
     Prism({
       onlyIn: node => node.type === "code",
       getSyntax: node => node.data.get("language") || "javascript",
