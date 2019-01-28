@@ -30,11 +30,14 @@ const schema = {
     table: {
       nodes: [
         {
-          match: [
-            { object: ["table-row"] },
-            { object: ["table-head"] },
-            { object: ["table-cell"] },
-          ],
+          match: {
+            type: "table-row",
+            nodes: [
+              {
+                match: [{ type: "table-head" }, { type: "table-cell" }],
+              },
+            ],
+          },
         },
       ],
     },
