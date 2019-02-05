@@ -115,7 +115,8 @@ export default function KeyboardBehavior() {
 
     // If at the start of a non-paragraph, convert it back into a paragraph
     if (selection.start.offset === 0) {
-      if (startBlock.type === "paragraph") return next();
+      if (startBlock.type === "paragraph"
+          || startBlock.type === "code-line") return next();
       ev.preventDefault();
 
       // If we're about to remove a heading then ensure that its not collapsed
