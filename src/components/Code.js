@@ -87,7 +87,6 @@ const Code = styled.code`
     hyphens: none;
     color: ${props => props.theme.code};
     margin: 0;
-    overflow: auto;
   }
 
   .token.comment,
