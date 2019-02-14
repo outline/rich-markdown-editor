@@ -75,4 +75,4 @@ function renderNode(props: SlateNodeProps, editor: Editor, next: Function) {
   }
 }
 
-export default renderNode;
+export default { renderNode };
