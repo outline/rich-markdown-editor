@@ -32,6 +32,7 @@ type Props = {
   readOnly?: boolean,
   toc?: boolean,
   dark?: boolean,
+  hideToolbars?: boolean,
   schema?: Schema,
   theme?: Object,
   uploadImage?: (file: File) => Promise<string>,
