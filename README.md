@@ -69,6 +69,10 @@ Allows overriding the inbuilt theme to brand the editor, for example use your ow
 
 With `dark` set to `true` the editor will use a default dark theme that's included. See the [source here](/src/theme.js).
 
+#### `hideToolbars`
+
+Prevent toolbars (formatting, link, block, and block insert) from displaying.
+
 
 ### Callbacks
 
