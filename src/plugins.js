@@ -43,7 +43,7 @@ const createPlugins = ({ placeholder, getLinkComponent }: *) => {
       },
     }),
     InsertImages({
-      extensions: ["png", "jpg", "gif", "webp"],
+      extensions: ["png", "jpg", "jpeg", "gif", "webp"],
       insertImage: (editor, file) => editor.insertImageFile(file),
     }),
     EditCode({
