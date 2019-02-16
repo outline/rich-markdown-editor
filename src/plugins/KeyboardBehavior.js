@@ -73,10 +73,12 @@ export default function KeyboardBehavior() {
     next: Function
   ) {
     const { value } = editor;
+    const { startBlock } = value;
+    if (!startBlock) return next();
 
     // On tab, if at the end of the heading jump to the main body content
     // as if it is another input field (act the same as enter).
-    if (value.startBlock.type === "heading1") {
+    if (startBlock.type === "heading1") {
       ev.preventDefault();
       return editor.splitBlock().setBlocks("paragraph");
     }
@@ -91,7 +93,6 @@ export default function KeyboardBehavior() {
   ) {
     const { value } = editor;
     const { startBlock, selection } = value;
-
     if (!startBlock) return next();
 
     // If image or embed is selected go ahead and delete the whole block
