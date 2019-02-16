@@ -7,7 +7,7 @@ const inlineShortcuts = [
   { mark: "italic", shortcut: "*" },
   { mark: "italic", shortcut: "_" },
   { mark: "code", shortcut: "`" },
-  { mark: "added", shortcut: "++" },
+  { mark: "inserted", shortcut: "++" },
   { mark: "deleted", shortcut: "~~" },
 ];
 

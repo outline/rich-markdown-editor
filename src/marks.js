@@ -24,7 +24,7 @@ export default function renderMark(
       return <u>{props.children}</u>;
     case "deleted":
       return <del>{props.children}</del>;
-    case "added":
+    case "inserted":
       return <mark>{props.children}</mark>;
     default:
       return next();
