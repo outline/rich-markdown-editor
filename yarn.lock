@@ -5636,7 +5636,6 @@ slate-hotkeys@^0.2.8:
 slate-md-serializer@^5.2.3:
   version "5.2.3"
   resolved "https://registry.yarnpkg.com/slate-md-serializer/-/slate-md-serializer-5.2.3.tgz#45e67f37dca2bfc2c4ea7b17206a1c653d40e55d"
-  integrity sha512-X5pOTi613jK5cMQ1bteWmHjXus4OpTwDXPSH3HjanoHyIH2chfMhg/X0Wm9BMoOfr94o4PJlj5cSmAqIPkXU0A==
   dependencies:
     hashtag-regex "^2.0.0"
 
@@ -5683,9 +5682,9 @@ slate-schema-violations@^0.1.39:
   version "0.1.39"
   resolved "https://registry.yarnpkg.com/slate-schema-violations/-/slate-schema-violations-0.1.39.tgz#854ab5624136419cef4c803b1823acabe11f1c15"
 
-slate@^0.44.0:
-  version "0.44.9"
-  resolved "https://registry.yarnpkg.com/slate/-/slate-0.44.9.tgz#0fc9ba9f08b379b86c4c0a1ddebbe6bf28aa3c4b"
+slate@^0.44.10:
+  version "0.44.10"
+  resolved "https://registry.yarnpkg.com/slate/-/slate-0.44.10.tgz#ac7c3e3cf85570a8723a64a8a7807c881ddbfa8a"
   dependencies:
     debug "^3.1.0"
     direction "^0.1.5"

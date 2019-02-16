@@ -33,7 +33,7 @@
     "react-keydown": "^1.9.7",
     "react-medium-image-zoom": "^3.0.10",
     "react-portal": "^4.1.4",
-    "slate": "^0.44.0",
+    "slate": "^0.44.10",
     "slate-collapse-on-escape": "^0.8.1",
     "slate-drop-or-paste-images": "^0.9.1",
     "slate-md-serializer": "^5.2.3",
