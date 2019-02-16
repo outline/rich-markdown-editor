@@ -17,6 +17,7 @@ import MarkdownPaste from "./plugins/MarkdownPaste";
 import Ellipsis from "./plugins/Ellipsis";
 import Embeds from "./plugins/Embeds";
 import Nodes from "./nodes.js";
+import Marks from "./marks.js";
 
 // additional language support based on the most popular programming languages
 import "prismjs/components/prism-ruby";
@@ -29,6 +30,7 @@ import "prismjs/components/prism-java";
 const createPlugins = ({ placeholder, getLinkComponent }: *) => {
   return [
     Nodes,
+    Marks,
     PasteLinkify({
       type: "link",
       collapseTo: "end",

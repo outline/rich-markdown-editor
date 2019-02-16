@@ -3,7 +3,7 @@ import * as React from "react";
 import { Value, Editor as TEditor, Schema, Node } from "slate";
 import { Editor } from "slate-react";
 import styled, { ThemeProvider } from "styled-components";
-import type { SlateNodeProps, Plugin, SearchResult } from "./types";
+import type { Plugin, SearchResult } from "./types";
 import { light as lightTheme, dark as darkTheme } from "./theme";
 import defaultSchema from "./schema";
 import getDataTransferFiles from "./lib/getDataTransferFiles";
@@ -14,7 +14,6 @@ import BlockInsert from "./components/BlockInsert";
 import Contents from "./components/Contents";
 import Markdown from "./serializer";
 import createPlugins from "./plugins";
-import renderMark from "./marks";
 import commands from "./commands";
 import queries from "./queries";
 
@@ -285,7 +284,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
               commands={commands}
               queries={queries}
               placeholder={placeholder}
-              renderMark={renderMark}
               schema={this.getSchema()}
               onKeyDown={this.handleKeyDown}
               onChange={this.handleChange}

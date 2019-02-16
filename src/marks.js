@@ -8,11 +8,7 @@ type Props = {
   mark: Mark,
 };
 
-export default function renderMark(
-  props: Props,
-  editor: Editor,
-  next: Function
-) {
+function renderMark(props: Props, editor: Editor, next: Function) {
   switch (props.mark.type) {
     case "bold":
       return <strong>{props.children}</strong>;
@@ -30,3 +26,5 @@ export default function renderMark(
       return next();
   }
 }
+
+export default { renderMark };
