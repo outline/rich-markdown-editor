@@ -153,6 +153,7 @@ export default function KeyboardBehavior() {
           })
           .reverse()
           .first();
+        if (!codeLeaf) return next();
 
         return editor.removeMarkByKey(
           textNode.key,
