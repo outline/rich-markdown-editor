@@ -15,7 +15,6 @@ import Contents from "./components/Contents";
 import Markdown from "./serializer";
 import createPlugins from "./plugins";
 import renderMark from "./marks";
-import renderNode from "./nodes";
 import commands from "./commands";
 import queries from "./queries";
 
@@ -43,7 +42,6 @@ type Props = {
   onSearchLink?: (term: string) => Promise<SearchResult[]>,
   onClickLink?: (href: string) => *,
   onShowToast?: (message: string) => *,
-  renderNode?: SlateNodeProps => ?React.Node,
   getLinkComponent?: Node => ?React.ComponentType<*>,
   className?: string,
   style?: Object,
@@ -215,12 +213,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     editor.moveToEndOfDocument().focus();
   };
 
-  renderNode = (...args: *) => {
-    const node = this.props.renderNode && this.props.renderNode(...args);
-    if (node) return node;
-    return renderNode(...args);
-  };
-
   getSchema = () => {
     if (this.prevSchema !== this.props.schema) {
       this.schema = {
@@ -293,7 +285,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
               commands={commands}
               queries={queries}
               placeholder={placeholder}
-              renderNode={this.renderNode}
               renderMark={renderMark}
               schema={this.getSchema()}
               onKeyDown={this.handleKeyDown}

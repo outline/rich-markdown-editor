@@ -152,7 +152,7 @@ import { history } from "react-router";
 
 #### `renderNode`
 
-This callback allows overriding of the [inbuilt renderNode](https://github.com/outline/rich-markdown-editor/blob/master/src/nodes.js) – if a component is returned from the callback then it will be used instead of the default implementation. See the [Slate documentation](https://docs.slatejs.org/guides/rendering#nodes-and-marks) for an example.
+See the [Slate documentation](https://docs.slatejs.org/guides/rendering#nodes-and-marks) for an example.  There is an [inbuilt renderNode](https://github.com/outline/rich-markdown-editor/blob/master/src/nodes.js) implemented as a plugin.
 
 #### `getLinkComponent(Node)`
 
