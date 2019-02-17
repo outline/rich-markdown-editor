@@ -146,14 +146,16 @@ export default function KeyboardBehavior() {
         let iterationOffset = 0;
         const startOffset = selection.start.offset;
         const textNode = startBlock.getTextAtOffset(startOffset);
-        const codeLeaf = textNode.leaves
-          .takeUntil(v => {
-            iterationOffset += v.text.length;
-            return iterationOffset > startOffset;
-          })
-          .reverse()
-          .first();
+        const leavesUntilCode = textNode.leaves.takeUntil(v => {
+          iterationOffset += v.text.length;
+          return iterationOffset > startOffset;
+        });
+
+        const textUntilCode = leavesUntilCode.map(l => l.text).join("");
+        const codeLeaf = leavesUntilCode.reverse().first();
+
         if (!codeLeaf) return next();
+        if (startOffset !== textUntilCode.length) return next();
 
         return editor.removeMarkByKey(
           textNode.key,

@@ -37,7 +37,7 @@ export default function KeyboardShortcuts() {
     // don't allow formatting of main document title
     if (value.startBlock.type === "heading1") return next();
 
-    editor.toggleMark(type);
+    editor.removeMark("code").toggleMark(type);
   }
 
   return { onKeyDown };
