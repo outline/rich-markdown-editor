@@ -90,6 +90,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     if (this.props.autoFocus) {
       this.focusAtEnd();
     }
+
+    this.scrollToAnchor();
   }
 
   componentDidUpdate(prevProps: Props) {
@@ -100,6 +102,14 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
   componentWillUnmount() {
     window.removeEventListener("keydown", this.handleKeyDown);
+  }
+
+  scrollToAnchor() {
+    const { hash } = window.location;
+    if (!hash) return;
+
+    const element = document.querySelector(hash);
+    if (element) element.scrollIntoView({ behavior: "smooth" });
   }
 
   setEditorRef = (ref: Editor) => {
