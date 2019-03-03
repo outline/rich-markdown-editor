@@ -108,8 +108,15 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     const { hash } = window.location;
     if (!hash) return;
 
-    const element = document.querySelector(hash);
-    if (element) element.scrollIntoView({ behavior: "smooth" });
+    try {
+      const element = document.querySelector(hash);
+      if (element) element.scrollIntoView({ behavior: "smooth" });
+    } catch (err) {
+      // querySelector will throw an error if the hash begins with a number
+      // or contains a period. This is protected against now by safeSlugify
+      // however previous links may be in the wild.
+      console.warn("Attempted to scroll to invalid hash", err);
+    }
   }
 
   setEditorRef = (ref: Editor) => {
