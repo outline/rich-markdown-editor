@@ -16,7 +16,10 @@ import {
 } from "outline-icons";
 import getDataTransferFiles from "../../lib/getDataTransferFiles";
 import type { SlateNodeProps, Theme } from "../../types";
+import EditList from "../../plugins/EditList";
 import ToolbarButton from "./ToolbarButton";
+
+const { changes } = EditList;
 
 type Props = SlateNodeProps & {
   theme: Theme,
@@ -72,13 +75,28 @@ class BlockToolbar extends React.Component<Props> {
 
     editor
       .moveToEndOfNode(this.props.node)
-      .splitAndInsertBlock(options)
+      .insertBlock(options.type)
       .removeNodeByKey(this.props.node.key)
       .moveToEnd();
 
     if (cursorPosition === "before") editor.moveToStartOfPreviousBlock();
     if (cursorPosition === "after") editor.moveToStartOfNextBlock();
     return editor.focus();
+  };
+
+  insertList = (type: string) => {
+    const { editor } = this.props;
+
+    editor.moveToEndOfNode(this.props.node).command(changes.wrapInList, type);
+
+    if (type === "todo-list") {
+      // TODO data: { checked: false },
+    }
+
+    return editor
+      .removeNodeByKey(this.props.node.key)
+      .moveToEndOfNextBlock()
+      .focus();
   };
 
   handleClickBlock = (ev: SyntheticEvent<*>, type: string) => {
@@ -99,20 +117,11 @@ class BlockToolbar extends React.Component<Props> {
           "after"
         );
       case "bulleted-list":
-        return this.insertBlock({
-          type: "list-item",
-          wrapper: "bulleted-list",
-        });
+        return this.insertList("bulleted-list");
       case "ordered-list":
-        return this.insertBlock({
-          type: "list-item",
-          wrapper: "ordered-list",
-        });
+        return this.insertList("ordered-list");
       case "todo-list":
-        return this.insertBlock({
-          type: { type: "list-item", data: { checked: false } },
-          wrapper: "todo-list",
-        });
+        return this.insertList("todo-list");
       case "image":
         return this.onPickImage();
       default:
