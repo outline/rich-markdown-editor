@@ -1,13 +1,5 @@
 // @flow
 import { Editor, Block, KeyUtils } from "slate";
-import EditList from "./plugins/EditList";
-
-const { changes } = EditList;
-
-type SplitOptions = {
-  type: string | Object,
-  wrapper?: string | Object,
-};
 
 const commands = {
   wrapLink(editor: Editor, href: string) {
