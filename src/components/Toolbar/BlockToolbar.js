@@ -86,12 +86,14 @@ class BlockToolbar extends React.Component<Props> {
 
   insertList = (type: string) => {
     const { editor } = this.props;
+    const checked = type === "todo-list" ? false : undefined;
 
-    editor.moveToEndOfNode(this.props.node).command(changes.wrapInList, type);
-
-    if (type === "todo-list") {
-      // TODO data: { checked: false },
-    }
+    editor
+      .moveToEndOfNode(this.props.node)
+      .command(changes.wrapInList, type, undefined, {
+        type: "list-item",
+        data: { checked },
+      });
 
     return editor
       .removeNodeByKey(this.props.node.key)

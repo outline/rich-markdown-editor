@@ -138,6 +138,10 @@
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.7.0.tgz#9a06f4f137ee84d7df0460c1fdb1135ffa6c50fd"
 
+"@tommoor/slate-edit-list@0.19.0-0":
+  version "0.19.0-0"
+  resolved "https://registry.yarnpkg.com/@tommoor/slate-edit-list/-/slate-edit-list-0.19.0-0.tgz#972a714e9ea4cdf47a530d5702a904f5547be2dd"
+
 "@wikifactory/slate-edit-blockquote@^0.7.1":
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/@wikifactory/slate-edit-blockquote/-/slate-edit-blockquote-0.7.1.tgz#dffb4a3a69dfe6dc35198465be92daa999533357"
@@ -2976,10 +2980,6 @@ globby@^6.1.0:
     object-assign "^4.0.1"
     pify "^2.0.0"
     pinkie-promise "^2.0.0"
-
-golery-slate-edit-list@^0.18.0-golery.4:
-  version "0.18.0-golery.4"
-  resolved "https://registry.yarnpkg.com/golery-slate-edit-list/-/golery-slate-edit-list-0.18.0-golery.4.tgz#4452588b0571ece63bcf62e5d0dbd0018cbc2a12"
 
 golery-slate-prism@0.6.0-golery.2:
   version "0.6.0-golery.2"
