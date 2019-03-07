@@ -68,11 +68,11 @@ const createPlugins = ({ placeholder, getLinkComponent }: *) => {
     Embeds({ getComponent: getLinkComponent }),
     CollapseOnEscape({ toEdge: "end" }),
     CollapsableHeadings(),
+    EditList,
     KeyboardBehavior(),
     KeyboardShortcuts(),
     MarkdownShortcuts(),
     MarkdownPaste(),
-    EditList,
     Ellipsis(),
     TrailingBlock({ type: "paragraph" }),
   ];

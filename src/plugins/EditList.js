@@ -1,5 +1,5 @@
 // @flow
-import EditList from "golery-slate-edit-list";
+import EditList from "@tommoor/slate-edit-list";
 
 export default EditList({
   types: ["ordered-list", "bulleted-list", "todo-list"],

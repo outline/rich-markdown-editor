@@ -1,13 +1,5 @@
 // @flow
 import { Editor, Block, KeyUtils } from "slate";
-import EditList from "./plugins/EditList";
-
-const { changes } = EditList;
-
-type SplitOptions = {
-  type: string | Object,
-  wrapper?: string | Object,
-};
 
 const commands = {
   wrapLink(editor: Editor, href: string) {
@@ -16,28 +8,6 @@ const commands = {
 
   unwrapLink(editor: Editor) {
     editor.unwrapInline("link");
-  },
-
-  splitAndInsertBlock(editor: Editor, options: SplitOptions) {
-    const { type, wrapper } = options;
-    const parent = editor.value.document.getParent(editor.value.startBlock.key);
-
-    // lists get some special treatment
-    if (parent && parent.type === "list-item") {
-      editor
-        .moveToStart()
-        .command(changes.splitListItem)
-        .moveToEndOfNodePreviousBlock()
-        .command(changes.unwrapList);
-    }
-
-    if (wrapper) editor.moveToStartOfNextBlock();
-
-    // this is a hack as insertBlock with normalize: false does not appear to work
-    editor.insertBlock("paragraph").setBlocks(type, { normalize: false });
-
-    if (wrapper) editor.wrapBlock(wrapper);
-    return editor;
   },
 
   insertImageFile(editor: Editor, file: window.File) {
