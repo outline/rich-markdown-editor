@@ -75,9 +75,14 @@ class FormattingToolbar extends React.Component<Props> {
     ev.preventDefault();
     ev.stopPropagation();
 
-    const data = { href: "" };
-    this.props.editor.wrapInline({ type: "link", data });
-    this.props.onCreateLink(ev);
+    let selection = window.getSelection().toString();
+    selection = selection.trim();
+
+    if (selection.length) {
+      const data = { href: "" };
+      this.props.editor.wrapInline({ type: "link", data });
+      this.props.onCreateLink(ev);
+    }
   };
 
   renderMarkButton = (type: Mark, IconClass: Function) => {
