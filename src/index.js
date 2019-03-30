@@ -20,6 +20,8 @@ import queries from "./queries";
 export const theme = lightTheme;
 export const schema = defaultSchema;
 
+const defaultOptions = { normalize: false };
+
 type Props = {
   id?: string,
   defaultValue: string,
@@ -48,7 +50,6 @@ type Props = {
 
 type State = {
   editorValue: Value,
-  editorLoaded: boolean,
 };
 
 class RichMarkdownEditor extends React.PureComponent<Props, State> {
@@ -78,7 +79,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     this.plugins = [...props.plugins, ...builtInPlugins];
 
     this.state = {
-      editorLoaded: false,
       editorValue: Markdown.deserialize(props.defaultValue),
     };
   }
@@ -121,8 +121,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
   setEditorRef = (ref: Editor) => {
     this.editor = ref;
-    // Force re-render to show ToC (<Content />)
-    this.setState({ editorLoaded: true });
   };
 
   value = (): string => {
@@ -130,13 +128,11 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   handleChange = ({ value }: { value: Value }) => {
-    if (this.state.editorValue !== value) {
-      this.setState({ editorValue: value }, state => {
-        if (this.props.onChange && !this.props.readOnly) {
-          this.props.onChange(this.value);
-        }
-      });
-    }
+    this.setState({ editorValue: value }, state => {
+      if (this.props.onChange && !this.props.readOnly) {
+        this.props.onChange(this.value);
+      }
+    });
   };
 
   handleDrop = async (ev: SyntheticDragEvent<*>) => {
@@ -280,20 +276,16 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       >
         <ThemeProvider theme={theme}>
           <React.Fragment>
-            {toc &&
-              this.state.editorLoaded &&
-              this.editor && <Contents editor={this.editor} />}
-            {!readOnly &&
-              this.editor && (
-                <Toolbar value={this.state.editorValue} editor={this.editor} />
-              )}
-            {!readOnly &&
-              this.editor && (
-                <BlockInsert
-                  editor={this.editor}
-                  onInsertImage={this.insertImageFile}
-                />
-              )}
+            {toc && this.editor && <Contents editor={this.editor} />}
+            {!readOnly && this.editor && (
+              <Toolbar value={this.state.editorValue} editor={this.editor} />
+            )}
+            {!readOnly && this.editor && (
+              <BlockInsert
+                editor={this.editor}
+                onInsertImage={this.insertImageFile}
+              />
+            )}
             <StyledEditor
               ref={this.setEditorRef}
               plugins={this.plugins}
@@ -314,6 +306,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
               spellCheck={!readOnly}
               uploadImage={uploadImage}
               pretitle={pretitle}
+              options={defaultOptions}
               {...rest}
             />
           </React.Fragment>

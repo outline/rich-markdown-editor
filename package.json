@@ -38,7 +38,6 @@
     "slate-drop-or-paste-images": "^0.9.1",
     "slate-md-serializer": "^5.2.3",
     "slate-paste-linkify": "^0.7.0",
-    "slate-plain-serializer": "0.6.33",
     "slate-react": "^0.21.15",
     "slate-schema-violations": "^0.1.39",
     "slugify": "^1.3.0",

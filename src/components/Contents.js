@@ -21,7 +21,7 @@ class Contents extends React.Component<Props, State> {
 
   componentDidMount() {
     window.addEventListener("scroll", this.updateActiveHeading);
-    this.updateActiveHeading();
+    setImmediate(this.updateActiveHeading);
   }
 
   componentWillUnmount() {
