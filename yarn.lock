@@ -5750,10 +5750,10 @@ slate-hotkeys@^0.2.9:
     is-hotkey "0.1.4"
     slate-dev-environment "^0.2.2"
 
-slate-md-serializer@^5.3.0:
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/slate-md-serializer/-/slate-md-serializer-5.3.0.tgz#481c1cafe75151faee264803c30bf3dd5f4ed2ac"
-  integrity sha512-5F2kcJqgsdjvwMH0LXb+fyBpwYiYrt+brj2YhQ13vsk2IFxS9DdYDa1tHUXuEvCGUitF/3tfTPKmj4BCDTPftQ==
+slate-md-serializer@^5.3.1:
+  version "5.3.1"
+  resolved "https://registry.yarnpkg.com/slate-md-serializer/-/slate-md-serializer-5.3.1.tgz#999dfb9dafe71d2f96019d9d95d4aac24bd493de"
+  integrity sha512-2eYblR148Df6FjShvX+pPplTMQ89HAIjmFXL1zA7VHT5P35h5MrBXcaCNh81MK8vEm4XpxaH9XRYZ1VK1kmrQg==
   dependencies:
     hashtag-regex "^2.0.0"
 
