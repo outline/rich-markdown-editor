@@ -9,9 +9,6 @@ import defaultSchema from "./schema";
 import getDataTransferFiles from "./lib/getDataTransferFiles";
 import isModKey from "./lib/isModKey";
 import Flex from "./components/Flex";
-import Toolbar from "./components/Toolbar";
-import BlockInsert from "./components/BlockInsert";
-import Contents from "./components/Contents";
 import Markdown from "./serializer";
 import createPlugins from "./plugins";
 import commands from "./commands";
@@ -22,7 +19,7 @@ export const schema = defaultSchema;
 
 const defaultOptions = { normalize: false };
 
-type Props = {
+export type Props = {
   id?: string,
   defaultValue: string,
   placeholder: string,
@@ -239,7 +236,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   render = () => {
     const {
       readOnly,
-      toc,
       pretitle,
       placeholder,
       onSave,
@@ -275,41 +271,29 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         auto
       >
         <ThemeProvider theme={theme}>
-          <React.Fragment>
-            {toc && this.editor && <Contents editor={this.editor} />}
-            {!readOnly && this.editor && (
-              <Toolbar value={this.state.editorValue} editor={this.editor} />
-            )}
-            {!readOnly && this.editor && (
-              <BlockInsert
-                editor={this.editor}
-                onInsertImage={this.insertImageFile}
-              />
-            )}
-            <StyledEditor
-              ref={this.setEditorRef}
-              plugins={this.plugins}
-              value={this.state.editorValue}
-              commands={commands}
-              queries={queries}
-              placeholder={placeholder}
-              schema={this.getSchema()}
-              onKeyDown={this.handleKeyDown}
-              onChange={this.handleChange}
-              onSave={onSave}
-              onSearchLink={onSearchLink}
-              onClickLink={onClickLink}
-              onImageUploadStart={onImageUploadStart}
-              onImageUploadStop={onImageUploadStop}
-              onShowToast={onShowToast}
-              readOnly={readOnly}
-              spellCheck={!readOnly}
-              uploadImage={uploadImage}
-              pretitle={pretitle}
-              options={defaultOptions}
-              {...rest}
-            />
-          </React.Fragment>
+          <StyledEditor
+            ref={this.setEditorRef}
+            plugins={this.plugins}
+            value={this.state.editorValue}
+            commands={commands}
+            queries={queries}
+            placeholder={placeholder}
+            schema={this.getSchema()}
+            onKeyDown={this.handleKeyDown}
+            onChange={this.handleChange}
+            onSave={onSave}
+            onSearchLink={onSearchLink}
+            onClickLink={onClickLink}
+            onImageUploadStart={onImageUploadStart}
+            onImageUploadStop={onImageUploadStop}
+            onShowToast={onShowToast}
+            readOnly={readOnly}
+            spellCheck={!readOnly}
+            uploadImage={uploadImage}
+            pretitle={pretitle}
+            options={defaultOptions}
+            {...rest}
+          />
         </ThemeProvider>
       </Flex>
     );

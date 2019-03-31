@@ -16,6 +16,7 @@ import MarkdownShortcuts from "./plugins/MarkdownShortcuts";
 import MarkdownPaste from "./plugins/MarkdownPaste";
 import Ellipsis from "./plugins/Ellipsis";
 import Embeds from "./plugins/Embeds";
+import Chrome from "./plugins/Chrome";
 import Nodes from "./nodes.js";
 import Marks from "./marks.js";
 
@@ -75,6 +76,7 @@ const createPlugins = ({ placeholder, getLinkComponent }: *) => {
     MarkdownPaste(),
     Ellipsis(),
     TrailingBlock({ type: "paragraph" }),
+    Chrome(),
   ];
 };
 

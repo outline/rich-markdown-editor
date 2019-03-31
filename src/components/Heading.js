@@ -41,7 +41,7 @@ function Heading(props: Props) {
         onClick={() => editor.toggleContentBelow(node)}
         contentEditable={false}
         collapsed={collapsed}
-        disabled={firstNode}
+        disabled={firstNode || !title}
       >
         <CollapsedIcon />
       </CollapseToggle>

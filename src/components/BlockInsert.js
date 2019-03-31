@@ -111,8 +111,6 @@ class BlockInsert extends React.Component<Props, State> {
     const node = this.state.closestRootNode;
     if (!node) return;
 
-    editor.moveToStartOfNode(node);
-
     // we're on an empty paragraph. just replace it with the block toolbar
     if (!node.text.trim() && node.type === "paragraph") {
       editor.setNodeByKey(node.key, {

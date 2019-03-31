@@ -10,7 +10,7 @@ export default function Ellipsis() {
       const { value } = editor;
       const { startBlock, selection } = value;
       if (selection.isExpanded) return next();
-      if (startBlock.type.match(/code/)) return next();
+      if (!startBlock || startBlock.type.match(/code/)) return next();
 
       const startOffset = value.selection.start.offset - 3;
       const textNode = startBlock.getFirstText();
