@@ -69,8 +69,7 @@ export default function MarkdownShortcuts() {
       if (chars === "[ ]") checked = false;
 
       editor.withoutNormalizing(c => {
-        c
-          .moveFocusToStartOfNode(startBlock)
+        c.moveFocusToStartOfNode(startBlock)
           .delete()
           .setBlocks({
             type,
