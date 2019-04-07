@@ -91,6 +91,8 @@ export default function CollapsableHeadings() {
         };
       }
     }
+
+    return next();
   }
 
   return { queries, commands, normalizeNode, onKeyDown };
