@@ -43,7 +43,7 @@ class Image extends React.Component<Props, State> {
 
   render() {
     const { attributes, node, isSelected, readOnly } = this.props;
-    const loading = node.data.get("loading");
+    const isLoading = node.data.get("loading");
     const caption = node.data.get("alt") || "";
     const src = node.data.get("src");
     const showCaption = !readOnly || caption;
@@ -64,7 +64,8 @@ class Image extends React.Component<Props, State> {
                 src={src}
                 alt={caption}
                 isSelected={isSelected}
-                loading={loading}
+                isLoading={isLoading}
+                loading="lazy"
               />
             ) : (
               <ImageZoom
@@ -116,16 +117,20 @@ const ErrorMessage = styled.div`
   font-size: 14px;
 `;
 
-const HiddenImg = styled.img`
+// This wrapper allows us to pass non-standard HTML attributes through to the DOM element
+// https://www.styled-components.com/docs/basics#passed-props
+const Img = props => <img {...props} />;
+
+const HiddenImg = styled(Img)`
   display: none;
 `;
 
-const StyledImg = styled.img`
+const StyledImg = styled(Img)`
   max-width: 100%;
   box-shadow: ${props =>
     props.isSelected ? `0 0 0 2px ${props.theme.selected}` : "none"};
   border-radius: ${props => (props.isSelected ? `2px` : "0")};
-  opacity: ${props => (props.loading ? 0.5 : 1)};
+  opacity: ${props => (props.isLoading ? 0.5 : 1)};
 `;
 
 const ErrorImg = styled(StyledImg)`
