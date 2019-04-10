@@ -45,7 +45,9 @@ function Heading(props: Props) {
       >
         <CollapsedIcon />
       </CollapseToggle>
-      <Wrapper hasPretitle={startsWithPretitleAndSpace}>{children}</Wrapper>
+      <Wrapper hasPretitle={firstNode && startsWithPretitleAndSpace}>
+        {children}
+      </Wrapper>
       {showHash && (
         <Anchor
           name={slugish}
