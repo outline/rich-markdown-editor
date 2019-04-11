@@ -30,12 +30,11 @@ function PlaceholderPlugin(
 
     const others = next() || [];
     const first = node.getFirstText();
-    const last = node.getLastText();
-    if (!first || !last) return next();
+    if (!first) return next();
 
     const decoration = {
       anchor: { key: first.key, offset: 0 },
-      focus: { key: last.key, offset: last.text.length },
+      focus: { key: first.key, offset: 0 },
       mark: { type: "placeholder", data: { placeholder } },
     };
 
