@@ -6,7 +6,7 @@ A React and [Slate](https://github.com/ianstormtaylor/slate) based editor that p
 The editor is WYSIWYG and includes many formatting tools whilst retaining the ability to write markdown
 shortcuts inline and output Markdown.
 
-> Note: This project is not attempting to be an all-purpose editor. If you wish to heavily customize the design, layout, or toolbars please fork the project.
+> Note: This project is **not attempting** to be an all-purpose Markdown editor. It renders and outputs a subset of the Markdown schema, as well as supporting markdown-like syntax as shortcuts for rich text editing.
 
 ## Usage
 
