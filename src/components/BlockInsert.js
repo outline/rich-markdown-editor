@@ -34,6 +34,8 @@ type State = {
 
 class BlockInsert extends React.Component<Props, State> {
   mouseMoveTimeout: ?TimeoutID;
+  ref: ?HTMLSpanElement;
+
   state = {
     top: -1000,
     left: -1000,
@@ -55,11 +57,13 @@ class BlockInsert extends React.Component<Props, State> {
   };
 
   handleMouseMove = (ev: SyntheticMouseEvent<*>) => {
-    const windowWidth = window.innerWidth * 0.33;
+    const triggerPoint = this.ref
+      ? this.ref.getBoundingClientRect().left + 300
+      : window.innerWidth;
     const result = findClosestRootNode(this.props.editor.value, ev);
     const newState = { ...this.state };
 
-    newState.active = ev.clientX < windowWidth;
+    newState.active = ev.clientX < triggerPoint;
 
     if (result) {
       newState.closestRootNode = result.node;
@@ -120,19 +124,26 @@ class BlockInsert extends React.Component<Props, State> {
     }
   };
 
+  setRef = ref => {
+    this.ref = ref;
+  };
+
   render() {
     const { theme } = this.props;
     const style = { top: `${this.state.top}px`, left: `${this.state.left}px` };
 
     return (
-      <Portal>
-        <Trigger active={this.state.active} style={style}>
-          <PlusIcon
-            onClick={this.handleClick}
-            color={theme.blockToolbarTrigger}
-          />
-        </Trigger>
-      </Portal>
+      <React.Fragment>
+        <span ref={this.setRef} />
+        <Portal>
+          <Trigger active={this.state.active} style={style}>
+            <PlusIcon
+              onClick={this.handleClick}
+              color={theme.blockToolbarTrigger}
+            />
+          </Trigger>
+        </Portal>
+      </React.Fragment>
     );
   }
 }
