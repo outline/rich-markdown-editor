@@ -1,7 +1,7 @@
 {
   "name": "rich-markdown-editor",
   "description": "A rich text editor with Markdown shortcuts built on Slate",
-  "version": "9.2.1-0",
+  "version": "9.2.1",
   "main": "lib/index.js",
   "license": "BSD-3-Clause",
   "scripts": {
@@ -64,11 +64,11 @@
     "eslint-plugin-import": "^2.9.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.7.0",
+    "flow-bin": "^0.68.0",
     "immutable": "^3.8.2",
+    "prettier": "^1.11.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "flow-bin": "^0.68.0",
-    "prettier": "^1.11.1",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.2.3",
     "webpack-serve": "^2.0.3"
