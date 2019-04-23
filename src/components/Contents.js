@@ -8,24 +8,26 @@ import { List } from "immutable";
 import headingToSlug from "../lib/headingToSlug";
 
 type Props = {
-  editor: Editor,
+  editor: Editor
 };
 
 type State = {
-  activeHeading: ?string,
+  activeHeading: ?string
 };
 class Contents extends React.Component<Props, State> {
   state = {
-    activeHeading: undefined,
+    activeHeading: undefined
   };
 
   componentDidMount() {
-    typeof window !== "undefined" && window.addEventListener("scroll", this.updateActiveHeading);
+    typeof window !== "undefined" &&
+      window.addEventListener("scroll", this.updateActiveHeading);
     setImmediate(this.updateActiveHeading);
   }
 
   componentWillUnmount() {
-    typeof window !== "undefined" && window.removeEventListener("scroll", this.updateActiveHeading);
+    typeof window !== "undefined" &&
+      window.removeEventListener("scroll", this.updateActiveHeading);
   }
 
   updateActiveHeading = () => {

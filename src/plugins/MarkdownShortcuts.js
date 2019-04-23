@@ -8,7 +8,7 @@ const inlineShortcuts = [
   { mark: "italic", shortcut: "_" },
   { mark: "code", shortcut: "`" },
   { mark: "inserted", shortcut: "++" },
-  { mark: "deleted", shortcut: "~~" },
+  { mark: "deleted", shortcut: "~~" }
 ];
 
 export default function MarkdownShortcuts() {
@@ -73,7 +73,7 @@ export default function MarkdownShortcuts() {
           .delete()
           .setBlocks({
             type,
-            data: { checked },
+            data: { checked }
           });
 
         if (type === "list-item") {
@@ -105,7 +105,7 @@ export default function MarkdownShortcuts() {
         const endOfBlock = end === text.length;
         const surroundedByWhitespaces = [
           text.slice(start - 1, start),
-          text.slice(end, end + 1),
+          text.slice(end, end + 1)
         ].includes(" ");
 
         if (
@@ -156,7 +156,7 @@ export default function MarkdownShortcuts() {
         .setBlocks(
           {
             type: "horizontal-rule",
-            isVoid: true,
+            isVoid: true
           },
           { normalize: false }
         )

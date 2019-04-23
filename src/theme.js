@@ -14,7 +14,7 @@ const colors = {
   greyLight: "#F4F7FA",
   grey: "#E8EBED",
   greyMid: "#9BA6B2",
-  greyDark: "#DAE1E9",
+  greyDark: "#DAE1E9"
 };
 
 export const base = {
@@ -43,7 +43,7 @@ export const base = {
   codeStatement: "#22a2c9",
   codePlaceholder: "#3d8fd1",
   codeInserted: "#202746",
-  codeImportant: "#c94922",
+  codeImportant: "#c94922"
 };
 
 export const light: Theme = {
@@ -65,7 +65,7 @@ export const light: Theme = {
   codeBackground: colors.greyLight,
   codeBorder: colors.grey,
   horizontalRule: colors.grey,
-  imageErrorBackground: colors.greyLight,
+  imageErrorBackground: colors.greyLight
 };
 
 export const dark: Theme = {
@@ -88,7 +88,7 @@ export const dark: Theme = {
   codeBorder: colors.lightBlack,
   codeString: "#3d8fd1",
   horizontalRule: colors.almostWhite,
-  imageErrorBackground: "rgba(0, 0, 0, 0.5)",
+  imageErrorBackground: "rgba(0, 0, 0, 0.5)"
 };
 
 export default light;

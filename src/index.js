@@ -42,11 +42,11 @@ export type Props = {
   onShowToast?: (message: string) => *,
   getLinkComponent?: Node => ?React.ComponentType<*>,
   className?: string,
-  style?: Object,
+  style?: Object
 };
 
 type State = {
-  editorValue: Value,
+  editorValue: Value
 };
 
 class RichMarkdownEditor extends React.PureComponent<Props, State> {
@@ -55,7 +55,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     placeholder: "Write something nice…",
     onImageUploadStart: () => {},
     onImageUploadStop: () => {},
-    plugins: [],
+    plugins: []
   };
 
   editor: Editor;
@@ -68,7 +68,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
     const builtInPlugins = createPlugins({
       placeholder: props.placeholder,
-      getLinkComponent: props.getLinkComponent,
+      getLinkComponent: props.getLinkComponent
     });
 
     // in Slate plugins earlier in the stack can opt not to continue
@@ -76,7 +76,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     this.plugins = [...props.plugins, ...builtInPlugins];
 
     this.state = {
-      editorValue: Markdown.deserialize(props.defaultValue),
+      editorValue: Markdown.deserialize(props.defaultValue)
     };
   }
 
@@ -84,7 +84,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     this.scrollToAnchor();
 
     if (this.props.readOnly) return;
-    typeof window !== "undefined" && window.addEventListener("keydown", this.handleKeyDown);
+    typeof window !== "undefined" &&
+      window.addEventListener("keydown", this.handleKeyDown);
 
     if (this.props.autoFocus) {
       this.focusAtEnd();
@@ -98,7 +99,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   }
 
   componentWillUnmount() {
-    typeof window !== "undefined" && window.removeEventListener("keydown", this.handleKeyDown);
+    typeof window !== "undefined" &&
+      window.removeEventListener("keydown", this.handleKeyDown);
   }
 
   scrollToAnchor() {
@@ -226,7 +228,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     if (this.prevSchema !== this.props.schema) {
       this.schema = {
         ...defaultSchema,
-        ...(this.props.schema || {}),
+        ...(this.props.schema || {})
       };
       this.prevSchema = this.props.schema;
     }

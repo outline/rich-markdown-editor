@@ -34,7 +34,7 @@ const createPlugins = ({ placeholder, getLinkComponent }: *) => {
     Marks,
     PasteLinkify({
       type: "link",
-      collapseTo: "end",
+      collapseTo: "end"
     }),
     Placeholder({
       placeholder,
@@ -45,26 +45,26 @@ const createPlugins = ({ placeholder, getLinkComponent }: *) => {
         if (node.text !== "") return false;
         if (editor.value.document.getBlocks().size > 1) return false;
         return true;
-      },
+      }
     }),
     InsertImages({
       extensions: ["png", "jpg", "jpeg", "gif", "webp"],
-      insertImage: (editor, file) => editor.insertImageFile(file),
+      insertImage: (editor, file) => editor.insertImageFile(file)
     }),
     EditCode({
       containerType: "code",
       lineType: "code-line",
       exitBlocktype: "paragraph",
       allowMarks: false,
-      selectAll: true,
+      selectAll: true
     }),
     EditBlockquote({
       type: "block-quote",
-      typeDefault: "paragraph",
+      typeDefault: "paragraph"
     }),
     Prism({
       onlyIn: node => node.type === "code",
-      getSyntax: node => node.data.get("language") || "javascript",
+      getSyntax: node => node.data.get("language") || "javascript"
     }),
     Embeds({ getComponent: getLinkComponent }),
     CollapseOnEscape({ toEdge: "end" }),
@@ -76,7 +76,7 @@ const createPlugins = ({ placeholder, getLinkComponent }: *) => {
     MarkdownPaste(),
     Ellipsis(),
     TrailingBlock({ type: "paragraph" }),
-    Chrome(),
+    Chrome()
   ];
 };
 

@@ -4,7 +4,7 @@ import styled from "styled-components";
 import CopyToClipboard from "./CopyToClipboard";
 
 type State = {
-  copied: boolean,
+  copied: boolean
 };
 
 class CopyButton extends React.Component<*, State> {

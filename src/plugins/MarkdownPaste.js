@@ -14,6 +14,6 @@ export default function MarkdownPaste() {
       if (!fragment) return;
 
       return editor.insertFragment(fragment.document);
-    },
+    }
   };
 }

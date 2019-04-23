@@ -4,27 +4,27 @@ const schema = {
   blocks: {
     heading1: {
       nodes: [{ match: { object: "text" } }],
-      marks: [""],
+      marks: [""]
     },
     heading2: {
       nodes: [{ match: { object: "text" } }],
-      marks: [""],
+      marks: [""]
     },
     heading3: {
       nodes: [{ match: { object: "text" } }],
-      marks: [""],
+      marks: [""]
     },
     heading4: {
       nodes: [{ match: { object: "text" } }],
-      marks: [""],
+      marks: [""]
     },
     heading5: {
       nodes: [{ match: { object: "text" } }],
-      marks: [""],
+      marks: [""]
     },
     heading6: {
       nodes: [{ match: { object: "text" } }],
-      marks: [""],
+      marks: [""]
     },
     "block-quote": { marks: [""] },
     table: {
@@ -34,23 +34,23 @@ const schema = {
             type: "table-row",
             nodes: [
               {
-                match: [{ type: "table-head" }, { type: "table-cell" }],
-              },
-            ],
-          },
-        },
-      ],
+                match: [{ type: "table-head" }, { type: "table-cell" }]
+              }
+            ]
+          }
+        }
+      ]
     },
     "horizontal-rule": {
-      isVoid: true,
+      isVoid: true
     },
     image: {
-      isVoid: true,
+      isVoid: true
     },
     link: { nodes: [{ objects: ["text"] }] },
     "block-toolbar": {
-      isVoid: true,
-    },
+      isVoid: true
+    }
   },
   document: {
     nodes: [
@@ -72,12 +72,12 @@ const schema = {
           { type: "todo-list" },
           { type: "block-toolbar" },
           { type: "table" },
-          { type: "link" },
+          { type: "link" }
         ],
-        min: 1,
-      },
-    ],
-  },
+        min: 1
+      }
+    ]
+  }
 };
 
 export default schema;

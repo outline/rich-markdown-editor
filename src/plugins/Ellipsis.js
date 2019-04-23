@@ -26,6 +26,6 @@ export default function Ellipsis() {
       }
 
       return next();
-    },
+    }
   };
 }

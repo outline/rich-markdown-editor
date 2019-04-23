@@ -9,7 +9,7 @@ import CopyToClipboard from "./CopyToClipboard";
 type Props = SlateNodeProps & {
   component: "h1" | "h2" | "h3" | "h4" | "h5" | "h6",
   hasPretitle: boolean,
-  className: string,
+  className: string
 };
 
 function Heading(props: Props) {
@@ -20,7 +20,7 @@ function Heading(props: Props) {
     children,
     component = "h1",
     attributes,
-    className,
+    className
   } = props;
 
   const firstNode = editor.value.document.nodes.first() === node;
@@ -31,8 +31,9 @@ function Heading(props: Props) {
   const title = node.text.trim();
   const startsWithPretitleAndSpace =
     pretitle && title.match(new RegExp(`^${pretitle}\\s`));
-  const pathName = typeof window !== "undefined" ? window.location.pathname : '';
-  const origin = typeof window !== "undefined" ? window.location.origin : ''
+  const pathName =
+    typeof window !== "undefined" ? window.location.pathname : "";
+  const origin = typeof window !== "undefined" ? window.location.origin : "";
   const pathToHeading = `${pathName}#${slugish}`;
   const collapsed = node.data.get("collapsed");
 

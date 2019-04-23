@@ -6,11 +6,11 @@ import styled from "styled-components";
 import type { SlateNodeProps as Props } from "../types";
 
 type State = {
-  hasError?: boolean,
+  hasError?: boolean
 };
 class Image extends React.Component<Props, State> {
   state = {
-    hasError: false,
+    hasError: false
   };
 
   handleKeyDown = (ev: SyntheticKeyboardEvent<*>) => {
@@ -73,9 +73,9 @@ class Image extends React.Component<Props, State> {
                   src,
                   alt: caption,
                   style: {
-                    maxWidth: "100%",
+                    maxWidth: "100%"
                   },
-                  ...attributes,
+                  ...attributes
                 }}
                 shouldRespectMaxDimension
               />

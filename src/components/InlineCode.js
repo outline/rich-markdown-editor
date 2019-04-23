@@ -2,7 +2,7 @@
 import styled from "styled-components";
 
 const InlineCode = styled.code.attrs({
-  spellCheck: false,
+  spellCheck: false
 })`
   background: ${props => props.theme.codeBackground};
   border-radius: 4px;

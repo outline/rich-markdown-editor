@@ -8,7 +8,7 @@ import Placeholder from "../components/Placeholder";
 function PlaceholderPlugin(
   options: {
     placeholder?: string,
-    when?: (editor: Editor, node: Node) => boolean,
+    when?: (editor: Editor, node: Node) => boolean
   } = {}
 ) {
   const { placeholder, when } = options;
@@ -35,7 +35,7 @@ function PlaceholderPlugin(
     const decoration = {
       anchor: { key: first.key, offset: 0 },
       focus: { key: first.key, offset: 0 },
-      mark: { type: "placeholder", data: { placeholder } },
+      mark: { type: "placeholder", data: { placeholder } }
     };
 
     return [...others, decoration];
