@@ -3,7 +3,7 @@ import * as React from "react";
 import { Editor, Node } from "slate";
 
 type Options = {
-  getComponent?: Node => ?React.ComponentType<*>
+  getComponent?: Node => ?React.ComponentType<*>,
 };
 
 function findTopParent(document, node): ?Node {
@@ -43,12 +43,12 @@ export default function Embeds({ getComponent }: Options) {
           nodes: [
             {
               object: "text",
-              leaves: [{ text: "" }]
-            }
+              leaves: [{ text: "" }],
+            },
           ],
-          data: { ...node.data.toJS(), embed: true, component }
+          data: { ...node.data.toJS(), embed: true, component },
         });
       };
-    }
+    },
   };
 }

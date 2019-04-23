@@ -14,7 +14,7 @@ import {
   Heading3,
   Heading4,
   Heading5,
-  Heading6
+  Heading6,
 } from "./components/Heading";
 import Paragraph from "./components/Paragraph";
 import type { SlateNodeProps } from "./types";

@@ -7,7 +7,7 @@ export default function CollapsableHeadings() {
     getPathForHeadingNode(editor: Editor, node: Node) {
       const slugish = headingToSlug(editor.value.document, node);
       return `${editor.props.id || window.location.pathname}#${slugish}`;
-    }
+    },
   };
 
   const commands = {
@@ -48,7 +48,7 @@ export default function CollapsableHeadings() {
         }
         if (n === node) active = true;
       });
-    }
+    },
   };
 
   function onKeyDown(
@@ -86,7 +86,7 @@ export default function CollapsableHeadings() {
           return editor
             .updateContentBelow(node, shouldBeCollapsed)
             .setNodeByKey(node.key, {
-              data: { collapsed: shouldBeCollapsed }
+              data: { collapsed: shouldBeCollapsed },
             });
         };
       }

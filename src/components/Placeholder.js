@@ -2,7 +2,7 @@
 import styled from "styled-components";
 
 const Placeholder = styled.span.attrs({
-  contentEditable: false
+  contentEditable: false,
 })`
   pointer-events: none;
   display: inline-block;

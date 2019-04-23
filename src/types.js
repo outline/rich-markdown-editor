@@ -12,18 +12,18 @@ export type SlateNodeProps = {
   node: Node,
   parent: Node,
   mark: TMark,
-  isSelected: boolean
+  isSelected: boolean,
 };
 
 export type Plugin = {
   validateNode?: (Node, Editor, Function) => *,
   onClick?: (SyntheticEvent<*>) => *,
-  onKeyDown?: (SyntheticKeyboardEvent<*>, Editor, Function) => *
+  onKeyDown?: (SyntheticKeyboardEvent<*>, Editor, Function) => *,
 };
 
 export type SearchResult = {
   title: string,
-  url: string
+  url: string,
 };
 
 export type Block =
@@ -43,7 +43,7 @@ export type Mark = "bold" | "italic" | "deleted" | "code" | "link";
 
 export type HiddenToolbarButtons = ?{
   marks?: Mark[],
-  blocks?: Block[]
+  blocks?: Block[],
 };
 
 export type Theme = {
@@ -85,5 +85,5 @@ export type Theme = {
   codeBorder?: string,
   horizontalRule: string,
 
-  hiddenToolbarButtons?: HiddenToolbarButtons
+  hiddenToolbarButtons?: HiddenToolbarButtons,
 };

@@ -6,7 +6,7 @@ type Props = {
   text: string,
   children?: React.Node,
   onClick?: () => *,
-  onCopy: () => *
+  onCopy: () => *,
 };
 
 class CopyToClipboard extends React.Component<Props> {

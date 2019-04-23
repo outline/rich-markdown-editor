@@ -8,15 +8,15 @@ import { List } from "immutable";
 import headingToSlug from "../lib/headingToSlug";
 
 type Props = {
-  editor: Editor
+  editor: Editor,
 };
 
 type State = {
-  activeHeading: ?string
+  activeHeading: ?string,
 };
 class Contents extends React.Component<Props, State> {
   state = {
-    activeHeading: undefined
+    activeHeading: undefined,
   };
 
   componentDidMount() {

@@ -41,7 +41,7 @@ export default function KeyboardBehavior() {
       return editor.splitBlock(10).setBlocks({
         type: "paragraph",
         text: "",
-        isVoid: false
+        isVoid: false,
       });
     }
 

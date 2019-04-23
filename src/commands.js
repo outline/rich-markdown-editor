@@ -15,7 +15,7 @@ const commands = {
       uploadImage,
       onImageUploadStart,
       onShowToast,
-      onImageUploadStop
+      onImageUploadStop,
     } = editor.props;
 
     if (!uploadImage) {
@@ -35,7 +35,7 @@ const commands = {
       key,
       type: "image",
       isVoid: true,
-      data: { src: placeholderSrc, alt, loading: true }
+      data: { src: placeholderSrc, alt, loading: true },
     });
 
     editor
@@ -59,7 +59,7 @@ const commands = {
           // removed it during upload so we need to take that into account.
           try {
             editor.setNodeByKey(key, {
-              data: { src, alt, loading: false }
+              data: { src, alt, loading: false },
             });
           } catch (err) {
             console.warn("Image placeholder could not be found", err);
@@ -78,7 +78,7 @@ const commands = {
           if (onImageUploadStop) onImageUploadStop();
         });
     });
-  }
+  },
 };
 
 export default commands;

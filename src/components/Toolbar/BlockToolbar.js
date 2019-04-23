@@ -35,11 +35,13 @@ class BlockToolbar extends React.Component<Props> {
   file: ?HTMLInputElement;
 
   componentDidMount() {
-    typeof window !== "undefined" && window.addEventListener("click", this.handleOutsideMouseClick);
+    typeof window !== "undefined" &&
+      window.addEventListener("click", this.handleOutsideMouseClick);
   }
 
   componentWillUnmount() {
-    typeof window !== "undefined" && window.removeEventListener("click", this.handleOutsideMouseClick);
+    typeof window !== "undefined" &&
+      window.removeEventListener("click", this.handleOutsideMouseClick);
   }
 
   handleOutsideMouseClick = (ev: SyntheticMouseEvent<*>) => {

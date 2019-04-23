@@ -19,7 +19,7 @@ const languages = {
   php: "PHP",
   python: "Python",
   ruby: "Ruby",
-  typescript: "TypeScript"
+  typescript: "TypeScript",
 };
 
 export default function CodeBlock({
@@ -27,14 +27,14 @@ export default function CodeBlock({
   node,
   readOnly,
   attributes,
-  editor
+  editor,
 }: SlateNodeProps) {
   const { data } = node;
   const language = data.get("language") || "javascript";
 
   const onSelectLanguage = ev => {
     editor.setNodeByKey(node.key, {
-      data: { ...data, language: ev.target.value }
+      data: { ...data, language: ev.target.value },
     });
   };
 

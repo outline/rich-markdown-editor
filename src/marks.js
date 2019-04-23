@@ -5,7 +5,7 @@ import InlineCode from "./components/InlineCode";
 
 type Props = {
   children: React$Element<*>,
-  mark: Mark
+  mark: Mark,
 };
 
 function renderMark(props: Props, editor: Editor, next: Function) {

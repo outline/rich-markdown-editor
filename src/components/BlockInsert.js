@@ -9,7 +9,7 @@ import { PlusIcon } from "outline-icons";
 
 type Props = {
   editor: Editor,
-  theme: Object
+  theme: Object,
 };
 
 function findClosestRootNode(value, ev) {
@@ -29,7 +29,7 @@ type State = {
   closestRootNode: ?Node,
   active: boolean,
   top: number,
-  left: number
+  left: number,
 };
 
 class BlockInsert extends React.Component<Props, State> {
@@ -40,7 +40,7 @@ class BlockInsert extends React.Component<Props, State> {
     top: -1000,
     left: -1000,
     active: false,
-    closestRootNode: undefined
+    closestRootNode: undefined,
   };
 
   componentDidMount = () => {
@@ -109,7 +109,7 @@ class BlockInsert extends React.Component<Props, State> {
       if (node.type === "block-toolbar") {
         editor.setNodeByKey(node.key, {
           type: "paragraph",
-          isVoid: false
+          isVoid: false,
         });
       }
     });
@@ -121,7 +121,7 @@ class BlockInsert extends React.Component<Props, State> {
     if (!node.text.trim() && node.type === "paragraph") {
       editor.setNodeByKey(node.key, {
         type: "block-toolbar",
-        isVoid: true
+        isVoid: true,
       });
     }
   };

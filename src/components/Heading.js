@@ -9,7 +9,7 @@ import CopyToClipboard from "./CopyToClipboard";
 type Props = SlateNodeProps & {
   component: "h1" | "h2" | "h3" | "h4" | "h5" | "h6",
   hasPretitle: boolean,
-  className: string
+  className: string,
 };
 
 function Heading(props: Props) {
@@ -20,7 +20,7 @@ function Heading(props: Props) {
     children,
     component = "h1",
     attributes,
-    className
+    className,
   } = props;
 
   const firstNode = editor.value.document.nodes.first() === node;
