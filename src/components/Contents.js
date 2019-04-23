@@ -20,12 +20,12 @@ class Contents extends React.Component<Props, State> {
   };
 
   componentDidMount() {
-    window.addEventListener("scroll", this.updateActiveHeading);
+    typeof window !== 'undefined' && window.addEventListener("scroll", this.updateActiveHeading);
     setImmediate(this.updateActiveHeading);
   }
 
   componentWillUnmount() {
-    window.removeEventListener("scroll", this.updateActiveHeading);
+    typeof window !== 'undefined' && window.removeEventListener("scroll", this.updateActiveHeading);
   }
 
   updateActiveHeading = () => {

@@ -31,7 +31,9 @@ function Heading(props: Props) {
   const title = node.text.trim();
   const startsWithPretitleAndSpace =
     pretitle && title.match(new RegExp(`^${pretitle}\\s`));
-  const pathToHeading = `${window.location.pathname}#${slugish}`;
+  const pathName = typeof window !== 'undefined' ? window.location.pathname : '';
+  const origin = typeof window !== 'undefined' ? window.location.origin : ''
+  const pathToHeading = `${pathName}#${slugish}`;
   const collapsed = node.data.get("collapsed");
 
   return (
@@ -55,7 +57,7 @@ function Heading(props: Props) {
             editor.props.onShowToast &&
             editor.props.onShowToast("Link copied to clipboard")
           }
-          text={`${window.location.origin}${pathToHeading}`}
+          text={`${origin}${pathToHeading}`}
         >
           <span>#</span>
         </Anchor>
