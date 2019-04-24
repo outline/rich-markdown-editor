@@ -28,7 +28,7 @@
     "prismjs": "^1.16.0",
     "react-autosize-textarea": "^6.0.0",
     "react-keydown": "^1.9.7",
-    "react-medium-image-zoom": "^3.0.10",
+    "react-medium-image-zoom": "^3.0.16",
     "react-portal": "^4.1.4",
     "slate": "^0.45.0",
     "slate-collapse-on-escape": "^0.8.1",
