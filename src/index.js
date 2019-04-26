@@ -84,7 +84,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     this.scrollToAnchor();
 
     if (this.props.readOnly) return;
-    window.addEventListener("keydown", this.handleKeyDown);
+    if (typeof window !== "undefined") {
+      window.addEventListener("keydown", this.handleKeyDown);
+    }
 
     if (this.props.autoFocus) {
       this.focusAtEnd();
@@ -98,7 +100,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   }
 
   componentWillUnmount() {
-    window.removeEventListener("keydown", this.handleKeyDown);
+    if (typeof window !== "undefined") {
+      window.removeEventListener("keydown", this.handleKeyDown);
+    }
   }
 
   scrollToAnchor() {

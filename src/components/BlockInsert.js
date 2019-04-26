@@ -44,12 +44,16 @@ class BlockInsert extends React.Component<Props, State> {
   };
 
   componentDidMount = () => {
-    window.addEventListener("mousemove", this.handleMouseMove);
+    if (typeof window !== "undefined") {
+      window.addEventListener("mousemove", this.handleMouseMove);
+    }
   };
 
   componentWillUnmount = () => {
     if (this.mouseMoveTimeout) clearTimeout(this.mouseMoveTimeout);
-    window.removeEventListener("mousemove", this.handleMouseMove);
+    if (typeof window !== "undefined") {
+      window.removeEventListener("mousemove", this.handleMouseMove);
+    }
   };
 
   setInactive = () => {

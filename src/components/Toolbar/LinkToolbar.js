@@ -47,13 +47,17 @@ class LinkToolbar extends React.Component<Props, State> {
     this.originalValue = this.props.link.data.get("href");
     this.setState({ isEditing: !!this.originalValue });
 
-    setImmediate(() =>
-      window.addEventListener("click", this.handleOutsideMouseClick)
-    );
+    if (typeof window !== "undefined") {
+      setImmediate(() =>
+        window.addEventListener("click", this.handleOutsideMouseClick)
+      );
+    }
   }
 
   componentWillUnmount() {
-    window.removeEventListener("click", this.handleOutsideMouseClick);
+    if (typeof window !== "undefined") {
+      window.removeEventListener("click", this.handleOutsideMouseClick);
+    }
   }
 
   handleOutsideMouseClick = (ev: SyntheticMouseEvent<*>) => {

@@ -51,13 +51,17 @@ export default class Toolbar extends React.Component<Props, State> {
 
   componentDidMount = () => {
     this.update();
-    window.addEventListener("mousedown", this.handleMouseDown);
-    window.addEventListener("mouseup", this.handleMouseUp);
+    if (typeof window !== "undefined") {
+      window.addEventListener("mousedown", this.handleMouseDown);
+      window.addEventListener("mouseup", this.handleMouseUp);
+    }
   };
 
   componentWillUnmount = () => {
-    window.removeEventListener("mousedown", this.handleMouseDown);
-    window.removeEventListener("mouseup", this.handleMouseUp);
+    if (typeof window !== "undefined") {
+      window.removeEventListener("mousedown", this.handleMouseDown);
+      window.removeEventListener("mouseup", this.handleMouseUp);
+    }
   };
 
   componentWillUpdate = debounce(() => {
