@@ -87,7 +87,7 @@ export const dark: Theme = {
   codeBackground: colors.almostBlack,
   codeBorder: colors.lightBlack,
   codeString: "#3d8fd1",
-  horizontalRule: colors.almostWhite,
+  horizontalRule: colors.lightBlack,
   imageErrorBackground: "rgba(0, 0, 0, 0.5)",
 };
 
