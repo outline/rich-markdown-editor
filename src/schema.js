@@ -34,7 +34,7 @@ const schema = {
             type: "table-row",
             nodes: [
               {
-                match: [{ type: "table-head" }, { type: "table-cell" }],
+                match: [{ type: "table-cell" }],
               },
             ],
           },

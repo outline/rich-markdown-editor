@@ -110,6 +110,11 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
+"@domoinc/slate-edit-table@^0.22.2":
+  version "0.22.2"
+  resolved "https://registry.yarnpkg.com/@domoinc/slate-edit-table/-/slate-edit-table-0.22.2.tgz#67450c1915eeae37d2a4055755c9a12f70f3306c"
+  integrity sha512-qGjOq/+R8jaQFCpJ2WM/71r+5LIenXMImgMc0st6Isg8W4OGFomj5uMNDaKuznBgPfbtV8/zzvLwjuGba5faSA==
+
 "@emotion/is-prop-valid@^0.7.3":
   version "0.7.3"
   resolved "https://registry.yarnpkg.com/@emotion/is-prop-valid/-/is-prop-valid-0.7.3.tgz#a6bf4fa5387cbba59d44e698a4680f481a8da6cc"

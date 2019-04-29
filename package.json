@@ -12,6 +12,7 @@
     "prepublish": "yarn build"
   },
   "dependencies": {
+    "@domoinc/slate-edit-table": "^0.22.2",
     "@tommoor/slate-edit-list": "0.19.0-0",
     "@wikifactory/slate-edit-blockquote": "^0.7.1",
     "@wikifactory/slate-edit-code": "^0.16.0",
