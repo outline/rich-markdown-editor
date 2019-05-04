@@ -8,23 +8,6 @@ import { isEqual, debounce } from "lodash";
 import FormattingToolbar from "./FormattingToolbar";
 import LinkToolbar from "./LinkToolbar";
 
-function getLinkInSelection(value): any {
-  try {
-    const selectedLinks = value.document
-      .getLeafInlinesAtRange(value.selection)
-      .filter(node => node.type === "link");
-
-    if (selectedLinks.size) {
-      const link = selectedLinks.first();
-      const { selection } = value;
-      if (selection.anchor.isInNode(link) || selection.focus.isInNode(link))
-        return link;
-    }
-  } catch (err) {
-    // It's okay.
-  }
-}
-
 type Props = {
   editor: Editor,
   value: Value,
@@ -33,6 +16,7 @@ type Props = {
 type State = {
   active: boolean,
   link: ?Node,
+  table: ?String,
   top: string,
   left: string,
   mouseDown: boolean,
@@ -43,6 +27,7 @@ export default class Toolbar extends React.Component<Props, State> {
     active: false,
     mouseDown: false,
     link: undefined,
+    table: undefined,
     top: "",
     left: "",
   };
@@ -84,13 +69,14 @@ export default class Toolbar extends React.Component<Props, State> {
     ev.preventDefault();
     ev.stopPropagation();
 
-    const link = getLinkInSelection(this.props.value);
+    const link = this.props.editor.getLinkInSelection();
     this.setState({ link });
   };
 
   update = () => {
-    const { value } = this.props;
-    const link = getLinkInSelection(value);
+    const { value, editor } = this.props;
+    const link = editor.getLinkInSelection();
+    const table = editor.isSelectionInTable();
     const selection = window.getSelection();
 
     // value.isCollapsed is not correct when the user clicks outside of the Slate bounds
@@ -103,6 +89,7 @@ export default class Toolbar extends React.Component<Props, State> {
           ...this.state,
           active: false,
           link: undefined,
+          table,
           top: "",
           left: "",
         };
@@ -183,6 +170,8 @@ export default class Toolbar extends React.Component<Props, State> {
               link={this.state.link}
               onBlur={this.hideLinkToolbar}
             />
+          ) : this.state.table ? (
+            <div>TABLE</div>
           ) : (
             <FormattingToolbar
               onCreateLink={this.showLinkToolbar}

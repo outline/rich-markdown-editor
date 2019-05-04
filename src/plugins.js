@@ -18,6 +18,7 @@ import MarkdownPaste from "./plugins/MarkdownPaste";
 import Ellipsis from "./plugins/Ellipsis";
 import Embeds from "./plugins/Embeds";
 import Chrome from "./plugins/Chrome";
+import TableAlign from "./plugins/TableAlign";
 import Nodes from "./nodes.js";
 import Marks from "./marks.js";
 
@@ -69,6 +70,7 @@ const createPlugins = ({ placeholder, getLinkComponent }: *) => {
       typeCell: "table-cell",
       typeContent: "paragraph",
     }),
+    TableAlign(),
     Prism({
       onlyIn: node => node.type === "code",
       getSyntax: node => node.data.get("language") || "javascript",
