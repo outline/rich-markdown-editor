@@ -166,14 +166,14 @@ export default class Toolbar extends React.Component<Props, State> {
           ref={ref => (this.menu = ref)}
           style={style}
         >
-          {this.state.table ? (
-            <TableToolbar {...this.props} />
-          ) : this.state.link ? (
+          {this.state.link ? (
             <LinkToolbar
               {...this.props}
               link={this.state.link}
               onBlur={this.hideLinkToolbar}
             />
+          ) : this.state.table ? (
+            <TableToolbar {...this.props} />
           ) : (
             <FormattingToolbar
               onCreateLink={this.showLinkToolbar}
@@ -203,6 +203,7 @@ const Menu = styled.div`
   height: 40px;
   box-sizing: border-box;
   pointer-events: none;
+  white-space: nowrap;
 
   * {
     box-sizing: border-box;

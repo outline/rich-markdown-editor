@@ -2,10 +2,17 @@
 import * as React from "react";
 import { withTheme } from "styled-components";
 import { Editor } from "slate-react";
-import { BulletedListIcon } from "outline-icons";
+import {
+  AlignLeftIcon,
+  AlignCenterIcon,
+  AlignRightIcon,
+  PlusIcon,
+  TrashIcon,
+} from "outline-icons";
 
 import type { Theme } from "../../types";
 import ToolbarButton from "./ToolbarButton";
+import Separator from "./Separator";
 
 type Props = {
   editor: Editor,
@@ -19,19 +26,19 @@ class TableToolbar extends React.Component<Props> {
    * @param {String} type
    * @return {Boolean}
    */
-  hasAlign = (type: string) => {
+  hasAlign = (align: string) => {
     try {
-      return this.props.editor.value.nodes.some(
-        node => node.data.get("align") === type
+      const { editor } = this.props;
+      const { startBlock, document } = editor.value;
+
+      const position = editor.getPositionByKey(document, startBlock.key);
+      return (
+        position.node.data.get("align") === align ||
+        startBlock.data.get("align") === align
       );
     } catch (_err) {
       return false;
     }
-  };
-
-  isBlock = (type: string) => {
-    const startBlock = this.props.editor.value.startBlock;
-    return startBlock && startBlock.type === type;
   };
 
   onClickAlign = (ev, align) => {
@@ -55,12 +62,29 @@ class TableToolbar extends React.Component<Props> {
     );
   };
 
+  addRow = ev => {
+    ev.preventDefault();
+    this.props.editor.insertRow().blur();
+  };
+
+  removeRow = ev => {
+    ev.preventDefault();
+    this.props.editor.removeRow().blur();
+  };
+
   render() {
     return (
       <span>
-        {this.renderAlignButton("left", BulletedListIcon)}
-        {this.renderAlignButton("center", BulletedListIcon)}
-        {this.renderAlignButton("right", BulletedListIcon)}
+        {this.renderAlignButton("left", AlignLeftIcon)}
+        {this.renderAlignButton("center", AlignCenterIcon)}
+        {this.renderAlignButton("right", AlignRightIcon)}
+        <Separator />
+        <ToolbarButton onMouseDown={this.addRow}>
+          <PlusIcon color={this.props.theme.toolbarItem} />
+        </ToolbarButton>
+        <ToolbarButton onMouseDown={this.removeRow}>
+          <TrashIcon color={this.props.theme.toolbarItem} />
+        </ToolbarButton>
       </span>
     );
   }

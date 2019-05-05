@@ -1,6 +1,5 @@
 // @flow
 import * as React from "react";
-import { PlusIcon } from "outline-icons";
 import styled from "styled-components";
 
 const StyledTable = styled.table`
@@ -12,22 +11,6 @@ const StyledTable = styled.table`
 `;
 
 class Table extends React.Component<*> {
-  componentDidMount = () => {
-    if (typeof window !== "undefined") {
-      window.addEventListener("mousemove", this.handleMouseMove);
-    }
-  };
-
-  componentWillUnmount = () => {
-    if (typeof window !== "undefined") {
-      window.removeEventListener("mousemove", this.handleMouseMove);
-    }
-  };
-
-  handleMouseMove = (ev: SyntheticMouseEvent<*>) => {
-    // TODO
-  };
-
   render() {
     const { children, ...rest } = this.props;
 
@@ -39,32 +22,9 @@ class Table extends React.Component<*> {
   }
 }
 
-const InsertRowPositioner = styled.div`
-  position: relative;
-  width: 0;
-  height: 0;
-`;
-
-const InsertRow = styled.div`
-  padding: 4px;
-  position: absolute;
-  left: -24px;
-  top: 20px;
-`;
-
 const StyledTr = styled.tr`
   position: relative;
   border-bottom: 1px solid ${props => props.theme.horizontalRule};
-
-  ${InsertRowPositioner} {
-    visibility: hidden;
-  }
-
-  &:hover {
-    ${InsertRowPositioner} {
-      visibility: visible;
-    }
-  }
 `;
 
 export const StyledTd = styled.td`
@@ -79,26 +39,12 @@ export const StyledTd = styled.td`
   box-shadow: 0 1px 1px ${props.theme.horizontalRule};
   z-index: 1;
   position: sticky;
-  top: 0;
+  top: -1px;
   `}
 `;
 
 export const Row = ({ children, editor, attributes, node, ...rest }: *) => {
-  return (
-    <StyledTr {...attributes}>
-      <InsertRowPositioner>
-        <InsertRow
-          onClick={ev => {
-            ev.preventDefault();
-            editor.insertRow();
-          }}
-        >
-          <PlusIcon />
-        </InsertRow>
-      </InsertRowPositioner>
-      {children}
-    </StyledTr>
-  );
+  return <StyledTr {...attributes}>{children}</StyledTr>;
 };
 
 export const Cell = ({
