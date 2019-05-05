@@ -7,7 +7,6 @@ const StyledTable = styled.table`
   border-collapse: collapse;
   border-radius: 4px;
   border: 1px solid ${props => props.theme.horizontalRule};
-  box-shadow: 0 -4px 0 rgba(0, 0, 0, 0.04), -4px 0 0 rgba(0, 0, 0, 0.04);
 `;
 
 class Table extends React.Component<*> {
@@ -27,13 +26,71 @@ const StyledTr = styled.tr`
   border-bottom: 1px solid ${props => props.theme.horizontalRule};
 `;
 
-export const StyledTd = styled.td`
-  text-align: ${props => props.align};
-  border-right: 1px solid ${props => props.theme.horizontalRule};
-  padding: 4px 8px;
+const Grip = styled.a`
+  position: absolute;
+  background: ${props => props.theme.horizontalRule};
+  opacity: ${props => (props.isActive ? 1 : 0)}
+  transition: opacity 100ms ease-in-out;
+  cursor: pointer;
+
+  &:hover {
+    background: ${props => props.theme.primary};
+  }
+`;
+
+const GripRow = styled(Grip)`
+  left: -12px;
+  top: 0.5px;
+  height: 100%;
+  width: 8px;
 
   ${props =>
-    props.isHead &&
+    props.isFirstRow &&
+    `
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+  `}
+
+  ${props =>
+    props.isLastRow &&
+    `
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+  `}
+`;
+
+const GripColumn = styled(Grip)`
+  top: -12px;
+  left: -0.5px;
+  width: 100%;
+  height: 8px;
+
+  ${props =>
+    props.isFirstColumn &&
+    `
+  border-top-left-radius: 2px;
+  border-bottom-left-radius: 2px;
+`}
+
+  ${props =>
+    props.isLastColumn &&
+    `
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px;
+`}
+`;
+
+const RowContent = styled.div`
+  padding: 4px 8px;
+  text-align: ${props => props.align};
+`;
+
+export const StyledTd = styled.td`
+  border-right: 1px solid ${props => props.theme.horizontalRule};
+  position: relative;
+
+  ${props =>
+    props.isFirstRow &&
     `
   background: ${props.theme.background};
   box-shadow: 0 1px 1px ${props.theme.horizontalRule};
@@ -56,12 +113,41 @@ export const Cell = ({
   ...rest
 }: *) => {
   const { document } = editor.value;
+  const isActive = editor.isSelectionInTable();
   const position = editor.getPositionByKey(document, node.key);
-  const isHead = position.isFirstRow();
+  const isFirstRow = position.isFirstRow();
+  const isFirstColumn = position.isFirstColumn();
+  const isLastRow = position.isLastRow();
+  const isLastColumn = position.isLastColumn();
 
   return (
-    <StyledTd align={node.data.get("align")} isHead={isHead} {...attributes}>
-      {children}
+    <StyledTd
+      isFirstRow={isFirstRow}
+      isFirstColumn={isFirstColumn}
+      {...attributes}
+    >
+      {!readOnly && (
+        <React.Fragment>
+          {isFirstColumn && (
+            <GripRow
+              isFirstRow={isFirstRow}
+              isLastRow={isLastRow}
+              isActive={isActive}
+              contentEditable={false}
+            />
+          )}
+          {isFirstRow && (
+            <GripColumn
+              isFirstColumn={isFirstColumn}
+              isLastColumn={isLastColumn}
+              isActive={isActive}
+              contentEditable={false}
+            />
+          )}
+        </React.Fragment>
+      )}
+
+      <RowContent align={node.data.get("align")}>{children}</RowContent>
     </StyledTd>
   );
 };
