@@ -16,7 +16,6 @@ type Props = {
 type State = {
   active: boolean,
   link: ?Node,
-  table: ?String,
   top: string,
   left: string,
   mouseDown: boolean,
@@ -27,7 +26,6 @@ export default class Toolbar extends React.Component<Props, State> {
     active: false,
     mouseDown: false,
     link: undefined,
-    table: undefined,
     top: "",
     left: "",
   };
@@ -76,7 +74,6 @@ export default class Toolbar extends React.Component<Props, State> {
   update = () => {
     const { value, editor } = this.props;
     const link = editor.getLinkInSelection();
-    const table = editor.isSelectionInTable();
     const selection = window.getSelection();
 
     // value.isCollapsed is not correct when the user clicks outside of the Slate bounds
@@ -89,7 +86,6 @@ export default class Toolbar extends React.Component<Props, State> {
           ...this.state,
           active: false,
           link: undefined,
-          table,
           top: "",
           left: "",
         };
@@ -170,8 +166,6 @@ export default class Toolbar extends React.Component<Props, State> {
               link={this.state.link}
               onBlur={this.hideLinkToolbar}
             />
-          ) : this.state.table ? (
-            <div>TABLE</div>
           ) : (
             <FormattingToolbar
               onCreateLink={this.showLinkToolbar}

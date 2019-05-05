@@ -91,14 +91,21 @@ export const StyledTd = styled.td`
   padding: 4px 8px;
 `;
 
-export const Cell = ({ children, editor, attributes, node, ...rest }: *) => {
+export const Cell = ({
+  children,
+  editor,
+  readOnly,
+  attributes,
+  node,
+  ...rest
+}: *) => {
   const { document } = editor.value;
   const position = editor.getPositionByKey(document, node.key);
   const isHead = position.isFirstRow();
 
   return (
     <StyledTd align={node.data.get("align")} {...attributes}>
-      {isHead && (
+      {isHead && !readOnly && (
         <React.Fragment>
           <span
             onClick={ev => {

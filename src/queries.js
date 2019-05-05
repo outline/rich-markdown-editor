@@ -1,14 +1,16 @@
 // @flow
-import { Editor, Value } from "slate";
+import { Editor } from "slate";
 
 const queries = {
-  isLinkActive(editor: Editor, value: Value) {
+  isLinkActive(editor: Editor) {
+    const { value } = editor;
     const { inlines } = value;
     return inlines.some(i => i.type === "link");
   },
 
-  getLinkInSelection(editor: Editor, value: Value) {
+  getLinkInSelection(editor: Editor) {
     try {
+      const { value } = editor;
       const selectedLinks = value.document
         .getLeafInlinesAtRange(value.selection)
         .filter(node => node.type === "link");
@@ -23,6 +25,7 @@ const queries = {
       }
     } catch (err) {
       // It's okay.
+      console.error(err);
     }
   },
 };
