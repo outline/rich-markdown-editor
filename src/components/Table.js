@@ -67,7 +67,23 @@ const StyledTr = styled.tr`
   }
 `;
 
-export const Row = ({ children, editor, attributes, ...rest }: *) => {
+export const StyledTd = styled.td`
+  text-align: ${props => props.align};
+  border-right: 1px solid ${props => props.theme.horizontalRule};
+  padding: 4px 8px;
+
+  ${props =>
+    props.isHead &&
+    `
+  background: ${props.theme.background};
+  box-shadow: 0 1px 1px ${props.theme.horizontalRule};
+  z-index: 1;
+  position: sticky;
+  top: 0;
+  `}
+`;
+
+export const Row = ({ children, editor, attributes, node, ...rest }: *) => {
   return (
     <StyledTr {...attributes}>
       <InsertRowPositioner>
@@ -85,12 +101,6 @@ export const Row = ({ children, editor, attributes, ...rest }: *) => {
   );
 };
 
-export const StyledTd = styled.td`
-  text-align: ${props => props.align};
-  border-right: 1px solid ${props => props.theme.horizontalRule};
-  padding: 4px 8px;
-`;
-
 export const Cell = ({
   children,
   editor,
@@ -104,45 +114,7 @@ export const Cell = ({
   const isHead = position.isFirstRow();
 
   return (
-    <StyledTd align={node.data.get("align")} {...attributes}>
-      {isHead && !readOnly && (
-        <React.Fragment>
-          <span
-            onClick={ev => {
-              editor.moveSelection(
-                position.getColumnIndex(),
-                position.getRowIndex()
-              );
-              editor.setColumnAlign("left");
-            }}
-          >
-            left
-          </span>{" "}
-          <span
-            onClick={ev => {
-              editor.moveSelection(
-                position.getColumnIndex(),
-                position.getRowIndex()
-              );
-              editor.setColumnAlign("center");
-            }}
-          >
-            center
-          </span>{" "}
-          <span
-            onClick={ev => {
-              editor.moveSelection(
-                position.getColumnIndex(),
-                position.getRowIndex()
-              );
-              editor.setColumnAlign("right");
-            }}
-          >
-            right
-          </span>
-        </React.Fragment>
-      )}
-
+    <StyledTd align={node.data.get("align")} isHead={isHead} {...attributes}>
       {children}
     </StyledTd>
   );

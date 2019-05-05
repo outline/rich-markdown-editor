@@ -42,9 +42,9 @@ function renderNode(props: SlateNodeProps, editor: Editor, next: Function) {
     case "table":
       return <Table {...attributes}>{props.children}</Table>;
     case "table-row":
-      return <Row {...props}>{props.children}</Row>;
+      return <Row {...props} />;
     case "table-cell":
-      return <Cell {...props}>{props.children}</Cell>;
+      return <Cell {...props} />;
     case "list-item":
       return <ListItem {...props} />;
     case "horizontal-rule":

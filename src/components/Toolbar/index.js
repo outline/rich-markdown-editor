@@ -6,6 +6,7 @@ import { Node, Value } from "slate";
 import styled from "styled-components";
 import { isEqual, debounce } from "lodash";
 import FormattingToolbar from "./FormattingToolbar";
+import TableToolbar from "./TableToolbar";
 import LinkToolbar from "./LinkToolbar";
 
 type Props = {
@@ -16,6 +17,7 @@ type Props = {
 type State = {
   active: boolean,
   link: ?Node,
+  table: ?Boolean,
   top: string,
   left: string,
   mouseDown: boolean,
@@ -26,6 +28,7 @@ export default class Toolbar extends React.Component<Props, State> {
     active: false,
     mouseDown: false,
     link: undefined,
+    table: undefined,
     top: "",
     left: "",
   };
@@ -79,12 +82,14 @@ export default class Toolbar extends React.Component<Props, State> {
     // value.isCollapsed is not correct when the user clicks outside of the Slate bounds
     // checking the window selection collapsed state as a fallback for this case
     const isCollapsed = value.selection.isCollapsed || selection.isCollapsed;
+    const isTable = editor.isSelectionInTable() && isCollapsed;
 
-    if (isCollapsed && !link) {
+    if (isCollapsed && !link && !isTable) {
       if (this.state.active) {
         const newState = {
-          ...this.state,
+          mouseDown: this.state.mouseDown,
           active: false,
+          table: undefined,
           link: undefined,
           top: "",
           left: "",
@@ -111,8 +116,9 @@ export default class Toolbar extends React.Component<Props, State> {
     if (this.state.mouseDown && !link) active = false;
 
     const newState = {
-      ...this.state,
       active,
+      mouseDown: this.state.mouseDown,
+      table: isTable,
       link: this.state.link || link,
       top: undefined,
       left: undefined,
@@ -160,7 +166,9 @@ export default class Toolbar extends React.Component<Props, State> {
           ref={ref => (this.menu = ref)}
           style={style}
         >
-          {this.state.link ? (
+          {this.state.table ? (
+            <TableToolbar {...this.props} />
+          ) : this.state.link ? (
             <LinkToolbar
               {...this.props}
               link={this.state.link}
