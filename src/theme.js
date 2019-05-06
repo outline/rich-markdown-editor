@@ -61,6 +61,10 @@ export const light: Theme = {
   blockToolbarTriggerIcon: colors.white,
   blockToolbarItem: colors.almostBlack,
 
+  tableDivider: colors.grey,
+  tableSelected: colors.primary,
+  tableSelectedBackground: "#E5F7FF",
+
   quote: colors.greyDark,
   codeBackground: colors.greyLight,
   codeBorder: colors.grey,
@@ -82,6 +86,10 @@ export const dark: Theme = {
   blockToolbarTrigger: colors.almostWhite,
   blockToolbarTriggerIcon: colors.almostBlack,
   blockToolbarItem: colors.lightBlack,
+
+  tableDivider: colors.lightBlack,
+  tableSelected: colors.primary,
+  tableSelectedBackground: "#002333",
 
   quote: colors.almostWhite,
   codeBackground: colors.almostBlack,

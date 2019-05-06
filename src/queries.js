@@ -28,6 +28,18 @@ const queries = {
       console.error(err);
     }
   },
+
+  forEachCells(
+    editor: Editor,
+    table: Node,
+    iterator: (cell: Node, rowIndex: number, columnIndex: number) => void
+  ) {
+    return table.nodes.forEach((row, rowIndex) => {
+      return row.nodes.forEach((cell, columnIndex) => {
+        return iterator(cell, rowIndex, columnIndex);
+      });
+    });
+  },
 };
 
 export default queries;

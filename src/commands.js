@@ -10,6 +10,113 @@ const commands = {
     editor.unwrapInline("link");
   },
 
+  clearSelectedColumn(editor: Editor, table, columnIndex: number) {
+    const cells = editor.getCellsAtColumn(table, columnIndex);
+
+    cells.forEach(cell => {
+      const data = cell.data.toObject();
+      editor.setNodeByKey(cell.key, {
+        data: {
+          ...data,
+          selected: undefined,
+        },
+      });
+    });
+  },
+
+  clearSelectedRow(editor: Editor, table, rowIndex: number) {
+    const cells = editor.getCellsAtRow(table, rowIndex);
+
+    cells.forEach(cell => {
+      const data = cell.data.toObject();
+      editor.setNodeByKey(cell.key, {
+        data: {
+          ...data,
+          selected: undefined,
+        },
+      });
+    });
+  },
+
+  clearSelected(editor: Editor, table) {
+    const previouslySelectedRow = table.data.get("selectedRow");
+    const previouslySelectedColumn = table.data.get("selectedColumn");
+
+    if (previouslySelectedRow !== undefined) {
+      editor.clearSelectedRow(table, previouslySelectedRow);
+    }
+    if (previouslySelectedColumn !== undefined) {
+      editor.clearSelectedColumn(table, previouslySelectedColumn);
+    }
+
+    editor.setNodeByKey(table.key, {
+      data: {
+        selectedColumn: undefined,
+        selectedRow: undefined,
+      },
+    });
+  },
+
+  selectColumn(editor: Editor, selected: boolean) {
+    const pos = editor.getPosition(editor.value);
+    const selectedColumn = pos.getColumnIndex();
+
+    editor.withoutSaving(() => {
+      editor.clearSelected(pos.table);
+
+      editor.setNodeByKey(pos.table.key, {
+        data: {
+          selectedColumn: selected ? selectedColumn : undefined,
+          selectedRow: undefined,
+        },
+      });
+
+      const cells = editor.getCellsAtColumn(pos.table, selectedColumn);
+
+      cells.forEach(cell => {
+        const data = cell.data.toObject();
+        editor.setNodeByKey(cell.key, {
+          data: {
+            ...data,
+            selected,
+          },
+        });
+      });
+    });
+
+    return editor;
+  },
+
+  selectRow(editor: Editor, selected: boolean) {
+    const pos = editor.getPosition(editor.value);
+    const selectedRow = pos.getRowIndex();
+
+    editor.withoutSaving(() => {
+      editor.clearSelected(pos.table);
+
+      editor.setNodeByKey(pos.table.key, {
+        data: {
+          selectedColumn: undefined,
+          selectedRow: selected ? selectedRow : undefined,
+        },
+      });
+
+      const cells = editor.getCellsAtRow(pos.table, selectedRow);
+
+      cells.forEach(cell => {
+        const data = cell.data.toObject();
+        editor.setNodeByKey(cell.key, {
+          data: {
+            ...data,
+            selected,
+          },
+        });
+      });
+    });
+
+    return editor;
+  },
+
   insertImageFile(editor: Editor, file: window.File) {
     const {
       uploadImage,
