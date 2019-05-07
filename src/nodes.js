@@ -40,7 +40,7 @@ function renderNode(props: SlateNodeProps, editor: Editor, next: Function) {
     case "todo-list":
       return <TodoList {...attributes}>{props.children}</TodoList>;
     case "table":
-      return <Table {...attributes}>{props.children}</Table>;
+      return <Table {...props}>{props.children}</Table>;
     case "table-row":
       return <Row {...props} />;
     case "table-cell":

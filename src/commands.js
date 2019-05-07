@@ -49,12 +49,17 @@ const commands = {
       editor.clearSelectedColumn(table, previouslySelectedColumn);
     }
 
-    editor.setNodeByKey(table.key, {
-      data: {
-        selectedColumn: undefined,
-        selectedRow: undefined,
-      },
-    });
+    if (
+      previouslySelectedRow !== undefined ||
+      previouslySelectedColumn !== undefined
+    ) {
+      editor.setNodeByKey(table.key, {
+        data: {
+          selectedColumn: undefined,
+          selectedRow: undefined,
+        },
+      });
+    }
   },
 
   selectColumn(editor: Editor, selected: boolean) {

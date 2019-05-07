@@ -1,5 +1,6 @@
 // @flow
 import * as React from "react";
+import { findDOMNode } from "react-dom";
 import styled from "styled-components";
 
 const StyledTr = styled.tr`
@@ -75,11 +76,37 @@ const StyledTable = styled.table`
 `;
 
 class Table extends React.Component<*> {
+  table: HTMLTableElement;
+
+  componentDidMount() {
+    if (typeof window !== "undefined") {
+      window.addEventListener("click", this.handleOutsideMouseClick);
+    }
+  }
+
+  componentWillUnmount() {
+    if (typeof window !== "undefined") {
+      window.removeEventListener("click", this.handleOutsideMouseClick);
+    }
+  }
+
+  handleOutsideMouseClick = (ev: SyntheticMouseEvent<*>) => {
+    const element = findDOMNode(this.table);
+
+    if (
+      !element ||
+      (ev.target instanceof Node && element.contains(ev.target))
+    ) {
+      return;
+    }
+    this.props.editor.clearSelected(this.props.node);
+  };
+
   render() {
-    const { children, ...rest } = this.props;
+    const { children, attributes } = this.props;
 
     return (
-      <StyledTable {...rest}>
+      <StyledTable ref={ref => (this.table = ref)} {...attributes}>
         <tbody>{children}</tbody>
       </StyledTable>
     );
