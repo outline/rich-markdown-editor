@@ -1,5 +1,5 @@
 // @flow
-import { Editor, Block, KeyUtils } from "slate";
+import { Editor, Block, Node, KeyUtils } from "slate";
 
 const commands = {
   wrapLink(editor: Editor, href: string) {
@@ -10,7 +10,7 @@ const commands = {
     editor.unwrapInline("link");
   },
 
-  clearSelectedColumn(editor: Editor, table, columnIndex: number) {
+  clearSelectedColumn(editor: Editor, table: Node, columnIndex: number) {
     const cells = editor.getCellsAtColumn(table, columnIndex);
 
     cells.forEach(cell => {
@@ -24,7 +24,7 @@ const commands = {
     });
   },
 
-  clearSelectedRow(editor: Editor, table, rowIndex: number) {
+  clearSelectedRow(editor: Editor, table: Node, rowIndex: number) {
     const cells = editor.getCellsAtRow(table, rowIndex);
 
     cells.forEach(cell => {
@@ -38,7 +38,7 @@ const commands = {
     });
   },
 
-  clearSelected(editor: Editor, table) {
+  clearSelected(editor: Editor, table: Node) {
     const previouslySelectedRow = table.data.get("selectedRow");
     const previouslySelectedColumn = table.data.get("selectedColumn");
 

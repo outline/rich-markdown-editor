@@ -1,5 +1,5 @@
 // @flow
-import { Editor } from "slate";
+import { Editor, Node } from "slate";
 
 const queries = {
   isLinkActive(editor: Editor) {
