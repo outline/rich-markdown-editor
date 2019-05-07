@@ -128,6 +128,7 @@ export const StyledTd = styled.td`
   z-index: 1;
   position: sticky;
   top: -1px;
+  min-width: 100px;
   `}
 `;
 
