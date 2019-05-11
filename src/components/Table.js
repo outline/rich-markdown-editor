@@ -208,7 +208,12 @@ export const Row = ({ children, editor, attributes, node, ...rest }: *) => {
   return <StyledTr {...attributes}>{children}</StyledTr>;
 };
 
-export class Cell extends React.Component<*> {
+type State = {
+  left: number,
+  top: number,
+};
+
+export class Cell extends React.Component<*, State> {
   cell: ?HTMLElement;
   menu: ?HTMLElement;
 
@@ -220,7 +225,10 @@ export class Cell extends React.Component<*> {
   componentDidUpdate() {
     if (!this.cell) return;
 
-    const rect = findDOMNode(this.cell).getBoundingClientRect();
+    const element = findDOMNode(this.cell);
+    if (!(element instanceof HTMLElement)) return;
+
+    const rect = element.getBoundingClientRect();
     const menuWidth = 238;
     const menuHeight = 40;
     const left = Math.round(
