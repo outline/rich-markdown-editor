@@ -6,7 +6,8 @@ import {
   AlignLeftIcon,
   AlignCenterIcon,
   AlignRightIcon,
-  PlusIcon,
+  InsertLeftIcon,
+  InsertRightIcon,
   TrashIcon,
 } from "outline-icons";
 
@@ -66,9 +67,18 @@ class TableToolbar extends React.Component<Props> {
     this.props.editor.removeRow().blur();
   };
 
-  addColumn = ev => {
+  addColumnRight = ev => {
     ev.preventDefault();
     this.props.editor.insertColumn().blur();
+  };
+
+  addColumnLeft = ev => {
+    ev.preventDefault();
+
+    const { editor } = this.props;
+    const { startBlock, document } = editor.value;
+    const position = editor.getPositionByKey(document, startBlock.key);
+    editor.insertColumn(position.getColumnIndex()).blur();
   };
 
   removeColumn = ev => {
@@ -84,35 +94,27 @@ class TableToolbar extends React.Component<Props> {
     const position = editor.getPositionByKey(document, startBlock.key);
     const columnIsSelected =
       position.table.data.get("selectedColumn") !== undefined;
-    const rowIsSelected = position.table.data.get("selectedRow") !== undefined;
 
     return (
-      <span>
+      <React.Fragment>
         {this.renderAlignButton("left", AlignLeftIcon)}
         {this.renderAlignButton("center", AlignCenterIcon)}
         {this.renderAlignButton("right", AlignRightIcon)}
-        {(rowIsSelected || columnIsSelected) && <Separator />}
-        {rowIsSelected && (
-          <React.Fragment>
-            <ToolbarButton onMouseDown={this.addRow}>
-              <PlusIcon color={this.props.theme.toolbarItem} />
-            </ToolbarButton>
-            <ToolbarButton onMouseDown={this.removeRow}>
-              <TrashIcon color={this.props.theme.toolbarItem} />
-            </ToolbarButton>
-          </React.Fragment>
-        )}
+        <Separator />
         {columnIsSelected && (
           <React.Fragment>
-            <ToolbarButton onMouseDown={this.addColumn}>
-              <PlusIcon color={this.props.theme.toolbarItem} />
+            <ToolbarButton onMouseDown={this.addColumnLeft}>
+              <InsertLeftIcon color={this.props.theme.toolbarItem} />
             </ToolbarButton>
             <ToolbarButton onMouseDown={this.removeColumn}>
               <TrashIcon color={this.props.theme.toolbarItem} />
             </ToolbarButton>
+            <ToolbarButton onMouseDown={this.addColumnRight}>
+              <InsertRightIcon color={this.props.theme.toolbarItem} />
+            </ToolbarButton>
           </React.Fragment>
         )}
-      </span>
+      </React.Fragment>
     );
   }
 }

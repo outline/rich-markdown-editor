@@ -6,7 +6,6 @@ import { Node, Value } from "slate";
 import styled from "styled-components";
 import { isEqual, debounce } from "lodash";
 import FormattingToolbar from "./FormattingToolbar";
-import TableToolbar from "./TableToolbar";
 import LinkToolbar from "./LinkToolbar";
 
 type Props = {
@@ -17,7 +16,6 @@ type Props = {
 type State = {
   active: boolean,
   link: ?Node,
-  table: ?Boolean,
   top: string,
   left: string,
   mouseDown: boolean,
@@ -28,7 +26,6 @@ export default class Toolbar extends React.Component<Props, State> {
     active: false,
     mouseDown: false,
     link: undefined,
-    table: undefined,
     top: "",
     left: "",
   };
@@ -50,7 +47,7 @@ export default class Toolbar extends React.Component<Props, State> {
     }
   };
 
-  componentWillUpdate = debounce(() => {
+  componentWillReceiveProps = debounce(() => {
     this.update();
   }, 100);
 
@@ -60,10 +57,12 @@ export default class Toolbar extends React.Component<Props, State> {
 
   handleMouseDown = () => {
     this.setState({ mouseDown: true });
+    this.update();
   };
 
   handleMouseUp = () => {
     this.setState({ mouseDown: false });
+    this.update();
   };
 
   showLinkToolbar = (ev: SyntheticEvent<*>) => {
@@ -82,14 +81,12 @@ export default class Toolbar extends React.Component<Props, State> {
     // value.isCollapsed is not correct when the user clicks outside of the Slate bounds
     // checking the window selection collapsed state as a fallback for this case
     const isCollapsed = value.selection.isCollapsed || selection.isCollapsed;
-    const isTable = editor.isSelectionInTable() && isCollapsed;
 
-    if (isCollapsed && !link && !isTable) {
+    if (isCollapsed && !link) {
       if (this.state.active) {
         const newState = {
           mouseDown: this.state.mouseDown,
           active: false,
-          table: undefined,
           link: undefined,
           top: "",
           left: "",
@@ -118,7 +115,6 @@ export default class Toolbar extends React.Component<Props, State> {
     const newState = {
       active,
       mouseDown: this.state.mouseDown,
-      table: isTable,
       link: this.state.link || link,
       top: undefined,
       left: undefined,
@@ -172,8 +168,6 @@ export default class Toolbar extends React.Component<Props, State> {
               link={this.state.link}
               onBlur={this.hideLinkToolbar}
             />
-          ) : this.state.table ? (
-            <TableToolbar {...this.props} />
           ) : (
             <FormattingToolbar
               onCreateLink={this.showLinkToolbar}
@@ -186,7 +180,7 @@ export default class Toolbar extends React.Component<Props, State> {
   }
 }
 
-const Menu = styled.div`
+export const Menu = styled.div`
   padding: 8px 16px;
   position: absolute;
   z-index: 200;
@@ -204,6 +198,21 @@ const Menu = styled.div`
   box-sizing: border-box;
   pointer-events: none;
   white-space: nowrap;
+
+  &::before {
+    content: "";
+    display: block;
+    width: 24px;
+    height: 24px;
+    transform: rotate(45deg) translateX(-50%);
+    background: ${props => props.theme.toolbarBackground};
+    border-radius: 3px;
+    z-index: -1;
+
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+  }
 
   * {
     box-sizing: border-box;

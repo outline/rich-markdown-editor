@@ -4827,10 +4827,10 @@ osenv@^0.1.4:
     os-homedir "^1.0.0"
     os-tmpdir "^1.0.0"
 
-outline-icons@^1.9.0-1:
-  version "1.9.0-1"
-  resolved "https://registry.yarnpkg.com/outline-icons/-/outline-icons-1.9.0-1.tgz#b0e911a7399f558f6a58fcdbae8013f3a4df5fdc"
-  integrity sha512-0fA74KmGAqwQzPnyWJDtQOsX1klKnlpVWGKfnlgSOsLzSxG2QLNUoDcInaY8QZ2CXuSY1rdP+d013zAdLM2Gvg==
+outline-icons@^1.9.0-2:
+  version "1.9.0-2"
+  resolved "https://registry.yarnpkg.com/outline-icons/-/outline-icons-1.9.0-2.tgz#a1d8c166e1a941e7f513c4cfdbe102c9d3b2e4cc"
+  integrity sha512-BO6CcXjlLKkwqQXUkKKwx2/oN/3ky4Yo84iqF73FMlhYbCFW0oKEWOEPT8xVFFh+jpMzTxogUBkpWstRYtvDcw==
 
 output-file-sync@^1.1.2:
   version "1.1.2"

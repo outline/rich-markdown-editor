@@ -14,6 +14,8 @@ const commands = {
     const cells = editor.getCellsAtColumn(table, columnIndex);
 
     cells.forEach(cell => {
+      if (!cell) return;
+
       const data = cell.data.toObject();
       editor.setNodeByKey(cell.key, {
         data: {
