@@ -51,7 +51,11 @@ class TableToolbar extends React.Component<Props> {
     const onMouseDown = ev => this.onClickAlign(ev, align);
 
     return (
-      <ToolbarButton onMouseDown={onMouseDown} active={isActive}>
+      <ToolbarButton
+        onMouseDown={onMouseDown}
+        active={isActive}
+        title={`Align ${align}`}
+      >
         <IconClass color={this.props.theme.toolbarItem} />
       </ToolbarButton>
     );
@@ -103,13 +107,22 @@ class TableToolbar extends React.Component<Props> {
         <Separator />
         {columnIsSelected && (
           <React.Fragment>
-            <ToolbarButton onMouseDown={this.addColumnLeft}>
+            <ToolbarButton
+              onMouseDown={this.addColumnLeft}
+              title="Insert column left"
+            >
               <InsertLeftIcon color={this.props.theme.toolbarItem} />
             </ToolbarButton>
-            <ToolbarButton onMouseDown={this.removeColumn}>
+            <ToolbarButton
+              onMouseDown={this.removeColumn}
+              title="Remove column"
+            >
               <TrashIcon color={this.props.theme.toolbarItem} />
             </ToolbarButton>
-            <ToolbarButton onMouseDown={this.addColumnRight}>
+            <ToolbarButton
+              onMouseDown={this.addColumnRight}
+              title="Insert column right"
+            >
               <InsertRightIcon color={this.props.theme.toolbarItem} />
             </ToolbarButton>
           </React.Fragment>
