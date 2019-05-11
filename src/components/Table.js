@@ -223,8 +223,10 @@ export class Cell extends React.Component<*> {
     const rect = findDOMNode(this.cell).getBoundingClientRect();
     const menuWidth = 238;
     const menuHeight = 40;
-    const left = rect.left + rect.width / 2 - menuWidth / 2;
-    const top = rect.top - menuHeight - 12;
+    const left = Math.round(
+      rect.left + window.scrollX + rect.width / 2 - menuWidth / 2
+    );
+    const top = Math.round(rect.top + window.scrollY - menuHeight - 12);
 
     this.setState(state => {
       if (state.left !== left || state.top !== top) {
