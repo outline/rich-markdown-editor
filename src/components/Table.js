@@ -253,6 +253,8 @@ export class Cell extends React.Component<*, State> {
     const isLastRow = position.isLastRow();
     const isLastColumn = position.isLastColumn();
     const isSelected = node.data.get("selected");
+    const isSelectedRow =
+      position.table.data.get("selectedRow") === position.getRowIndex();
     const isSelectedColumn =
       position.table.data.get("selectedColumn") === position.getColumnIndex();
 
@@ -270,21 +272,27 @@ export class Cell extends React.Component<*, State> {
         {!readOnly && (
           <React.Fragment>
             {isFirstColumn && (
-              <GripRow
-                isFirstRow={isFirstRow}
-                isLastRow={isLastRow}
-                isActive={isActive}
-                isSelected={
-                  position.table.data.get("selectedRow") ===
-                  position.getRowIndex()
-                }
-                contentEditable={false}
-                onClick={ev => {
-                  ev.preventDefault();
-                  ev.stopPropagation();
-                  editor.selectRow(!isSelected);
-                }}
-              />
+              <React.Fragment>
+                <GripRow
+                  isFirstRow={isFirstRow}
+                  isLastRow={isLastRow}
+                  isActive={isActive}
+                  isSelected={isSelectedRow}
+                  contentEditable={false}
+                  onClick={ev => {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    editor.selectRow(!isSelected);
+                  }}
+                />
+                {isActive && (
+                  <Portal>
+                    <Menu active={isSelectedRow} style={this.state}>
+                      <TableToolbar editor={editor} />
+                    </Menu>
+                  </Portal>
+                )}
+              </React.Fragment>
             )}
             {isFirstRow && (
               <React.Fragment>

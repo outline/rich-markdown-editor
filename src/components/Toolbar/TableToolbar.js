@@ -8,6 +8,8 @@ import {
   AlignRightIcon,
   InsertLeftIcon,
   InsertRightIcon,
+  InsertAboveIcon,
+  InsertBelowIcon,
   TrashIcon,
 } from "outline-icons";
 
@@ -61,9 +63,18 @@ class TableToolbar extends React.Component<Props> {
     );
   };
 
-  addRow = ev => {
+  addRowBelow = ev => {
     ev.preventDefault();
     this.props.editor.insertRow().blur();
+  };
+
+  addRowAbove = ev => {
+    ev.preventDefault();
+
+    const { editor } = this.props;
+    const { startBlock, document } = editor.value;
+    const position = editor.getPositionByKey(document, startBlock.key);
+    editor.insertRow(position.getRowIndex()).blur();
   };
 
   removeRow = ev => {
@@ -98,15 +109,16 @@ class TableToolbar extends React.Component<Props> {
     const position = editor.getPositionByKey(document, startBlock.key);
     const columnIsSelected =
       position.table.data.get("selectedColumn") !== undefined;
+    const rowIsSelected = position.table.data.get("selectedRow") !== undefined;
 
     return (
       <React.Fragment>
-        {this.renderAlignButton("left", AlignLeftIcon)}
-        {this.renderAlignButton("center", AlignCenterIcon)}
-        {this.renderAlignButton("right", AlignRightIcon)}
-        <Separator />
         {columnIsSelected && (
           <React.Fragment>
+            {this.renderAlignButton("left", AlignLeftIcon)}
+            {this.renderAlignButton("center", AlignCenterIcon)}
+            {this.renderAlignButton("right", AlignRightIcon)}
+            <Separator />
             <ToolbarButton
               onMouseDown={this.removeColumn}
               title="Remove column"
@@ -125,6 +137,26 @@ class TableToolbar extends React.Component<Props> {
               title="Insert column right"
             >
               <InsertRightIcon color={this.props.theme.toolbarItem} />
+            </ToolbarButton>
+          </React.Fragment>
+        )}
+        {rowIsSelected && (
+          <React.Fragment>
+            <ToolbarButton onMouseDown={this.removeRow} title="Remove row">
+              <TrashIcon color={this.props.theme.toolbarItem} />
+            </ToolbarButton>
+            <Separator />
+            <ToolbarButton
+              onMouseDown={this.addRowAbove}
+              title="Insert row above"
+            >
+              <InsertAboveIcon color={this.props.theme.toolbarItem} />
+            </ToolbarButton>
+            <ToolbarButton
+              onMouseDown={this.addRowBelow}
+              title="Insert row below"
+            >
+              <InsertBelowIcon color={this.props.theme.toolbarItem} />
             </ToolbarButton>
           </React.Fragment>
         )}
