@@ -29,10 +29,10 @@ class TableToolbar extends React.Component<Props> {
     try {
       const { editor } = this.props;
       const { startBlock, document } = editor.value;
-
       const position = editor.getPositionByKey(document, startBlock.key);
+
       return (
-        position.node.data.get("align") === align ||
+        position.cell.data.get("align") === align ||
         startBlock.data.get("align") === align
       );
     } catch (_err) {
