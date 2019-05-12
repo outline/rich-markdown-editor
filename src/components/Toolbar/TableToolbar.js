@@ -109,10 +109,7 @@ class TableToolbar extends React.Component<Props> {
     const { startBlock, document } = editor.value;
     const position = editor.getPositionByKey(document, startBlock.key);
 
-    this.props.editor
-      .clearSelected(position.table)
-      .insertColumn()
-      .blur();
+    this.props.editor.clearSelected(position.table).insertColumn();
   };
 
   addColumnLeft = ev => {
@@ -124,7 +121,7 @@ class TableToolbar extends React.Component<Props> {
     editor
       .insertColumn(position.getColumnIndex())
       .clearSelected(position.table)
-      .blur();
+      .moveSelectionBy(-1, 0);
   };
 
   removeColumn = ev => {
