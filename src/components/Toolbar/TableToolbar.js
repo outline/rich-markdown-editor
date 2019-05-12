@@ -65,7 +65,14 @@ class TableToolbar extends React.Component<Props> {
 
   addRowBelow = ev => {
     ev.preventDefault();
-    this.props.editor.insertRow().blur();
+
+    const { editor } = this.props;
+    const { startBlock, document } = editor.value;
+    const position = editor.getPositionByKey(document, startBlock.key);
+    this.props.editor
+      .clearSelected(position.table)
+      .insertRow()
+      .blur();
   };
 
   addRowAbove = ev => {
@@ -74,7 +81,10 @@ class TableToolbar extends React.Component<Props> {
     const { editor } = this.props;
     const { startBlock, document } = editor.value;
     const position = editor.getPositionByKey(document, startBlock.key);
-    editor.insertRow(position.getRowIndex()).blur();
+    editor
+      .clearSelected(position.table)
+      .insertRow(position.getRowIndex())
+      .blur();
   };
 
   removeRow = ev => {
@@ -84,16 +94,26 @@ class TableToolbar extends React.Component<Props> {
 
   addColumnRight = ev => {
     ev.preventDefault();
-    this.props.editor.insertColumn().blur();
+    const { editor } = this.props;
+    const { startBlock, document } = editor.value;
+    const position = editor.getPositionByKey(document, startBlock.key);
+
+    this.props.editor
+      .clearSelected(position.table)
+      .insertColumn()
+      .blur();
   };
 
   addColumnLeft = ev => {
     ev.preventDefault();
-
     const { editor } = this.props;
     const { startBlock, document } = editor.value;
     const position = editor.getPositionByKey(document, startBlock.key);
-    editor.insertColumn(position.getColumnIndex()).blur();
+
+    editor
+      .clearSelected(position.table)
+      .insertColumn(position.getColumnIndex())
+      .blur();
   };
 
   removeColumn = ev => {

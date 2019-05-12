@@ -137,6 +137,8 @@ const TableShadows = styled.div`
   overflow-y: hidden;
   overflow-x: scroll;
   padding-left: 1em;
+  border-left: 1px solid transparent;
+  border-right: 1px solid transparent;
   transition: border 250ms ease-in-out;
   margin-left: -1em;
 
@@ -305,7 +307,6 @@ export class Cell extends React.Component<*, State> {
                   onClick={ev => {
                     ev.preventDefault();
                     ev.stopPropagation();
-
                     editor.selectColumn(!isSelected);
                   }}
                 />
