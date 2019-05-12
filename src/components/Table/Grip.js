@@ -10,7 +10,8 @@ const Grip = styled.a`
   ${props => props.isSelected && "opacity: 1 !important;"}
 
   &:hover {
-    background: ${props => props.theme.tableSelected};
+    background: ${props =>
+      props.isSelected ? props.theme.tableSelected : props.theme.text};
   }
 `;
 

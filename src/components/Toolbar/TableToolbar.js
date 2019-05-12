@@ -43,6 +43,7 @@ class TableToolbar extends React.Component<Props> {
 
   onClickAlign = (ev, align) => {
     ev.preventDefault();
+    ev.stopPropagation();
 
     const { editor } = this.props;
     const { startBlock, document } = editor.value;

@@ -154,9 +154,11 @@ export const GripTable = styled(Grip)`
   width: 9px;
   height: 9px;
   border-radius: 9px;
+  border: 2px solid ${props => props.theme.background};
+
   position: absolute;
-  top: -12px;
-  left: -12px;
+  top: -14px;
+  left: -14px;
 `;
 
 export const GripRow = styled(Grip)`
@@ -164,6 +166,7 @@ export const GripRow = styled(Grip)`
   top: 0.5px;
   height: 100%;
   width: 8px;
+  border-right: 3px solid ${props => props.theme.background};
 
   ${props =>
     props.isFirstRow &&
