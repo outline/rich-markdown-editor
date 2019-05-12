@@ -204,13 +204,13 @@ export const Menu = styled.div`
     display: block;
     width: 24px;
     height: 24px;
-    transform: rotate(45deg) translateX(-50%);
+    transform: translateX(-50%) rotate(45deg);
     background: ${props => props.theme.toolbarBackground};
     border-radius: 3px;
     z-index: -1;
 
     position: absolute;
-    bottom: -10px;
+    bottom: -2px;
     left: 50%;
   }
 

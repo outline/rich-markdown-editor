@@ -5,6 +5,7 @@ import { findDOMNode } from "react-dom";
 import styled from "styled-components";
 import TableToolbar from "../Toolbar/TableToolbar";
 import { Menu } from "../Toolbar";
+import Grip from "./Grip";
 
 type State = {
   left: number,
@@ -45,17 +46,20 @@ class Cell extends React.Component<*, State> {
     const { children, editor, readOnly, attributes, node } = this.props;
 
     const { document } = editor.value;
-    const isActive = editor.isSelectionInTable();
     const position = editor.getPositionByKey(document, node.key);
     const isFirstRow = position.isFirstRow();
     const isFirstColumn = position.isFirstColumn();
     const isLastRow = position.isLastRow();
     const isLastColumn = position.isLastColumn();
     const isSelected = node.data.get("selected");
+    const isTableSelected = position.table.data.get("selectedTable");
+    const isActive = editor.isSelectionInTable() && !isTableSelected;
+    const selectedRows = position.table.data.get("selectedRows");
+    const selectedColumns = position.table.data.get("selectedColumns");
     const isRowSelected =
-      position.table.data.get("selectedRow") === position.getRowIndex();
+      selectedRows && selectedRows.includes(position.getRowIndex());
     const isColumnSelected =
-      position.table.data.get("selectedColumn") === position.getColumnIndex();
+      selectedColumns && selectedColumns.includes(position.getColumnIndex());
 
     return (
       <StyledTd
@@ -70,12 +74,29 @@ class Cell extends React.Component<*, State> {
       >
         {!readOnly && (
           <React.Fragment>
+            {isFirstColumn && isFirstRow && (
+              <React.Fragment>
+                <GripTable
+                  contentEditable={false}
+                  isSelected={isTableSelected}
+                  onClick={ev => {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    editor.selectAll();
+                  }}
+                />
+                <Portal>
+                  <Menu active={isTableSelected} style={this.state}>
+                    <TableToolbar editor={editor} isTableSelected />
+                  </Menu>
+                </Portal>
+              </React.Fragment>
+            )}
             {isFirstColumn && (
               <React.Fragment>
                 <GripRow
                   isFirstRow={isFirstRow}
                   isLastRow={isLastRow}
-                  isActive={isActive}
                   isSelected={isRowSelected}
                   contentEditable={false}
                   onClick={ev => {
@@ -98,7 +119,6 @@ class Cell extends React.Component<*, State> {
                 <GripColumn
                   isFirstColumn={isFirstColumn}
                   isLastColumn={isLastColumn}
-                  isActive={isActive}
                   isSelected={isColumnSelected}
                   contentEditable={false}
                   onClick={ev => {
@@ -125,17 +145,13 @@ class Cell extends React.Component<*, State> {
   }
 }
 
-const Grip = styled.a`
+export const GripTable = styled(Grip)`
+  width: 9px;
+  height: 9px;
+  border-radius: 9px;
   position: absolute;
-  cursor: pointer;
-  background: ${props =>
-    props.isSelected ? props.theme.tableSelected : props.theme.tableDivider};
-
-  ${props => props.isSelected && "opacity: 1 !important;"}
-
-  &:hover {
-    background: ${props => props.theme.tableSelected};
-  }
+  top: -12px;
+  left: -12px;
 `;
 
 export const GripRow = styled(Grip)`

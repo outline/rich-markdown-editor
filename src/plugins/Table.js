@@ -38,6 +38,15 @@ function TablePlugin() {
       },
 
       clearSelectedColumn(editor: Editor, table: Node, columnIndex: number) {
+        if (columnIndex === "*") {
+          const rows = editor.getRowsAtColumn(table, 0);
+          let cI = 0;
+          rows.forEach(() => {
+            editor.clearSelectedRow(editor, table, cI++);
+          });
+          return;
+        }
+
         const cells = editor.getCellsAtColumn(table, columnIndex);
 
         cells.forEach(cell => {
@@ -54,6 +63,15 @@ function TablePlugin() {
       },
 
       clearSelectedRow(editor: Editor, table: Node, rowIndex: number) {
+        if (rowIndex === "*") {
+          const cells = editor.getCellsAtColumn(table, 0);
+          let rI = 0;
+          cells.forEach(() => {
+            editor.clearSelectedRow(editor, table, rI++);
+          });
+          return;
+        }
+
         const cells = editor.getCellsAtRow(table, rowIndex);
 
         cells.forEach(cell => {
@@ -79,7 +97,7 @@ function TablePlugin() {
         const cells = editor.getCellsAtRow(position.table, rowIndex);
 
         // take the alignment data from the head cells and map onto
-        // the data rows
+        // the individual data cells
         cells.forEach((cell, index) => {
           const headCell = headCells.get(index);
           const data = headCell.data.toObject();
@@ -88,24 +106,24 @@ function TablePlugin() {
       },
 
       clearSelected(editor: Editor, table: Node) {
-        const previouslySelectedRow = table.data.get("selectedRow");
-        const previouslySelectedColumn = table.data.get("selectedColumn");
+        const previouslySelectedRows = table.data.get("selectedRows") || [];
+        const previouslySelectedColumns =
+          table.data.get("selectedColumns") || [];
 
-        if (previouslySelectedRow !== undefined) {
-          editor.clearSelectedRow(table, previouslySelectedRow);
-        }
-        if (previouslySelectedColumn !== undefined) {
-          editor.clearSelectedColumn(table, previouslySelectedColumn);
-        }
+        previouslySelectedRows.forEach(rowIndex => {
+          editor.clearSelectedRow(table, rowIndex);
+        });
 
-        if (
-          previouslySelectedRow !== undefined ||
-          previouslySelectedColumn !== undefined
-        ) {
+        previouslySelectedColumns.forEach(columnIndex => {
+          editor.clearSelectedColumn(table, columnIndex);
+        });
+
+        if (previouslySelectedRows.length || previouslySelectedColumns.length) {
           editor.setNodeByKey(table.key, {
             data: {
-              selectedColumn: undefined,
-              selectedRow: undefined,
+              selectedTable: false,
+              selectedColumns: [],
+              selectedRows: [],
             },
           });
         }
@@ -120,8 +138,8 @@ function TablePlugin() {
 
           editor.setNodeByKey(pos.table.key, {
             data: {
-              selectedColumn: selected ? selectedColumn : undefined,
-              selectedRow: undefined,
+              selectedColumns: selected ? [selectedColumn] : [],
+              selectedRows: [],
             },
           });
 
@@ -150,8 +168,8 @@ function TablePlugin() {
 
           editor.setNodeByKey(pos.table.key, {
             data: {
-              selectedColumn: undefined,
-              selectedRow: selected ? selectedRow : undefined,
+              selectedColumns: [],
+              selectedRows: selected ? [selectedRow] : [],
             },
           });
 
@@ -169,6 +187,38 @@ function TablePlugin() {
         });
 
         return editor;
+      },
+
+      selectAll(editor: Editor, selected: boolean = true) {
+        const pos = editor.getPosition(editor.value);
+
+        editor.withoutSaving(() => {
+          editor.withoutNormalizing(() => {
+            const width = pos.getWidth();
+            const height = pos.getHeight();
+            const data = {
+              selectedTable: true,
+              selectedColumns: Array.from(Array(width).keys()),
+              selectedRows: Array.from(Array(height).keys()),
+            };
+
+            editor.setNodeByKey(pos.table.key, { data });
+
+            for (let y = 0; y < pos.getHeight(); y++) {
+              const cells = editor.getCellsAtRow(pos.table, y);
+
+              cells.forEach(cell => {
+                const data = cell.data.toObject();
+                editor.setNodeByKey(cell.key, {
+                  data: {
+                    ...data,
+                    selected,
+                  },
+                });
+              });
+            }
+          });
+        });
       },
     },
   };

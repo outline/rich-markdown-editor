@@ -2,7 +2,7 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import styled from "styled-components";
-import { GripRow, GripColumn } from "./Cell";
+import { GripRow, GripColumn, GripTable } from "./Cell";
 import Scrollable from "./Scrollable";
 
 const StyledTable = styled.table`
@@ -13,14 +13,16 @@ const StyledTable = styled.table`
   margin-top: 1em;
 
   ${GripColumn},
-  ${GripRow} {
+  ${GripRow},
+  ${GripTable} {
     opacity: 0;
     transition: opacity 100ms ease-in-out;
   }
 
   &:hover {
     ${GripColumn},
-    ${GripRow} {
+    ${GripRow},
+    ${GripTable} {
       opacity: 1;
     }
   }
