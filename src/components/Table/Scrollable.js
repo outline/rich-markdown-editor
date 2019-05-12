@@ -15,6 +15,14 @@ class Scrollable extends React.Component<Props, State> {
   };
 
   componentDidMount() {
+    this.updateRightShadow();
+  }
+
+  componentDidUpdate() {
+    this.updateRightShadow();
+  }
+
+  updateRightShadow() {
     const shadowRight = !!(
       this.element && this.element.scrollWidth > this.element.clientWidth
     );
