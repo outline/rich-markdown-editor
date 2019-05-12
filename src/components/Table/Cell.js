@@ -82,7 +82,12 @@ class Cell extends React.Component<*, State> {
                   onClick={ev => {
                     ev.preventDefault();
                     ev.stopPropagation();
-                    editor.selectAll();
+
+                    if (isTableSelected) {
+                      editor.clearSelected(position.table);
+                    } else {
+                      editor.selectAll();
+                    }
                   }}
                 />
                 <Portal>

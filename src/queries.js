@@ -1,5 +1,5 @@
 // @flow
-import { Editor, Node } from "slate";
+import { Editor } from "slate";
 
 const queries = {
   isLinkActive(editor: Editor) {
@@ -27,18 +27,6 @@ const queries = {
       // It's okay.
       console.error(err);
     }
-  },
-
-  forEachCells(
-    editor: Editor,
-    table: Node,
-    iterator: (cell: Node, rowIndex: number, columnIndex: number) => void
-  ) {
-    return table.nodes.forEach((row, rowIndex) => {
-      return row.nodes.forEach((cell, columnIndex) => {
-        return iterator(cell, rowIndex, columnIndex);
-      });
-    });
   },
 };
 
