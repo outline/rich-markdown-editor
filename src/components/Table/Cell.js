@@ -107,7 +107,7 @@ class Cell extends React.Component<*, State> {
                   onClick={ev => {
                     ev.preventDefault();
                     ev.stopPropagation();
-                    editor.selectRow(!isSelected);
+                    editor.selectRow(!isSelected || isTableSelected);
                   }}
                 />
                 {isActive && (
@@ -129,7 +129,7 @@ class Cell extends React.Component<*, State> {
                   onClick={ev => {
                     ev.preventDefault();
                     ev.stopPropagation();
-                    editor.selectColumn(!isSelected);
+                    editor.selectColumn(!isSelected || isTableSelected);
                   }}
                 />
                 {isActive && (

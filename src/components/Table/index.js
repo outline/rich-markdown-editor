@@ -5,28 +5,8 @@ import styled from "styled-components";
 import { GripRow, GripColumn, GripTable } from "./Cell";
 import Scrollable from "./Scrollable";
 
-const StyledTable = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-  border-radius: 4px;
-  border: 1px solid ${props => props.theme.tableDivider};
-  margin-top: 1em;
-
-  ${GripColumn},
-  ${GripRow},
-  ${GripTable} {
-    opacity: 0;
-    transition: opacity 100ms ease-in-out;
-  }
-
-  &:hover {
-    ${GripColumn},
-    ${GripRow},
-    ${GripTable} {
-      opacity: 1;
-    }
-  }
-`;
+// Looking for logic for the table controls and toolbars?
+// It mostly lives in the "Cell" component and the Table plugin
 
 class Table extends React.Component<*> {
   table: HTMLTableElement;
@@ -68,5 +48,28 @@ class Table extends React.Component<*> {
     );
   }
 }
+
+const StyledTable = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 4px;
+  border: 1px solid ${props => props.theme.tableDivider};
+  margin-top: 1em;
+
+  ${GripColumn},
+  ${GripRow},
+  ${GripTable} {
+    opacity: 0;
+    transition: opacity 100ms ease-in-out;
+  }
+
+  &:hover {
+    ${GripColumn},
+    ${GripRow},
+    ${GripTable} {
+      opacity: 1;
+    }
+  }
+`;
 
 export default Table;
