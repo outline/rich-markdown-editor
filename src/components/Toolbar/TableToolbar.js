@@ -18,6 +18,8 @@ import ToolbarButton from "./ToolbarButton";
 import Separator from "./Separator";
 
 type Props = {
+  isRowSelected: boolean,
+  isColumnSelected: Boolean,
   editor: Editor,
   theme: Theme,
 };
@@ -124,18 +126,11 @@ class TableToolbar extends React.Component<Props> {
   };
 
   render() {
-    const { editor } = this.props;
-    const { startBlock, document } = editor.value;
-    if (!startBlock) return null;
-
-    const position = editor.getPositionByKey(document, startBlock.key);
-    const columnIsSelected =
-      position.table.data.get("selectedColumn") !== undefined;
-    const rowIsSelected = position.table.data.get("selectedRow") !== undefined;
+    const { isRowSelected, isColumnSelected } = this.props;
 
     return (
       <React.Fragment>
-        {columnIsSelected && (
+        {isColumnSelected && (
           <React.Fragment>
             {this.renderAlignButton("left", AlignLeftIcon)}
             {this.renderAlignButton("center", AlignCenterIcon)}
@@ -162,7 +157,7 @@ class TableToolbar extends React.Component<Props> {
             </ToolbarButton>
           </React.Fragment>
         )}
-        {rowIsSelected && (
+        {isRowSelected && (
           <React.Fragment>
             <ToolbarButton onMouseDown={this.removeRow} title="Remove row">
               <TrashIcon color={this.props.theme.toolbarItem} />

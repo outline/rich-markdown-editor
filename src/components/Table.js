@@ -257,9 +257,9 @@ export class Cell extends React.Component<*, State> {
     const isLastRow = position.isLastRow();
     const isLastColumn = position.isLastColumn();
     const isSelected = node.data.get("selected");
-    const isSelectedRow =
+    const isRowSelected =
       position.table.data.get("selectedRow") === position.getRowIndex();
-    const isSelectedColumn =
+    const isColumnSelected =
       position.table.data.get("selectedColumn") === position.getColumnIndex();
 
     return (
@@ -281,7 +281,7 @@ export class Cell extends React.Component<*, State> {
                   isFirstRow={isFirstRow}
                   isLastRow={isLastRow}
                   isActive={isActive}
-                  isSelected={isSelectedRow}
+                  isSelected={isRowSelected}
                   contentEditable={false}
                   onClick={ev => {
                     ev.preventDefault();
@@ -291,8 +291,8 @@ export class Cell extends React.Component<*, State> {
                 />
                 {isActive && (
                   <Portal>
-                    <Menu active={isSelectedRow} style={this.state}>
-                      <TableToolbar editor={editor} />
+                    <Menu active={isRowSelected} style={this.state}>
+                      <TableToolbar editor={editor} isRowSelected />
                     </Menu>
                   </Portal>
                 )}
@@ -304,7 +304,7 @@ export class Cell extends React.Component<*, State> {
                   isFirstColumn={isFirstColumn}
                   isLastColumn={isLastColumn}
                   isActive={isActive}
-                  isSelected={isSelectedColumn}
+                  isSelected={isColumnSelected}
                   contentEditable={false}
                   onClick={ev => {
                     ev.preventDefault();
@@ -314,8 +314,8 @@ export class Cell extends React.Component<*, State> {
                 />
                 {isActive && (
                   <Portal>
-                    <Menu active={isSelectedColumn} style={this.state}>
-                      <TableToolbar editor={editor} />
+                    <Menu active={isColumnSelected} style={this.state}>
+                      <TableToolbar editor={editor} isColumnSelected />
                     </Menu>
                   </Portal>
                 )}
