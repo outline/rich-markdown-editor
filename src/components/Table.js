@@ -3,7 +3,6 @@ import * as React from "react";
 import { Portal } from "react-portal";
 import { findDOMNode } from "react-dom";
 import styled from "styled-components";
-import { PlusIcon } from "outline-icons";
 import TableToolbar from "./Toolbar/TableToolbar";
 import { Menu } from "./Toolbar";
 
@@ -68,20 +67,6 @@ const GripColumn = styled(Grip)`
 `}
 `;
 
-const PlusButton = styled.button`
-  position: absolute;
-  border: 0;
-  background: 0;
-  padding: 0;
-  border-radius: 24px;
-  top: -32px;
-  left: -12px;
-  width: 24px;
-  height: 24px;
-
-  ${props => props.right && "right: 0;"}
-`;
-
 const RowContent = styled.div`
   padding: 4px 8px;
   text-align: ${props => props.align};
@@ -93,9 +78,7 @@ const StyledTable = styled.table`
   border-radius: 4px;
   border: 1px solid ${props => props.theme.tableDivider};
   margin-top: 1em;
-  margin-left: 1em;
 
-  ${PlusButton},
   ${GripColumn},
   ${GripRow} {
     opacity: 0;
@@ -103,7 +86,6 @@ const StyledTable = styled.table`
   }
 
   &:hover {
-    ${PlusButton},
     ${GripColumn},
     ${GripRow} {
       opacity: 1;
@@ -111,38 +93,57 @@ const StyledTable = styled.table`
   }
 `;
 
+class Scrollable extends React.Component<
+  {},
+  { shadowLeft: boolean, shadowRight: boolean }
+> {
+  element: HTMLElement;
+
+  state = {
+    shadowLeft: false,
+    shadowRight: false,
+  };
+
+  componentDidMount() {
+    const shadowRight = this.element.scrollWidth > this.element.clientWidth;
+
+    if (this.state.shadowRight !== shadowRight) {
+      this.setState({ shadowRight });
+    }
+  }
+
+  handleScroll = (ev: SyntheticMouseEvent<*>) => {
+    const shadowLeft = ev.currentTarget.scrollLeft > 0;
+
+    if (this.state.shadowLeft !== shadowLeft) {
+      this.setState({ shadowLeft });
+    }
+  };
+
+  render() {
+    return (
+      <TableShadows
+        ref={ref => (this.element = ref)}
+        onScroll={this.handleScroll}
+        shadowLeft={this.state.shadowLeft}
+        shadowRight={this.state.shadowRight}
+        {...this.props}
+      />
+    );
+  }
+}
+
 const TableShadows = styled.div`
-  position: relative;
-
-  &::after {
-    content: "";
-    height: 100%;
-    width: 0;
-    border-right: 1px solid ${props => props.theme.tableDivider};
-    display: block;
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    z-index: 1;
-  }
-
-  &::before {
-    content: "";
-    height: 100%;
-    width: 0;
-    border-right: 1px solid ${props => props.theme.tableDivider};
-    display: block;
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    z-index: 1;
-  }
-`;
-
-const TableWrapper = styled.div`
+  overflow-y: hidden;
   overflow-x: scroll;
+  padding-left: 1em;
+  transition: border 250ms ease-in-out;
+  margin-left: -1em;
+
+  ${props =>
+    props.shadowLeft && `border-left: 1px solid ${props.theme.tableDivider};`}
+  ${props =>
+    props.shadowRight && `border-right: 1px solid ${props.theme.tableDivider};`}
 `;
 
 class Table extends React.Component<*> {
@@ -177,13 +178,11 @@ class Table extends React.Component<*> {
     const { children, attributes } = this.props;
 
     return (
-      <TableShadows>
-        <TableWrapper>
-          <StyledTable ref={ref => (this.table = ref)} {...attributes}>
-            <tbody>{children}</tbody>
-          </StyledTable>
-        </TableWrapper>
-      </TableShadows>
+      <Scrollable>
+        <StyledTable ref={ref => (this.table = ref)} {...attributes}>
+          <tbody>{children}</tbody>
+        </StyledTable>
+      </Scrollable>
     );
   }
 }
@@ -229,7 +228,7 @@ export class Cell extends React.Component<*, State> {
     if (!(element instanceof HTMLElement)) return;
 
     const rect = element.getBoundingClientRect();
-    const menuWidth = 238;
+    const menuWidth = 248;
     const menuHeight = 40;
     const left = Math.round(
       rect.left + window.scrollX + rect.width / 2 - menuWidth / 2

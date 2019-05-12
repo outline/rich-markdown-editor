@@ -108,16 +108,17 @@ class TableToolbar extends React.Component<Props> {
         {columnIsSelected && (
           <React.Fragment>
             <ToolbarButton
-              onMouseDown={this.addColumnLeft}
-              title="Insert column left"
-            >
-              <InsertLeftIcon color={this.props.theme.toolbarItem} />
-            </ToolbarButton>
-            <ToolbarButton
               onMouseDown={this.removeColumn}
               title="Remove column"
             >
               <TrashIcon color={this.props.theme.toolbarItem} />
+            </ToolbarButton>
+            <Separator />
+            <ToolbarButton
+              onMouseDown={this.addColumnLeft}
+              title="Insert column left"
+            >
+              <InsertLeftIcon color={this.props.theme.toolbarItem} />
             </ToolbarButton>
             <ToolbarButton
               onMouseDown={this.addColumnRight}
