@@ -6,7 +6,9 @@ import BlockToolbar from "./components/Toolbar/BlockToolbar";
 import HorizontalRule from "./components/HorizontalRule";
 import Image from "./components/Image";
 import Link from "./components/Link";
-import Table, { Cell, Row } from "./components/Table";
+import Table from "./components/Table";
+import Cell from "./components/Table/Cell";
+import Row from "./components/Table/Row";
 import ListItem from "./components/ListItem";
 import TodoList from "./components/TodoList";
 import {
