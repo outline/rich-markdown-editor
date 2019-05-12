@@ -11,7 +11,9 @@ const Grip = styled.a`
 
   &:hover {
     background: ${props =>
-      props.isSelected ? props.theme.tableSelected : props.theme.text};
+      props.isSelected
+        ? props.theme.tableSelected
+        : props.theme.toolbarBackground};
   }
 `;
 
