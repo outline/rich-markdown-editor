@@ -69,9 +69,10 @@ class TableToolbar extends React.Component<Props> {
     const { editor } = this.props;
     const { startBlock, document } = editor.value;
     const position = editor.getPositionByKey(document, startBlock.key);
-    this.props.editor
+    editor
       .clearSelected(position.table)
-      .insertRow()
+      .insertRow(position.getRowIndex() + 1)
+      .resetAlign(position.table, position.getRowIndex() + 1)
       .blur();
   };
 
@@ -84,6 +85,7 @@ class TableToolbar extends React.Component<Props> {
     editor
       .clearSelected(position.table)
       .insertRow(position.getRowIndex())
+      .resetAlign(position.table, position.getRowIndex())
       .blur();
   };
 
@@ -111,8 +113,8 @@ class TableToolbar extends React.Component<Props> {
     const position = editor.getPositionByKey(document, startBlock.key);
 
     editor
-      .clearSelected(position.table)
       .insertColumn(position.getColumnIndex())
+      .clearSelected(position.table)
       .blur();
   };
 

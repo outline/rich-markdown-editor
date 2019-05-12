@@ -40,6 +40,23 @@ const commands = {
     });
   },
 
+  resetAlign(editor: Editor, table: Node, rowIndex: number) {
+    const headCells = editor.getCellsAtRow(table, 0);
+
+    // we need to re-query position as the table has been edited
+    // since it was originally queried (pre-insert)
+    const position = editor.getPositionByKey(editor.value.document, table.key);
+    const cells = editor.getCellsAtRow(position.table, rowIndex);
+
+    // take the alignment data from the head cells and map onto
+    // the data rows
+    cells.forEach((cell, index) => {
+      const headCell = headCells.get(index);
+      const data = headCell.data.toObject();
+      editor.setNodeByKey(cell.key, { data });
+    });
+  },
+
   clearSelected(editor: Editor, table: Node) {
     const previouslySelectedRow = table.data.get("selectedRow");
     const previouslySelectedColumn = table.data.get("selectedColumn");
