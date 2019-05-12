@@ -97,7 +97,7 @@ class Scrollable extends React.Component<
   {},
   { shadowLeft: boolean, shadowRight: boolean }
 > {
-  element: HTMLElement;
+  element: ?HTMLElement;
 
   state = {
     shadowLeft: false,
@@ -105,7 +105,9 @@ class Scrollable extends React.Component<
   };
 
   componentDidMount() {
-    const shadowRight = this.element.scrollWidth > this.element.clientWidth;
+    const shadowRight = !!(
+      this.element && this.element.scrollWidth > this.element.clientWidth
+    );
 
     if (this.state.shadowRight !== shadowRight) {
       this.setState({ shadowRight });
