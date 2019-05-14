@@ -38,15 +38,6 @@ function TablePlugin() {
       },
 
       clearSelectedColumn(editor: Editor, table: Node, columnIndex: number) {
-        if (columnIndex === "*") {
-          const rows = editor.getRowsAtColumn(table, 0);
-          let cI = 0;
-          rows.forEach(() => {
-            editor.clearSelectedRow(editor, table, cI++);
-          });
-          return;
-        }
-
         const cells = editor.getCellsAtColumn(table, columnIndex);
 
         cells.forEach(cell => {
@@ -63,15 +54,6 @@ function TablePlugin() {
       },
 
       clearSelectedRow(editor: Editor, table: Node, rowIndex: number) {
-        if (rowIndex === "*") {
-          const cells = editor.getCellsAtColumn(table, 0);
-          let rI = 0;
-          cells.forEach(() => {
-            editor.clearSelectedRow(editor, table, rI++);
-          });
-          return;
-        }
-
         const cells = editor.getCellsAtRow(table, rowIndex);
 
         cells.forEach(cell => {
