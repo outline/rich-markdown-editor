@@ -2,9 +2,12 @@
 import * as React from "react";
 import styled from "styled-components";
 
-type Props = {};
+type Props = { children: React.Node };
 
-type State = { shadowLeft: boolean, shadowRight: boolean };
+type State = {
+  shadowLeft: boolean,
+  shadowRight: boolean,
+};
 
 class Scrollable extends React.Component<Props, State> {
   element: ?HTMLElement;
@@ -41,19 +44,28 @@ class Scrollable extends React.Component<Props, State> {
   };
 
   render() {
+    const { children, ...rest } = this.props;
     return (
-      <Shadows
-        ref={ref => (this.element = ref)}
-        onScroll={this.handleScroll}
-        shadowLeft={this.state.shadowLeft}
-        shadowRight={this.state.shadowRight}
-        {...this.props}
-      />
+      <Wrapper>
+        <Scrolling
+          ref={ref => (this.element = ref)}
+          onScroll={this.handleScroll}
+          {...rest}
+        >
+          {children}
+        </Scrolling>
+        <Shadow left={this.state.shadowLeft} />
+        <Shadow right={this.state.shadowRight} />
+      </Wrapper>
     );
   }
 }
 
-const Shadows = styled.div`
+const Wrapper = styled.div`
+  position: relative;
+`;
+
+const Scrolling = styled.div`
   overflow-y: hidden;
   overflow-x: scroll;
   padding-left: 1em;
@@ -61,11 +73,32 @@ const Shadows = styled.div`
   border-right: 1px solid transparent;
   transition: border 250ms ease-in-out;
   margin-left: -1em;
+`;
+
+const Shadow = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -1em;
+  width: 16px;
+  transition: box-shadow 250ms ease-in-out, border 100ms ease-in-out;
+  border: 0px solid transparent;
+  border-left-width: 1em;
+  pointer-events: none;
 
   ${props =>
-    props.shadowLeft && `border-left: 1px solid ${props.theme.tableDivider};`}
+    props.left &&
+    `
+     box-shadow: 16px 0 16px -16px inset rgba(0,0,0,0.25);
+     border-left: 1em solid ${props.theme.background};
+  `}
+
   ${props =>
-    props.shadowRight && `border-right: 1px solid ${props.theme.tableDivider};`}
+    props.right &&
+    `right: 0;
+     left: auto;
+     box-shadow: -16px 0 16px -16px inset rgba(0,0,0,0.25);
+  `}
 `;
 
 export default Scrollable;

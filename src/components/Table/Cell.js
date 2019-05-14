@@ -177,6 +177,7 @@ const RowContent = styled.div`
 `;
 
 const StyledTd = styled.td`
+  vertical-align: top;
   border-right: 1px solid ${props => props.theme.tableDivider};
   position: relative;
   background: ${props =>
