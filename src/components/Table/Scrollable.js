@@ -81,7 +81,7 @@ const Shadow = styled.div`
   bottom: 0;
   left: -1em;
   width: 16px;
-  transition: box-shadow 250ms ease-in-out, border 100ms ease-in-out;
+  transition: box-shadow 250ms ease-in-out;
   border: 0px solid transparent;
   border-left-width: 1em;
   pointer-events: none;
