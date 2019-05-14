@@ -56,6 +56,10 @@ const StyledTable = styled.table`
   border: 1px solid ${props => props.theme.tableDivider};
   margin-top: 1em;
 
+  * { 
+    box-sizing: initial;
+  }
+
   ${GripColumn},
   ${GripRow},
   ${GripTable} {
