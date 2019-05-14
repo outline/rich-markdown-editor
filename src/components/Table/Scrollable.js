@@ -63,6 +63,7 @@ class Scrollable extends React.Component<Props, State> {
 
 const Wrapper = styled.div`
   position: relative;
+  margin: 0.5em 0;
 `;
 
 const Scrolling = styled.div`
