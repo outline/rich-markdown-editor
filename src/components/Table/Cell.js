@@ -1,51 +1,16 @@
 // @flow
 import * as React from "react";
-import { Portal } from "react-portal";
-import { findDOMNode } from "react-dom";
 import styled from "styled-components";
-import TableToolbar from "../Toolbar/TableToolbar";
-import { Menu } from "../Toolbar";
+import Toolbar from "./Toolbar";
 import Grip from "./Grip";
 
-type State = {
-  left: number,
-  top: number,
-};
-
-class Cell extends React.Component<*, State> {
+class Cell extends React.Component<*> {
   cell: ?HTMLElement;
-  menu: ?HTMLElement;
-
-  state = {
-    top: 0,
-    left: 0,
-  };
-
-  componentDidUpdate() {
-    if (!this.cell) return;
-
-    const element = findDOMNode(this.cell);
-    if (!(element instanceof HTMLElement)) return;
-
-    const rect = element.getBoundingClientRect();
-    const menuWidth = 248;
-    const menuHeight = 40;
-    const left = Math.round(
-      rect.left + window.scrollX + rect.width / 2 - menuWidth / 2
-    );
-    const top = Math.round(rect.top + window.scrollY - menuHeight - 12);
-
-    this.setState(state => {
-      if (state.left !== left || state.top !== top) {
-        return { left, top };
-      }
-    });
-  }
 
   render() {
     const { children, editor, readOnly, attributes, node } = this.props;
-
     const { document } = editor.value;
+
     const position = editor.getPositionByKey(document, node.key);
     const isFirstRow = position.isFirstRow();
     const isFirstColumn = position.isFirstColumn();
@@ -67,9 +32,7 @@ class Cell extends React.Component<*, State> {
         isFirstRow={isFirstRow}
         isFirstColumn={isFirstColumn}
         isSelected={isSelected}
-        onClick={
-          isSelected ? undefined : () => editor.clearSelected(position.table)
-        }
+        onClick={() => editor.clearSelected(position.table)}
         {...attributes}
       >
         {!readOnly && (
@@ -90,11 +53,12 @@ class Cell extends React.Component<*, State> {
                     }
                   }}
                 />
-                <Portal>
-                  <Menu active={isTableSelected} style={this.state}>
-                    <TableToolbar editor={editor} isTableSelected />
-                  </Menu>
-                </Portal>
+                <Toolbar
+                  editor={editor}
+                  cell={this.cell}
+                  active={isTableSelected}
+                  type="table"
+                />
               </React.Fragment>
             )}
             {isFirstColumn && (
@@ -111,11 +75,12 @@ class Cell extends React.Component<*, State> {
                   }}
                 />
                 {isActive && (
-                  <Portal>
-                    <Menu active={isRowSelected} style={this.state}>
-                      <TableToolbar editor={editor} isRowSelected />
-                    </Menu>
-                  </Portal>
+                  <Toolbar
+                    editor={editor}
+                    cell={this.cell}
+                    active={isRowSelected}
+                    type="row"
+                  />
                 )}
               </React.Fragment>
             )}
@@ -133,11 +98,12 @@ class Cell extends React.Component<*, State> {
                   }}
                 />
                 {isActive && (
-                  <Portal>
-                    <Menu active={isColumnSelected} style={this.state}>
-                      <TableToolbar editor={editor} isColumnSelected />
-                    </Menu>
-                  </Portal>
+                  <Toolbar
+                    editor={editor}
+                    cell={this.cell}
+                    active={isColumnSelected}
+                    type="column"
+                  />
                 )}
               </React.Fragment>
             )}
