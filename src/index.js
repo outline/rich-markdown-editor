@@ -17,7 +17,7 @@ import queries from "./queries";
 export const theme = lightTheme;
 export const schema = defaultSchema;
 
-const defaultOptions = { normalize: false };
+const defaultOptions = {};
 
 export type Props = {
   id?: string,
