@@ -10,6 +10,7 @@ function getCopyText(node) {
 }
 
 const languages = {
+  bash: "Bash",
   css: "CSS",
   clike: "C",
   csharp: "C#",
@@ -17,6 +18,7 @@ const languages = {
   java: "Java",
   javascript: "JavaScript",
   php: "PHP",
+  powershell: "Powershell",
   python: "Python",
   ruby: "Ruby",
   typescript: "TypeScript",
