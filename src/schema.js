@@ -27,20 +27,6 @@ const schema = {
       marks: [""],
     },
     "block-quote": { marks: [""] },
-    table: {
-      nodes: [
-        {
-          match: {
-            type: "table-row",
-            nodes: [
-              {
-                match: [{ type: "table-head" }, { type: "table-cell" }],
-              },
-            ],
-          },
-        },
-      ],
-    },
     "horizontal-rule": {
       isVoid: true,
     },

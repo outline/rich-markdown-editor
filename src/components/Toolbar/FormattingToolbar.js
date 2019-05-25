@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import styled, { withTheme } from "styled-components";
+import { withTheme } from "styled-components";
 import { Editor } from "slate-react";
 import {
   BoldIcon,
@@ -12,8 +12,10 @@ import {
   LinkIcon,
   StrikethroughIcon,
 } from "outline-icons";
+
 import type { Theme, Mark, Block } from "../../types";
 import ToolbarButton from "./ToolbarButton";
+import Separator from "./Separator";
 
 type Props = {
   editor: Editor,
@@ -126,16 +128,22 @@ class FormattingToolbar extends React.Component<Props> {
   };
 
   render() {
+    const isSelectionInTable = this.props.editor.isSelectionInTable();
+
     return (
       <span>
         {this.renderMarkButton("bold", BoldIcon)}
         {this.renderMarkButton("italic", ItalicIcon)}
         {this.renderMarkButton("deleted", StrikethroughIcon)}
         {this.renderMarkButton("code", CodeIcon)}
-        <Separator />
-        {this.renderBlockButton("heading2", Heading1Icon)}
-        {this.renderBlockButton("heading3", Heading2Icon)}
-        {this.renderBlockButton("block-quote", BlockQuoteIcon)}
+        {!isSelectionInTable && (
+          <React.Fragment>
+            <Separator />
+            {this.renderBlockButton("heading2", Heading1Icon)}
+            {this.renderBlockButton("heading3", Heading2Icon)}
+            {this.renderBlockButton("block-quote", BlockQuoteIcon)}
+          </React.Fragment>
+        )}
         <Separator />
         <ToolbarButton onMouseDown={this.handleCreateLink}>
           <LinkIcon color={this.props.theme.toolbarItem} />
@@ -144,14 +152,5 @@ class FormattingToolbar extends React.Component<Props> {
     );
   }
 }
-
-const Separator = styled.div`
-  height: 100%;
-  width: 1px;
-  background: ${props => props.theme.toolbarItem};
-  opacity: 0.2;
-  display: inline-block;
-  margin-left: 10px;
-`;
 
 export default withTheme(FormattingToolbar);

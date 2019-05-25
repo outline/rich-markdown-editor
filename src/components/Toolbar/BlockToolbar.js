@@ -13,6 +13,7 @@ import {
   OrderedListIcon,
   HorizontalRuleIcon,
   TodoListIcon,
+  TableIcon,
 } from "outline-icons";
 import getDataTransferFiles from "../../lib/getDataTransferFiles";
 import type { SlateNodeProps, Theme } from "../../types";
@@ -77,11 +78,15 @@ class BlockToolbar extends React.Component<Props> {
   ) => {
     const { editor } = this.props;
 
-    editor
-      .moveToEndOfNode(this.props.node)
-      .insertBlock(options.type)
-      .removeNodeByKey(this.props.node.key)
-      .moveToEnd();
+    editor.moveToEndOfNode(this.props.node);
+
+    if (options.type === "table") {
+      editor.insertTable(3, 3);
+    } else {
+      editor.insertBlock(options.type);
+    }
+
+    editor.removeNodeByKey(this.props.node.key).moveToEnd();
 
     if (cursorPosition === "before") editor.moveToStartOfPreviousBlock();
     if (cursorPosition === "after") editor.moveToStartOfNextBlock();
@@ -113,6 +118,7 @@ class BlockToolbar extends React.Component<Props> {
       case "heading1":
       case "heading2":
       case "block-quote":
+      case "table":
       case "code":
         return this.insertBlock({ type });
       case "horizontal-rule":
@@ -184,6 +190,7 @@ class BlockToolbar extends React.Component<Props> {
         {this.renderBlockButton("ordered-list", OrderedListIcon)}
         {this.renderBlockButton("todo-list", TodoListIcon)}
         <Separator />
+        {this.renderBlockButton("table", TableIcon)}
         {this.renderBlockButton("block-quote", BlockQuoteIcon)}
         {this.renderBlockButton("code", CodeIcon)}
         {this.renderBlockButton("horizontal-rule", HorizontalRuleIcon)}

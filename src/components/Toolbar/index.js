@@ -8,23 +8,6 @@ import { isEqual, debounce } from "lodash";
 import FormattingToolbar from "./FormattingToolbar";
 import LinkToolbar from "./LinkToolbar";
 
-function getLinkInSelection(value): any {
-  try {
-    const selectedLinks = value.document
-      .getLeafInlinesAtRange(value.selection)
-      .filter(node => node.type === "link");
-
-    if (selectedLinks.size) {
-      const link = selectedLinks.first();
-      const { selection } = value;
-      if (selection.anchor.isInNode(link) || selection.focus.isInNode(link))
-        return link;
-    }
-  } catch (err) {
-    // It's okay.
-  }
-}
-
 type Props = {
   editor: Editor,
   value: Value,
@@ -64,7 +47,7 @@ export default class Toolbar extends React.Component<Props, State> {
     }
   };
 
-  componentWillUpdate = debounce(() => {
+  componentWillReceiveProps = debounce(() => {
     this.update();
   }, 100);
 
@@ -74,23 +57,25 @@ export default class Toolbar extends React.Component<Props, State> {
 
   handleMouseDown = () => {
     this.setState({ mouseDown: true });
+    this.update();
   };
 
   handleMouseUp = () => {
     this.setState({ mouseDown: false });
+    this.update();
   };
 
   showLinkToolbar = (ev: SyntheticEvent<*>) => {
     ev.preventDefault();
     ev.stopPropagation();
 
-    const link = getLinkInSelection(this.props.value);
+    const link = this.props.editor.getLinkInSelection();
     this.setState({ link });
   };
 
   update = () => {
-    const { value } = this.props;
-    const link = getLinkInSelection(value);
+    const { value, editor } = this.props;
+    const link = editor.getLinkInSelection();
     const selection = window.getSelection();
 
     // value.isCollapsed is not correct when the user clicks outside of the Slate bounds
@@ -100,7 +85,7 @@ export default class Toolbar extends React.Component<Props, State> {
     if (isCollapsed && !link) {
       if (this.state.active) {
         const newState = {
-          ...this.state,
+          mouseDown: this.state.mouseDown,
           active: false,
           link: undefined,
           top: "",
@@ -128,8 +113,8 @@ export default class Toolbar extends React.Component<Props, State> {
     if (this.state.mouseDown && !link) active = false;
 
     const newState = {
-      ...this.state,
       active,
+      mouseDown: this.state.mouseDown,
       link: this.state.link || link,
       top: undefined,
       left: undefined,
@@ -195,7 +180,7 @@ export default class Toolbar extends React.Component<Props, State> {
   }
 }
 
-const Menu = styled.div`
+export const Menu = styled.div`
   padding: 8px 16px;
   position: absolute;
   z-index: 200;
@@ -212,6 +197,22 @@ const Menu = styled.div`
   height: 40px;
   box-sizing: border-box;
   pointer-events: none;
+  white-space: nowrap;
+
+  &::before {
+    content: "";
+    display: block;
+    width: 24px;
+    height: 24px;
+    transform: translateX(-50%) rotate(45deg);
+    background: ${props => props.theme.toolbarBackground};
+    border-radius: 3px;
+    z-index: -1;
+
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+  }
 
   * {
     box-sizing: border-box;

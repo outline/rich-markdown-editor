@@ -373,23 +373,6 @@ const StyledEditor = styled(Editor)`
     font-style: italic;
   }
 
-  table {
-    border-collapse: collapse;
-  }
-
-  tr {
-    border-bottom: 1px solid #eee;
-  }
-
-  th {
-    font-weight: bold;
-  }
-
-  th,
-  td {
-    padding: 5px 20px 5px 0;
-  }
-
   b,
   strong {
     font-weight: 600;

@@ -110,6 +110,11 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
+"@domoinc/slate-edit-table@^0.22.2":
+  version "0.22.2"
+  resolved "https://registry.yarnpkg.com/@domoinc/slate-edit-table/-/slate-edit-table-0.22.2.tgz#67450c1915eeae37d2a4055755c9a12f70f3306c"
+  integrity sha512-qGjOq/+R8jaQFCpJ2WM/71r+5LIenXMImgMc0st6Isg8W4OGFomj5uMNDaKuznBgPfbtV8/zzvLwjuGba5faSA==
+
 "@emotion/is-prop-valid@^0.7.3":
   version "0.7.3"
   resolved "https://registry.yarnpkg.com/@emotion/is-prop-valid/-/is-prop-valid-0.7.3.tgz#a6bf4fa5387cbba59d44e698a4680f481a8da6cc"
@@ -4822,10 +4827,10 @@ osenv@^0.1.4:
     os-homedir "^1.0.0"
     os-tmpdir "^1.0.0"
 
-outline-icons@^1.6.0:
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/outline-icons/-/outline-icons-1.8.0.tgz#e2ebdc6e69db5a79ca3dfdd60b533bbeb8edf1ef"
-  integrity sha512-+A/xE3QLBfwpEYy9OaKmwDpzcIVIa5/S9eGG6N0uNW+qiHZBqhOEcpnO2RasVUjvFZDpyAFiHSqy03Yb8oBjmA==
+outline-icons@^1.9.0:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/outline-icons/-/outline-icons-1.9.0.tgz#e17d998272209846aa3277ad7ed7063fc4dae984"
+  integrity sha512-Uzh1aP9Js+9ieOrvZpyPjFOaVBjpC+OFzF1pRi5jemYpH6kiA236i7itv0OdLX6KFDpybP6b6OWrCVDle5RXLQ==
 
 output-file-sync@^1.1.2:
   version "1.1.2"
@@ -5802,10 +5807,10 @@ slate-hotkeys@^0.2.9:
     is-hotkey "0.1.4"
     slate-dev-environment "^0.2.2"
 
-slate-md-serializer@^5.3.3:
-  version "5.3.3"
-  resolved "https://registry.yarnpkg.com/slate-md-serializer/-/slate-md-serializer-5.3.3.tgz#31c5a3e24cce888ff941560be5200625498ec865"
-  integrity sha512-ysI3DM8exQekCUngq23N2ZChdtre6t0PDcdEV8fYUgFJB9RPUGW1d5HA7XTZqaTgF0BCPSbZYDM/IqMu5987vQ==
+slate-md-serializer@^5.4.0-5:
+  version "5.4.0-5"
+  resolved "https://registry.yarnpkg.com/slate-md-serializer/-/slate-md-serializer-5.4.0-5.tgz#52d5324dbc3112743e741a7465b3531863e3fe3f"
+  integrity sha512-9mrijYXULUrTyIw/SIHghjB9JiLT2Gjuds7PCA08AqJ3pWG30U9axMMMg+mJKv72INIqdg07mts4Z83//53doQ==
   dependencies:
     hashtag-regex "^2.0.0"
 
