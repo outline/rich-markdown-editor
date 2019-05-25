@@ -26,9 +26,11 @@ import Marks from "./marks.js";
 import "prismjs/components/prism-ruby";
 import "prismjs/components/prism-typescript";
 import "prismjs/components/prism-csharp";
+import "prismjs/components/prism-powershell";
 import "prismjs/components/prism-php";
 import "prismjs/components/prism-python";
 import "prismjs/components/prism-java";
+import "prismjs/components/prism-bash";
 
 const createPlugins = ({ placeholder, getLinkComponent }: *) => {
   return [
