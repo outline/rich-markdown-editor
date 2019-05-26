@@ -39,8 +39,12 @@ class FormattingToolbar extends React.Component<Props> {
   };
 
   isBlock = (type: string) => {
-    const startBlock = this.props.editor.value.startBlock;
-    return startBlock && startBlock.type === type;
+    const { startBlock, document } = this.props.editor.value;
+
+    // accounts for blocks with an inner paragraph tag
+    const parent = startBlock && document.getParent(startBlock.key);
+
+    return startBlock && startBlock.type === type || parent && parent.type === type;
   };
 
   /**
@@ -69,8 +73,16 @@ class FormattingToolbar extends React.Component<Props> {
   onClickBlock = (ev: SyntheticEvent<*>, type: string) => {
     ev.preventDefault();
     ev.stopPropagation();
+    const { editor } = this.props;
+    const {startBlock, document} = editor.value;
+    const parent = document.getParent(startBlock.key);
 
-    this.props.editor.setBlocks(type);
+    editor.setNodeByKey(startBlock.key, type);
+    
+    // accounts for blocks with an inner paragraph tag
+    if (parent && parent.type && type === "paragraph") {
+      editor.setNodeByKey(parent.key, type);
+    }
   };
 
   handleCreateLink = (ev: SyntheticEvent<*>) => {
@@ -109,6 +121,7 @@ class FormattingToolbar extends React.Component<Props> {
 
   renderBlockButton = (type: Block, IconClass: Function) => {
     const { hiddenToolbarButtons } = this.props.theme;
+
     if (
       hiddenToolbarButtons &&
       hiddenToolbarButtons.blocks &&
@@ -117,6 +130,7 @@ class FormattingToolbar extends React.Component<Props> {
       return null;
 
     const isActive = this.isBlock(type);
+
     const onMouseDown = ev =>
       this.onClickBlock(ev, isActive ? "paragraph" : type);
 
