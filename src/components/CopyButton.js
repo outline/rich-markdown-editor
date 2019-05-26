@@ -39,7 +39,7 @@ const StyledCopyToClipboard = styled(CopyToClipboard)`
 
   opacity: 0;
   transition: opacity 50ms ease-in-out;
-  z-index: 200;
+  z-index: 199; /* must be below toolbar index */
   font-size: 12px;
   font-weight: 500;
   color: ${props => props.theme.text};

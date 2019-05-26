@@ -44,7 +44,10 @@ class FormattingToolbar extends React.Component<Props> {
     // accounts for blocks with an inner paragraph tag
     const parent = startBlock && document.getParent(startBlock.key);
 
-    return startBlock && startBlock.type === type || parent && parent.type === type;
+    return (
+      (startBlock && startBlock.type === type) ||
+      (parent && parent.type === type)
+    );
   };
 
   /**
@@ -74,11 +77,11 @@ class FormattingToolbar extends React.Component<Props> {
     ev.preventDefault();
     ev.stopPropagation();
     const { editor } = this.props;
-    const {startBlock, document} = editor.value;
+    const { startBlock, document } = editor.value;
     const parent = document.getParent(startBlock.key);
 
     editor.setNodeByKey(startBlock.key, type);
-    
+
     // accounts for blocks with an inner paragraph tag
     if (parent && parent.type && type === "paragraph") {
       editor.setNodeByKey(parent.key, type);
