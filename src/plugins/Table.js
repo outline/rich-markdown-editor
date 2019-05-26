@@ -57,6 +57,8 @@ function TablePlugin() {
         const cells = editor.getCellsAtRow(table, rowIndex);
 
         cells.forEach(cell => {
+          if (!cell) return;
+
           const data = cell.data.toObject();
           editor.setNodeByKey(cell.key, {
             data: {
@@ -83,7 +85,7 @@ function TablePlugin() {
         cells.forEach((cell, index) => {
           const headCell = headCells.get(index);
           const data = headCell.data.toObject();
-          editor.setNodeByKey(cell.key, { data });
+          editor.setNodeByKey(cell.key, { data: { ...data, selected: undefined } });
         });
       },
 
@@ -92,23 +94,27 @@ function TablePlugin() {
         const previouslySelectedColumns =
           table.data.get("selectedColumns") || [];
 
-        previouslySelectedRows.forEach(rowIndex => {
-          editor.clearSelectedRow(table, rowIndex);
-        });
-
-        previouslySelectedColumns.forEach(columnIndex => {
-          editor.clearSelectedColumn(table, columnIndex);
-        });
-
-        if (previouslySelectedRows.length || previouslySelectedColumns.length) {
-          editor.setNodeByKey(table.key, {
-            data: {
-              selectedTable: false,
-              selectedColumns: [],
-              selectedRows: [],
-            },
+        editor.withoutSaving(() => {
+          previouslySelectedRows.forEach(rowIndex => {
+            editor.clearSelectedRow(table, rowIndex);
           });
-        }
+  
+          previouslySelectedColumns.forEach(columnIndex => {
+            editor.clearSelectedColumn(table, columnIndex);
+          });
+  
+          if (previouslySelectedRows.length || previouslySelectedColumns.length) {
+            editor.setNodeByKey(table.key, {
+              data: {
+                selectedTable: false,
+                selectedColumns: [],
+                selectedRows: [],
+              },
+            });
+          }
+        });
+
+        return editor;
       },
 
       selectColumn(editor: Editor, selected: boolean) {

@@ -8,6 +8,7 @@ import type { SlateNodeProps as Props } from "../types";
 type State = {
   hasError?: boolean,
 };
+
 class Image extends React.Component<Props, State> {
   state = {
     hasError: false,
