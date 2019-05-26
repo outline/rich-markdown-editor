@@ -85,7 +85,9 @@ function TablePlugin() {
         cells.forEach((cell, index) => {
           const headCell = headCells.get(index);
           const data = headCell.data.toObject();
-          editor.setNodeByKey(cell.key, { data: { ...data, selected: undefined } });
+          editor.setNodeByKey(cell.key, {
+            data: { ...data, selected: undefined },
+          });
         });
       },
 
@@ -98,12 +100,15 @@ function TablePlugin() {
           previouslySelectedRows.forEach(rowIndex => {
             editor.clearSelectedRow(table, rowIndex);
           });
-  
+
           previouslySelectedColumns.forEach(columnIndex => {
             editor.clearSelectedColumn(table, columnIndex);
           });
-  
-          if (previouslySelectedRows.length || previouslySelectedColumns.length) {
+
+          if (
+            previouslySelectedRows.length ||
+            previouslySelectedColumns.length
+          ) {
             editor.setNodeByKey(table.key, {
               data: {
                 selectedTable: false,
