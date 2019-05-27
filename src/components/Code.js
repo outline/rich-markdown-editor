@@ -10,6 +10,7 @@ function getCopyText(node) {
 }
 
 const languages = {
+  none: "None",
   bash: "Bash",
   css: "CSS",
   clike: "C",
