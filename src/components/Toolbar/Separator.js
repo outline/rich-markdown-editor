@@ -8,6 +8,7 @@ const Separator = styled.div`
   opacity: 0.2;
   display: inline-block;
   margin-left: 10px;
+  vertical-align: middle;
 `;
 
 export default Separator;
