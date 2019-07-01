@@ -210,7 +210,9 @@ const Separator = styled.div`
 
 const Bar = styled.div`
   display: flex;
-  z-index: 100;
+  z-index: ${props => {
+    return props.theme.zIndex;
+  }};
   position: relative;
   align-items: center;
   background: ${props => props.theme.blockToolbarBackground};
