@@ -188,7 +188,6 @@ const StyledTd = styled.td`
   ${props =>
     props.isFirstRow &&
     `
-  box-shadow: 0 1px 1px ${props.theme.tableDivider};
   min-width: 100px;
   `}
 `;
