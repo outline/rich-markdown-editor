@@ -148,7 +148,7 @@ class FormattingToolbar extends React.Component<Props> {
     const isSelectionInTable = this.props.editor.isSelectionInTable();
 
     return (
-      <span>
+      <React.Fragment>
         {this.renderMarkButton("bold", BoldIcon)}
         {this.renderMarkButton("italic", ItalicIcon)}
         {this.renderMarkButton("deleted", StrikethroughIcon)}
@@ -165,7 +165,7 @@ class FormattingToolbar extends React.Component<Props> {
         <ToolbarButton onMouseDown={this.handleCreateLink}>
           <LinkIcon color={this.props.theme.toolbarItem} />
         </ToolbarButton>
-      </span>
+      </React.Fragment>
     );
   }
 }
