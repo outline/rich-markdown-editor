@@ -48,12 +48,11 @@ export default function MarkdownShortcuts() {
     const { value } = editor;
     const { selection, startBlock } = value;
     if (selection.isExpanded) return next();
-    if (editor.isSelectionInTable()) return next();
 
     const chars = startBlock.text.slice(0, selection.start.offset).trim();
     const type = getType(chars);
 
-    if (type) {
+    if (type && !editor.isSelectionInTable()) {
       // only shortcuts to change heading size should work in headings
       if (startBlock.type.match(/heading/) && !type.match(/heading/)) {
         return next();
