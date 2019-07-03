@@ -106,7 +106,9 @@ const Wrapper = styled.div`
   position: fixed;
   right: 0;
   top: 150px;
-  z-index: 100;
+  z-index: ${props => {
+    return props.theme.zIndex;
+  }};
 
   @media print {
     display: none;
