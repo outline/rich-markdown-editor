@@ -155,18 +155,23 @@ class BlockToolbar extends React.Component<Props> {
     }
   };
 
-  renderBlockButton = (type: string, IconClass: Function) => {
+  renderBlockButton = (type: string, IconClass: Function, tooltip: string) => {
     const { hiddenToolbarButtons } = this.props.theme;
+    const Tooltip = this.props.editor.props.tooltip;
+
     if (
       hiddenToolbarButtons &&
       hiddenToolbarButtons.blocks &&
       hiddenToolbarButtons.blocks.includes(type)
-    )
+    ) {
       return null;
+    }
 
     return (
       <ToolbarButton onMouseDown={ev => this.handleClickBlock(ev, type)}>
-        <IconClass color={this.props.theme.blockToolbarItem} />
+        <Tooltip tooltip={tooltip} placement="top">
+          <IconClass color={this.props.theme.blockToolbarItem} />
+        </Tooltip>
       </ToolbarButton>
     );
   };
@@ -183,18 +188,31 @@ class BlockToolbar extends React.Component<Props> {
           onChange={this.onImagePicked}
           accept="image/*"
         />
-        {this.renderBlockButton("heading1", Heading1Icon)}
-        {this.renderBlockButton("heading2", Heading2Icon)}
+        {this.renderBlockButton("heading1", Heading1Icon, "Add heading")}
+        {this.renderBlockButton("heading2", Heading2Icon, "Add subheading")}
         <Separator />
-        {this.renderBlockButton("bulleted-list", BulletedListIcon)}
-        {this.renderBlockButton("ordered-list", OrderedListIcon)}
-        {this.renderBlockButton("todo-list", TodoListIcon)}
+        {this.renderBlockButton(
+          "bulleted-list",
+          BulletedListIcon,
+          "Start bulleted list"
+        )}
+        {this.renderBlockButton(
+          "ordered-list",
+          OrderedListIcon,
+          "Start numbered List"
+        )}
+        {this.renderBlockButton("todo-list", TodoListIcon, "Start checklist")}
         <Separator />
-        {this.renderBlockButton("table", TableIcon)}
-        {this.renderBlockButton("block-quote", BlockQuoteIcon)}
-        {this.renderBlockButton("code", CodeIcon)}
-        {this.renderBlockButton("horizontal-rule", HorizontalRuleIcon)}
-        {hasImageUpload && this.renderBlockButton("image", ImageIcon)}
+        {this.renderBlockButton("table", TableIcon, "Create table")}
+        {this.renderBlockButton("block-quote", BlockQuoteIcon, "Add quote")}
+        {this.renderBlockButton("code", CodeIcon, "Add code")}
+        {this.renderBlockButton(
+          "horizontal-rule",
+          HorizontalRuleIcon,
+          "Add break"
+        )}
+        {hasImageUpload &&
+          this.renderBlockButton("image", ImageIcon, "Add image")}
       </Bar>
     );
   }

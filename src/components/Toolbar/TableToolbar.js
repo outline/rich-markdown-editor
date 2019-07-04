@@ -54,15 +54,14 @@ class TableToolbar extends React.Component<Props> {
 
   renderAlignButton = (align: string, IconClass: Function) => {
     const isActive = this.hasAlign(align);
+    const Tooltip = this.props.editor.props.tooltip;
     const onMouseDown = ev => this.onClickAlign(ev, align);
 
     return (
-      <ToolbarButton
-        onMouseDown={onMouseDown}
-        active={isActive}
-        title={`Align ${align}`}
-      >
-        <IconClass color={this.props.theme.toolbarItem} />
+      <ToolbarButton onMouseDown={onMouseDown} active={isActive}>
+        <Tooltip tooltip={`Align ${align}`} placement="top">
+          <IconClass color={this.props.theme.toolbarItem} />
+        </Tooltip>
       </ToolbarButton>
     );
   };
@@ -131,12 +130,15 @@ class TableToolbar extends React.Component<Props> {
 
   render() {
     const { isRowSelected, isColumnSelected, isTableSelected } = this.props;
+    const Tooltip = this.props.editor.props.tooltip;
 
     return (
       <React.Fragment>
         {isTableSelected && (
-          <ToolbarButton onMouseDown={this.removeTable} title="Remove table">
-            <TrashIcon color={this.props.theme.toolbarItem} />
+          <ToolbarButton onMouseDown={this.removeTable}>
+            <Tooltip tooltip="Delete table" placement="top">
+              <TrashIcon color={this.props.theme.toolbarItem} />
+            </Tooltip>
           </ToolbarButton>
         )}
         {isColumnSelected && (
@@ -145,44 +147,41 @@ class TableToolbar extends React.Component<Props> {
             {this.renderAlignButton("center", AlignCenterIcon)}
             {this.renderAlignButton("right", AlignRightIcon)}
             <Separator />
-            <ToolbarButton
-              onMouseDown={this.removeColumn}
-              title="Remove column"
-            >
-              <TrashIcon color={this.props.theme.toolbarItem} />
+            <ToolbarButton onMouseDown={this.removeColumn}>
+              <Tooltip tooltip="Delete column" placement="top">
+                <TrashIcon color={this.props.theme.toolbarItem} />
+              </Tooltip>
             </ToolbarButton>
             <Separator />
-            <ToolbarButton
-              onMouseDown={this.addColumnLeft}
-              title="Insert column left"
-            >
-              <InsertLeftIcon color={this.props.theme.toolbarItem} />
+            <ToolbarButton onMouseDown={this.addColumnLeft}>
+              <Tooltip tooltip="Insert column left" placement="top">
+                <InsertLeftIcon color={this.props.theme.toolbarItem} />
+              </Tooltip>
             </ToolbarButton>
-            <ToolbarButton
-              onMouseDown={this.addColumnRight}
-              title="Insert column right"
-            >
-              <InsertRightIcon color={this.props.theme.toolbarItem} />
+            <ToolbarButton onMouseDown={this.addColumnRight}>
+              <Tooltip tooltip="Insert column right" placement="top">
+                <InsertRightIcon color={this.props.theme.toolbarItem} />
+              </Tooltip>
             </ToolbarButton>
           </React.Fragment>
         )}
         {isRowSelected && (
           <React.Fragment>
-            <ToolbarButton onMouseDown={this.removeRow} title="Remove row">
-              <TrashIcon color={this.props.theme.toolbarItem} />
+            <ToolbarButton onMouseDown={this.removeRow}>
+              <Tooltip tooltip="Delete row" placement="right">
+                <TrashIcon color={this.props.theme.toolbarItem} />
+              </Tooltip>
             </ToolbarButton>
             <Separator />
-            <ToolbarButton
-              onMouseDown={this.addRowAbove}
-              title="Insert row above"
-            >
-              <InsertAboveIcon color={this.props.theme.toolbarItem} />
+            <ToolbarButton onMouseDown={this.addRowAbove}>
+              <Tooltip tooltip="Insert row above" placement="right">
+                <InsertAboveIcon color={this.props.theme.toolbarItem} />
+              </Tooltip>
             </ToolbarButton>
-            <ToolbarButton
-              onMouseDown={this.addRowBelow}
-              title="Insert row below"
-            >
-              <InsertBelowIcon color={this.props.theme.toolbarItem} />
+            <ToolbarButton onMouseDown={this.addRowBelow}>
+              <Tooltip tooltip="Insert row below" placement="right">
+                <InsertBelowIcon color={this.props.theme.toolbarItem} />
+              </Tooltip>
             </ToolbarButton>
           </React.Fragment>
         )}

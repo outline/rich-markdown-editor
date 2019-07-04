@@ -202,6 +202,7 @@ class LinkToolbar extends React.Component<Props, State> {
   render() {
     const href = this.props.link.data.get("href");
     const hasResults = this.state.results.length > 0;
+    const Tooltip = this.props.editor.props.tooltip;
 
     return (
       <span ref={this.setWrapperRef}>
@@ -216,14 +217,20 @@ class LinkToolbar extends React.Component<Props, State> {
           />
           {this.state.isEditing && (
             <ToolbarButton onMouseDown={this.openLink}>
-              <OpenIcon color={this.props.theme.toolbarItem} />
+              <Tooltip tooltip="Open link" placement="top">
+                <OpenIcon color={this.props.theme.toolbarItem} />
+              </Tooltip>
             </ToolbarButton>
           )}
           <ToolbarButton onMouseDown={this.removeLink}>
             {this.state.isEditing ? (
-              <TrashIcon color={this.props.theme.toolbarItem} />
+              <Tooltip tooltip="Remove link" placement="top">
+                <TrashIcon color={this.props.theme.toolbarItem} />
+              </Tooltip>
             ) : (
-              <CloseIcon color={this.props.theme.toolbarItem} />
+              <Tooltip tooltip="Discard link" placement="top">
+                <CloseIcon color={this.props.theme.toolbarItem} />
+              </Tooltip>
             )}
           </ToolbarButton>
         </LinkEditor>

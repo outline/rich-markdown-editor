@@ -69,6 +69,14 @@ Allows overriding the inbuilt theme to brand the editor, for example use your ow
 
 With `dark` set to `true` the editor will use a default dark theme that's included. See the [source here](/src/theme.js).
 
+#### `tooltip`
+
+A React component that will be wrapped around items that have an optional tooltip. You can use this to inject your own tooltip library into the editor – the component will be passed the following props:
+
+- `tooltip`: A React node with the tooltip content
+- `placement`: Enum `top`, `bottom`, `left`, `right`
+- `children`: The component that the tooltip wraps, must be rendered
+
 
 ### Callbacks
 

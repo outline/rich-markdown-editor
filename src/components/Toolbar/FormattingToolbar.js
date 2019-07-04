@@ -102,28 +102,33 @@ class FormattingToolbar extends React.Component<Props> {
     }
   };
 
-  renderMarkButton = (type: Mark, IconClass: Function) => {
+  renderMarkButton = (type: Mark, IconClass: Function, tooltip: string) => {
     const { hiddenToolbarButtons } = this.props.theme;
+    const Tooltip = this.props.editor.props.tooltip;
 
     if (
       hiddenToolbarButtons &&
       hiddenToolbarButtons.marks &&
       hiddenToolbarButtons.marks.includes(type)
-    )
+    ) {
       return null;
+    }
 
     const isActive = this.hasMark(type);
     const onMouseDown = ev => this.onClickMark(ev, type);
 
     return (
       <ToolbarButton onMouseDown={onMouseDown} active={isActive}>
-        <IconClass color={this.props.theme.toolbarItem} />
+        <Tooltip tooltip={tooltip} placement="top">
+          <IconClass color={this.props.theme.toolbarItem} />
+        </Tooltip>
       </ToolbarButton>
     );
   };
 
-  renderBlockButton = (type: Block, IconClass: Function) => {
+  renderBlockButton = (type: Block, IconClass: Function, tooltip: string) => {
     const { hiddenToolbarButtons } = this.props.theme;
+    const Tooltip = this.props.editor.props.tooltip;
 
     if (
       hiddenToolbarButtons &&
@@ -139,31 +144,36 @@ class FormattingToolbar extends React.Component<Props> {
 
     return (
       <ToolbarButton onMouseDown={onMouseDown} active={isActive}>
-        <IconClass color={this.props.theme.toolbarItem} />
+        <Tooltip tooltip={tooltip} placement="top">
+          <IconClass color={this.props.theme.toolbarItem} />
+        </Tooltip>
       </ToolbarButton>
     );
   };
 
   render() {
     const isSelectionInTable = this.props.editor.isSelectionInTable();
+    const Tooltip = this.props.editor.props.tooltip;
 
     return (
       <React.Fragment>
-        {this.renderMarkButton("bold", BoldIcon)}
-        {this.renderMarkButton("italic", ItalicIcon)}
-        {this.renderMarkButton("deleted", StrikethroughIcon)}
-        {this.renderMarkButton("code", CodeIcon)}
+        {this.renderMarkButton("bold", BoldIcon, "Bold")}
+        {this.renderMarkButton("italic", ItalicIcon, "Italic")}
+        {this.renderMarkButton("deleted", StrikethroughIcon, "Strikethrough")}
+        {this.renderMarkButton("code", CodeIcon, "Code")}
         {!isSelectionInTable && (
           <React.Fragment>
             <Separator />
-            {this.renderBlockButton("heading2", Heading1Icon)}
-            {this.renderBlockButton("heading3", Heading2Icon)}
-            {this.renderBlockButton("block-quote", BlockQuoteIcon)}
+            {this.renderBlockButton("heading2", Heading1Icon, "Heading")}
+            {this.renderBlockButton("heading3", Heading2Icon, "Subheading")}
+            {this.renderBlockButton("block-quote", BlockQuoteIcon, "Quote")}
           </React.Fragment>
         )}
         <Separator />
         <ToolbarButton onMouseDown={this.handleCreateLink}>
-          <LinkIcon color={this.props.theme.toolbarItem} />
+          <Tooltip tooltip="Create link" placement="top">
+            <LinkIcon color={this.props.theme.toolbarItem} />
+          </Tooltip>
         </ToolbarButton>
       </React.Fragment>
     );
