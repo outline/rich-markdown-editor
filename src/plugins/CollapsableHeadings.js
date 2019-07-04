@@ -37,9 +37,16 @@ export default function CollapsableHeadings() {
 
       editor.setNodeByKey(node.key, { data: { collapsed: hidden } });
 
+      const headingLevel = parseInt(node.type.replace(/^heading/, ""), 10);
+      let headingLevels = [];
+
+      for (let level = headingLevel; level > 0; level--) {
+        headingLevels.push(`heading${level}`);
+      }
+
       let active;
       document.nodes.forEach(n => {
-        if (active && n.type.match(/heading/)) {
+        if (active && headingLevels.includes(n.type)) {
           active = false;
           return;
         }
