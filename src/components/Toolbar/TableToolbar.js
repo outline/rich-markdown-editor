@@ -168,18 +168,18 @@ class TableToolbar extends React.Component<Props> {
         {isRowSelected && (
           <React.Fragment>
             <ToolbarButton onMouseDown={this.removeRow}>
-              <Tooltip tooltip="Delete row" placement="right">
+              <Tooltip tooltip="Delete row" placement="top">
                 <TrashIcon color={this.props.theme.toolbarItem} />
               </Tooltip>
             </ToolbarButton>
             <Separator />
             <ToolbarButton onMouseDown={this.addRowAbove}>
-              <Tooltip tooltip="Insert row above" placement="right">
+              <Tooltip tooltip="Insert row above" placement="top">
                 <InsertAboveIcon color={this.props.theme.toolbarItem} />
               </Tooltip>
             </ToolbarButton>
             <ToolbarButton onMouseDown={this.addRowBelow}>
-              <Tooltip tooltip="Insert row below" placement="right">
+              <Tooltip tooltip="Insert row below" placement="top">
                 <InsertBelowIcon color={this.props.theme.toolbarItem} />
               </Tooltip>
             </ToolbarButton>
