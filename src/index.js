@@ -56,7 +56,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     onImageUploadStart: () => {},
     onImageUploadStop: () => {},
     plugins: [],
-    tooltip: React.Fragment,
+    tooltip: "span",
   };
 
   editor: Editor;
