@@ -3,7 +3,9 @@ import { Editor, Block, KeyUtils } from "slate";
 
 const commands = {
   wrapLink(editor: Editor, href: string) {
-    editor.wrapInline({ type: "link", data: { href } });
+    if (!editor.isLinkActive()) {
+      editor.wrapInline({ type: "link", data: { href } });
+    }
   },
 
   unwrapLink(editor: Editor) {
