@@ -33,9 +33,9 @@ type State = {
 
 @keydown
 class LinkToolbar extends React.Component<Props, State> {
-  wrapper: ?HTMLElement;
+  wrapper: ?HTMLSpanElement;
   input: ?HTMLInputElement;
-  firstDocument: ?HTMLElement;
+  firstDocument: ?LinkSearchResult;
   originalValue: string = "";
   state = {
     isEditing: false,
@@ -191,11 +191,11 @@ class LinkToolbar extends React.Component<Props, State> {
     this.props.onBlur();
   };
 
-  setFirstResultRef = (ref: *) => {
+  setFirstResultRef = (ref: ?LinkSearchResult) => {
     this.firstDocument = ref;
   };
 
-  setWrapperRef = (ref: *) => {
+  setWrapperRef = (ref: ?HTMLSpanElement) => {
     this.wrapper = ref;
   };
 
