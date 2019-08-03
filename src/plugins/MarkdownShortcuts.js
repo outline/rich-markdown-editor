@@ -90,6 +90,8 @@ export default function MarkdownShortcuts() {
       });
     }
 
+    const focusText = editor.value.focusText;
+
     for (const key of inlineShortcuts) {
       // find all inline characters
       let { mark, shortcut } = key;
@@ -97,8 +99,8 @@ export default function MarkdownShortcuts() {
 
       // only add tags if they have spaces around them or the tag is beginning
       // or the end of the block
-      for (let i = 0; i < startBlock.text.length; i++) {
-        const { text } = startBlock;
+      for (let i = 0; i < focusText.text.length; i++) {
+        const { text } = focusText;
         const start = i;
         const end = i + shortcut.length;
         const beginningOfBlock = start === 0;
@@ -118,16 +120,25 @@ export default function MarkdownShortcuts() {
 
       // if we have multiple tags then mark the text between
       if (inlineTags.length > 1) {
-        const firstText = startBlock.getFirstText();
+        const firstText = focusText;
         const firstCodeTagIndex = inlineTags[0];
         const lastCodeTagIndex = inlineTags[inlineTags.length - 1];
+
+        const tokenLen = lastCodeTagIndex - firstCodeTagIndex - shortcut.length;
+
+        ev.preventDefault();
+        // Add space character at end of the text so it doesn't get wrapped
+        // within the node containing the mark we're applying.
+        editor.insertText(' ');
+
         return editor
           .removeTextByKey(firstText.key, lastCodeTagIndex, shortcut.length)
           .removeTextByKey(firstText.key, firstCodeTagIndex, shortcut.length)
           .moveAnchorTo(firstCodeTagIndex, lastCodeTagIndex - shortcut.length)
           .addMark(mark)
-          .moveToEnd()
-          .removeMark(mark);
+          .moveAnchorTo(tokenLen)
+          .removeMark(mark)
+          .moveAnchorTo(1);
       }
     }
 
