@@ -53,6 +53,7 @@ export default class Toolbar extends React.Component<Props, State> {
 
   hideLinkToolbar = () => {
     this.setState({ link: undefined });
+    this.update();
   };
 
   handleMouseDown = () => {

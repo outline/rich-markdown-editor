@@ -49,14 +49,14 @@ class LinkToolbar extends React.Component<Props, State> {
 
     if (typeof window !== "undefined") {
       setImmediate(() =>
-        window.addEventListener("click", this.handleOutsideMouseClick)
+        window.addEventListener("mousedown", this.handleOutsideMouseClick)
       );
     }
   }
 
   componentWillUnmount() {
     if (typeof window !== "undefined") {
-      window.removeEventListener("click", this.handleOutsideMouseClick);
+      window.removeEventListener("mousedown", this.handleOutsideMouseClick);
     }
   }
 
@@ -120,7 +120,7 @@ class LinkToolbar extends React.Component<Props, State> {
     this.save(this.originalValue);
   };
 
-  onKeyDown = (ev: SyntheticKeyboardEvent<*>) => {
+  onKeyDown = (ev: SyntheticKeyboardEvent<>) => {
     switch (ev.key) {
       case "Enter":
         ev.preventDefault();
@@ -141,7 +141,7 @@ class LinkToolbar extends React.Component<Props, State> {
     }
   };
 
-  onChange = (ev: SyntheticInputEvent<*>) => {
+  onChange = (ev: SyntheticInputEvent<>) => {
     if (!this.props.editor.props.onSearchLink) return;
 
     try {
