@@ -35,7 +35,7 @@ class Scrollable extends React.Component<Props, State> {
     }
   }
 
-  handleScroll = (ev: SyntheticMouseEvent<*>) => {
+  handleScroll = (ev: SyntheticMouseEvent<HTMLElement>) => {
     const shadowLeft = ev.currentTarget.scrollLeft > 0;
 
     if (this.state.shadowLeft !== shadowLeft) {

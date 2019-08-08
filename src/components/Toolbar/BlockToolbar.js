@@ -47,7 +47,7 @@ class BlockToolbar extends React.Component<Props> {
     }
   }
 
-  handleOutsideMouseClick = (ev: SyntheticMouseEvent<*>) => {
+  handleOutsideMouseClick = (ev: SyntheticMouseEvent<>) => {
     const element = findDOMNode(this.bar);
 
     if (

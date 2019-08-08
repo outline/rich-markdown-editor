@@ -23,7 +23,7 @@ class Table extends React.Component<*> {
     }
   }
 
-  handleOutsideMouseClick = (ev: SyntheticMouseEvent<*>) => {
+  handleOutsideMouseClick = (ev: SyntheticMouseEvent<>) => {
     const element = findDOMNode(this.table);
 
     if (

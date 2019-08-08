@@ -1,4 +1,5 @@
 // @flow
+import * as React from "react";
 import { Node, Editor } from "slate";
 import TrailingBlock from "@wikifactory/slate-trailing-block";
 import EditCode from "@wikifactory/slate-edit-code";
@@ -32,7 +33,13 @@ import "prismjs/components/prism-python";
 import "prismjs/components/prism-java";
 import "prismjs/components/prism-bash";
 
-const createPlugins = ({ placeholder, getLinkComponent }: *) => {
+const createPlugins = ({
+  placeholder,
+  getLinkComponent,
+}: {
+  placeholder: string,
+  getLinkComponent?: Node => ?React.ComponentType<any>,
+}) => {
   return [
     Nodes,
     Marks,

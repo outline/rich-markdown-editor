@@ -60,7 +60,7 @@ class BlockInsert extends React.Component<Props, State> {
     this.setState({ active: false });
   };
 
-  handleMouseMove = (ev: SyntheticMouseEvent<*>) => {
+  handleMouseMove = (ev: SyntheticMouseEvent<>) => {
     const triggerPoint = this.ref
       ? this.ref.getBoundingClientRect().left + 300
       : window.innerWidth;
@@ -98,7 +98,7 @@ class BlockInsert extends React.Component<Props, State> {
     }
   };
 
-  handleClick = (ev: SyntheticMouseEvent<*>) => {
+  handleClick = (ev: SyntheticMouseEvent<>) => {
     ev.preventDefault();
     ev.stopPropagation();
 

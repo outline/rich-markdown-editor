@@ -40,7 +40,7 @@ export type Props = {
   onSearchLink?: (term: string) => Promise<SearchResult[]>,
   onClickLink?: (href: string) => *,
   onShowToast?: (message: string) => *,
-  getLinkComponent?: Node => ?React.ComponentType<*>,
+  getLinkComponent?: Node => ?React.ComponentType<any>,
   className?: string,
   style?: Object,
 };

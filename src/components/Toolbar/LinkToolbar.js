@@ -21,8 +21,8 @@ type Props = {
   editor: Editor,
   link: Node,
   suggestions?: Suggestion[],
-  onBlur: () => *,
-  theme: *,
+  onBlur: () => void,
+  theme: Object,
 };
 
 type State = {
@@ -60,7 +60,7 @@ class LinkToolbar extends React.Component<Props, State> {
     }
   }
 
-  handleOutsideMouseClick = (ev: SyntheticMouseEvent<*>) => {
+  handleOutsideMouseClick = (ev: SyntheticMouseEvent<>) => {
     // check if we're clicking inside the link toolbar
     const element = findDOMNode(this.wrapper);
     if (
@@ -166,7 +166,7 @@ class LinkToolbar extends React.Component<Props, State> {
     this.save("");
   };
 
-  openLink = (ev: SyntheticMouseEvent<*>) => {
+  openLink = (ev: SyntheticMouseEvent<>) => {
     const { link, editor } = this.props;
     const href = link.data.get("href");
 
