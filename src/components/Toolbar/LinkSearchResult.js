@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { NextIcon } from "outline-icons";
 
 type Props = {
-  onClick: (SyntheticEvent<*>) => *,
+  onClick: (SyntheticEvent<>) => void,
   title: string,
 };
 

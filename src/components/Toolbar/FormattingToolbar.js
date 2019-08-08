@@ -19,7 +19,7 @@ import Separator from "./Separator";
 
 type Props = {
   editor: Editor,
-  onCreateLink: (SyntheticEvent<*>) => *,
+  onCreateLink: (SyntheticEvent<>) => void,
   theme: Theme,
 };
 

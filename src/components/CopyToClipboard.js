@@ -5,8 +5,8 @@ import copy from "copy-to-clipboard";
 type Props = {
   text: string,
   children?: React.Node,
-  onClick?: () => *,
-  onCopy: () => *,
+  onClick?: () => void,
+  onCopy: () => void,
 };
 
 class CopyToClipboard extends React.Component<Props> {
