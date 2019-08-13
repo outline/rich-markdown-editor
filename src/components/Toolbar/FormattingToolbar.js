@@ -152,29 +152,44 @@ class FormattingToolbar extends React.Component<Props> {
   };
 
   render() {
-    const isSelectionInTable = this.props.editor.isSelectionInTable();
-    const Tooltip = this.props.editor.props.tooltip;
+    const { editor } = this.props;
+    const isSelectionInHeading = editor.isSelectionInHeading();
+    const isSelectionInTable = editor.isSelectionInTable();
+    const Tooltip = editor.props.tooltip;
 
     return (
       <React.Fragment>
-        {this.renderMarkButton("bold", BoldIcon, "Bold")}
-        {this.renderMarkButton("italic", ItalicIcon, "Italic")}
-        {this.renderMarkButton("deleted", StrikethroughIcon, "Strikethrough")}
-        {this.renderMarkButton("code", CodeIcon, "Code")}
-        {!isSelectionInTable && (
+        {!isSelectionInHeading && (
           <React.Fragment>
-            <Separator />
-            {this.renderBlockButton("heading2", Heading1Icon, "Heading")}
-            {this.renderBlockButton("heading3", Heading2Icon, "Subheading")}
-            {this.renderBlockButton("block-quote", BlockQuoteIcon, "Quote")}
+            {this.renderMarkButton("bold", BoldIcon, "Bold")}
+            {this.renderMarkButton("italic", ItalicIcon, "Italic")}
+            {this.renderMarkButton(
+              "deleted",
+              StrikethroughIcon,
+              "Strikethrough"
+            )}
+            {this.renderMarkButton("code", CodeIcon, "Code")}
           </React.Fragment>
         )}
-        <Separator />
-        <ToolbarButton onMouseDown={this.handleCreateLink}>
-          <Tooltip tooltip="Create link" placement="top">
-            <LinkIcon color={this.props.theme.toolbarItem} />
-          </Tooltip>
-        </ToolbarButton>
+        {!isSelectionInTable && (
+          <React.Fragment>
+            {!isSelectionInHeading && <Separator />}
+            {this.renderBlockButton("heading2", Heading1Icon, "Heading")}
+            {this.renderBlockButton("heading3", Heading2Icon, "Subheading")}
+            {!isSelectionInHeading &&
+              this.renderBlockButton("block-quote", BlockQuoteIcon, "Quote")}
+          </React.Fragment>
+        )}
+        {!isSelectionInHeading && (
+          <React.Fragment>
+            <Separator />
+            <ToolbarButton onMouseDown={this.handleCreateLink}>
+              <Tooltip tooltip="Create link" placement="top">
+                <LinkIcon color={this.props.theme.toolbarItem} />
+              </Tooltip>
+            </ToolbarButton>
+          </React.Fragment>
+        )}
       </React.Fragment>
     );
   }

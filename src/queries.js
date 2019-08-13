@@ -8,6 +8,12 @@ const queries = {
     return inlines.some(i => i.type === "link");
   },
 
+  isSelectionInHeading(editor: Editor) {
+    const { value } = editor;
+    const { startBlock } = value;
+    return !!(startBlock && startBlock.type.match(/heading/));
+  },
+
   getLinkInSelection(editor: Editor) {
     try {
       const { value } = editor;
