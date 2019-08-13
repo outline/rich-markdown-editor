@@ -1,41 +1,73 @@
 // @flow
+import type { Change, Node } from "slate";
+
+function removeInlines(
+  change: Change,
+  error: { code: string, node: Node, child: Node }
+) {
+  if (error.code === "child_object_invalid") {
+    change.unwrapInlineByKey(error.child.key, error.child.type);
+  }
+}
 
 const schema = {
   blocks: {
     heading1: {
       nodes: [{ match: { object: "text" } }],
       marks: [""],
+      normalize: removeInlines,
     },
     heading2: {
       nodes: [{ match: { object: "text" } }],
       marks: [""],
+      normalize: removeInlines,
     },
     heading3: {
       nodes: [{ match: { object: "text" } }],
       marks: [""],
+      normalize: removeInlines,
     },
     heading4: {
       nodes: [{ match: { object: "text" } }],
       marks: [""],
+      normalize: removeInlines,
     },
     heading5: {
       nodes: [{ match: { object: "text" } }],
       marks: [""],
+      normalize: removeInlines,
     },
     heading6: {
       nodes: [{ match: { object: "text" } }],
       marks: [""],
+      normalize: removeInlines,
     },
-    "block-quote": { marks: [""] },
+    code: {
+      marks: [""],
+    },
     "horizontal-rule": {
       isVoid: true,
     },
     image: {
       isVoid: true,
     },
-    link: { nodes: [{ objects: ["text"] }] },
+    link: {
+      nodes: [{ match: { object: "text" } }],
+    },
     "block-toolbar": {
       isVoid: true,
+    },
+    "list-item": {
+      parent: [
+        { type: "bulleted-list" },
+        { type: "ordered-list" },
+        { type: "todo-list" },
+      ],
+      nodes: [
+        {
+          match: [{ object: "text" }, { type: "image" }, { type: "paragraph" }],
+        },
+      ],
     },
   },
   document: {
