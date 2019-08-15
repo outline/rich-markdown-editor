@@ -65,7 +65,14 @@ const schema = {
       ],
       nodes: [
         {
-          match: [{ object: "text" }, { type: "image" }, { type: "paragraph" }],
+          match: [
+            { object: "text" },
+            { type: "image" },
+            { type: "paragraph" },
+            { type: "bulleted-list" },
+            { type: "ordered-list" },
+            { type: "todo-list" },
+          ],
         },
       ],
     },
