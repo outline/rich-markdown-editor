@@ -27,6 +27,7 @@ export default function Link(props: Props) {
           : undefined
       }
       target="_blank"
+      rel="noopener noreferrer"
     >
       {children}
     </a>
