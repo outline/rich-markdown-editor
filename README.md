@@ -162,10 +162,6 @@ import { history } from "react-router";
 />
 ```
 
-#### `renderNode`
-
-See the [Slate documentation](https://docs.slatejs.org/guides/rendering#nodes-and-marks) for an example.  There is an [inbuilt renderNode](https://github.com/outline/rich-markdown-editor/blob/master/src/nodes.js) implemented as a plugin.
-
 #### `getLinkComponent(Node)`
 
 This callback allows links to request an alternative component to display instead of an inline link. Given a link node return `undefined` for no replacement or a valid React component to replace the standard link display. This is particularly useful for "embeds".
