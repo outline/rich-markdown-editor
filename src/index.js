@@ -27,6 +27,7 @@ export type Props = {
   plugins: Plugin[],
   autoFocus?: boolean,
   readOnly?: boolean,
+  headingsOffset?: number,
   toc?: boolean,
   dark?: boolean,
   schema?: Schema,
