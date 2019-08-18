@@ -1,10 +1,11 @@
 // @flow
 import * as React from "react";
 import styled from "styled-components";
+import type { SlateNodeProps as Props } from "../../types";
 import Toolbar from "./Toolbar";
 import Grip from "./Grip";
 
-class Cell extends React.Component<*> {
+class Cell extends React.Component<Props> {
   cell: ?HTMLElement;
 
   render() {

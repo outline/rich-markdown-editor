@@ -4,7 +4,7 @@ import isModKey from "../lib/isModKey";
 
 export default function KeyboardShortcuts() {
   function onKeyDown(
-    ev: SyntheticKeyboardEvent<*>,
+    ev: SyntheticKeyboardEvent<>,
     editor: Editor,
     next: Function
   ) {

@@ -111,7 +111,7 @@ class LinkToolbar extends React.Component<Props, State> {
     this.setState({ isFetching: false });
   };
 
-  selectSearchResult = (ev: SyntheticEvent<*>, url: string) => {
+  selectSearchResult = (ev: SyntheticEvent<>, url: string) => {
     ev.preventDefault();
     this.save(url);
   };
@@ -154,7 +154,7 @@ class LinkToolbar extends React.Component<Props, State> {
     this.setState({ results: [] });
   };
 
-  onResultKeyDown = (ev: SyntheticKeyboardEvent<*>) => {
+  onResultKeyDown = (ev: SyntheticKeyboardEvent<>) => {
     if (ev.key === "Escape") {
       ev.preventDefault();
       ev.stopPropagation();

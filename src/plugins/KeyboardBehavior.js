@@ -4,7 +4,7 @@ import isModKey from "../lib/isModKey";
 
 export default function KeyboardBehavior() {
   function onKeyDown(
-    ev: SyntheticKeyboardEvent<*>,
+    ev: SyntheticKeyboardEvent<>,
     editor: Editor,
     next: Function
   ) {
@@ -23,7 +23,7 @@ export default function KeyboardBehavior() {
   }
 
   function onEnter(
-    ev: SyntheticKeyboardEvent<*>,
+    ev: SyntheticKeyboardEvent<>,
     editor: Editor,
     next: Function
   ) {
@@ -67,11 +67,7 @@ export default function KeyboardBehavior() {
     return next();
   }
 
-  function onTab(
-    ev: SyntheticKeyboardEvent<*>,
-    editor: Editor,
-    next: Function
-  ) {
+  function onTab(ev: SyntheticKeyboardEvent<>, editor: Editor, next: Function) {
     const { value } = editor;
     const { startBlock } = value;
     if (!startBlock) return next();
@@ -87,7 +83,7 @@ export default function KeyboardBehavior() {
   }
 
   function onBackspace(
-    ev: SyntheticKeyboardEvent<*>,
+    ev: SyntheticKeyboardEvent<>,
     editor: Editor,
     next: Function
   ) {

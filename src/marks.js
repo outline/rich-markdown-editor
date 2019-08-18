@@ -4,7 +4,7 @@ import { Mark, Editor } from "slate";
 import InlineCode from "./components/InlineCode";
 
 type Props = {
-  children: React$Element<*>,
+  children: React$Element<any>,
   mark: Mark,
 };
 

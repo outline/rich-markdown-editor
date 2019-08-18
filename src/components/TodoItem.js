@@ -5,7 +5,7 @@ import styled from "styled-components";
 import type { SlateNodeProps as Props } from "../types";
 
 export default class TodoItem extends React.Component<Props> {
-  handleChange = (ev: SyntheticInputEvent<*>) => {
+  handleChange = (ev: SyntheticInputEvent<>) => {
     const checked = ev.target.checked;
     const { editor, node } = this.props;
     editor.setNodeByKey(node.key, { data: { checked } });

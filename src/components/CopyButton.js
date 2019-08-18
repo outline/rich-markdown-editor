@@ -3,11 +3,15 @@ import * as React from "react";
 import styled from "styled-components";
 import CopyToClipboard from "./CopyToClipboard";
 
+type Props = {
+  text: string,
+};
+
 type State = {
   copied: boolean,
 };
 
-class CopyButton extends React.Component<*, State> {
+class CopyButton extends React.Component<Props, State> {
   copiedTimeout: ?TimeoutID;
   state = { copied: false };
 

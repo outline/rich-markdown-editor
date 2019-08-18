@@ -2,13 +2,14 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import styled from "styled-components";
+import type { SlateNodeProps as Props } from "../../types";
 import { GripRow, GripColumn, GripTable } from "./Cell";
 import Scrollable from "./Scrollable";
 
 // Looking for logic for the table controls and toolbars?
 // It mostly lives in the "Cell" component and the Table plugin
 
-class Table extends React.Component<*> {
+class Table extends React.Component<Props> {
   table: HTMLTableElement;
 
   componentDidMount() {

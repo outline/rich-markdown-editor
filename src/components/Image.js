@@ -14,7 +14,7 @@ class Image extends React.Component<Props, State> {
     hasError: false,
   };
 
-  handleKeyDown = (ev: SyntheticKeyboardEvent<*>) => {
+  handleKeyDown = (ev: SyntheticKeyboardEvent<>) => {
     if (ev.key === "Enter" || ev.key === "ArrowDown") {
       ev.preventDefault();
       const { editor, node } = this.props;
@@ -25,7 +25,7 @@ class Image extends React.Component<Props, State> {
     }
   };
 
-  handleChange = (ev: SyntheticInputEvent<*>) => {
+  handleChange = (ev: SyntheticInputEvent<>) => {
     ev.stopPropagation();
     const alt = ev.target.value;
     const { editor, node } = this.props;
@@ -34,7 +34,7 @@ class Image extends React.Component<Props, State> {
     editor.setNodeByKey(node.key, { data: { ...data, alt } });
   };
 
-  handleClick = (ev: SyntheticInputEvent<*>) => {
+  handleClick = (ev: SyntheticInputEvent<>) => {
     ev.stopPropagation();
   };
 

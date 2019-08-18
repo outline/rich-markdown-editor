@@ -61,7 +61,7 @@ class BlockToolbar extends React.Component<Props> {
   };
 
   @keydown("esc")
-  removeSelf(ev: SyntheticEvent<*>) {
+  removeSelf(ev: SyntheticEvent<>) {
     ev.preventDefault();
     ev.stopPropagation();
 
@@ -112,7 +112,7 @@ class BlockToolbar extends React.Component<Props> {
       .focus();
   };
 
-  handleClickBlock = (ev: SyntheticEvent<*>, type: string) => {
+  handleClickBlock = (ev: SyntheticEvent<>, type: string) => {
     ev.preventDefault();
     ev.stopPropagation();
 
@@ -147,7 +147,7 @@ class BlockToolbar extends React.Component<Props> {
     if (this.file) this.file.click();
   };
 
-  onImagePicked = async (ev: SyntheticInputEvent<*>) => {
+  onImagePicked = async (ev: SyntheticInputEvent<>) => {
     const files = getDataTransferFiles(ev);
     const { editor } = this.props;
 

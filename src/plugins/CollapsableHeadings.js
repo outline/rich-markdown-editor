@@ -59,7 +59,7 @@ export default function CollapsableHeadings() {
   };
 
   function onKeyDown(
-    ev: SyntheticKeyboardEvent<*>,
+    ev: SyntheticKeyboardEvent<>,
     editor: Editor,
     next: Function
   ) {

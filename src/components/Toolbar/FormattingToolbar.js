@@ -56,7 +56,7 @@ class FormattingToolbar extends React.Component<Props> {
    * @param {Event} ev
    * @param {String} type
    */
-  onClickMark = (ev: SyntheticEvent<*>, type: string) => {
+  onClickMark = (ev: SyntheticEvent<>, type: string) => {
     ev.preventDefault();
     ev.stopPropagation();
 
@@ -73,7 +73,7 @@ class FormattingToolbar extends React.Component<Props> {
     }
   };
 
-  onClickBlock = (ev: SyntheticEvent<*>, type: string) => {
+  onClickBlock = (ev: SyntheticEvent<>, type: string) => {
     ev.preventDefault();
     ev.stopPropagation();
     const { editor } = this.props;
@@ -88,7 +88,7 @@ class FormattingToolbar extends React.Component<Props> {
     }
   };
 
-  handleCreateLink = (ev: SyntheticEvent<*>) => {
+  handleCreateLink = (ev: SyntheticEvent<>) => {
     ev.preventDefault();
     ev.stopPropagation();
 

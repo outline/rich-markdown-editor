@@ -4,7 +4,7 @@ import isModKey from "../lib/isModKey";
 
 export default function Ellipsis() {
   return {
-    onKeyDown(ev: SyntheticKeyboardEvent<*>, editor: Editor, next: Function) {
+    onKeyDown(ev: SyntheticKeyboardEvent<>, editor: Editor, next: Function) {
       if (isModKey(ev) || ev.key !== " ") return next();
 
       const { value } = editor;

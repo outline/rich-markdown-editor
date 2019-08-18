@@ -3,7 +3,7 @@ import * as React from "react";
 import { Editor, Node } from "slate";
 
 type Options = {
-  getComponent?: Node => ?React.ComponentType<*>,
+  getComponent?: Node => ?React.ComponentType<any>,
 };
 
 function findTopParent(document, node): ?Node {

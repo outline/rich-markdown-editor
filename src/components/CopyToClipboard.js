@@ -10,7 +10,7 @@ type Props = {
 };
 
 class CopyToClipboard extends React.Component<Props> {
-  onClick = (ev: SyntheticEvent<*>) => {
+  onClick = (ev: SyntheticEvent<>) => {
     const { text, onCopy, children } = this.props;
     const elem = React.Children.only(children);
     copy(text);

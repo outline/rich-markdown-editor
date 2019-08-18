@@ -13,7 +13,7 @@ const inlineShortcuts = [
 
 export default function MarkdownShortcuts() {
   function onKeyDown(
-    ev: SyntheticKeyboardEvent<*>,
+    ev: SyntheticKeyboardEvent<>,
     editor: Editor,
     next: Function
   ) {
@@ -41,7 +41,7 @@ export default function MarkdownShortcuts() {
    * node into the shortcut's corresponding type.
    */
   function onSpace(
-    ev: SyntheticKeyboardEvent<*>,
+    ev: SyntheticKeyboardEvent<>,
     editor: Editor,
     next: Function
   ) {
@@ -135,7 +135,7 @@ export default function MarkdownShortcuts() {
   }
 
   function onDash(
-    ev: SyntheticKeyboardEvent<*>,
+    ev: SyntheticKeyboardEvent<>,
     editor: Editor,
     next: Function
   ) {
@@ -170,7 +170,7 @@ export default function MarkdownShortcuts() {
   }
 
   function onBacktick(
-    ev: SyntheticKeyboardEvent<*>,
+    ev: SyntheticKeyboardEvent<>,
     editor: Editor,
     next: Function
   ) {

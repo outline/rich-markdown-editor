@@ -66,7 +66,7 @@ export default class Toolbar extends React.Component<Props, State> {
     this.update();
   };
 
-  showLinkToolbar = (ev: SyntheticEvent<*>) => {
+  showLinkToolbar = (ev: SyntheticEvent<>) => {
     ev.preventDefault();
     ev.stopPropagation();
 

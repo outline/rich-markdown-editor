@@ -5,7 +5,7 @@ import Markdown from "../serializer";
 
 export default function MarkdownPaste() {
   return {
-    onPaste(ev: SyntheticKeyboardEvent<*>, editor: Editor, next: Function) {
+    onPaste(ev: SyntheticKeyboardEvent<>, editor: Editor, next: Function) {
       const transfer = getEventTransfer(ev);
       const { text } = transfer;
       if (transfer.type !== "text" && transfer.type !== "html") return next();
