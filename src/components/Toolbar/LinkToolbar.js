@@ -183,6 +183,11 @@ class LinkToolbar extends React.Component<Props, State> {
     href = href.trim();
 
     if (href) {
+      // If the input doesn't start with protocol or relative slash, make sure
+      // a protocol is added
+      if (!href.startsWith("/") && !href.match(/^https?:\/\//i)) {
+        href = `https://${href}`;
+      }
       editor.setNodeByKey(link.key, { type: "link", data: { href } });
     } else if (link) {
       editor.unwrapInlineByKey(link.key);
