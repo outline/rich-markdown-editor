@@ -184,12 +184,6 @@ class BlockToolbar extends React.Component<Props> {
 
     return (
       <Bar {...attributes} ref={ref => (this.bar = ref)}>
-        <HiddenInput
-          type="file"
-          ref={ref => (this.file = ref)}
-          onChange={this.onImagePicked}
-          accept="image/*"
-        />
         {this.renderBlockButton("heading1", Heading1Icon, "Add heading")}
         {this.renderBlockButton("heading2", Heading2Icon, "Add subheading")}
         <Separator />
@@ -215,6 +209,12 @@ class BlockToolbar extends React.Component<Props> {
         )}
         {hasImageUpload &&
           this.renderBlockButton("image", ImageIcon, "Add image")}
+        <HiddenInput
+          type="file"
+          ref={ref => (this.file = ref)}
+          onChange={this.onImagePicked}
+          accept="image/*"
+        />
       </Bar>
     );
   }
