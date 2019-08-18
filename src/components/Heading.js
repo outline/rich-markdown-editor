@@ -68,6 +68,7 @@ function Heading(props: Props) {
 }
 
 const CollapseToggle = styled.a`
+  text-decoration: none;
   opacity: ${props => (props.disabled ? "0" : "1")};
   pointer-events: ${props => (props.disabled ? "none" : "all")};
   visibility: ${props => (props.collapsed ? "visible" : "hidden")};
@@ -84,6 +85,8 @@ const CollapseToggle = styled.a`
   }
 
   &:hover {
+    text-decoration: none;
+
     svg {
       fill: ${props => props.theme.text};
     }
