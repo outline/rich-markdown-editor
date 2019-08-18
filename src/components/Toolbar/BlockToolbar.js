@@ -81,7 +81,7 @@ class BlockToolbar extends React.Component<Props> {
     editor.moveToEndOfNode(this.props.node);
 
     if (options.type === "table") {
-      editor.insertTable(3, 3);
+      editor.insertTable(3, 3).moveSelection(0, 0);
     } else {
       editor.insertBlock(options.type);
     }
