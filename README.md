@@ -162,6 +162,20 @@ import { history } from "react-router";
 />
 ```
 
+#### `onClickHashtag(tag: string)`
+
+This callback allows handling of clicking on hashtags in the document text. If no callback is provided then hashtags will render as regular text, so you can choose if to support them or not by passing this prop.
+
+```javascript
+import { history } from "react-router";
+
+<Editor
+  onClickHashtag={tag => {
+    history.push(`/hashtags/${tag}`);
+  }}
+/>
+```
+
 #### `getLinkComponent(Node)`
 
 This callback allows links to request an alternative component to display instead of an inline link. Given a link node return `undefined` for no replacement or a valid React component to replace the standard link display. This is particularly useful for "embeds".

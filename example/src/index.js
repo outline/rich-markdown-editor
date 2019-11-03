@@ -62,6 +62,7 @@ class Example extends React.Component<*, { readOnly: boolean, dark: boolean }> {
           onCancel={() => console.log("Cancel triggered")}
           onChange={this.handleChange}
           onClickLink={href => console.log("Clicked link: ", href)}
+          onClickHashtag={tag => console.log("Clicked hashtag: ", tag)}
           onShowToast={message => window.alert(message)}
           onSearchLink={async term => {
             console.log("Searched link: ", term);

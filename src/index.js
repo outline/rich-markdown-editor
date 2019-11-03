@@ -40,6 +40,7 @@ export type Props = {
   onImageUploadStop?: () => void,
   onSearchLink?: (term: string) => Promise<SearchResult[]>,
   onClickLink?: (href: string) => void,
+  onClickHashtag?: (tag: string) => void,
   onShowToast?: (message: string) => void,
   getLinkComponent?: Node => ?React.ComponentType<any>,
   className?: string,

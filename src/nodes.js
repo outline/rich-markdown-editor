@@ -6,6 +6,7 @@ import BlockToolbar from "./components/Toolbar/BlockToolbar";
 import HorizontalRule from "./components/HorizontalRule";
 import Image from "./components/Image";
 import Link from "./components/Link";
+import Hashtag from "./components/Hashtag";
 import Table from "./components/Table";
 import Cell from "./components/Table/Cell";
 import Row from "./components/Table/Row";
@@ -59,6 +60,8 @@ function renderNode(props: SlateNodeProps, editor: Editor, next: Function) {
       return <Image {...props} />;
     case "link":
       return <Link {...props} />;
+    case "hashtag":
+      return <Hashtag {...props} />;
     case "heading1":
       return <Heading1 {...props} />;
     case "heading2":
