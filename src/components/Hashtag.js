@@ -1,11 +1,15 @@
 // @flow
 import * as React from "react";
+import hashtagRegex from "hashtag-regex";
 import type { SlateNodeProps as Props } from "../types";
+
+const regex = hashtagRegex();
 
 export default function Hashtag(props: Props) {
   const { attributes, node, children, editor, readOnly } = props;
 
-  if (!editor.props.onClickHashtag) {
+  if (!editor.props.onClickHashtag || !node.text.match(regex)) {
+    console.log("PLAIN HASHTAG", node.text);
     return children;
   }
 
@@ -13,6 +17,7 @@ export default function Hashtag(props: Props) {
     <a
       {...attributes}
       href={readOnly ? node.text : undefined}
+      spellCheck={false}
       onClick={
         readOnly
           ? ev => {

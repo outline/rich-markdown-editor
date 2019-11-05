@@ -5931,6 +5931,11 @@ slate-hotkeys@^0.2.9:
     is-hotkey "0.1.4"
     slate-dev-environment "^0.2.2"
 
+slate-instant-replace@^0.1.13:
+  version "0.1.13"
+  resolved "https://registry.yarnpkg.com/slate-instant-replace/-/slate-instant-replace-0.1.13.tgz#03a2c908253c399a1ca5d6922a93867eb186c69b"
+  integrity sha512-jesj33+TUgrmcVKGBy6QgqORaAq55hSuFmBOv70iNjif0CHqK9CapWfHOLg8N8HWw+VAX0YpSaqy/lAQSSmwWg==
+
 slate-md-serializer@5.4.4:
   version "5.4.4"
   resolved "https://registry.yarnpkg.com/slate-md-serializer/-/slate-md-serializer-5.4.4.tgz#b0b55f7ab1dc9ed2159c6f97852594a81a5b76e9"
