@@ -9,7 +9,6 @@ export default function Hashtag(props: Props) {
   const { attributes, node, children, editor, readOnly } = props;
 
   if (!editor.props.onClickHashtag || !node.text.match(regex)) {
-    console.log("PLAIN HASHTAG", node.text);
     return children;
   }
 
