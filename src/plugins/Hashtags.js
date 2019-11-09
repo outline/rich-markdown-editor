@@ -7,6 +7,8 @@ const regex = hashtagRegex();
 function Hashtags() {
   return InstantReplace((editor, lastWord: string) => {
     if (!lastWord) return;
+    if (!editor.props.onClickHashtag) return;
+
     const match = lastWord.match(regex);
 
     // captures when "#" added before existing characters
