@@ -183,9 +183,12 @@ class LinkToolbar extends React.Component<Props, State> {
     href = href.trim();
 
     if (href) {
+      //If the input starts with 'mailto:', keep it the same.
       // If the input doesn't start with protocol or relative slash, make sure
       // a protocol is added
-      if (!href.startsWith("/") && !href.match(/^https?:\/\//i)) {
+      if (href.startsWith("mailto:")) {
+        href;
+      } else if (!href.startsWith("/") && !href.match(/^https?:\/\//i)) {
         href = `https://${href}`;
       }
       editor.setNodeByKey(link.key, { type: "link", data: { href } });
