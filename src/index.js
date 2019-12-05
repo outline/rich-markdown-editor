@@ -3,7 +3,7 @@ import * as React from "react";
 import { Value, Editor as TEditor, Schema, Node } from "slate";
 import { Editor } from "slate-react";
 import styled, { ThemeProvider } from "styled-components";
-import type { Plugin, SearchResult } from "./types";
+import type { Plugin, SearchResult, Serializer } from "./types";
 import { light as lightTheme, dark as darkTheme } from "./theme";
 import defaultSchema from "./schema";
 import getDataTransferFiles from "./lib/getDataTransferFiles";
@@ -31,6 +31,7 @@ export type Props = {
   toc?: boolean,
   dark?: boolean,
   schema?: Schema,
+  serializer?: Serializer,
   theme?: Object,
   uploadImage?: (file: File) => Promise<string>,
   onSave?: ({ done?: boolean }) => void,
@@ -63,6 +64,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
   editor: Editor;
   plugins: Plugin[];
+  serializer: Serializer;
   prevSchema: ?Schema = null;
   schema: ?Schema = null;
 
@@ -78,8 +80,10 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     // to later ones. By adding overrides first we give more control
     this.plugins = [...props.plugins, ...builtInPlugins];
 
+    this.serializer = props.serializer || Markdown;
+
     this.state = {
-      editorValue: Markdown.deserialize(props.defaultValue),
+      editorValue: this.serializer.deserialize(props.defaultValue),
     };
   }
 
@@ -128,7 +132,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   value = (): string => {
-    return Markdown.serialize(this.state.editorValue);
+    return this.serializer.serialize(this.state.editorValue);
   };
 
   handleChange = ({ value }: { value: Value }) => {

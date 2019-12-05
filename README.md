@@ -61,6 +61,10 @@ Allows additional [Slate plugins](https://github.com/ianstormtaylor/slate/blob/m
 
 Allows additional Slate schema to be passed to the underlying Slate editor.
 
+#### `serializer`
+
+Allows overriding the serializer, defaults to `slate-md-serializer` when not set.
+
 #### `theme`
 
 Allows overriding the inbuilt theme to brand the editor, for example use your own font face and brand colors to have the editor fit within your application. See the [inbuilt theme](/src/theme.js) for an example of the keys that should be provided.
@@ -199,6 +203,34 @@ const hiddenToolbarButtons = {
   theme={{ hiddenToolbarButtons, ...theme }}
 />
 ```
+
+### Customizing the serializer
+
+If on the need of customizing the serializer, you can customize it:
+
+```javascript
+// @flow
+import Editor from 'rich-markdown-editor';
+
+const MySerializer = {
+  deserialize: (str: string) => {
+    var v: Value;
+    // process given string and return a Value object
+    return v;
+  },
+  serialize: (value: Value) => {
+    var result = '';
+    // Transform given value into a string for storage
+    return result;
+  }
+};
+
+<Editor
+  serializer={MySerializer}
+/>
+```
+
+You can look [slate-md-serializer](https://github.com/tommoor/slate-md-serializer) for reference.
 
 ## Contributing
 
