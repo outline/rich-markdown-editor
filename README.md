@@ -180,6 +180,25 @@ import { history } from "react-router";
 
 This callback allows links to request an alternative component to display instead of an inline link. Given a link node return `undefined` for no replacement or a valid React component to replace the standard link display. This is particularly useful for "embeds".
 
+### Hiding Toolbar Buttons
+
+Buttons in either of the pop-up toolbars can be hidden by using a custom theme or overriding the supplied theme.
+
+```javascript
+import Editor, { theme } from 'rich-markdown-editor';
+
+const hiddenToolbarButtons = {
+  blocks: [
+    'image',
+    'table'
+  ],
+  marks: ['deleted', 'code', 'link', 'italic']
+};
+
+<Editor
+  theme={{ hiddenToolbarButtons, ...theme }}
+/>
+```
 
 ## Contributing
 
