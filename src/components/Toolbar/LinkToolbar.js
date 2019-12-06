@@ -183,15 +183,13 @@ class LinkToolbar extends React.Component<Props, State> {
     href = href.trim();
     
     if (href) {
-      //If href passes the url test, 
-      //make sure href equals the new URL's href value.
-      //If it fails and if the input doesn't start with https protocol or relative slash, 
-      //make sure a default https protocol is added.
+      //If href passes the url test, make sure href equals the new URL's href value.
+      //If it fails and doesn't start with https protocol or relative slash, make sure a default https protocol is added.
       try {
         let url_test = new URL(href);
         href = url_test.href;
       } catch (e){
-        if (!href.startsWith(("/")) && !href.match(/^https?:\/\//i)) {
+        if (!href.startsWith("/") && !href.match(/^https?:\/\//i)) {
           href = `https://${href}`;
         }
       }
