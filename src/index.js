@@ -33,6 +33,7 @@ export type Props = {
   schema?: Schema,
   serializer?: Serializer,
   theme?: Object,
+  themeOverrides?: Object,
   uploadImage?: (file: File) => Promise<string>,
   onSave?: ({ done?: boolean }) => void,
   onCancel?: () => void,
@@ -264,10 +265,14 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       defaultValue,
       autoFocus,
       plugins,
+      themeOverrides,
       ...rest
     } = this.props;
 
-    const theme = this.props.theme || (dark ? darkTheme : lightTheme);
+    const baseTheme = this.props.theme || (dark ? darkTheme : lightTheme);
+    const theme = themeOverrides
+      ? { ...baseTheme, ...themeOverrides }
+      : baseTheme;
 
     return (
       <Flex

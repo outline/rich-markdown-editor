@@ -69,6 +69,10 @@ Allows overriding the serializer, defaults to `slate-md-serializer` when not set
 
 Allows overriding the inbuilt theme to brand the editor, for example use your own font face and brand colors to have the editor fit within your application. See the [inbuilt theme](/src/theme.js) for an example of the keys that should be provided.
 
+#### `themeOverrides`
+
+Allows overriding individual properties from the inbuilt theme to brand the editor, for example, `themeOverrides={{ zIndex: 200 }}` will retain the built in theme with a z-index of 200. See the [inbuilt theme](/src/theme.js) for an example of the keys that can be overriden.
+
 #### `dark`
 
 With `dark` set to `true` the editor will use a default dark theme that's included. See the [source here](/src/theme.js).
