@@ -120,7 +120,9 @@ const ErrorMessage = styled.div`
 
 // This wrapper allows us to pass non-standard HTML attributes through to the DOM element
 // https://www.styled-components.com/docs/basics#passed-props
-const Img = props => <img alt={props.alt} {...props} />;
+const Img = ({ isSelected, isLoading, ...rest }) => {
+  return <img alt={rest.alt} {...rest} />;
+};
 
 const HiddenImg = styled(Img)`
   display: none;

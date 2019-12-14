@@ -25,6 +25,11 @@ export type SearchResult = {
   url: string,
 };
 
+export type Serializer = {
+  deserialize: (str: string) => Value,
+  serialize: (value: Value) => string,
+};
+
 export type Block =
   | "heading1"
   | "heading2"
