@@ -85,9 +85,11 @@ export default function MarkdownShortcuts() {
             return c.wrapBlock("bulleted-list");
           }
         }
-
-        return next();
       });
+
+      // purposefully not passing to next() here so that the trigger space
+      // character is not added to the block content
+      return;
     }
 
     for (const key of inlineShortcuts) {
