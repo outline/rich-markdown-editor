@@ -27,6 +27,7 @@ export type Props = {
   plugins: Plugin[],
   autoFocus?: boolean,
   readOnly?: boolean,
+  autoWrite?: boolean,
   headingsOffset?: number,
   toc?: boolean,
   dark?: boolean,
@@ -83,7 +84,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     this.serializer = props.serializer || Markdown;
 
     this.state = {
-      editorValue: this.serializer.deserialize(props.defaultValue),
+      editorValue: this.serializer.deserialize(props.defaultValue)
     };
   }
 
@@ -91,6 +92,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     this.scrollToAnchor();
 
     if (this.props.readOnly) return;
+
     if (typeof window !== "undefined") {
       window.addEventListener("keydown", this.handleKeyDown);
     }
@@ -206,6 +208,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     next: Function = () => {}
   ) => {
     if (this.props.readOnly) return next();
+    if (this.props.autoWrite) return next();
 
     switch (ev.key) {
       case "s":
@@ -247,6 +250,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   render = () => {
     const {
       readOnly,
+      autoWrite,
       pretitle,
       placeholder,
       onSave,
@@ -299,6 +303,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
             onImageUploadStop={onImageUploadStop}
             onShowToast={onShowToast}
             readOnly={readOnly}
+            autoWrite={autoWrite}
             spellCheck={!readOnly}
             uploadImage={uploadImage}
             pretitle={pretitle}
