@@ -1,6 +1,7 @@
 // @flow
 import * as React from "react";
 import { Value, Editor as TEditor, Schema, Node } from "slate";
+import { debounce } from "lodash";
 import { Editor } from "slate-react";
 import styled, { ThemeProvider } from "styled-components";
 import type { Plugin, SearchResult, Serializer } from "./types";
@@ -27,7 +28,6 @@ export type Props = {
   plugins: Plugin[],
   autoFocus?: boolean,
   readOnly?: boolean,
-  autoWrite?: boolean,
   headingsOffset?: number,
   toc?: boolean,
   dark?: boolean,
@@ -68,6 +68,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   serializer: Serializer;
   prevSchema: ?Schema = null;
   schema: ?Schema = null;
+  defaultValue: String;
 
   constructor(props: Props) {
     super(props);
@@ -76,7 +77,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       placeholder: props.placeholder,
       getLinkComponent: props.getLinkComponent,
     });
-
     // in Slate plugins earlier in the stack can opt not to continue
     // to later ones. By adding overrides first we give more control
     this.plugins = [...props.plugins, ...builtInPlugins];
@@ -86,17 +86,22 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     this.state = {
       editorValue: this.serializer.deserialize(props.defaultValue)
     };
+
   }
 
   componentDidMount() {
+    if (this.props.value != undefined) {
+      //setting up default value
+      this.defaultValue = this.serializer.serialize(this.props.value);
+      localStorage.setItem("saved", this.defaultValue);
+      return this.setState({ editorValue: this.serializer.deserialize(this.defaultValue) });
+    }
+
     this.scrollToAnchor();
-
     if (this.props.readOnly) return;
-
     if (typeof window !== "undefined") {
       window.addEventListener("keydown", this.handleKeyDown);
     }
-
     if (this.props.autoFocus) {
       this.focusAtEnd();
     }
@@ -208,7 +213,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     next: Function = () => {}
   ) => {
     if (this.props.readOnly) return next();
-    if (this.props.autoWrite) return next();
 
     switch (ev.key) {
       case "s":
@@ -250,7 +254,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   render = () => {
     const {
       readOnly,
-      autoWrite,
       pretitle,
       placeholder,
       onSave,
@@ -265,12 +268,13 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       className,
       style,
       dark,
-      defaultValue,
       autoFocus,
       plugins,
       ...rest
     } = this.props;
 
+    const defaultValue = (this.props.value != undefined) ? this.defaultValue : this.props.defaultValue;
+    
     const theme = this.props.theme || (dark ? darkTheme : lightTheme);
 
     return (
@@ -290,6 +294,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
             ref={this.setEditorRef}
             plugins={this.plugins}
             value={this.state.editorValue}
+            defaultValue={defaultValue}
             commands={commands}
             queries={queries}
             placeholder={placeholder}
@@ -303,7 +308,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
             onImageUploadStop={onImageUploadStop}
             onShowToast={onShowToast}
             readOnly={readOnly}
-            autoWrite={autoWrite}
             spellCheck={!readOnly}
             uploadImage={uploadImage}
             pretitle={pretitle}
