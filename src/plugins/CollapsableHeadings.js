@@ -6,7 +6,8 @@ export default function CollapsableHeadings() {
   const queries = {
     getPathForHeadingNode(editor: Editor, node: Node) {
       const slugish = headingToSlug(editor.value.document, node);
-      return `${editor.props.id || window.location.pathname}#${slugish}`;
+      return `${editor.props.id ||
+        (window ? window.location.pathname : "")}#${slugish}`;
     },
   };
 
@@ -24,10 +25,14 @@ export default function CollapsableHeadings() {
       const persistKey = editor.getPathForHeadingNode(node);
 
       if (collapsed) {
-        localStorage.removeItem(persistKey);
+        if (typeof window !== "undefined") {
+          window.localStorage.removeItem(persistKey);
+        }
         return editor.showContentBelow(node);
       } else {
-        localStorage.setItem(persistKey, "collapsed");
+        if (typeof window !== "undefined") {
+          window.localStorage.setItem(persistKey, "collapsed");
+        }
         return editor.hideContentBelow(node);
       }
     },
@@ -78,14 +83,22 @@ export default function CollapsableHeadings() {
     return next();
   }
 
+  function getCollapsed(node: Node, editor: Editor) {
+    if (typeof window === "undefined") {
+      return false;
+    }
+
+    const persistKey = editor.getPathForHeadingNode(node);
+    const persistedState = localStorage.getItem(persistKey);
+    return persistedState === "collapsed";
+  }
+
   function normalizeNode(node: Node, editor: Editor, next: Function) {
     if (node.object !== "block") return next();
 
     if (node.type.match(/heading/)) {
       const collapsed = node.data.get("collapsed");
-      const persistKey = editor.getPathForHeadingNode(node);
-      const persistedState = localStorage.getItem(persistKey);
-      const shouldBeCollapsed = persistedState === "collapsed";
+      const shouldBeCollapsed = getCollapsed(node, editor);
 
       // ensures that on load content under collapsed headings is correctly hidden
       if (shouldBeCollapsed && !collapsed) {
