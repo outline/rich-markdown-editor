@@ -1,8 +1,15 @@
 // @flow
 import * as React from "react";
-import { Value, Editor as TEditor, Schema, Node } from "slate";
-import { Editor } from "slate-react";
+import { EditorState, PluginKey, TextSelection } from "prosemirror-state";
+import { EditorView } from "prosemirror-view";
+import { Schema, DOMParser, DOMSerializer } from "prosemirror-model";
+import {
+  schema,
+  defaultMarkdownParser,
+  defaultMarkdownSerializer,
+} from "prosemirror-markdown";
 import styled, { ThemeProvider } from "styled-components";
+import setup from "./setup";
 import type { Plugin, SearchResult, Serializer } from "./types";
 import { light as lightTheme, dark as darkTheme } from "./theme";
 import defaultSchema from "./schema";
@@ -15,7 +22,7 @@ import commands from "./commands";
 import queries from "./queries";
 
 export const theme = lightTheme;
-export const schema = defaultSchema;
+// export const schema = defaultSchema;
 
 const defaultOptions = {};
 
@@ -62,7 +69,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     tooltip: "span",
   };
 
-  editor: Editor;
+  element: HTMLElement;
+  view: EditorView;
   plugins: Plugin[];
   serializer: Serializer;
   prevSchema: ?Schema = null;
@@ -97,6 +105,15 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
     if (this.props.autoFocus) {
       this.focusAtEnd();
+    }
+
+    if (this.element) {
+      this.view = new EditorView(this.element, {
+        state: EditorState.create({
+          doc: defaultMarkdownParser.parse(this.props.defaultValue),
+          plugins: setup({ schema }),
+        }),
+      });
     }
   }
 
@@ -224,13 +241,13 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   focusAtStart = () => {
-    const { editor } = this;
-    editor.moveToStartOfDocument().focus();
+    // const { editor } = this;
+    // editor.moveToStartOfDocument().focus();
   };
 
   focusAtEnd = () => {
-    const { editor } = this;
-    editor.moveToEndOfDocument().focus();
+    // const { editor } = this;
+    // editor.moveToEndOfDocument().focus();
   };
 
   getSchema = () => {
@@ -282,7 +299,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         auto
       >
         <ThemeProvider theme={theme}>
-          <StyledEditor
+          {/* <StyledEditor
             ref={this.setEditorRef}
             plugins={this.plugins}
             value={this.state.editorValue}
@@ -304,86 +321,87 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
             pretitle={pretitle}
             options={defaultOptions}
             {...rest}
-          />
+          /> */}
+          <div ref={ref => (this.element = ref)} />
         </ThemeProvider>
       </Flex>
     );
   };
 }
 
-const StyledEditor = styled(Editor)`
-  color: ${props => props.theme.text};
-  background: ${props => props.theme.background};
-  font-family: ${props => props.theme.fontFamily};
-  font-weight: ${props => props.theme.fontWeight};
-  font-size: 1em;
-  line-height: 1.7em;
-  width: 100%;
+// const StyledEditor = styled(Editor)`
+//   color: ${props => props.theme.text};
+//   background: ${props => props.theme.background};
+//   font-family: ${props => props.theme.fontFamily};
+//   font-weight: ${props => props.theme.fontWeight};
+//   font-size: 1em;
+//   line-height: 1.7em;
+//   width: 100%;
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-weight: 500;
-  }
+//   h1,
+//   h2,
+//   h3,
+//   h4,
+//   h5,
+//   h6 {
+//     font-weight: 500;
+//   }
 
-  ul,
-  ol {
-    margin: 0 0.1em;
-    padding-left: 1em;
+//   ul,
+//   ol {
+//     margin: 0 0.1em;
+//     padding-left: 1em;
 
-    ul,
-    ol {
-      margin: 0.1em;
-    }
-  }
+//     ul,
+//     ol {
+//       margin: 0.1em;
+//     }
+//   }
 
-  p {
-    position: relative;
-    margin: 0;
-  }
+//   p {
+//     position: relative;
+//     margin: 0;
+//   }
 
-  a {
-    color: ${props => props.theme.link};
-  }
+//   a {
+//     color: ${props => props.theme.link};
+//   }
 
-  a:hover {
-    text-decoration: ${props => (props.readOnly ? "underline" : "none")};
-  }
+//   a:hover {
+//     text-decoration: ${props => (props.readOnly ? "underline" : "none")};
+//   }
 
-  li p {
-    display: inline;
-    margin: 0;
-  }
+//   li p {
+//     display: inline;
+//     margin: 0;
+//   }
 
-  .todoList {
-    list-style: none;
-    padding-left: 0;
+//   .todoList {
+//     list-style: none;
+//     padding-left: 0;
 
-    .todoList {
-      padding-left: 1em;
-    }
-  }
+//     .todoList {
+//       padding-left: 1em;
+//     }
+//   }
 
-  .todo {
-    span:last-child:focus {
-      outline: none;
-    }
-  }
+//   .todo {
+//     span:last-child:focus {
+//       outline: none;
+//     }
+//   }
 
-  blockquote {
-    border-left: 3px solid ${props => props.theme.quote};
-    margin: 0;
-    padding-left: 10px;
-    font-style: italic;
-  }
+//   blockquote {
+//     border-left: 3px solid ${props => props.theme.quote};
+//     margin: 0;
+//     padding-left: 10px;
+//     font-style: italic;
+//   }
 
-  b,
-  strong {
-    font-weight: 600;
-  }
-`;
+//   b,
+//   strong {
+//     font-weight: 600;
+//   }
+// `;
 
 export default RichMarkdownEditor;
