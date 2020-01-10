@@ -1,3 +1,8 @@
 // @flow
-import MarkdownSerializer from "slate-md-serializer";
-export default new MarkdownSerializer();
+import {
+  defaultMarkdownParser,
+  defaultMarkdownSerializer,
+} from "prosemirror-markdown";
+
+export const parser = defaultMarkdownParser;
+export const serializer = defaultMarkdownSerializer;

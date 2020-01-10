@@ -50,27 +50,16 @@ export { buildMenuItems, buildKeymap, buildInputRules };
 //     menuContent:: [[MenuItem]]
 //     Can be used to override the menu content.
 export default function exampleSetup(options) {
-  let plugins = [
+  return [
     buildInputRules(options.schema),
     keymap(buildKeymap(options.schema, options.mapKeys)),
     keymap(baseKeymap),
     dropCursor(),
     gapCursor(),
+    menuBar({
+      floating: options.floatingMenu !== false,
+      content: options.menuContent || buildMenuItems(options.schema).fullMenu,
+    }),
+    history(),
   ];
-  if (options.menuBar !== false)
-    plugins.push(
-      menuBar({
-        floating: options.floatingMenu !== false,
-        content: options.menuContent || buildMenuItems(options.schema).fullMenu,
-      })
-    );
-  if (options.history !== false) plugins.push(history());
-
-  return plugins.concat(
-    new Plugin({
-      props: {
-        attributes: { class: "ProseMirror-example-setup-style" },
-      },
-    })
-  );
 }

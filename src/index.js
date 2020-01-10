@@ -1,25 +1,17 @@
 // @flow
 import * as React from "react";
-import { EditorState, PluginKey, TextSelection } from "prosemirror-state";
+import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
-import { Schema, DOMParser, DOMSerializer } from "prosemirror-model";
-import {
-  schema,
-  defaultMarkdownParser,
-  defaultMarkdownSerializer,
-} from "prosemirror-markdown";
+import { Schema } from "prosemirror-model";
 import styled, { ThemeProvider } from "styled-components";
 import setup from "./setup";
 import type { Plugin, SearchResult, Serializer } from "./types";
 import { light as lightTheme, dark as darkTheme } from "./theme";
-import defaultSchema from "./schema";
+import schema from "./schema";
 import getDataTransferFiles from "./lib/getDataTransferFiles";
 import isModKey from "./lib/isModKey";
 import Flex from "./components/Flex";
-import Markdown from "./serializer";
-import createPlugins from "./plugins";
-import commands from "./commands";
-import queries from "./queries";
+import { serializer, parser } from "./serializer";
 
 export const theme = lightTheme;
 // export const schema = defaultSchema;
@@ -55,11 +47,7 @@ export type Props = {
   style?: Object,
 };
 
-type State = {
-  editorValue: Value,
-};
-
-class RichMarkdownEditor extends React.PureComponent<Props, State> {
+class RichMarkdownEditor extends React.PureComponent<Props> {
   static defaultProps = {
     defaultValue: "",
     placeholder: "Write something nice…",
@@ -72,28 +60,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   element: HTMLElement;
   view: EditorView;
   plugins: Plugin[];
-  serializer: Serializer;
   prevSchema: ?Schema = null;
-  schema: ?Schema = null;
-
-  constructor(props: Props) {
-    super(props);
-
-    const builtInPlugins = createPlugins({
-      placeholder: props.placeholder,
-      getLinkComponent: props.getLinkComponent,
-    });
-
-    // in Slate plugins earlier in the stack can opt not to continue
-    // to later ones. By adding overrides first we give more control
-    this.plugins = [...props.plugins, ...builtInPlugins];
-
-    this.serializer = props.serializer || Markdown;
-
-    this.state = {
-      editorValue: this.serializer.deserialize(props.defaultValue),
-    };
-  }
 
   componentDidMount() {
     this.scrollToAnchor();
@@ -110,7 +77,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     if (this.element) {
       this.view = new EditorView(this.element, {
         state: EditorState.create({
-          doc: defaultMarkdownParser.parse(this.props.defaultValue),
+          doc: parser.parse(this.props.defaultValue),
           plugins: setup({ schema }),
         }),
       });
@@ -144,12 +111,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     }
   }
 
-  setEditorRef = (ref: Editor) => {
-    this.editor = ref;
-  };
-
   value = (): string => {
-    return this.serializer.serialize(this.state.editorValue);
+    return serializer.serialize(this.view.state.doc);
+    // return this.serializer.serialize(this.state.editorValue);
   };
 
   handleChange = ({ value }: { value: Value }) => {
@@ -183,7 +147,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   insertImageFile = (file: window.File) => {
-    this.editor.insertImageFile(file);
+    // this.editor.insertImageFile(file);
   };
 
   cancelEvent = (ev: SyntheticEvent<>) => {
@@ -248,17 +212,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   focusAtEnd = () => {
     // const { editor } = this;
     // editor.moveToEndOfDocument().focus();
-  };
-
-  getSchema = () => {
-    if (this.prevSchema !== this.props.schema) {
-      this.schema = {
-        ...defaultSchema,
-        ...(this.props.schema || {}),
-      };
-      this.prevSchema = this.props.schema;
-    }
-    return this.schema;
   };
 
   render = () => {
