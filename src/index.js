@@ -1,7 +1,6 @@
 // @flow
 import * as React from "react";
 import { Value, Editor as TEditor, Schema, Node } from "slate";
-import { debounce } from "lodash";
 import { Editor } from "slate-react";
 import styled, { ThemeProvider } from "styled-components";
 import type { Plugin, SearchResult, Serializer } from "./types";
@@ -68,7 +67,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   serializer: Serializer;
   prevSchema: ?Schema = null;
   schema: ?Schema = null;
-  defaultValue: String;
 
   constructor(props: Props) {
     super(props);
@@ -77,6 +75,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       placeholder: props.placeholder,
       getLinkComponent: props.getLinkComponent,
     });
+
     // in Slate plugins earlier in the stack can opt not to continue
     // to later ones. By adding overrides first we give more control
     this.plugins = [...props.plugins, ...builtInPlugins];
@@ -84,27 +83,25 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     this.serializer = props.serializer || Markdown;
 
     this.state = {
-      editorValue: this.serializer.deserialize(props.defaultValue)
+      editorValue: this.serializer.deserialize(props.defaultValue),
     };
-
   }
 
   componentDidMount() {
-    if (this.props.value != undefined) {
-      //setting up default value
-      this.defaultValue = this.serializer.serialize(this.props.value);
-      localStorage.setItem("saved", this.defaultValue);
-      return this.setState({ editorValue: this.serializer.deserialize(this.defaultValue) });
-    }
-
     this.scrollToAnchor();
+    if(this.props.value != undefined){
+      this.defaultValue = this.serializer.serialize(this.props.value);
+      return this.render();
+    }
     if (this.props.readOnly) return;
     if (typeof window !== "undefined") {
       window.addEventListener("keydown", this.handleKeyDown);
     }
+
     if (this.props.autoFocus) {
       this.focusAtEnd();
     }
+
   }
 
   componentDidUpdate(prevProps: Props) {
@@ -273,50 +270,93 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       ...rest
     } = this.props;
 
-    const defaultValue = (this.props.value != undefined) ? this.defaultValue : this.props.defaultValue;
-    
     const theme = this.props.theme || (dark ? darkTheme : lightTheme);
+    const defaultValue = this.defaultValue || this.props.defaultValue;
 
-    return (
-      <Flex
-        style={style}
-        className={className}
-        onDrop={this.handleDrop}
-        onDragOver={this.cancelEvent}
-        onDragEnter={this.cancelEvent}
-        align="flex-start"
-        justify="center"
-        column
-        auto
-      >
-        <ThemeProvider theme={theme}>
-          <StyledEditor
-            ref={this.setEditorRef}
-            plugins={this.plugins}
-            value={this.state.editorValue}
-            defaultValue={defaultValue}
-            commands={commands}
-            queries={queries}
-            placeholder={placeholder}
-            schema={this.getSchema()}
-            onKeyDown={this.handleKeyDown}
-            onChange={this.handleChange}
-            onSave={onSave}
-            onSearchLink={onSearchLink}
-            onClickLink={onClickLink}
-            onImageUploadStart={onImageUploadStart}
-            onImageUploadStop={onImageUploadStop}
-            onShowToast={onShowToast}
-            readOnly={readOnly}
-            spellCheck={!readOnly}
-            uploadImage={uploadImage}
-            pretitle={pretitle}
-            options={defaultOptions}
-            {...rest}
-          />
-        </ThemeProvider>
-      </Flex>
-    );
+    if(this.props.value != undefined) {
+      return (
+        <Flex
+          style={style}
+          className={className}
+          onDrop={this.handleDrop}
+          onDragOver={this.cancelEvent}
+          onDragEnter={this.cancelEvent}
+          align="flex-start"
+          justify="center"
+          column
+          auto
+        >
+          <ThemeProvider theme={theme}>
+            <StyledEditor
+              key={3}
+              ref={this.setEditorRef}
+              plugins={this.plugins}
+              value={this.state.editorValue}
+              commands={commands}
+              queries={queries}
+              placeholder={placeholder}
+              schema={this.getSchema()}
+              onKeyDown={this.handleKeyDown}
+              onChange={this.handleChange}
+              onSave={onSave}
+              onSearchLink={onSearchLink}
+              onClickLink={onClickLink}
+              onImageUploadStart={onImageUploadStart}
+              onImageUploadStop={onImageUploadStop}
+              onShowToast={onShowToast}
+              readOnly={readOnly}
+              spellCheck={!readOnly}
+              uploadImage={uploadImage}
+              pretitle={pretitle}
+              options={defaultOptions}
+              {...rest}
+            />
+          </ThemeProvider>
+        </Flex>
+      );
+
+    } else {
+      return (
+        <Flex
+          style={style}
+          className={className}
+          onDrop={this.handleDrop}
+          onDragOver={this.cancelEvent}
+          onDragEnter={this.cancelEvent}
+          align="flex-start"
+          justify="center"
+          column
+          auto
+        >
+          <ThemeProvider theme={theme}>
+            <StyledEditor
+              key={4}
+              ref={this.setEditorRef}
+              plugins={this.plugins}
+              value={this.state.editorValue}
+              commands={commands}
+              queries={queries}
+              placeholder={placeholder}
+              schema={this.getSchema()}
+              onKeyDown={this.handleKeyDown}
+              onChange={this.handleChange}
+              onSave={onSave}
+              onSearchLink={onSearchLink}
+              onClickLink={onClickLink}
+              onImageUploadStart={onImageUploadStart}
+              onImageUploadStop={onImageUploadStop}
+              onShowToast={onShowToast}
+              readOnly={readOnly}
+              spellCheck={!readOnly}
+              uploadImage={uploadImage}
+              pretitle={pretitle}
+              options={defaultOptions}
+              {...rest}
+            />
+          </ThemeProvider>
+        </Flex>
+      );
+    }
   };
 }
 
@@ -328,7 +368,6 @@ const StyledEditor = styled(Editor)`
   font-size: 1em;
   line-height: 1.7em;
   width: 100%;
-
   h1,
   h2,
   h3,
@@ -337,58 +376,47 @@ const StyledEditor = styled(Editor)`
   h6 {
     font-weight: 500;
   }
-
   ul,
   ol {
     margin: 0 0.1em;
     padding-left: 1em;
-
     ul,
     ol {
       margin: 0.1em;
     }
   }
-
   p {
     position: relative;
     margin: 0;
   }
-
   a {
     color: ${props => props.theme.link};
   }
-
   a:hover {
     text-decoration: ${props => (props.readOnly ? "underline" : "none")};
   }
-
   li p {
     display: inline;
     margin: 0;
   }
-
   .todoList {
     list-style: none;
     padding-left: 0;
-
     .todoList {
       padding-left: 1em;
     }
   }
-
   .todo {
     span:last-child:focus {
       outline: none;
     }
   }
-
   blockquote {
     border-left: 3px solid ${props => props.theme.quote};
     margin: 0;
     padding-left: 10px;
     font-style: italic;
   }
-
   b,
   strong {
     font-weight: 600;

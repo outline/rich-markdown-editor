@@ -15,6 +15,7 @@ const autoWriteTemplate = `Document has been restarted with a template!`;
 
 class GoogleEmbed extends React.Component<*> {
   render() {
+    console.log("google embeded render");
     const { attributes, node } = this.props;
     return <p {...attributes}>Google Embed ({node.data.get("href")})</p>;
   }
@@ -35,7 +36,12 @@ class Example extends React.Component<*, { readOnly: boolean, dark: boolean }> {
 
   handleToggleAutoWrite = () => {
     if (!this.state.readOnly) {
-      this.setState({ autoWrite: !this.state.autoWrite });
+      //saves the the value before switching editors in render.
+      localStorage.setItem("saved", autoWriteTemplate);
+      this.setState({ 
+        autoWrite: !this.state.autoWrite,
+        defaultValue: localStorage.getItem("saved") || exampleText
+      });
     }
   }
 
@@ -46,13 +52,19 @@ class Example extends React.Component<*, { readOnly: boolean, dark: boolean }> {
   };
 
   handleChange = debounce(value => {
+    /*if(this.state.autoWrite){
+      return this.setState({ 
+        autoWrite: !this.state.autoWrite,
+        defaultValue: localStorage.getItem("saved") || exampleText
+      });
+    }*/
+
     localStorage.setItem("saved", value());
   }, 250);
  
   render() {
     const { body } = document;
     if (body) body.style.backgroundColor = this.state.dark ? "#181A1B" : "#FFF";
-
     if (!this.state.autoWrite) {
       return (
         <div style={{ marginTop: "60px" }}>
@@ -126,7 +138,6 @@ class Example extends React.Component<*, { readOnly: boolean, dark: boolean }> {
             id="example"
             readOnly={this.state.readOnly}
             autoWrite={this.state.autoWrite}
-            defaultValue={this.state.defaultValue}
             value={Serializer.deserialize(autoWriteTemplate)}
             onSave={options => console.log("Save triggered", options)}
             onCancel={() => console.log("Cancel triggered")}
