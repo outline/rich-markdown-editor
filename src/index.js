@@ -89,9 +89,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
   componentDidMount() {
     this.scrollToAnchor();
-    if(this.props.value != undefined){
+    if (this.props.value !== undefined) {
       this.defaultValue = this.serializer.serialize(this.props.value);
-      return this.render();
     }
     if (this.props.readOnly) return;
     if (typeof window !== "undefined") {
@@ -101,7 +100,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     if (this.props.autoFocus) {
       this.focusAtEnd();
     }
-
   }
 
   componentDidUpdate(prevProps: Props) {
@@ -273,9 +271,10 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     const theme = this.props.theme || (dark ? darkTheme : lightTheme);
     const defaultValue = this.defaultValue || this.props.defaultValue;
 
-    if(this.props.value != undefined) {
+    if (this.props.value !== undefined) {
       return (
         <Flex
+          key={3}
           style={style}
           className={className}
           onDrop={this.handleDrop}
@@ -288,9 +287,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         >
           <ThemeProvider theme={theme}>
             <StyledEditor
-              key={3}
               ref={this.setEditorRef}
               plugins={this.plugins}
+              defaultValue={defaultValue}
               value={this.state.editorValue}
               commands={commands}
               queries={queries}
@@ -314,10 +313,10 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           </ThemeProvider>
         </Flex>
       );
-
     } else {
       return (
         <Flex
+          key={4}
           style={style}
           className={className}
           onDrop={this.handleDrop}
@@ -330,9 +329,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         >
           <ThemeProvider theme={theme}>
             <StyledEditor
-              key={4}
               ref={this.setEditorRef}
               plugins={this.plugins}
+              defaultValue={defaultValue}
               value={this.state.editorValue}
               commands={commands}
               queries={queries}
