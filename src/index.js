@@ -88,10 +88,15 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   }
 
   componentDidMount() {
+    console.log("component did mount");
     this.scrollToAnchor();
     if (this.props.value !== undefined) {
       this.defaultValue = this.serializer.serialize(this.props.value);
     }
+    console.log(this.defaultValue);
+    console.log(this.props.value);
+    console.log(this.props.defaultValue);
+
     if (this.props.readOnly) return;
     if (typeof window !== "undefined") {
       window.addEventListener("keydown", this.handleKeyDown);
@@ -247,6 +252,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   render = () => {
+    console.log("render");
     const {
       readOnly,
       pretitle,
@@ -263,18 +269,25 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       className,
       style,
       dark,
+      defaultValue,
       autoFocus,
       plugins,
       ...rest
     } = this.props;
 
-    const theme = this.props.theme || (dark ? darkTheme : lightTheme);
-    const defaultValue = this.defaultValue || this.props.defaultValue;
+    console.log(this.props.value);
+    console.log(this.props.defaultValue);
+    console.log(this.defaultValue);
+    console.log(defaultValue);
 
-    if (this.props.value !== undefined) {
+    const theme = this.props.theme || (dark ? darkTheme : lightTheme);
+
+    if (this.props.value !== undefined && this.defaultValue !== undefined) {
+      //new default value evaluated from component did mount
+      console.log("value defined");
       return (
         <Flex
-          key={3}
+          key="value-defined"
           style={style}
           className={className}
           onDrop={this.handleDrop}
@@ -289,12 +302,11 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
             <StyledEditor
               ref={this.setEditorRef}
               plugins={this.plugins}
-              defaultValue={defaultValue}
-              value={this.state.editorValue}
               commands={commands}
               queries={queries}
               placeholder={placeholder}
               schema={this.getSchema()}
+              defaultValue={this.defaultValue}
               onKeyDown={this.handleKeyDown}
               onChange={this.handleChange}
               onSave={onSave}
@@ -314,9 +326,10 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         </Flex>
       );
     } else {
+      console.log("value undefined");
       return (
         <Flex
-          key={4}
+          key="value-undefined"
           style={style}
           className={className}
           onDrop={this.handleDrop}
@@ -331,11 +344,10 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
             <StyledEditor
               ref={this.setEditorRef}
               plugins={this.plugins}
-              defaultValue={defaultValue}
-              value={this.state.editorValue}
               commands={commands}
               queries={queries}
               placeholder={placeholder}
+              value={this.state.editorValue}
               schema={this.getSchema()}
               onKeyDown={this.handleKeyDown}
               onChange={this.handleChange}

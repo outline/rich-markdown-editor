@@ -6,44 +6,33 @@ import Editor from "../../src";
 import Serializer from "../../src/serializer";
 
 const element = document.getElementById("main");
+const savedText = localStorage.getItem("saved");
+
 const exampleText = `
 # Welcome
-
 This is example content. It is persisted between reloads in localStorage.
 `;
-const autoWriteTemplate = `Document has been restarted with a template!`;
+
+const valuePropText = `Brand new text passed through value prop`;
+
+const defaultValue = savedText || exampleText;
 
 class GoogleEmbed extends React.Component<*> {
   render() {
-    console.log("google embeded render");
     const { attributes, node } = this.props;
     return <p {...attributes}>Google Embed ({node.data.get("href")})</p>;
   }
 }
 
 class Example extends React.Component<*, { readOnly: boolean, dark: boolean }> {
-  
   state = {
     readOnly: false,
-    autoWrite: false,
     dark: localStorage.getItem("dark") === "enabled",
-    defaultValue: localStorage.getItem("saved") || exampleText
   };
 
   handleToggleReadOnly = () => {
     this.setState({ readOnly: !this.state.readOnly });
   };
-
-  handleToggleAutoWrite = () => {
-    if (!this.state.readOnly) {
-      //saves the the value before switching editors in render.
-      localStorage.setItem("saved", autoWriteTemplate);
-      this.setState({ 
-        autoWrite: !this.state.autoWrite,
-        defaultValue: localStorage.getItem("saved") || exampleText
-      });
-    }
-  }
 
   handleToggleDark = () => {
     const dark = !this.state.dark;
@@ -52,128 +41,62 @@ class Example extends React.Component<*, { readOnly: boolean, dark: boolean }> {
   };
 
   handleChange = debounce(value => {
-    /*if(this.state.autoWrite){
-      return this.setState({ 
-        autoWrite: !this.state.autoWrite,
-        defaultValue: localStorage.getItem("saved") || exampleText
-      });
-    }*/
-
     localStorage.setItem("saved", value());
   }, 250);
- 
+
   render() {
     const { body } = document;
     if (body) body.style.backgroundColor = this.state.dark ? "#181A1B" : "#FFF";
-    if (!this.state.autoWrite) {
-      return (
-        <div style={{ marginTop: "60px" }}>
-          <p>
-            <button type="button" onClick={this.handleToggleReadOnly}>
-              {this.state.readOnly ? "Editable" : "Read Only"}
-            </button>
-            <button type="button" onClick={this.handleToggleAutoWrite}>
-              {this.state.autoWrite ? "Manual Write" : "Auto Write"}
-            </button>
-            <button type="button" onClick={this.handleToggleDark}>
-              {this.state.dark ? "Light Theme" : "Dark Theme"}
-            </button>
-          </p>
-          <Editor
-            key={1}
-            id="example"
-            readOnly={this.state.readOnly}
-            autoWrite={this.state.autoWrite}
-            defaultValue={this.state.defaultValue}
-            onSave={options => console.log("Save triggered", options)}
-            onCancel={() => console.log("Cancel triggered")}
-            onChange={this.handleChange}
-            onClickLink={href => console.log("Clicked link: ", href)}
-            onClickHashtag={tag => console.log("Clicked hashtag: ", tag)}
-            onShowToast={message => window.alert(message)}
-            onSearchLink={async term => {
-              console.log("Searched link: ", term);
-              return [
-                {
-                  title: term,
-                  url: "localhost",
-                },
-              ];
-            }}
-            uploadImage={file => {
-              console.log("File upload triggered: ", file);
 
-              // Delay to simulate time taken to upload
-              return new Promise(resolve => {
-                setTimeout(() => resolve("http://lorempixel.com/400/200/"), 1500);
-              });
-            }}
-            getLinkComponent={node => {
-              if (node.data.get("href").match(/google/)) {
-                return GoogleEmbed;
-              }
-            }}
-            dark={this.state.dark}
-            autoFocus
-            toc
-          />
-        </div>
-      );
-    } else {
-      return (
-        <div style={{ marginTop: "60px" }}>
-          <p>
-            <button type="button" onClick={this.handleToggleReadOnly}>
-              {this.state.readOnly ? "Editable" : "Read Only"}
-            </button>
-            <button type="button" onClick={this.handleToggleAutoWrite}>
-              {this.state.autoWrite ? "Manual Write" : "Auto Write"}
-            </button>
-            <button type="button" onClick={this.handleToggleDark}>
-              {this.state.dark ? "Light Theme" : "Dark Theme"}
-            </button>
-          </p>
-          <Editor
-            key={2}
-            id="example"
-            readOnly={this.state.readOnly}
-            autoWrite={this.state.autoWrite}
-            value={Serializer.deserialize(autoWriteTemplate)}
-            onSave={options => console.log("Save triggered", options)}
-            onCancel={() => console.log("Cancel triggered")}
-            onChange={this.handleChange}
-            onClickLink={href => console.log("Clicked link: ", href)}
-            onClickHashtag={tag => console.log("Clicked hashtag: ", tag)}
-            onShowToast={message => window.alert(message)}
-            onSearchLink={async term => {
-              console.log("Searched link: ", term);
-              return [
-                {
-                  title: term,
-                  url: "localhost",
-                },
-              ];
-            }}
-            uploadImage={file => {
-              console.log("File upload triggered: ", file);
+    return (
+      <div style={{ marginTop: "60px" }}>
+        <p>
+          <button type="button" onClick={this.handleToggleReadOnly}>
+            {this.state.readOnly ? "Editable" : "Read Only"}
+          </button>
+          <button type="button" onClick={this.handleToggleDark}>
+            {this.state.dark ? "Light Theme" : "Dark Theme"}
+          </button>
+        </p>
+        <Editor
+          id="example"
+          readOnly={this.state.readOnly}
+          value={Serializer.deserialize(valuePropText)}
+          defaultValue={defaultValue}
+          onSave={options => console.log("Save triggered", options)}
+          onCancel={() => console.log("Cancel triggered")}
+          onChange={this.handleChange}
+          onClickLink={href => console.log("Clicked link: ", href)}
+          onClickHashtag={tag => console.log("Clicked hashtag: ", tag)}
+          onShowToast={message => window.alert(message)}
+          onSearchLink={async term => {
+            console.log("Searched link: ", term);
+            return [
+              {
+                title: term,
+                url: "localhost",
+              },
+            ];
+          }}
+          uploadImage={file => {
+            console.log("File upload triggered: ", file);
 
-              // Delay to simulate time taken to upload
-              return new Promise(resolve => {
-                setTimeout(() => resolve("http://lorempixel.com/400/200/"), 1500);
-              });
-            }}
-            getLinkComponent={node => {
-              if (node.data.get("href").match(/google/)) {
-                return GoogleEmbed;
-              }
-            }}
-            dark={this.state.dark}
-            autoFocus
-            toc
-          />
-        </div>
-      );
-    }
+            // Delay to simulate time taken to upload
+            return new Promise(resolve => {
+              setTimeout(() => resolve("http://lorempixel.com/400/200/"), 1500);
+            });
+          }}
+          getLinkComponent={node => {
+            if (node.data.get("href").match(/google/)) {
+              return GoogleEmbed;
+            }
+          }}
+          dark={this.state.dark}
+          autoFocus
+          toc
+        />
+      </div>
+    );
   }
 }
 
