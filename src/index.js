@@ -10,7 +10,7 @@ import { history } from "prosemirror-history";
 import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
 import type { Plugin, SearchResult, Serializer } from "./types";
 import { light as lightTheme, dark as darkTheme } from "./theme";
-import Flex from "./slate-components/Flex";
+import Flex from "./components/Flex";
 import ExtensionManager from "./lib/ExtensionManager";
 import Blockquote from "./nodes/Blockquote";
 import Doc from "./nodes/Doc";
