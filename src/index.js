@@ -16,6 +16,7 @@ import ExtensionManager from "./lib/ExtensionManager";
 // plugins
 import History from "./plugins/History";
 import Change from "./plugins/Change";
+import Placeholder from "./plugins/Placeholder";
 
 // nodes
 import Node from "./nodes/Node";
@@ -134,6 +135,7 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
         new Bold(),
         new Code(),
         new Italic(),
+        new Placeholder(),
         new History(),
         new Change({ onChange: this.handleChange }),
       ],
@@ -367,9 +369,11 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
         column
         auto
       >
-        <ProsemirrorStyles />
         <ThemeProvider theme={theme}>
-          <StyledEditor ref={ref => (this.element = ref)} />
+          <React.Fragment>
+            <ProsemirrorStyles />
+            <StyledEditor ref={ref => (this.element = ref)} />
+          </React.Fragment>
         </ThemeProvider>
       </Flex>
     );
@@ -386,6 +390,16 @@ const ProsemirrorStyles = createGlobalStyle`
     -webkit-font-variant-ligatures: none;
     font-variant-ligatures: none;
     font-feature-settings: "liga" 0; /* the above doesn't seem to work in Edge */
+  }
+
+  .ProseMirror .placeholder {
+    &:before {
+      display: block;
+      content: attr(data-empty-text);
+      pointer-events: none;
+      height: 0;
+      color: ${props => props.theme.placeholder};
+    }
   }
 
   .ProseMirror pre {
