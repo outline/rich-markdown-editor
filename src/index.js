@@ -3,20 +3,32 @@ import * as React from "react";
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { Schema } from "prosemirror-model";
-import styled, { ThemeProvider } from "styled-components";
-import setup from "./setup";
+import { inputRules } from "prosemirror-inputrules";
+import { keymap } from "prosemirror-keymap";
+import { baseKeymap } from "prosemirror-commands";
+import { history } from "prosemirror-history";
+import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
 import type { Plugin, SearchResult, Serializer } from "./types";
 import { light as lightTheme, dark as darkTheme } from "./theme";
-import schema from "./schema";
-import getDataTransferFiles from "./lib/getDataTransferFiles";
-import isModKey from "./lib/isModKey";
-import Flex from "./components/Flex";
-import { serializer, parser } from "./serializer";
+import Flex from "./slate-components/Flex";
+import ExtensionManager from "./lib/ExtensionManager";
+import Blockquote from "./nodes/Blockquote";
+import Doc from "./nodes/Doc";
+import HorizontalRule from "./nodes/HorizontalRule";
+import Text from "./nodes/Text";
+import Paragraph from "./nodes/Paragraph";
+import Heading from "./nodes/Heading";
+
+import Bold from "./marks/Bold";
+import Code from "./marks/Code";
+import Italic from "./marks/Italic";
+// import schema from "./schema";
+// import setupPlugins from "./plugins";
+// import parser from "./parser";
+// import serializer from "./serializer";
 
 export const theme = lightTheme;
 // export const schema = defaultSchema;
-
-const defaultOptions = {};
 
 export type Props = {
   id?: string,
@@ -63,6 +75,7 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
   prevSchema: ?Schema = null;
 
   componentDidMount() {
+    this.init();
     this.scrollToAnchor();
 
     if (this.props.readOnly) return;
@@ -72,15 +85,6 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
 
     if (this.props.autoFocus) {
       this.focusAtEnd();
-    }
-
-    if (this.element) {
-      this.view = new EditorView(this.element, {
-        state: EditorState.create({
-          doc: parser.parse(this.props.defaultValue),
-          plugins: setup({ schema }),
-        }),
-      });
     }
   }
 
@@ -94,6 +98,119 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
     if (typeof window !== "undefined") {
       window.removeEventListener("keydown", this.handleKeyDown);
     }
+  }
+
+  init() {
+    this.extensions = this.createExtensions();
+    this.nodes = this.createNodes();
+    this.marks = this.createMarks();
+    this.schema = this.createSchema();
+    this.plugins = this.createPlugins();
+    this.keymaps = this.createKeymaps();
+    this.serializer = this.createSerializer();
+    this.parser = this.createParser();
+    this.inputRules = this.createInputRules();
+    this.pasteRules = this.createPasteRules();
+    this.view = this.createView();
+    this.commands = this.createCommands();
+  }
+
+  createExtensions() {
+    return new ExtensionManager(
+      [
+        new Doc(),
+        new Text(),
+        new Paragraph(),
+        new Heading(),
+        new Blockquote(),
+        new HorizontalRule(),
+        new Bold(),
+        new Code(),
+        new Italic(),
+      ],
+      this
+    );
+  }
+
+  createPlugins() {
+    return this.extensions.plugins;
+  }
+
+  createKeymaps() {
+    return this.extensions.keymaps({
+      schema: this.schema,
+    });
+  }
+
+  createInputRules() {
+    return this.extensions.inputRules({
+      schema: this.schema,
+    });
+  }
+
+  createPasteRules() {
+    return this.extensions.pasteRules({
+      schema: this.schema,
+    });
+  }
+
+  createCommands() {
+    return this.extensions.commands({
+      schema: this.schema,
+      view: this.view,
+    });
+  }
+
+  createNodes() {
+    return this.extensions.nodes;
+  }
+
+  createMarks() {
+    return this.extensions.marks;
+  }
+
+  createSchema() {
+    return new Schema({
+      nodes: this.nodes,
+      marks: this.marks,
+    });
+  }
+
+  createSerializer() {
+    return this.extensions.serializer;
+  }
+
+  createParser() {
+    return this.extensions.parser({
+      schema: this.schema,
+    });
+  }
+
+  createState() {
+    return EditorState.create({
+      schema: this.schema,
+      doc: this.createDocument(this.props.defaultValue),
+      plugins: [
+        ...this.plugins,
+        inputRules({
+          rules: this.inputRules,
+        }),
+        keymap(baseKeymap),
+        history(),
+        ...this.pasteRules,
+        ...this.keymaps,
+      ],
+    });
+  }
+
+  createDocument(content: string) {
+    return this.parser.parse(content);
+  }
+
+  createView() {
+    return new EditorView(this.element, {
+      state: this.createState(),
+    });
   }
 
   scrollToAnchor() {
@@ -112,38 +229,31 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
   }
 
   value = (): string => {
-    return serializer.serialize(this.view.state.doc);
-    // return this.serializer.serialize(this.state.editorValue);
+    return this.serializer.serialize(this.view.state.doc);
   };
 
-  handleChange = ({ value }: { value: Value }) => {
-    this.setState({ editorValue: value }, state => {
-      if (this.props.onChange && !this.props.readOnly) {
-        this.props.onChange(this.value);
-      }
-    });
+  handleChange = () => {
+    if (this.props.onChange && !this.props.readOnly) {
+      this.props.onChange(this.value);
+    }
   };
 
   handleDrop = async (ev: SyntheticDragEvent<>) => {
-    if (this.props.readOnly) return;
-
-    // check an image upload callback is defined
-    if (!this.editor.props.uploadImage) return;
-
-    // check if this event was already handled by the Editor
-    if (ev.isDefaultPrevented()) return;
-
-    // otherwise we'll handle this
-    ev.preventDefault();
-    ev.stopPropagation();
-
-    const files = getDataTransferFiles(ev);
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      if (file.type.startsWith("image/")) {
-        await this.insertImageFile(file);
-      }
-    }
+    // if (this.props.readOnly) return;
+    // // check an image upload callback is defined
+    // if (!this.editor.props.uploadImage) return;
+    // // check if this event was already handled by the Editor
+    // if (ev.isDefaultPrevented()) return;
+    // // otherwise we'll handle this
+    // ev.preventDefault();
+    // ev.stopPropagation();
+    // const files = getDataTransferFiles(ev);
+    // for (let i = 0; i < files.length; i++) {
+    //   const file = files[i];
+    //   if (file.type.startsWith("image/")) {
+    //     await this.insertImageFile(file);
+    //   }
+    // }
   };
 
   insertImageFile = (file: window.File) => {
@@ -186,22 +296,20 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
     editor: TEditor,
     next: Function = () => {}
   ) => {
-    if (this.props.readOnly) return next();
-
-    switch (ev.key) {
-      case "s":
-        if (isModKey(ev)) return this.onSave(ev);
-        break;
-      case "Enter":
-        if (isModKey(ev)) return this.onSaveAndExit(ev);
-        break;
-      case "Escape":
-        if (isModKey(ev)) return this.onCancel(ev);
-        break;
-      default:
-    }
-
-    return next();
+    // if (this.props.readOnly) return next();
+    // switch (ev.key) {
+    //   case "s":
+    //     if (isModKey(ev)) return this.onSave(ev);
+    //     break;
+    //   case "Enter":
+    //     if (isModKey(ev)) return this.onSaveAndExit(ev);
+    //     break;
+    //   case "Escape":
+    //     if (isModKey(ev)) return this.onCancel(ev);
+    //     break;
+    //   default:
+    // }
+    // return next();
   };
 
   focusAtStart = () => {
@@ -251,45 +359,68 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
         column
         auto
       >
+        <ProsemirrorStyles />
         <ThemeProvider theme={theme}>
-          {/* <StyledEditor
-            ref={this.setEditorRef}
-            plugins={this.plugins}
-            value={this.state.editorValue}
-            commands={commands}
-            queries={queries}
-            placeholder={placeholder}
-            schema={this.getSchema()}
-            onKeyDown={this.handleKeyDown}
-            onChange={this.handleChange}
-            onSave={onSave}
-            onSearchLink={onSearchLink}
-            onClickLink={onClickLink}
-            onImageUploadStart={onImageUploadStart}
-            onImageUploadStop={onImageUploadStop}
-            onShowToast={onShowToast}
-            readOnly={readOnly}
-            spellCheck={!readOnly}
-            uploadImage={uploadImage}
-            pretitle={pretitle}
-            options={defaultOptions}
-            {...rest}
-          /> */}
-          <div ref={ref => (this.element = ref)} />
+          <StyledEditor ref={ref => (this.element = ref)} />
         </ThemeProvider>
       </Flex>
     );
   };
 }
 
-// const StyledEditor = styled(Editor)`
-//   color: ${props => props.theme.text};
-//   background: ${props => props.theme.background};
-//   font-family: ${props => props.theme.fontFamily};
-//   font-weight: ${props => props.theme.fontWeight};
-//   font-size: 1em;
-//   line-height: 1.7em;
-//   width: 100%;
+const ProsemirrorStyles = createGlobalStyle`
+  .ProseMirror {
+    position: relative;
+    outline: none;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    white-space: break-spaces;
+    -webkit-font-variant-ligatures: none;
+    font-variant-ligatures: none;
+    font-feature-settings: "liga" 0; /* the above doesn't seem to work in Edge */
+  }
+
+  .ProseMirror pre {
+    white-space: pre-wrap;
+  }
+
+  .ProseMirror li {
+    position: relative;
+  }
+
+  .ProseMirror-hideselection *::selection { background: transparent; }
+  .ProseMirror-hideselection *::-moz-selection { background: transparent; }
+  .ProseMirror-hideselection { caret-color: transparent; }
+
+  .ProseMirror-selectednode {
+    outline: 2px solid #8cf;
+  }
+
+  /* Make sure li selections wrap around markers */
+
+  li.ProseMirror-selectednode {
+    outline: none;
+  }
+
+  li.ProseMirror-selectednode:after {
+    content: "";
+    position: absolute;
+    left: -32px;
+    right: -2px; top: -2px; bottom: -2px;
+    border: 2px solid #8cf;
+    pointer-events: none;
+  }
+`;
+
+const StyledEditor = styled("div")`
+  color: ${props => props.theme.text};
+  background: ${props => props.theme.background};
+  font-family: ${props => props.theme.fontFamily};
+  font-weight: ${props => props.theme.fontWeight};
+  font-size: 1em;
+  line-height: 1.7em;
+  width: 100%;
+`;
 
 //   h1,
 //   h2,

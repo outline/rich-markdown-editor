@@ -23,7 +23,7 @@ export function orderedListRule(nodeType) {
     /^(\d+)\.\s$/,
     nodeType,
     match => ({ order: +match[1] }),
-    (match, node) => node.childCount + node.attrs.order == +match[1]
+    (match, node) => node.childCount + node.attrs.order === +match[1]
   );
 }
 
@@ -47,7 +47,7 @@ export function codeBlockRule(nodeType) {
 // turns up to that number of `#` characters followed by a space at
 // the start of a textblock into a heading whose level corresponds to
 // the number of `#` signs.
-export function headingRule(nodeType, maxLevel) {
+export function headingRule(nodeType, maxLevel: number) {
   return textblockTypeInputRule(
     new RegExp("^(#{1," + maxLevel + "})\\s$"),
     nodeType,
