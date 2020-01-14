@@ -1,4 +1,5 @@
 // @flow
+import { setBlockType } from "prosemirror-commands";
 import Node from "./Node";
 
 export default class Paragraph extends Node {
@@ -14,6 +15,12 @@ export default class Paragraph extends Node {
       toDOM() {
         return ["p", 0];
       },
+    };
+  }
+
+  keys({ type }) {
+    return {
+      "Shift-Ctrl-0": setBlockType(type),
     };
   }
 

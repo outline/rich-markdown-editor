@@ -42,7 +42,7 @@ export default class Code extends Node {
     };
   }
 
-  toMarkdown() {
+  get toMarkdown() {
     return {
       open(_state, _mark, parent, index) {
         return backticksFor(parent.child(index), -1);

@@ -28,7 +28,7 @@ export default class Bold extends Node {
     };
   }
 
-  toMarkdown() {
+  get toMarkdown() {
     return {
       open: "**",
       close: "**",

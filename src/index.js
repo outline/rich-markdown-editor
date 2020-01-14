@@ -1,17 +1,24 @@
 // @flow
 import * as React from "react";
-import { EditorState } from "prosemirror-state";
+import { MarkdownParser, MarkdownSerializer } from "prosemirror-markdown";
+import { EditorState, Plugin } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { Schema } from "prosemirror-model";
 import { inputRules } from "prosemirror-inputrules";
 import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
-import { history } from "prosemirror-history";
 import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
-import type { Plugin, SearchResult, Serializer } from "./types";
+import type { SearchResult } from "./types";
 import { light as lightTheme, dark as darkTheme } from "./theme";
 import Flex from "./components/Flex";
 import ExtensionManager from "./lib/ExtensionManager";
+
+// plugins
+import History from "./plugins/History";
+import Change from "./plugins/Change";
+
+// nodes
+import Node from "./nodes/Node";
 import Blockquote from "./nodes/Blockquote";
 import Doc from "./nodes/Doc";
 import HorizontalRule from "./nodes/HorizontalRule";
@@ -19,16 +26,13 @@ import Text from "./nodes/Text";
 import Paragraph from "./nodes/Paragraph";
 import Heading from "./nodes/Heading";
 
+// marks
+import Mark from "./marks/Mark";
 import Bold from "./marks/Bold";
 import Code from "./marks/Code";
 import Italic from "./marks/Italic";
-// import schema from "./schema";
-// import setupPlugins from "./plugins";
-// import parser from "./parser";
-// import serializer from "./serializer";
 
 export const theme = lightTheme;
-// export const schema = defaultSchema;
 
 export type Props = {
   id?: string,
@@ -41,8 +45,6 @@ export type Props = {
   headingsOffset?: number,
   toc?: boolean,
   dark?: boolean,
-  schema?: Schema,
-  serializer?: Serializer,
   theme?: Object,
   uploadImage?: (file: File) => Promise<string>,
   onSave?: ({ done?: boolean }) => void,
@@ -69,10 +71,15 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
     tooltip: "span",
   };
 
+  extensions: ExtensionManager;
   element: HTMLElement;
   view: EditorView;
+  schema: Schema;
+  serializer: MarkdownSerializer;
+  parser: MarkdownParser;
   plugins: Plugin[];
-  prevSchema: ?Schema = null;
+  nodes: { string: Node };
+  marks: { string: Mark };
 
   componentDidMount() {
     this.init();
@@ -127,6 +134,8 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
         new Bold(),
         new Code(),
         new Italic(),
+        new History(),
+        new Change({ onChange: this.handleChange }),
       ],
       this
     );
@@ -196,7 +205,6 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
           rules: this.inputRules,
         }),
         keymap(baseKeymap),
-        history(),
         ...this.pasteRules,
         ...this.keymaps,
       ],

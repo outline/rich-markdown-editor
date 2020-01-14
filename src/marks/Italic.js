@@ -28,7 +28,7 @@ export default class Italic extends Node {
     };
   }
 
-  toMarkdown() {
+  get toMarkdown() {
     return {
       open: "*",
       close: "*",
