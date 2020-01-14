@@ -13,11 +13,6 @@ import { light as lightTheme, dark as darkTheme } from "./theme";
 import Flex from "./components/Flex";
 import ExtensionManager from "./lib/ExtensionManager";
 
-// plugins
-import History from "./plugins/History";
-import Change from "./plugins/Change";
-import Placeholder from "./plugins/Placeholder";
-
 // nodes
 import Node from "./nodes/Node";
 import Blockquote from "./nodes/Blockquote";
@@ -32,6 +27,12 @@ import Mark from "./marks/Mark";
 import Bold from "./marks/Bold";
 import Code from "./marks/Code";
 import Italic from "./marks/Italic";
+
+// plugins
+import History from "./plugins/History";
+import Change from "./plugins/Change";
+import Placeholder from "./plugins/Placeholder";
+import SmartText from "./plugins/SmartText";
 
 export const theme = lightTheme;
 
@@ -124,23 +125,21 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
   }
 
   createExtensions() {
-    return new ExtensionManager(
-      [
-        new Doc(),
-        new Text(),
-        new Paragraph(),
-        new Heading(),
-        new Blockquote(),
-        new HorizontalRule(),
-        new Bold(),
-        new Code(),
-        new Italic(),
-        new Placeholder(),
-        new History(),
-        new Change({ onChange: this.handleChange }),
-      ],
-      this
-    );
+    return new ExtensionManager([
+      new Doc(),
+      new Text(),
+      new Paragraph(),
+      new Heading(),
+      new Blockquote(),
+      new HorizontalRule(),
+      new Bold(),
+      new Code(),
+      new Italic(),
+      new Placeholder(),
+      new History(),
+      new SmartText(),
+      new Change({ onChange: this.handleChange }),
+    ]);
   }
 
   createPlugins() {

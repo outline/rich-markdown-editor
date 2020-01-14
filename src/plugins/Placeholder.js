@@ -27,13 +27,6 @@ export default class Placeholder extends Extension {
               doc.childCount <= 2 &&
               doc.content.size <= 4;
 
-            console.log(
-              doc.textContent,
-              doc.childCount,
-              doc.content.size,
-              completelyEmpty
-            );
-
             doc.descendants((node, pos) => {
               if (!completelyEmpty) {
                 return;
