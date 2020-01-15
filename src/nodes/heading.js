@@ -35,6 +35,9 @@ export default class Heading extends Node {
     };
   }
 
+  // heading id rule example
+  // https://github.com/pubpub/pubpub-editor/blob/master/src/plugins/headerIds.js
+
   toMarkdown(state: MarkdownSerializerState, node: TNode) {
     state.write(state.repeat("#", node.attrs.level) + " ");
     state.renderInline(node);

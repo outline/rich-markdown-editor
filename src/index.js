@@ -27,6 +27,7 @@ import Mark from "./marks/Mark";
 import Bold from "./marks/Bold";
 import Code from "./marks/Code";
 import Italic from "./marks/Italic";
+import Link from "./marks/Link";
 
 // plugins
 import History from "./plugins/History";
@@ -82,8 +83,10 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
   plugins: Plugin[];
   keymaps: Plugin[];
   inputRules: InputRule[];
+  pasteRules: InputRule[];
   nodes: { string: Node };
   marks: { string: Mark };
+  commands: Object;
 
   componentDidMount() {
     this.init();
@@ -142,6 +145,7 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
       new Bold(),
       new Code(),
       new Italic(),
+      new Link(),
       new Placeholder(),
       new History(),
       new SmartText(),
