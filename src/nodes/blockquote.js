@@ -1,6 +1,5 @@
 // @flow
 import { wrappingInputRule } from "prosemirror-inputrules";
-import { toggleWrap } from "prosemirror-commands";
 import Node from "./Node";
 
 export default class Blockquote extends Node {

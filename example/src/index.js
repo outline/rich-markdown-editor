@@ -13,12 +13,12 @@ This is example content. It is persisted between reloads in localStorage.
 `;
 const defaultValue = savedText || exampleText;
 
-class GoogleEmbed extends React.Component<*> {
-  render() {
-    const { attributes, node } = this.props;
-    return <p {...attributes}>Google Embed ({node.data.get("href")})</p>;
-  }
-}
+// class GoogleEmbed extends React.Component<*> {
+//   render() {
+//     const { attributes, node } = this.props;
+//     return <p {...attributes}>Google Embed ({node.data.get("href")})</p>;
+//   }
+// }
 
 class Example extends React.Component<*, { readOnly: boolean, dark: boolean }> {
   state = {
@@ -82,9 +82,9 @@ class Example extends React.Component<*, { readOnly: boolean, dark: boolean }> {
             });
           }}
           getLinkComponent={node => {
-            if (node.data.get("href").match(/google/)) {
-              return GoogleEmbed;
-            }
+            // if (node.data.get("href").match(/google/)) {
+            //   return GoogleEmbed;
+            // }
           }}
           dark={this.state.dark}
           autoFocus

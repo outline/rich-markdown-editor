@@ -22,11 +22,9 @@ export default class Node extends Extension {
 
   parseDOM() {}
 
-  toMarkdown(state, node) {
-    return "";
-  }
+  toMarkdown() {}
 
-  parseMarkdown() {}
+  parseMarkdown(): Object {}
 
   command() {
     return () => {};

@@ -1,6 +1,8 @@
 // @flow
+import { Schema, Node as TNode } from "prosemirror-model";
 import { textblockTypeInputRule } from "prosemirror-inputrules";
 import { setBlockType, toggleBlockType } from "prosemirror-commands";
+import { MarkdownSerializerState } from "prosemirror-markdown";
 import Node from "./Node";
 
 export default class Heading extends Node {
@@ -29,11 +31,11 @@ export default class Heading extends Node {
         tag: `h${level}`,
         attrs: { level },
       })),
-      toDOM: node => [`h${node.attrs.level}`, 0],
+      toDOM: (node: TNode) => [`h${node.attrs.level}`, 0],
     };
   }
 
-  toMarkdown(state, node) {
+  toMarkdown(state: MarkdownSerializerState, node: TNode) {
     state.write(state.repeat("#", node.attrs.level) + " ");
     state.renderInline(node);
     state.closeBlock(node);
@@ -42,15 +44,16 @@ export default class Heading extends Node {
   parseMarkdown() {
     return {
       block: "heading",
-      getAttrs: tok => ({ level: +tok.tag.slice(1) }),
+      getAttrs: (token: Object) => ({ level: +token.tag.slice(1) }),
     };
   }
 
-  commands({ type, schema }) {
-    return attrs => toggleBlockType(type, schema.nodes.paragraph, attrs);
+  commands({ type, schema }: { type: TNode, schema: Schema }) {
+    return (attrs: Object) =>
+      toggleBlockType(type, schema.nodes.paragraph, attrs);
   }
 
-  keys({ type }) {
+  keys({ type }: { type: TNode }) {
     return this.options.levels.reduce(
       (items, level) => ({
         ...items,
@@ -62,7 +65,7 @@ export default class Heading extends Node {
     );
   }
 
-  inputRules({ type }) {
+  inputRules({ type }: { type: TNode }) {
     return this.options.levels.map(level =>
       textblockTypeInputRule(new RegExp(`^(#{1,${level}})\\s$`), type, () => ({
         level,

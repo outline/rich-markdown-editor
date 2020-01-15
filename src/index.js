@@ -4,7 +4,7 @@ import { MarkdownParser, MarkdownSerializer } from "prosemirror-markdown";
 import { EditorState, Plugin } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { Schema } from "prosemirror-model";
-import { inputRules } from "prosemirror-inputrules";
+import { inputRules, InputRule } from "prosemirror-inputrules";
 import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
 import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
@@ -80,6 +80,8 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
   serializer: MarkdownSerializer;
   parser: MarkdownParser;
   plugins: Plugin[];
+  keymaps: Plugin[];
+  inputRules: InputRule[];
   nodes: { string: Node };
   marks: { string: Mark };
 
@@ -98,6 +100,11 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
   }
 
   componentDidUpdate(prevProps: Props) {
+    if (prevProps.readOnly !== this.props.readOnly) {
+      this.view.setProps({
+        editable: () => !this.props.readOnly,
+      });
+    }
     if (prevProps.readOnly && !this.props.readOnly && this.props.autoFocus) {
       this.focusAtEnd();
     }
@@ -219,6 +226,7 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
   createView() {
     return new EditorView(this.element, {
       state: this.createState(),
+      editable: () => !this.props.readOnly,
     });
   }
 
