@@ -8,13 +8,11 @@ export default class History extends Extension {
   }
 
   keys() {
-    const keymap = {
+    return {
       "Mod-z": undo,
       "Mod-y": redo,
       "Shift-Mod-z": redo,
     };
-
-    return keymap;
   }
 
   get plugins() {

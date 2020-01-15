@@ -18,10 +18,6 @@ export default class Node extends Extension {
     return null;
   }
 
-  toDOM() {}
-
-  parseDOM() {}
-
   toMarkdown() {}
 
   parseMarkdown(): Object {}

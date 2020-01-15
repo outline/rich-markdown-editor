@@ -1,5 +1,7 @@
 // @flow
 import * as React from "react";
+import { dropCursor } from "prosemirror-dropcursor";
+import { gapCursor } from "prosemirror-gapcursor";
 import { MarkdownParser, MarkdownSerializer } from "prosemirror-markdown";
 import { EditorState, Plugin } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
@@ -11,6 +13,7 @@ import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
 import type { SearchResult } from "./types";
 import { light as lightTheme, dark as darkTheme } from "./theme";
 import Flex from "./components/Flex";
+import Extension from "./lib/Extension";
 import ExtensionManager from "./lib/ExtensionManager";
 
 // nodes
@@ -20,6 +23,7 @@ import Text from "./nodes/Text";
 import Blockquote from "./nodes/Blockquote";
 import BulletList from "./nodes/BulletList";
 import Heading from "./nodes/Heading";
+import HardBreak from "./nodes/HardBreak";
 import HorizontalRule from "./nodes/HorizontalRule";
 import ListItem from "./nodes/ListItem";
 import Paragraph from "./nodes/Paragraph";
@@ -32,8 +36,9 @@ import Italic from "./marks/Italic";
 import Link from "./marks/Link";
 
 // plugins
-import History from "./plugins/History";
 import Change from "./plugins/Change";
+import History from "./plugins/History";
+import Keys from "./plugins/Keys";
 import Placeholder from "./plugins/Placeholder";
 import SmartText from "./plugins/SmartText";
 
@@ -44,11 +49,10 @@ export type Props = {
   defaultValue: string,
   placeholder: string,
   pretitle?: string,
-  plugins: Plugin[],
+  extensions: Extension[],
   autoFocus?: boolean,
   readOnly?: boolean,
   headingsOffset?: number,
-  toc?: boolean,
   dark?: boolean,
   theme?: Object,
   uploadImage?: (file: File) => Promise<string>,
@@ -72,12 +76,29 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
     placeholder: "Write something nice…",
     onImageUploadStart: () => {},
     onImageUploadStop: () => {},
-    plugins: [],
+    extensions: [
+      new Doc(),
+      new Text(),
+      new Paragraph(),
+      new Blockquote(),
+      new BulletList(),
+      new HardBreak(),
+      new Heading(),
+      new HorizontalRule(),
+      new ListItem(),
+      new Bold(),
+      new Code(),
+      new Italic(),
+      new Link(),
+      new Placeholder(),
+      new History(),
+      new SmartText(),
+    ],
     tooltip: "span",
   };
 
   extensions: ExtensionManager;
-  element: HTMLElement;
+  element: ?HTMLElement;
   view: EditorView;
   schema: Schema;
   serializer: MarkdownSerializer;
@@ -95,12 +116,12 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
     this.scrollToAnchor();
 
     if (this.props.readOnly) return;
-    if (typeof window !== "undefined") {
-      window.addEventListener("keydown", this.handleKeyDown);
-    }
+    // if (typeof window !== "undefined") {
+    //   window.addEventListener("keydown", this.handleKeyDown);
+    // }
 
     if (this.props.autoFocus) {
-      this.focusAtEnd();
+      this.view.focus();
     }
   }
 
@@ -115,11 +136,11 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
     }
   }
 
-  componentWillUnmount() {
-    if (typeof window !== "undefined") {
-      window.removeEventListener("keydown", this.handleKeyDown);
-    }
-  }
+  // componentWillUnmount() {
+  //   if (typeof window !== "undefined") {
+  //     window.removeEventListener("keydown", this.handleKeyDown);
+  //   }
+  // }
 
   init() {
     this.extensions = this.createExtensions();
@@ -138,22 +159,9 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
 
   createExtensions() {
     return new ExtensionManager([
-      new Doc(),
-      new Text(),
-      new Paragraph(),
-      new Blockquote(),
-      new BulletList(),
-      new Heading(),
-      new HorizontalRule(),
-      new ListItem(),
-      new Bold(),
-      new Code(),
-      new Italic(),
-      new Link(),
-      new Placeholder(),
-      new History(),
-      new SmartText(),
+      ...this.props.extensions,
       new Change({ onChange: this.handleChange }),
+      new Keys({ onSave: this.handleSave }),
     ]);
   }
 
@@ -217,6 +225,8 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
       doc: this.createDocument(this.props.defaultValue),
       plugins: [
         ...this.plugins,
+        dropCursor(),
+        gapCursor(),
         inputRules({
           rules: this.inputRules,
         }),
@@ -289,53 +299,54 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
     ev.preventDefault();
   };
 
-  onSave(ev: SyntheticKeyboardEvent<>) {
+  handleSave = (ev: SyntheticKeyboardEvent<>) => {
+    console;
     const { onSave } = this.props;
     if (onSave) {
       ev.preventDefault();
       ev.stopPropagation();
       onSave({ done: false });
     }
-  }
+  };
 
-  onSaveAndExit(ev: SyntheticKeyboardEvent<>) {
+  handleSaveAndExit = (ev: SyntheticKeyboardEvent<>) => {
     const { onSave } = this.props;
     if (onSave) {
       ev.preventDefault();
       ev.stopPropagation();
       onSave({ done: true });
     }
-  }
+  };
 
-  onCancel(ev: SyntheticKeyboardEvent<>) {
+  handleCancel = (ev: SyntheticKeyboardEvent<>) => {
     const { onCancel } = this.props;
     if (onCancel) {
       ev.preventDefault();
       ev.stopPropagation();
       onCancel();
     }
-  }
-
-  handleKeyDown = (
-    ev: SyntheticKeyboardEvent<>,
-    editor: TEditor,
-    next: Function = () => {}
-  ) => {
-    // if (this.props.readOnly) return next();
-    // switch (ev.key) {
-    //   case "s":
-    //     if (isModKey(ev)) return this.onSave(ev);
-    //     break;
-    //   case "Enter":
-    //     if (isModKey(ev)) return this.onSaveAndExit(ev);
-    //     break;
-    //   case "Escape":
-    //     if (isModKey(ev)) return this.onCancel(ev);
-    //     break;
-    //   default:
-    // }
-    // return next();
   };
+
+  // handleKeyDown = (
+  //   ev: SyntheticKeyboardEvent<>,
+  //   editor: TEditor,
+  //   next: Function = () => {}
+  // ) => {
+  //   // if (this.props.readOnly) return next();
+  //   // switch (ev.key) {
+  //   //   case "s":
+  //   //     if (isModKey(ev)) return this.onSave(ev);
+  //   //     break;
+  //   //   case "Enter":
+  //   //     if (isModKey(ev)) return this.onSaveAndExit(ev);
+  //   //     break;
+  //   //   case "Escape":
+  //   //     if (isModKey(ev)) return this.onCancel(ev);
+  //   //     break;
+  //   //   default:
+  //   // }
+  //   // return next();
+  // };
 
   focusAtStart = () => {
     // const { editor } = this;
@@ -348,28 +359,7 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
   };
 
   render = () => {
-    const {
-      readOnly,
-      pretitle,
-      placeholder,
-      onSave,
-      onChange,
-      onCancel,
-      uploadImage,
-      onSearchLink,
-      onClickLink,
-      onImageUploadStart,
-      onImageUploadStop,
-      onShowToast,
-      className,
-      style,
-      dark,
-      defaultValue,
-      autoFocus,
-      plugins,
-      ...rest
-    } = this.props;
-
+    const { dark, style, className } = this.props;
     const theme = this.props.theme || (dark ? darkTheme : lightTheme);
 
     return (
@@ -430,7 +420,7 @@ const ProsemirrorStyles = createGlobalStyle`
   .ProseMirror-hideselection { caret-color: transparent; }
 
   .ProseMirror-selectednode {
-    outline: 2px solid #8cf;
+    outline: 2px solid ${props => props.theme.selected};
   }
 
   /* Make sure li selections wrap around markers */
@@ -444,7 +434,7 @@ const ProsemirrorStyles = createGlobalStyle`
     position: absolute;
     left: -32px;
     right: -2px; top: -2px; bottom: -2px;
-    border: 2px solid #8cf;
+    border: 2px solid ${props => props.theme.selected};
     pointer-events: none;
   }
 `;

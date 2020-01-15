@@ -18,13 +18,11 @@ export default class Mark extends Extension {
     return null;
   }
 
-  toDOM() {}
-
-  parseDOM() {}
-
   toMarkdown() {}
 
-  parseMarkdown() {}
+  parseMarkdown() {
+    return {};
+  }
 
   command() {
     return () => {};

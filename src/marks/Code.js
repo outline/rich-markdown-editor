@@ -29,6 +29,7 @@ export default class Code extends Node {
 
   get schema() {
     return {
+      excludes: "strong em link",
       parseDOM: [{ tag: "code" }],
       toDOM() {
         return ["code"];
