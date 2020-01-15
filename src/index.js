@@ -15,12 +15,14 @@ import ExtensionManager from "./lib/ExtensionManager";
 
 // nodes
 import Node from "./nodes/Node";
-import Blockquote from "./nodes/Blockquote";
 import Doc from "./nodes/Doc";
-import HorizontalRule from "./nodes/HorizontalRule";
 import Text from "./nodes/Text";
-import Paragraph from "./nodes/Paragraph";
+import Blockquote from "./nodes/Blockquote";
+import BulletList from "./nodes/BulletList";
 import Heading from "./nodes/Heading";
+import HorizontalRule from "./nodes/HorizontalRule";
+import ListItem from "./nodes/ListItem";
+import Paragraph from "./nodes/Paragraph";
 
 // marks
 import Mark from "./marks/Mark";
@@ -139,9 +141,11 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
       new Doc(),
       new Text(),
       new Paragraph(),
-      new Heading(),
       new Blockquote(),
+      new BulletList(),
+      new Heading(),
       new HorizontalRule(),
+      new ListItem(),
       new Bold(),
       new Code(),
       new Italic(),

@@ -91,15 +91,23 @@ export default class Link extends Node {
 }
 
 function isPlainURL(link, parent, index, side) {
-  if (link.attrs.title || !/^\w+:/.test(link.attrs.href)) return false;
+  if (link.attrs.title || !/^\w+:/.test(link.attrs.href)) {
+    return false;
+  }
+
   let content = parent.child(index + (side < 0 ? -1 : 0));
   if (
     !content.isText ||
     content.text !== link.attrs.href ||
     content.marks[content.marks.length - 1] !== link
-  )
+  ) {
     return false;
-  if (index === (side < 0 ? 1 : parent.childCount - 1)) return true;
+  }
+
+  if (index === (side < 0 ? 1 : parent.childCount - 1)) {
+    return true;
+  }
+
   let next = parent.child(index + (side < 0 ? -2 : 1));
   return !link.isInSet(next.marks);
 }
