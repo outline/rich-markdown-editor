@@ -4,7 +4,7 @@ import Extension from "../lib/Extension";
 
 export default class Change extends Extension {
   get name() {
-    return "history";
+    return "change";
   }
 
   get plugins() {

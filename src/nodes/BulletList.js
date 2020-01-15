@@ -1,5 +1,4 @@
 // @flow
-// import { toggleList } from "prosemirror-schema-list";
 import { wrappingInputRule } from "prosemirror-inputrules";
 import Node from "./Node";
 

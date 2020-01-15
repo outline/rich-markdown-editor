@@ -41,6 +41,7 @@ import History from "./plugins/History";
 import Keys from "./plugins/Keys";
 import Placeholder from "./plugins/Placeholder";
 import SmartText from "./plugins/SmartText";
+import TrailingNode from "./plugins/TrailingNode";
 
 export const theme = lightTheme;
 
@@ -93,6 +94,10 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
       new Placeholder(),
       new History(),
       new SmartText(),
+      new TrailingNode({
+        node: "paragraph",
+        notAfter: ["paragraph", "heading"],
+      }),
     ],
     tooltip: "span",
   };
@@ -158,11 +163,14 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
   }
 
   createExtensions() {
-    return new ExtensionManager([
-      ...this.props.extensions,
-      new Change({ onChange: this.handleChange }),
-      new Keys({ onSave: this.handleSave }),
-    ]);
+    return new ExtensionManager(
+      [
+        ...this.props.extensions,
+        new Change({ onChange: this.handleChange }),
+        new Keys({ onSave: this.handleSave }),
+      ],
+      this
+    );
   }
 
   createPlugins() {
@@ -300,7 +308,6 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
   };
 
   handleSave = (ev: SyntheticKeyboardEvent<>) => {
-    console;
     const { onSave } = this.props;
     if (onSave) {
       ev.preventDefault();
