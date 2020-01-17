@@ -38,8 +38,10 @@ export default class Code extends Node {
   }
 
   keys({ type }) {
+    // Note: This key binding only works on non-Mac platforms
+    // https://github.com/ProseMirror/prosemirror/issues/515
     return {
-      "Mod-`": toggleMark(type),
+      "Mod`": toggleMark(type),
     };
   }
 

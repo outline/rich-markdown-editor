@@ -15,6 +15,7 @@ import { light as lightTheme, dark as darkTheme } from "./theme";
 import Flex from "./components/Flex";
 import Extension from "./lib/Extension";
 import ExtensionManager from "./lib/ExtensionManager";
+import ComponentView from "./lib/ComponentView";
 
 // nodes
 import Node from "./nodes/Node";
@@ -125,9 +126,9 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
     //   window.addEventListener("keydown", this.handleKeyDown);
     // }
 
-    if (this.props.autoFocus) {
-      this.view.focus();
-    }
+    // if (this.props.autoFocus) {
+    //   this.view.focus();
+    // }
   }
 
   componentDidUpdate(prevProps: Props) {
@@ -158,6 +159,7 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
     this.parser = this.createParser();
     this.inputRules = this.createInputRules();
     this.pasteRules = this.createPasteRules();
+    this.nodeViews = this.createNodeViews();
     this.view = this.createView();
     this.commands = this.createCommands();
   }
@@ -193,6 +195,30 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
     return this.extensions.pasteRules({
       schema: this.schema,
     });
+  }
+
+  createNodeViews() {
+    return this.props.extensions
+      .filter(extension => extension.component)
+      .reduce((nodeViews, extension) => {
+        const nodeView = (node, view, getPos, decorations) => {
+          const { component } = extension;
+
+          return new ComponentView(component, {
+            editor: this,
+            extension,
+            node,
+            view,
+            getPos,
+            decorations,
+          });
+        };
+
+        return {
+          ...nodeViews,
+          [extension.name]: nodeView,
+        };
+      }, {});
   }
 
   createCommands() {
@@ -250,10 +276,16 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
   }
 
   createView() {
-    return new EditorView(this.element, {
+    const view = new EditorView(this.element, {
       state: this.createState(),
       editable: () => !this.props.readOnly,
     });
+
+    view.setProps({
+      nodeViews: this.nodeViews,
+    });
+
+    return view;
   }
 
   scrollToAnchor() {
@@ -277,7 +309,11 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
 
   handleChange = () => {
     if (this.props.onChange && !this.props.readOnly) {
-      this.props.onChange(this.value);
+      this.props.onChange(() => {
+        const text = this.value();
+        console.log(text);
+        return text;
+      });
     }
   };
 
@@ -366,7 +402,7 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
   };
 
   render = () => {
-    const { dark, style, className } = this.props;
+    const { dark, readOnly, style, className } = this.props;
     const theme = this.props.theme || (dark ? darkTheme : lightTheme);
 
     return (
@@ -384,7 +420,10 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
         <ThemeProvider theme={theme}>
           <React.Fragment>
             <ProsemirrorStyles />
-            <StyledEditor ref={ref => (this.element = ref)} />
+            <StyledEditor
+              readOnly={readOnly}
+              ref={ref => (this.element = ref)}
+            />
           </React.Fragment>
         </ThemeProvider>
       </Flex>
@@ -454,16 +493,41 @@ const StyledEditor = styled("div")`
   font-size: 1em;
   line-height: 1.7em;
   width: 100%;
-`;
 
-//   h1,
-//   h2,
-//   h3,
-//   h4,
-//   h5,
-//   h6 {
-//     font-weight: 500;
-//   }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 500;
+  }
+
+  blockquote {
+    border-left: 3px solid ${props => props.theme.quote};
+    margin: 0;
+    padding-left: 10px;
+    font-style: italic;
+  }
+
+  b,
+  strong {
+    font-weight: 600;
+  }
+
+  p {
+    position: relative;
+    margin: 0;
+  }
+
+  a {
+    color: ${props => props.theme.link};
+  }
+
+  a:hover {
+    text-decoration: ${props => (props.readOnly ? "underline" : "none")};
+  }
+`;
 
 //   ul,
 //   ol {
@@ -475,20 +539,6 @@ const StyledEditor = styled("div")`
 //       margin: 0.1em;
 //     }
 //   }
-
-//   p {
-//     position: relative;
-//     margin: 0;
-//   }
-
-//   a {
-//     color: ${props => props.theme.link};
-//   }
-
-//   a:hover {
-//     text-decoration: ${props => (props.readOnly ? "underline" : "none")};
-//   }
-
 //   li p {
 //     display: inline;
 //     margin: 0;
@@ -509,17 +559,6 @@ const StyledEditor = styled("div")`
 //     }
 //   }
 
-//   blockquote {
-//     border-left: 3px solid ${props => props.theme.quote};
-//     margin: 0;
-//     padding-left: 10px;
-//     font-style: italic;
-//   }
-
-//   b,
-//   strong {
-//     font-weight: 600;
-//   }
 // `;
 
 export default RichMarkdownEditor;

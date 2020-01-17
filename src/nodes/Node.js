@@ -10,10 +10,6 @@ export default class Node extends Extension {
     return "node";
   }
 
-  get view() {
-    return null;
-  }
-
   get schema(): ?Object {
     return null;
   }
