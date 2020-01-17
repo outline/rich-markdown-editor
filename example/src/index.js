@@ -42,6 +42,7 @@ class Example extends React.Component<*, { readOnly: boolean, dark: boolean }> {
 
   handleChange = debounce(value => {
     localStorage.setItem("saved", value());
+    console.log(localStorage);
   }, 250);
 
   render() {

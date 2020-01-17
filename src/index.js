@@ -1,3 +1,4 @@
+  
 // @flow
 import * as React from "react";
 import { Value, Editor as TEditor, Schema, Node } from "slate";
@@ -93,9 +94,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     if (this.props.value !== undefined) {
       this.defaultValue = this.serializer.serialize(this.props.value);
     }
-    console.log(this.defaultValue);
-    console.log(this.props.value);
-    console.log(this.props.defaultValue);
 
     if (this.props.readOnly) return;
     if (typeof window !== "undefined") {
@@ -269,25 +267,21 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       className,
       style,
       dark,
-      defaultValue,
       autoFocus,
       plugins,
       ...rest
     } = this.props;
 
-    console.log(this.props.value);
-    console.log(this.props.defaultValue);
-    console.log(this.defaultValue);
-    console.log(defaultValue);
-
     const theme = this.props.theme || (dark ? darkTheme : lightTheme);
+    
+    const defaultValue = this.defaultValue || this.props.defaultValue;
 
-    if (this.props.value !== undefined && this.defaultValue !== undefined) {
-      //new default value evaluated from component did mount
-      console.log("value defined");
+    if (this.defaultValue !== undefined){
+      //if a new default value evaluated from component did mount (from value prop being passed)
+      console.log("default value defined");
       return (
         <Flex
-          key="value-defined"
+          key="default-value-defined"
           style={style}
           className={className}
           onDrop={this.handleDrop}
@@ -304,12 +298,40 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
               plugins={this.plugins}
               commands={commands}
               queries={queries}
+              value={this.serializer.deserialize(this.defaultValue)}
+              schema={this.getSchema()}
+              onChange={this.handleChange}
+              onSearchLink={onSearchLink}
+              onClickLink={onClickLink}
+              onImageUploadStart={onImageUploadStart}
+              onImageUploadStop={onImageUploadStop}
+              onShowToast={onShowToast}
+              readOnly={readOnly}
+              spellCheck={!readOnly}
+              uploadImage={uploadImage}
+              pretitle={pretitle}
+              options={defaultOptions}
+              {...rest}
+            />
+          </ThemeProvider>
+        </Flex>
+      );
+    } else if (this.props.value !== undefined) {
+      //if value prop is passed from initial render
+      console.log("value defined only");
+      return (
+        <Flex
+          key="value-defined"
+        >
+          <ThemeProvider theme={theme}>
+            <StyledEditor
+              ref={this.setEditorRef}
+              plugins={this.plugins}
+              commands={commands}
+              queries={queries}
               placeholder={placeholder}
               schema={this.getSchema()}
-              defaultValue={this.defaultValue}
-              onKeyDown={this.handleKeyDown}
               onChange={this.handleChange}
-              onSave={onSave}
               onSearchLink={onSearchLink}
               onClickLink={onClickLink}
               onImageUploadStart={onImageUploadStart}
@@ -326,10 +348,11 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         </Flex>
       );
     } else {
-      console.log("value undefined");
+      //default editor, in which can be edited manually. 
+      console.log("default editor and value undefined");
       return (
         <Flex
-          key="value-undefined"
+          key="default-editor"
           style={style}
           className={className}
           onDrop={this.handleDrop}
