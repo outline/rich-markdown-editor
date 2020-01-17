@@ -35,7 +35,7 @@ export default class Placeholder extends Extension {
               const decoration = Decoration.node(pos, pos + node.nodeSize, {
                 class: this.options.emptyNodeClass,
                 "data-empty-text":
-                  node.type.name === "heading"
+                  pos === 0
                     ? this.options.headingPlaceholder
                     : this.options.paragraphPlaceholder,
               });
