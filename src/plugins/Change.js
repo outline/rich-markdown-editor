@@ -12,7 +12,9 @@ export default class Change extends Extension {
       new Plugin({
         view: () => {
           return {
-            update: view => {
+            update: (view, prevState) => {
+              if (view.state.doc === prevState.doc) return;
+
               this.options.onChange({
                 view,
                 selection: view.state.selection,
