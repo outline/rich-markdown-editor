@@ -10,7 +10,7 @@ import { Schema } from "prosemirror-model";
 import { inputRules, InputRule } from "prosemirror-inputrules";
 import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
-import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
+import styled, { ThemeProvider } from "styled-components";
 import type { SearchResult } from "./types";
 import { light as lightTheme, dark as darkTheme } from "./theme";
 import Flex from "./components/Flex";
@@ -426,7 +426,6 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
       >
         <ThemeProvider theme={theme}>
           <React.Fragment>
-            <ProsemirrorStyles />
             <StyledEditor
               readOnly={readOnly}
               ref={ref => (this.element = ref)}
@@ -438,7 +437,15 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
   };
 }
 
-const ProsemirrorStyles = createGlobalStyle`
+const StyledEditor = styled("div")`
+  color: ${props => props.theme.text};
+  background: ${props => props.theme.background};
+  font-family: ${props => props.theme.fontFamily};
+  font-weight: ${props => props.theme.fontWeight};
+  font-size: 1em;
+  line-height: 1.7em;
+  width: 100%;
+
   .ProseMirror {
     position: relative;
     outline: none;
@@ -450,7 +457,7 @@ const ProsemirrorStyles = createGlobalStyle`
     font-feature-settings: "liga" 0; /* the above doesn't seem to work in Edge */
   }
 
-  .ProseMirror .placeholder {
+  .placeholder {
     &:before {
       display: block;
       content: attr(data-empty-text);
@@ -460,31 +467,37 @@ const ProsemirrorStyles = createGlobalStyle`
     }
   }
 
-  .ProseMirror pre {
+  pre {
     white-space: pre-wrap;
   }
 
-  .ProseMirror li {
+  li {
     position: relative;
   }
 
-  .ProseMirror img {
+  img {
     max-width: 100%;
   }
 
-  .ProseMirror .image {
+  .image {
     text-align: center;
   }
 
-  .ProseMirror .caption {
+  .caption {
     height: 1em;
     color: ${props => props.theme.textSecondary};
     text-align: center;
   }
 
-  .ProseMirror-hideselection *::selection { background: transparent; }
-  .ProseMirror-hideselection *::-moz-selection { background: transparent; }
-  .ProseMirror-hideselection { caret-color: transparent; }
+  .ProseMirror-hideselection *::selection {
+    background: transparent;
+  }
+  .ProseMirror-hideselection *::-moz-selection {
+    background: transparent;
+  }
+  .ProseMirror-hideselection {
+    caret-color: transparent;
+  }
 
   .ProseMirror-selectednode {
     outline: 2px solid ${props => props.theme.selected};
@@ -500,20 +513,12 @@ const ProsemirrorStyles = createGlobalStyle`
     content: "";
     position: absolute;
     left: -32px;
-    right: -2px; top: -2px; bottom: -2px;
+    right: -2px;
+    top: -2px;
+    bottom: -2px;
     border: 2px solid ${props => props.theme.selected};
     pointer-events: none;
   }
-`;
-
-const StyledEditor = styled("div")`
-  color: ${props => props.theme.text};
-  background: ${props => props.theme.background};
-  font-family: ${props => props.theme.fontFamily};
-  font-weight: ${props => props.theme.fontWeight};
-  font-size: 1em;
-  line-height: 1.7em;
-  width: 100%;
 
   h1,
   h2,
@@ -564,22 +569,5 @@ const StyledEditor = styled("div")`
     margin: 0;
   }
 `;
-
-//   .todoList {
-//     list-style: none;
-//     padding-left: 0;
-
-//     .todoList {
-//       padding-left: 1em;
-//     }
-//   }
-
-//   .todo {
-//     span:last-child:focus {
-//       outline: none;
-//     }
-//   }
-
-// `;
 
 export default RichMarkdownEditor;
