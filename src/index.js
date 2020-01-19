@@ -525,9 +525,18 @@ const StyledEditor = styled("div")`
       margin: 0.1em;
     }
   }
+
   li p {
     display: inline;
     margin: 0;
+  }
+
+  code {
+    border-radius: 4px;
+    border: 1px solid ${props => props.theme.codeBorder};
+    padding: 3px 6px;
+    font-family: "Source Code Pro", Menlo, monospace;
+    font-size: 85%;
   }
 `;
 
