@@ -12,9 +12,7 @@ export default class Blockquote extends Node {
       content: "block+",
       group: "block",
       parseDOM: [{ tag: "blockquote" }],
-      toDOM() {
-        return ["blockquote", 0];
-      },
+      toDOM: () => ["blockquote", 0],
     };
   }
 

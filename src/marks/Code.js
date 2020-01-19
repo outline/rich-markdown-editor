@@ -31,9 +31,7 @@ export default class Code extends Node {
     return {
       excludes: "strong em link",
       parseDOM: [{ tag: "code" }],
-      toDOM() {
-        return ["code"];
-      },
+      toDOM: () => ["code"],
     };
   }
 

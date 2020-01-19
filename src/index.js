@@ -26,6 +26,7 @@ import BulletList from "./nodes/BulletList";
 import Heading from "./nodes/Heading";
 import HardBreak from "./nodes/HardBreak";
 import HorizontalRule from "./nodes/HorizontalRule";
+import Image from "./nodes/Image";
 import ListItem from "./nodes/ListItem";
 import Paragraph from "./nodes/Paragraph";
 
@@ -87,6 +88,7 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
       new HardBreak(),
       new Heading(),
       new HorizontalRule(),
+      new Image(),
       new ListItem(),
       new Bold(),
       new Code(),
@@ -459,6 +461,20 @@ const ProsemirrorStyles = createGlobalStyle`
 
   .ProseMirror li {
     position: relative;
+  }
+
+  .ProseMirror img {
+    max-width: 100%;
+  }
+
+  .ProseMirror .image {
+    text-align: center;
+  }
+
+  .ProseMirror .caption {
+    height: 1em;
+    color: ${props => props.theme.textSecondary};
+    text-align: center;
   }
 
   .ProseMirror-hideselection *::selection { background: transparent; }

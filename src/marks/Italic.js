@@ -15,9 +15,7 @@ export default class Italic extends Node {
         { tag: "em" },
         { style: "font-style", getAttrs: value => value === "italic" },
       ],
-      toDOM() {
-        return ["em"];
-      },
+      toDOM: () => ["em"],
     };
   }
 

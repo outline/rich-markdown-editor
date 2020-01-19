@@ -15,9 +15,7 @@ export default class Bold extends Node {
         { tag: "strong" },
         { style: "font-style", getAttrs: value => value === "bold" },
       ],
-      toDOM() {
-        return ["strong"];
-      },
+      toDOM: () => ["strong"],
     };
   }
 
