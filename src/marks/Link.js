@@ -1,9 +1,11 @@
 // @flow
 import { toggleMark } from "prosemirror-commands";
 import { Plugin } from "prosemirror-state";
+import { InputRule } from "prosemirror-inputrules";
 import getMarkAttrs from "../lib/getMarkAttrs";
-
 import Node from "./Mark";
+
+const LINK_INPUT_REGEX = /\[(.+|:?)]\((\S+)\)/;
 
 export default class Link extends Node {
   get name() {
@@ -35,6 +37,25 @@ export default class Link extends Node {
         0,
       ],
     };
+  }
+
+  inputRules({ type }) {
+    return [
+      new InputRule(LINK_INPUT_REGEX, (state, match, start, end) => {
+        const [okay, alt, href] = match;
+        const { tr } = state;
+
+        if (okay) {
+          tr.replaceWith(start, end, this.editor.schema.text(alt)).addMark(
+            start,
+            start + alt.length,
+            type.create({ href })
+          );
+        }
+
+        return tr;
+      }),
+    ];
   }
 
   keys({ type }) {
