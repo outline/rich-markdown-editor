@@ -37,6 +37,7 @@ import Bold from "./marks/Bold";
 import Code from "./marks/Code";
 import Italic from "./marks/Italic";
 import Link from "./marks/Link";
+import Strikethrough from "./marks/Strikethrough";
 
 // plugins
 import Change from "./plugins/Change";
@@ -95,6 +96,7 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
       new Code(),
       new Italic(),
       new Link(),
+      new Strikethrough(),
       new OrderedList(),
       new Placeholder(),
       new History(),
