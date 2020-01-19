@@ -93,10 +93,10 @@ export default class Image extends Node {
   inputRules({ type }) {
     return [
       new InputRule(IMAGE_INPUT_REGEX, (state, match, start, end) => {
-        const [, alt, src] = match;
+        const [okay, alt, src] = match;
         const { tr } = state;
 
-        if (match[0]) {
+        if (okay) {
           tr.replaceWith(
             start - 1,
             end,

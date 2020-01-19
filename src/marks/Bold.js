@@ -1,6 +1,6 @@
 // @flow
 import { toggleMark } from "prosemirror-commands";
-
+import markInputRule from "../lib/markInputRule";
 import Node from "./Mark";
 
 export default class Bold extends Node {
@@ -17,6 +17,10 @@ export default class Bold extends Node {
       ],
       toDOM: () => ["strong"],
     };
+  }
+
+  inputRules({ type }) {
+    return [markInputRule(/(?:\*\*|__)([^*_]+)(?:\*\*|__)$/, type)];
   }
 
   keys({ type }) {
