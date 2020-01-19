@@ -234,12 +234,17 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   getSchema = () => {
-    if (this.props.schema != undefined && this.props.schema !== this.prevSchema) {
+    if (
+      this.props.schema !== undefined &&
+      this.props.schema !== this.prevSchema
+    ) {
       this.schema = {
         ...defaultSchema,
         ...(this.props.schema || {}),
       };
+      console.log(this.props.schema);
       this.prevSchema = this.props.schema;
+      console.log(this.prevSchema);
     }
     return this.schema;
   };
