@@ -1,6 +1,6 @@
 // @flow
 import { toggleMark } from "prosemirror-commands";
-
+import markInputRule from "../lib/markInputRule";
 import Node from "./Mark";
 
 function backticksFor(node, side) {
@@ -33,6 +33,10 @@ export default class Code extends Node {
       parseDOM: [{ tag: "code" }],
       toDOM: () => ["code"],
     };
+  }
+
+  inputRules({ type }) {
+    return [markInputRule(/(?:^|[^`])(`([^`]+)`)$/, type)];
   }
 
   keys({ type }) {
