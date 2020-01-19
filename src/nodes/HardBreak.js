@@ -40,7 +40,6 @@ export default class HardBreak extends Node {
       return true;
     });
     return {
-      "Mod-Enter": command,
       Enter: command,
     };
   }

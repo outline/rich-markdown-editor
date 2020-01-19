@@ -1,4 +1,5 @@
 // @flow
+/* global window File Promise */
 import * as React from "react";
 import { dropCursor } from "prosemirror-dropcursor";
 import { gapCursor } from "prosemirror-gapcursor";
@@ -87,11 +88,11 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
       new Paragraph(),
       new Blockquote(),
       new BulletList(),
-      new HardBreak(),
       new Heading(),
       new HorizontalRule(),
       new Image(),
       new ListItem(),
+      new HardBreak(), // must come after ListItem for correct Enter behavior
       new Bold(),
       new Code(),
       new Italic(),
@@ -265,6 +266,7 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
       doc: this.createDocument(this.props.defaultValue),
       plugins: [
         ...this.plugins,
+        ...this.keymaps,
         dropCursor(),
         gapCursor(),
         inputRules({
@@ -272,7 +274,6 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
         }),
         keymap(baseKeymap),
         ...this.pasteRules,
-        ...this.keymaps,
       ],
     });
   }
