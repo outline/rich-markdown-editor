@@ -548,22 +548,22 @@ const StyledEditor = styled("div")`
   a:hover {
     text-decoration: ${props => (props.readOnly ? "underline" : "none")};
   }
+
+  ul,
+  ol {
+    margin: 0 0.1em;
+    padding-left: 1em;
+
+    ul,
+    ol {
+      margin: 0.1em;
+    }
+  }
+  li p {
+    display: inline;
+    margin: 0;
+  }
 `;
-
-//   ul,
-//   ol {
-//     margin: 0 0.1em;
-//     padding-left: 1em;
-
-//     ul,
-//     ol {
-//       margin: 0.1em;
-//     }
-//   }
-//   li p {
-//     display: inline;
-//     margin: 0;
-//   }
 
 //   .todoList {
 //     list-style: none;
