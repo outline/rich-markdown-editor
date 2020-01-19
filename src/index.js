@@ -129,9 +129,6 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
     this.scrollToAnchor();
 
     if (this.props.readOnly) return;
-    // if (typeof window !== "undefined") {
-    //   window.addEventListener("keydown", this.handleKeyDown);
-    // }
 
     // if (this.props.autoFocus) {
     //   this.view.focus();
@@ -148,12 +145,6 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
       this.focusAtEnd();
     }
   }
-
-  // componentWillUnmount() {
-  //   if (typeof window !== "undefined") {
-  //     window.removeEventListener("keydown", this.handleKeyDown);
-  //   }
-  // }
 
   init() {
     this.extensions = this.createExtensions();
@@ -176,7 +167,11 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
       [
         ...this.props.extensions,
         new Change({ onChange: this.handleChange }),
-        new Keys({ onSave: this.handleSave }),
+        new Keys({
+          onSave: this.handleSave,
+          onSaveAndExit: this.handleSaveAndExit,
+          onCancel: this.props.onCancel,
+        }),
       ],
       this
     );
@@ -350,53 +345,19 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
     ev.preventDefault();
   };
 
-  handleSave = (ev: SyntheticKeyboardEvent<>) => {
+  handleSave = () => {
     const { onSave } = this.props;
     if (onSave) {
-      ev.preventDefault();
-      ev.stopPropagation();
       onSave({ done: false });
     }
   };
 
-  handleSaveAndExit = (ev: SyntheticKeyboardEvent<>) => {
+  handleSaveAndExit = () => {
     const { onSave } = this.props;
     if (onSave) {
-      ev.preventDefault();
-      ev.stopPropagation();
       onSave({ done: true });
     }
   };
-
-  handleCancel = (ev: SyntheticKeyboardEvent<>) => {
-    const { onCancel } = this.props;
-    if (onCancel) {
-      ev.preventDefault();
-      ev.stopPropagation();
-      onCancel();
-    }
-  };
-
-  // handleKeyDown = (
-  //   ev: SyntheticKeyboardEvent<>,
-  //   editor: TEditor,
-  //   next: Function = () => {}
-  // ) => {
-  //   // if (this.props.readOnly) return next();
-  //   // switch (ev.key) {
-  //   //   case "s":
-  //   //     if (isModKey(ev)) return this.onSave(ev);
-  //   //     break;
-  //   //   case "Enter":
-  //   //     if (isModKey(ev)) return this.onSaveAndExit(ev);
-  //   //     break;
-  //   //   case "Escape":
-  //   //     if (isModKey(ev)) return this.onCancel(ev);
-  //   //     break;
-  //   //   default:
-  //   // }
-  //   // return next();
-  // };
 
   focusAtStart = () => {
     // const { editor } = this;
