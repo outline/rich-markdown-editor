@@ -28,6 +28,7 @@ import HardBreak from "./nodes/HardBreak";
 import HorizontalRule from "./nodes/HorizontalRule";
 import Image from "./nodes/Image";
 import ListItem from "./nodes/ListItem";
+import OrderedList from "./nodes/OrderedList";
 import Paragraph from "./nodes/Paragraph";
 
 // marks
@@ -94,6 +95,7 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
       new Code(),
       new Italic(),
       new Link(),
+      new OrderedList(),
       new Placeholder(),
       new History(),
       new SmartText(),
