@@ -24,8 +24,10 @@ import Doc from "./nodes/Doc";
 import Text from "./nodes/Text";
 import Blockquote from "./nodes/Blockquote";
 import BulletList from "./nodes/BulletList";
+import Checkbox from "./nodes/Checkbox";
+import CheckboxInput from "./nodes/CheckboxInput";
 import Heading from "./nodes/Heading";
-import HardBreak from "./nodes/HardBreak";
+// import HardBreak from "./nodes/HardBreak";
 import HorizontalRule from "./nodes/HorizontalRule";
 import Image from "./nodes/Image";
 import ListItem from "./nodes/ListItem";
@@ -88,11 +90,13 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
       new Paragraph(),
       new Blockquote(),
       new BulletList(),
+      new Checkbox(),
+      new CheckboxInput(),
       new Heading(),
       new HorizontalRule(),
       new Image(),
       new ListItem(),
-      new HardBreak(), // must come after ListItem for correct Enter behavior
+      // new HardBreak(), // must come after ListItem for correct Enter behavior
       new Bold(),
       new Code(),
       new Italic(),
@@ -256,9 +260,11 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
   }
 
   createState() {
+    const doc = this.createDocument(this.props.defaultValue);
+    console.log({ doc });
     return EditorState.create({
       schema: this.schema,
-      doc: this.createDocument(this.props.defaultValue),
+      doc,
       plugins: [
         ...this.plugins,
         ...this.keymaps,
