@@ -17,6 +17,7 @@
     "boundless-arrow-key-navigation": "^1.1.0",
     "copy-to-clipboard": "^3.0.8",
     "lodash": "^4.17.11",
+    "markdown-it-mark": "^3.0.0",
     "outline-icons": "^1.10.0",
     "prismjs": "^1.16.0",
     "prosemirror-commands": "^1.1.3",

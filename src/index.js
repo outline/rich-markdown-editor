@@ -38,6 +38,7 @@ import Paragraph from "./nodes/Paragraph";
 import Mark from "./marks/Mark";
 import Bold from "./marks/Bold";
 import Code from "./marks/Code";
+import Highlight from "./marks/Highlight";
 import Italic from "./marks/Italic";
 import Link from "./marks/Link";
 import Strikethrough from "./marks/Strikethrough";
@@ -99,6 +100,7 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
       // new HardBreak(), // must come after ListItem for correct Enter behavior
       new Bold(),
       new Code(),
+      new Highlight(),
       new Italic(),
       new Link(),
       new Strikethrough(),
@@ -559,9 +561,16 @@ const StyledEditor = styled("div")`
   code {
     border-radius: 4px;
     border: 1px solid ${props => props.theme.codeBorder};
-    padding: 3px 6px;
+    padding: 3px 4px;
     font-family: "Source Code Pro", Menlo, monospace;
     font-size: 85%;
+  }
+
+  mark {
+    border-radius: 4px;
+    color: ${props => props.theme.white};
+    background: ${props => props.theme.textHighlight};
+    padding: 3px 4px;
   }
 `;
 
