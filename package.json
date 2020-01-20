@@ -1,6 +1,6 @@
 {
   "name": "rich-markdown-editor",
-  "description": "A rich text editor with Markdown shortcuts built on Slate",
+  "description": "A rich text editor with Markdown shortcuts",
   "version": "9.11.1",
   "main": "lib/index.js",
   "license": "BSD-3-Clause",

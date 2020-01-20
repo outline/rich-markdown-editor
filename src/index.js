@@ -24,6 +24,7 @@ import Doc from "./nodes/Doc";
 import Text from "./nodes/Text";
 import Blockquote from "./nodes/Blockquote";
 import BulletList from "./nodes/BulletList";
+import CodeBlock from "./nodes/CodeBlock";
 import CheckboxList from "./nodes/CheckboxList";
 import CheckboxItem from "./nodes/CheckboxItem";
 import Heading from "./nodes/Heading";
@@ -91,6 +92,7 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
       new Paragraph(),
       new Blockquote(),
       new BulletList(),
+      new CodeBlock(),
       new CheckboxList(),
       new CheckboxItem(),
       new Heading(),
@@ -570,6 +572,41 @@ const StyledEditor = styled("div")`
     border-radius: 1px;
     color: ${props => props.theme.black};
     background: ${props => props.theme.textHighlight};
+  }
+
+  pre {
+    display: block;
+    overflow-x: auto;
+    padding: 0.5em 1em;
+    line-height: 1.4em;
+    position: relative;
+    background: ${props => props.theme.codeBackground};
+    border-radius: 4px;
+    border: 1px solid ${props => props.theme.codeBorder};
+
+    -webkit-font-smoothing: initial;
+    font-family: ${props => props.theme.fontFamilyMono}
+    font-size: 13px;
+    direction: ltr;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+    color: ${props => props.theme.code};
+    margin: 0;
+
+    code {
+      background: none;
+      padding: 0;
+      border: 0;
+    }
   }
 `;
 
