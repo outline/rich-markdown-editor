@@ -29,7 +29,7 @@ export const base = {
   placeholder: "#B1BECC",
   textSecondary: "#4E5C6E",
   textLight: colors.white,
-  textHighlight: "#d73a49",
+  textHighlight: "#b3e7ff",
   selected: colors.primary,
   codeComment: "#6a737d",
   codePunctuation: "#5e6687",

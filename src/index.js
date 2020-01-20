@@ -567,10 +567,8 @@ const StyledEditor = styled("div")`
   }
 
   mark {
-    border-radius: 4px;
-    color: ${props => props.theme.white};
+    border-radius: 1px;
     background: ${props => props.theme.textHighlight};
-    padding: 3px 4px;
   }
 `;
 
