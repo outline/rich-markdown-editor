@@ -536,11 +536,19 @@ const StyledEditor = styled("div")`
     list-style: none;
     padding-left: 0;
     margin-left: 0;
+
+    ul.checkbox_list {
+      padding-left: 20px;
+    }
   }
 
   ul.checkbox_list li.checked {
     color: ${props => props.theme.textSecondary};
     text-decoration: line-through;
+  }
+
+  ul.checkbox_list li input {
+    margin-right: 6px;
   }
 
   li p {
