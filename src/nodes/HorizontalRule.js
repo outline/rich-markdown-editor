@@ -17,6 +17,15 @@ export default class HorizontalRule extends Node {
     };
   }
 
+  keys({ type }) {
+    return {
+      "Mod-_": (state, dispatch) => {
+        dispatch(state.tr.replaceSelectionWith(type.create()).scrollIntoView());
+        return true;
+      },
+    };
+  }
+
   inputRules({ type }) {
     return [
       new InputRule(/^(?:---|___\s|\*\*\*\s)$/, (state, match, start, end) => {
