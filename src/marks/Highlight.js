@@ -1,4 +1,5 @@
 // @flow
+import { toggleMark } from "prosemirror-commands";
 import markInputRule from "../lib/markInputRule";
 import Node from "./Mark";
 
@@ -16,6 +17,12 @@ export default class Highlight extends Node {
 
   inputRules({ type }) {
     return [markInputRule(/(?:==)([^=]+)(?:==)$/, type)];
+  }
+
+  keys({ type }) {
+    return {
+      "Mod-Ctrl-h": toggleMark(type),
+    };
   }
 
   get toMarkdown() {
