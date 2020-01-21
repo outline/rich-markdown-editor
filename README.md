@@ -2,11 +2,10 @@
 
 # rich-markdown-editor
 
-A React and [Slate](https://github.com/ianstormtaylor/slate) based editor that powers the [Outline wiki](http://getoutline.com) and can also be used for displaying content in a read-only fashion.
-The editor is WYSIWYG and includes many formatting tools whilst retaining the ability to write markdown
-shortcuts inline and output Markdown.
+A React and [Prosemirror](https://prosemirror.net/) based editor that powers [Outline](http://getoutline.com) and can also be used for displaying content in a read-only fashion.
+The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown.
 
-> Note: This project is **not attempting** to be an all-purpose Markdown editor. It renders and outputs a subset of the Markdown schema, as well as supporting markdown-like syntax as shortcuts for rich text editing.
+> Note: This project is **not attempting** to be an all-purpose Markdown editor. It is built for the Outline project, and whilst others are welcome to fork or use this package in your own products, development decisions are centered around the needs of Outline. 
 
 ## Usage
 
@@ -38,24 +37,16 @@ Allows overriding of the placeholder text displayed in the main body content. Th
 
 #### `readOnly`
 
-With `readOnly` set to `false` the editor is optimized for composition. When `true` the editor can be used to display previously written content – headings gain anchors, a table of contents displays and links become clickable.
+With `readOnly` set to `false` the editor is optimized for composition. When `true` the editor can be used to display previously written content – headings gain anchors and links become clickable.
 
 #### `autoFocus`
 
-When set `true` together with `readOnly` set to `false`, focus at the
+When set `true` together with `readOnly` set to `false`, focus at the end of the
 document automatically.
 
-#### `spellCheck`
+#### `extensions`
 
-Set to false to prevent spellchecking – defaults to true.
-
-#### `toc`
-
-With `toc` set to `true` the editor will display a table of contents for headings in the document. This is particularly useful for larger documents and allows quick jumping to key sections.
-
-#### `plugins`
-
-Allows additional [Slate plugins](https://github.com/ianstormtaylor/slate/blob/master/docs/general/plugins.md) to be passed to the underlying Slate editor.
+Allows additional [Prosemirror plugins](https://prosemirror.net/docs/ref/#state.Plugin_System) to be passed to the underlying Prosemirror instance.
 
 #### `schema`
 
@@ -80,10 +71,6 @@ A React component that will be wrapped around items that have an optional toolti
 - `tooltip`: A React node with the tooltip content
 - `placement`: Enum `top`, `bottom`, `left`, `right`
 - `children`: The component that the tooltip wraps, must be rendered
-
-#### `headingsOffset`
-
-A number that will offset the document headings by a number of levels. For example, if you already nest the editor under a main `h1` title you might want the user to only be able to create `h2` headings and below, in this case you would set the prop to `1`.
 
 
 ### Callbacks
@@ -113,7 +100,7 @@ This callback is triggered when the `Cmd+Escape` is hit within the editor. You m
 
 This callback is triggered when the contents of the editor changes, usually due to user input such as a keystroke or using formatting options. You may use this to locally persist the editors state, see the [inbuilt example](/example/index.js).
 
-As of `v4.0.0` this callback returns a function which when called returns the current text value of the document. This optimization is made to avoid serializing the state of the document to text on every change event, allowing the host app to choose when it needs this value.
+As of `v4.0.0` this callback returns a function which when called returns the current text value of the document. This optimization is made to avoid serializing the state of the document to text on every change event, allowing the host app to choose when it needs the serialized value.
 
 #### `onImageUploadStart`
 
@@ -131,7 +118,6 @@ The editor provides an ability to search for links to insert from the formatting
 
 Triggered when the editor wishes to show a toast message to the user. Hook into your apps
 notification system, or simplisticly use `window.alert(message)`.
-
 
 
 ```javascript
@@ -204,33 +190,6 @@ const hiddenToolbarButtons = {
 />
 ```
 
-### Customizing the serializer
-
-If on the need of customizing the serializer, you can customize it:
-
-```javascript
-// @flow
-import Editor from 'rich-markdown-editor';
-
-const MySerializer = {
-  deserialize: (str: string) => {
-    var v: Value;
-    // process given string and return a Value object
-    return v;
-  },
-  serialize: (value: Value) => {
-    var result = '';
-    // Transform given value into a string for storage
-    return result;
-  }
-};
-
-<Editor
-  serializer={MySerializer}
-/>
-```
-
-You can look [slate-md-serializer](https://github.com/tommoor/slate-md-serializer) for reference.
 
 ## Contributing
 

@@ -61,7 +61,6 @@ export type Props = {
   extensions: Extension[],
   autoFocus?: boolean,
   readOnly?: boolean,
-  headingsOffset?: number,
   dark?: boolean,
   theme?: Object,
   uploadImage?: (file: File) => Promise<string>,
