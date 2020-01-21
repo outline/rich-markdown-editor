@@ -28,7 +28,6 @@ import CodeBlock from "./nodes/CodeBlock";
 import CheckboxList from "./nodes/CheckboxList";
 import CheckboxItem from "./nodes/CheckboxItem";
 import Heading from "./nodes/Heading";
-// import HardBreak from "./nodes/HardBreak";
 import HorizontalRule from "./nodes/HorizontalRule";
 import Image from "./nodes/Image";
 import ListItem from "./nodes/ListItem";
@@ -99,7 +98,6 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
       new HorizontalRule(),
       new Image(),
       new ListItem(),
-      // new HardBreak(), // must come after ListItem for correct Enter behavior
       new Bold(),
       new Code(),
       new Highlight(),

@@ -25,8 +25,12 @@ export default class Paragraph extends Node {
   }
 
   toMarkdown(state, node) {
-    state.renderInline(node);
-    state.closeBlock(node);
+    if (node.textContent.trim() === "") {
+      state.write("\\\n");
+    } else {
+      state.renderInline(node);
+      state.closeBlock(node);
+    }
   }
 
   parseMarkdown() {
