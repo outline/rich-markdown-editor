@@ -10,7 +10,7 @@ export default class TrailingNode extends Extension {
   get defaultOptions() {
     return {
       node: "paragraph",
-      notAfter: ["paragraph"],
+      notAfter: ["paragraph", "heading"],
     };
   }
 

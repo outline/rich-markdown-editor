@@ -1,10 +1,10 @@
 // @flow
 /* global window File Promise */
 import * as React from "react";
+import { Selection, EditorState, Plugin } from "prosemirror-state";
 import { dropCursor } from "prosemirror-dropcursor";
 import { gapCursor } from "prosemirror-gapcursor";
 import { MarkdownParser, MarkdownSerializer } from "prosemirror-markdown";
-import { EditorState, Plugin } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { Schema } from "prosemirror-model";
 import { inputRules, InputRule } from "prosemirror-inputrules";
@@ -108,10 +108,7 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
       new Placeholder(),
       new History(),
       new SmartText(),
-      new TrailingNode({
-        node: "paragraph",
-        notAfter: ["paragraph", "heading"],
-      }),
+      new TrailingNode(),
     ],
     tooltip: "span",
   };
@@ -136,9 +133,9 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
 
     if (this.props.readOnly) return;
 
-    // if (this.props.autoFocus) {
-    //   this.view.focus();
-    // }
+    if (this.props.autoFocus) {
+      this.focusAtEnd();
+    }
   }
 
   componentDidUpdate(prevProps: Props) {
@@ -368,13 +365,17 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
   };
 
   focusAtStart = () => {
-    // const { editor } = this;
-    // editor.moveToStartOfDocument().focus();
+    const selection = Selection.atStart(this.view.docView.node);
+    const transaction = this.view.state.tr.setSelection(selection);
+    this.view.dispatch(transaction);
+    this.view.focus();
   };
 
   focusAtEnd = () => {
-    // const { editor } = this;
-    // editor.moveToEndOfDocument().focus();
+    const selection = Selection.atEnd(this.view.docView.node);
+    const transaction = this.view.state.tr.setSelection(selection);
+    this.view.dispatch(transaction);
+    this.view.focus();
   };
 
   render = () => {
