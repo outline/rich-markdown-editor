@@ -289,6 +289,10 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
 
     view.setProps({
       nodeViews: this.nodeViews,
+      uploadImage: this.props.uploadImage,
+      onImageUploadStart: this.props.onImageUploadStart,
+      onImageUploadStop: this.props.onImageUploadStop,
+      onShowToast: this.props.onShowToast,
     });
 
     return view;
@@ -321,28 +325,6 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
         return text;
       });
     }
-  };
-
-  handleDrop = async (ev: SyntheticDragEvent<>) => {
-    // if (this.props.readOnly) return;
-    // // check an image upload callback is defined
-    // if (!this.editor.props.uploadImage) return;
-    // // check if this event was already handled by the Editor
-    // if (ev.isDefaultPrevented()) return;
-    // // otherwise we'll handle this
-    // ev.preventDefault();
-    // ev.stopPropagation();
-    // const files = getDataTransferFiles(ev);
-    // for (let i = 0; i < files.length; i++) {
-    //   const file = files[i];
-    //   if (file.type.startsWith("image/")) {
-    //     await this.insertImageFile(file);
-    //   }
-    // }
-  };
-
-  insertImageFile = (file: window.File) => {
-    // this.editor.insertImageFile(file);
   };
 
   cancelEvent = (ev: SyntheticEvent<>) => {
@@ -385,7 +367,6 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
       <Flex
         style={style}
         className={className}
-        onDrop={this.handleDrop}
         onDragOver={this.cancelEvent}
         onDragEnter={this.cancelEvent}
         align="flex-start"
@@ -450,6 +431,10 @@ const StyledEditor = styled("div")`
 
   .image {
     text-align: center;
+  }
+
+  .image.placeholder img {
+    opacity: 0.5;
   }
 
   .caption {
