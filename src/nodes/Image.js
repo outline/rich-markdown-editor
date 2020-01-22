@@ -62,9 +62,117 @@ const findPlaceholder = function(state, id) {
   return found.length ? found[0].from : null;
 };
 
+const insertFiles = function(view, event, pos, files) {
+  // filter to only include image files
+  const images = files.filter(file => /image/i.test(file.type));
+  if (images.length === 0) return;
+
+  const {
+    uploadImage,
+    onImageUploadStart,
+    onImageUploadStop,
+    onShowToast,
+  } = view.props;
+
+  if (!uploadImage) {
+    console.warn(
+      "uploadImage callback must be defined to handle image uploads."
+    );
+    return;
+  }
+
+  // okay, we have some dropped images and a handler – lets stop this
+  // event going any further up the stack
+  event.preventDefault();
+
+  // let the user know we're starting to process the images
+  if (onImageUploadStart) onImageUploadStart();
+
+  const { schema } = view.state;
+
+  // we'll use this to track of how many images have succeeded or failed
+  let complete = 0;
+
+  // the user might have dropped multiple images at once, we need to loop
+  for (const file of images) {
+    // Use an object to act as the ID for this upload, clever.
+    let id = {};
+
+    const { tr } = view.state;
+
+    // insert a placeholder at this position
+    tr.setMeta(uploadPlaceholderPlugin, {
+      add: { id, file, pos },
+    });
+    view.dispatch(tr);
+
+    // start uploading the image file to the server. Using "then" syntax
+    // to allow all placeholders to be entered at once with the uploads
+    // happening in the background in parallel.
+    uploadImage(file)
+      .then(src => {
+        const pos = findPlaceholder(view.state, id);
+
+        // if the content around the placeholder has been deleted
+        // then forget about inserting this image
+        if (pos === null) return;
+
+        // otherwise, insert it at the placeholder's position, and remove
+        // the placeholder itself
+        const transaction = view.state.tr
+          .replaceWith(pos, pos, schema.nodes.image.create({ src }))
+          .setMeta(uploadPlaceholderPlugin, { remove: { id } });
+
+        view.dispatch(transaction);
+      })
+      .catch(error => {
+        console.error(error);
+
+        // cleanup the placeholder if there is a failure
+        const transaction = view.state.tr.setMeta(uploadPlaceholderPlugin, {
+          remove: { id },
+        });
+        view.dispatch(transaction);
+
+        // let the user know
+        if (onShowToast) {
+          onShowToast("Sorry, an error occurred uploading the image");
+        }
+      })
+      // eslint-disable-next-line no-loop-func
+      .finally(() => {
+        complete++;
+
+        // once everything is done, let the user know
+        if (complete === images.length) {
+          if (onImageUploadStop) onImageUploadStop();
+        }
+      });
+  }
+};
+
 const uploadPlugin = new Plugin({
   props: {
     handleDOMEvents: {
+      paste: async (view, event) => {
+        if (!view.props.editable) return;
+
+        // check if we actually pasted any files
+        const files = Array.prototype.slice
+          .call(event.clipboardData.items)
+          .map(dt => dt.getAsFile())
+          .filter(file => file);
+
+        if (files.length === 0) return;
+
+        const { tr } = view.state;
+        if (!tr.selection.empty) {
+          tr.deleteSelection();
+        }
+        const pos = tr.selection.from;
+
+        return insertFiles(view, event, pos, files);
+      },
       drop: async (view, event) => {
         if (!view.props.editable) return;
 
@@ -72,101 +180,13 @@ const uploadPlugin = new Plugin({
         const files = getDataTransferFiles(event);
         if (files.length === 0) return;
 
-        // filter to only include image files
-        const images = files.filter(file => /image/i.test(file.type));
-        if (images.length === 0) return;
+        // grab the position in the document for the cursor
+        const { pos } = view.posAtCoords({
+          left: event.clientX,
+          top: event.clientY,
+        });
 
-        const {
-          uploadImage,
-          onImageUploadStart,
-          onImageUploadStop,
-          onShowToast,
-        } = view.props;
-
-        if (!uploadImage) {
-          console.warn(
-            "uploadImage callback must be defined to handle image uploads."
-          );
-          return;
-        }
-
-        // okay, we have some dropped images and a handler – lets stop this
-        // event going any further up the stack
-        event.preventDefault();
-
-        // let the user know we're starting to process the images
-        if (onImageUploadStart) onImageUploadStart();
-
-        const { schema } = view.state;
-
-        // we'll use this to track of how many images have succeeded or failed
-        let complete = 0;
-
-        // the user might have dropped multiple images at once, we need to loop
-        for (const file of images) {
-          // Use an object to act as the ID for this upload, clever.
-          let id = {};
-
-          const { tr } = view.state;
-
-          // grab the position in the document for the cursor
-          const coordinates = view.posAtCoords({
-            left: event.clientX,
-            top: event.clientY,
-          });
-
-          // insert a placeholder at this position
-          tr.setMeta(uploadPlaceholderPlugin, {
-            add: { id, file, pos: coordinates.pos },
-          });
-          view.dispatch(tr);
-
-          // start uploading the image file to the server. Using "then" syntax
-          // to allow all placeholders to be entered at once with the uploads
-          // happening in the background in parallel.
-          uploadImage(file)
-            .then(src => {
-              const pos = findPlaceholder(view.state, id);
-
-              // if the content around the placeholder has been deleted
-              // then forget about inserting this image
-              if (pos === null) return;
-
-              // otherwise, insert it at the placeholder's position, and remove
-              // the placeholder itself
-              const transaction = view.state.tr
-                .replaceWith(pos, pos, schema.nodes.image.create({ src }))
-                .setMeta(uploadPlaceholderPlugin, { remove: { id } });
-
-              view.dispatch(transaction);
-            })
-            .catch(error => {
-              console.error(error);
-
-              // cleanup the placeholder if there is a failure
-              const transaction = view.state.tr.setMeta(
-                uploadPlaceholderPlugin,
-                {
-                  remove: { id },
-                }
-              );
-              view.dispatch(transaction);
-
-              // let the user know
-              if (onShowToast) {
-                onShowToast("Sorry, an error occurred uploading the image");
-              }
-            })
-            // eslint-disable-next-line no-loop-func
-            .finally(() => {
-              complete++;
-
-              // once everything is done, let the user know
-              if (complete === images.length) {
-                if (onImageUploadStop) onImageUploadStop();
-              }
-            });
-        }
+        return insertFiles(view, event, pos, files);
       },
     },
   },
