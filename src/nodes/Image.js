@@ -68,11 +68,11 @@ const uploadPlugin = new Plugin({
       drop: async (view, event) => {
         if (!view.props.editable) return;
 
-        // did we actually drop any files?
+        // check if we actually dropped any files
         const files = getDataTransferFiles(event);
         if (files.length === 0) return;
 
-        // filter to only images
+        // filter to only include image files
         const images = files.filter(file => /image/i.test(file.type));
         if (images.length === 0) return;
 
@@ -99,20 +99,23 @@ const uploadPlugin = new Plugin({
 
         const { schema } = view.state;
 
-        // keep track of how many images have succeeded or failed
+        // we'll use this to track of how many images have succeeded or failed
         let complete = 0;
 
+        // the user might have dropped multiple images at once, we need to loop
         for (const file of images) {
           // Use an object to act as the ID for this upload, clever.
           let id = {};
 
           const { tr } = view.state;
 
+          // grab the position in the document for the cursor
           const coordinates = view.posAtCoords({
             left: event.clientX,
             top: event.clientY,
           });
 
+          // insert a placeholder at this position
           tr.setMeta(uploadPlaceholderPlugin, {
             add: { id, file, pos: coordinates.pos },
           });
