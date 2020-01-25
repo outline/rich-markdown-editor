@@ -21,7 +21,7 @@ export default class CheckboxList extends Node {
   }
 
   inputRules({ type }) {
-    return [wrappingInputRule(/^\s*(\[ \])\s$/i, type)];
+    return [wrappingInputRule(/^-?\s*(\[ \])\s$/i, type)];
   }
 
   toMarkdown(state, node) {
