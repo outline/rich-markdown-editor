@@ -577,6 +577,16 @@ const StyledEditor = styled("div")`
     background: ${props => props.theme.textHighlight};
   }
 
+  .code-block {
+    select {
+      display: ${props => (props.readOnly ? "none" : "inline")};
+    }
+
+    button {
+      display: ${props => (props.readOnly ? "inline" : "none")};
+    }
+  }
+
   pre {
     display: block;
     overflow-x: auto;
