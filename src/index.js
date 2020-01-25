@@ -612,6 +612,103 @@ const StyledEditor = styled("div")`
     }
   }
 
+  .token.comment,
+  .token.prolog,
+  .token.doctype,
+  .token.cdata {
+    color: ${props => props.theme.codeComment};
+  }
+
+  .token.punctuation {
+    color: ${props => props.theme.codePunctuation};
+  }
+
+  .token.namespace {
+    opacity: .7;
+  }
+
+  .token.operator,
+  .token.boolean,
+  .token.number {
+    color: ${props => props.theme.codeNumber};
+  }
+
+  .token.property {
+    color: ${props => props.theme.codeProperty};
+  }
+
+  .token.tag {
+    color: ${props => props.theme.codeTag};
+  }
+
+  .token.string {
+    color: ${props => props.theme.codeString};
+  }
+
+  .token.selector {
+    color: ${props => props.theme.codeSelector};
+  }
+
+  .token.attr-name {
+    color: ${props => props.theme.codeAttr};
+  }
+
+  .token.entity,
+  .token.url,
+  .language-css .token.string,
+  .style .token.string {
+    color: ${props => props.theme.codeEntity};
+  }
+
+  .token.attr-value,
+  .token.keyword,
+  .token.control,
+  .token.directive,
+  .token.unit {
+    color: ${props => props.theme.codeKeyword};
+  }
+
+  .token.function {
+    color: ${props => props.theme.codeFunction};
+  }
+
+  .token.statement,
+  .token.regex,
+  .token.atrule {
+    color: ${props => props.theme.codeStatement};
+  }
+
+  .token.placeholder,
+  .token.variable {
+    color: ${props => props.theme.codePlaceholder};
+  }
+
+  .token.deleted {
+    text-decoration: line-through;
+  }
+
+  .token.inserted {
+    border-bottom: 1px dotted ${props => props.theme.codeInserted};
+    text-decoration: none;
+  }
+
+  .token.italic {
+    font-style: italic;
+  }
+
+  .token.important,
+  .token.bold {
+    font-weight: bold;
+  }
+
+  .token.important {
+    color: ${props => props.theme.codeImportant};
+  }
+
+  .token.entity {
+    cursor: help;
+  }
+
   .ProseMirror-gapcursor {
     display: none;
     pointer-events: none;
