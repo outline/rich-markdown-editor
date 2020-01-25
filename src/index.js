@@ -11,7 +11,6 @@ import { inputRules, InputRule } from "prosemirror-inputrules";
 import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
 import styled, { ThemeProvider } from "styled-components";
-import type { SearchResult } from "./types";
 import { light as lightTheme, dark as darkTheme } from "./theme";
 import Flex from "./components/Flex";
 import Extension from "./lib/Extension";
@@ -71,7 +70,7 @@ export type Props = {
   onChange: (value: () => string) => void,
   onImageUploadStart?: () => void,
   onImageUploadStop?: () => void,
-  onSearchLink?: (term: string) => Promise<SearchResult[]>,
+  onSearchLink?: (term: string) => Promise<Array<Object>>,
   onClickLink?: (href: string) => void,
   onClickHashtag?: (tag: string) => void,
   onShowToast?: (message: string) => void,

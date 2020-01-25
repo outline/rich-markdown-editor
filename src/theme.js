@@ -1,7 +1,4 @@
 // @flow
-
-import type { Theme } from "./types";
-
 const colors = {
   almostBlack: "#181A1B",
   lightBlack: "#2F3336",
@@ -48,7 +45,7 @@ export const base = {
   codeImportant: "#c94922",
 };
 
-export const light: Theme = {
+export const light = {
   ...base,
   background: colors.white,
   text: colors.almostBlack,
@@ -75,7 +72,7 @@ export const light: Theme = {
   imageErrorBackground: colors.greyLight,
 };
 
-export const dark: Theme = {
+export const dark = {
   ...base,
   background: colors.almostBlack,
   text: colors.almostWhite,
