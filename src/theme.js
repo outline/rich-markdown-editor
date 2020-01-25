@@ -53,6 +53,7 @@ export const light: Theme = {
   background: colors.white,
   text: colors.almostBlack,
   code: colors.lightBlack,
+  cursor: colors.black,
 
   toolbarBackground: colors.lightBlack,
   toolbarInput: colors.white10,
@@ -79,6 +80,7 @@ export const dark: Theme = {
   background: colors.almostBlack,
   text: colors.almostWhite,
   code: colors.almostWhite,
+  cursor: colors.white,
 
   toolbarBackground: colors.white,
   toolbarInput: colors.black10,

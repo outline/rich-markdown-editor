@@ -33,6 +33,7 @@ import Image from "./nodes/Image";
 import ListItem from "./nodes/ListItem";
 import OrderedList from "./nodes/OrderedList";
 import Paragraph from "./nodes/Paragraph";
+import Paste from "./nodes/Paste";
 
 // marks
 import Mark from "./marks/Mark";
@@ -50,6 +51,7 @@ import Keys from "./plugins/Keys";
 import Placeholder from "./plugins/Placeholder";
 import SmartText from "./plugins/SmartText";
 import TrailingNode from "./plugins/TrailingNode";
+// import MarkdownPaste from "./plugins/MarkdownPaste";
 
 export const theme = lightTheme;
 
@@ -108,6 +110,8 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
       new History(),
       new SmartText(),
       new TrailingNode(),
+      // new MarkdownPaste(),
+      new Paste(),
     ],
     tooltip: "span",
   };
@@ -118,6 +122,7 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
   schema: Schema;
   serializer: MarkdownSerializer;
   parser: MarkdownParser;
+  pasteParser: MarkdownParser;
   plugins: Plugin[];
   keymaps: Plugin[];
   inputRules: InputRule[];
@@ -157,6 +162,7 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
     this.keymaps = this.createKeymaps();
     this.serializer = this.createSerializer();
     this.parser = this.createParser();
+    this.pasteParser = this.createPasteParser();
     this.inputRules = this.createInputRules();
     this.pasteRules = this.createPasteRules();
     this.nodeViews = this.createNodeViews();
@@ -257,6 +263,16 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
     });
   }
 
+  createPasteParser() {
+    return this.extensions.parser({
+      schema: new Schema({
+        nodes: this.nodes,
+        marks: this.marks,
+        topNode: "paste",
+      }),
+    });
+  }
+
   createState() {
     const doc = this.createDocument(this.props.defaultValue);
 
@@ -289,10 +305,14 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
 
     view.setProps({
       nodeViews: this.nodeViews,
+
+      // none ProseMirror handlers
       uploadImage: this.props.uploadImage,
       onImageUploadStart: this.props.onImageUploadStart,
       onImageUploadStop: this.props.onImageUploadStop,
       onShowToast: this.props.onShowToast,
+      onClickLink: this.props.onClickLink,
+      onClickHashtag: this.props.onClickHashtag,
     });
 
     return view;
@@ -590,6 +610,32 @@ const StyledEditor = styled("div")`
       padding: 0;
       border: 0;
     }
+  }
+
+  .ProseMirror-gapcursor {
+    display: none;
+    pointer-events: none;
+    position: absolute;
+  }
+  
+  .ProseMirror-gapcursor:after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: -2px;
+    width: 20px;
+    border-top: 1px solid ${props => props.theme.cursor};
+    animation: ProseMirror-cursor-blink 1.1s steps(2, start) infinite;
+  }
+  
+  @keyframes ProseMirror-cursor-blink {
+    to {
+      visibility: hidden;
+    }
+  }
+  
+  .ProseMirror-focused .ProseMirror-gapcursor {
+    display: block;
   }
 `;
 
