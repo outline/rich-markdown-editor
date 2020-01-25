@@ -56,6 +56,7 @@ export const theme = lightTheme;
 
 export type Props = {
   id?: string,
+  value?: string,
   defaultValue: string,
   placeholder: string,
   pretitle?: string,
@@ -142,11 +143,21 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
   }
 
   componentDidUpdate(prevProps: Props) {
+    // Allow changes to the 'value' prop to update the editor from outside
+    if (this.props.value && prevProps.value !== this.props.value) {
+      const newState = this.createState(this.props.value);
+      this.view.updateState(newState);
+    }
+
+    // pass readOnly changes through to underlying editor instance
     if (prevProps.readOnly !== this.props.readOnly) {
       this.view.setProps({
         editable: () => !this.props.readOnly,
       });
     }
+
+    // Focus at the end of the document if switching from readOnly and autoFocus
+    // is set to true
     if (prevProps.readOnly && !this.props.readOnly && this.props.autoFocus) {
       this.focusAtEnd();
     }
@@ -272,8 +283,8 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
     });
   }
 
-  createState() {
-    const doc = this.createDocument(this.props.defaultValue);
+  createState(value: ?string) {
+    const doc = this.createDocument(value || this.props.defaultValue);
 
     return EditorState.create({
       schema: this.schema,
