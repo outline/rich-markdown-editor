@@ -6,7 +6,7 @@ import { dropCursor } from "prosemirror-dropcursor";
 import { gapCursor } from "prosemirror-gapcursor";
 import { MarkdownParser, MarkdownSerializer } from "prosemirror-markdown";
 import { EditorView } from "prosemirror-view";
-import { Schema } from "prosemirror-model";
+import { Node as PMNode, Schema } from "prosemirror-model";
 import { inputRules, InputRule } from "prosemirror-inputrules";
 import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
@@ -58,7 +58,6 @@ export type Props = {
   value?: string,
   defaultValue: string,
   placeholder: string,
-  pretitle?: string,
   extensions: Extension[],
   autoFocus?: boolean,
   readOnly?: boolean,
@@ -74,7 +73,7 @@ export type Props = {
   onClickLink?: (href: string) => void,
   onClickHashtag?: (tag: string) => void,
   onShowToast?: (message: string) => void,
-  getLinkComponent?: Node => ?React.ComponentType<any>,
+  getLinkComponent?: PMNode => ?React.ComponentType<any>,
   className?: string,
   style?: Object,
 };
@@ -293,7 +292,7 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
     view.setProps({
       nodeViews: this.nodeViews,
 
-      // none ProseMirror handlers
+      // handlers below are used by extensions, not ProseMirror
       uploadImage: this.props.uploadImage,
       onImageUploadStart: this.props.onImageUploadStart,
       onImageUploadStop: this.props.onImageUploadStop,

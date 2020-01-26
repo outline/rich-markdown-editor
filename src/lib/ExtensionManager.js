@@ -5,6 +5,7 @@ import { keymap } from "prosemirror-keymap";
 import { EditorView } from "prosemirror-view";
 import { MarkdownSerializer, MarkdownParser } from "prosemirror-markdown";
 import markPlugin from "markdown-it-mark";
+import Editor from "../Editor";
 import checkboxPlugin from "./markdownItCheckbox";
 import breakPlugin from "./markdownBreakToParagraph";
 import Extension from "./Extension";
@@ -12,7 +13,7 @@ import Extension from "./Extension";
 export default class ExtensionManager {
   extensions: Extension[];
 
-  constructor(extensions: Extension[] = [], editor) {
+  constructor(extensions: Extension[] = [], editor: Editor) {
     extensions.forEach(extension => {
       extension.init();
       extension.bindEditor(editor);
@@ -30,30 +31,6 @@ export default class ExtensionManager {
         }),
         {}
       );
-  }
-
-  get options() {
-    const { view } = this;
-
-    return this.extensions.reduce(
-      (nodes, extension) => ({
-        ...nodes,
-        [extension.name]: new Proxy(extension.options, {
-          set(obj, prop, value) {
-            const changed = obj[prop] !== value;
-
-            Object.assign(obj, { [prop]: value });
-
-            if (changed) {
-              extension.update(view);
-            }
-
-            return true;
-          },
-        }),
-      }),
-      {}
-    );
   }
 
   get serializer() {
@@ -148,14 +125,12 @@ export default class ExtensionManager {
   }
 
   inputRules({ schema }: { schema: Schema }) {
-    const allowedExtensions = this.extensions;
-
-    const extensionInputRules = allowedExtensions
+    const extensionInputRules = this.extensions
       .filter(extension => ["extension"].includes(extension.type))
       .filter(extension => extension.inputRules)
       .map(extension => extension.inputRules({ schema }));
 
-    const nodeMarkInputRules = allowedExtensions
+    const nodeMarkInputRules = this.extensions
       .filter(extension => ["node", "mark"].includes(extension.type))
       .filter(extension => extension.inputRules)
       .map(extension =>

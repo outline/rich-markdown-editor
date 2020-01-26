@@ -1,4 +1,5 @@
 // @flow
+import { Node } from "prosemirror-model";
 import { InputRule } from "prosemirror-inputrules";
 
 function getMarksBetween(start, end, state) {
@@ -18,7 +19,7 @@ function getMarksBetween(start, end, state) {
   return marks;
 }
 
-export default function(regexp, markType, getAttrs) {
+export default function(regexp: RegExp, markType: Node, getAttrs: () => {}) {
   return new InputRule(regexp, (state, match, start, end) => {
     const attrs = getAttrs instanceof Function ? getAttrs(match) : getAttrs;
     const { tr } = state;

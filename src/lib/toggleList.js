@@ -1,4 +1,7 @@
 // @flow
+import { Node } from "prosemirror-model";
+import { EditorView } from "prosemirror-view";
+import { EditorState } from "prosemirror-state";
 import { wrapInList, liftListItem } from "prosemirror-schema-list";
 import { findParentNode } from "prosemirror-utils";
 
@@ -10,8 +13,8 @@ function isList(node, schema) {
   );
 }
 
-export default function toggleList(listType, itemType) {
-  return (state, dispatch, view) => {
+export default function toggleList(listType: Node, itemType: Node) {
+  return (state: EditorState, dispatch: Function, view: EditorView) => {
     const { schema, selection } = state;
     const { $from, $to } = selection;
     const range = $from.blockRange($to);

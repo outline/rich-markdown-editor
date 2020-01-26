@@ -1,9 +1,11 @@
 // @flow
 import { EditorView } from "prosemirror-view";
 import { Node } from "prosemirror-model";
+import Editor from "../";
 
 export default class Extension {
   options: Object;
+  editor: Editor;
 
   constructor(options: Object = {}) {
     this.options = {
@@ -16,7 +18,7 @@ export default class Extension {
     return null;
   }
 
-  bindEditor(editor) {
+  bindEditor(editor: Editor) {
     this.editor = editor;
   }
 
