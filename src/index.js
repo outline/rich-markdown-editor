@@ -123,7 +123,6 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
   plugins: Plugin[];
   keymaps: Plugin[];
   inputRules: InputRule[];
-  pasteRules: InputRule[];
   nodes: { string: Node };
   marks: { string: Mark };
   commands: Object;
@@ -170,7 +169,6 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
     this.serializer = this.createSerializer();
     this.parser = this.createParser();
     this.inputRules = this.createInputRules();
-    this.pasteRules = this.createPasteRules();
     this.nodeViews = this.createNodeViews();
     this.view = this.createView();
     this.commands = this.createCommands();
@@ -203,12 +201,6 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
 
   createInputRules() {
     return this.extensions.inputRules({
-      schema: this.schema,
-    });
-  }
-
-  createPasteRules() {
-    return this.extensions.pasteRules({
       schema: this.schema,
     });
   }
@@ -284,7 +276,6 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
           rules: this.inputRules,
         }),
         keymap(baseKeymap),
-        ...this.pasteRules,
       ],
     });
   }

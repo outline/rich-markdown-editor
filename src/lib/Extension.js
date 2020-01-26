@@ -44,10 +44,6 @@ export default class Extension {
     return [];
   }
 
-  pasteRules(node: Node) {
-    return [];
-  }
-
   keys(node: Node) {
     return {};
   }
