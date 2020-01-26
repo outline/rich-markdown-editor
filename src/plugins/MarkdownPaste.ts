@@ -20,20 +20,20 @@ export default class MarkdownPaste extends Extension {
             event.preventDefault();
 
             const paste = this.editor.parser.parse(text);
-            const slice = paste.slice(0);
+            let slice = paste.slice(0);
 
             // because the default schema includes a forced level one heading
             // for the title we try and slice the extra node off if we can
             // before adding the parsed nodes to the doc
-            // try {
-            //   if (!slice.content.content[0].textContent) {
-            //     slice = slice.removeBetween(0, 2);
-            //   } else {
-            //     slice = slice.removeBetween(5, slice.size);
-            //   }
-            // } catch (err) {
-            //   console.error(err);
-            // }
+            try {
+              if (!slice.content.firstChild.textContent) {
+                slice = slice.removeBetween(0, 2);
+              } else {
+                slice = slice.removeBetween(5, slice.size);
+              }
+            } catch (err) {
+              console.error(err);
+            }
 
             const transaction = view.state.tr.replaceSelection(slice);
             view.dispatch(transaction);

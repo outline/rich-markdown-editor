@@ -1,6 +1,6 @@
 /* global window File Promise */
 import * as React from "react";
-import { EditorState, Plugin } from "prosemirror-state";
+import { EditorState, Selection, Plugin } from "prosemirror-state";
 import { dropCursor } from "prosemirror-dropcursor";
 import { gapCursor } from "prosemirror-gapcursor";
 import { MarkdownParser, MarkdownSerializer } from "prosemirror-markdown";
@@ -355,17 +355,17 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
   };
 
   focusAtStart = () => {
-    // const selection = Selection.atStart(this.view.docView.node);
-    // const transaction = this.view.state.tr.setSelection(selection);
-    // this.view.dispatch(transaction);
-    // this.view.focus();
+    const selection = Selection.atStart(this.view.state.doc);
+    const transaction = this.view.state.tr.setSelection(selection);
+    this.view.dispatch(transaction);
+    this.view.focus();
   };
 
   focusAtEnd = () => {
-    // const selection = Selection.atEnd(this.view.docView.node);
-    // const transaction = this.view.state.tr.setSelection(selection);
-    // this.view.dispatch(transaction);
-    // this.view.focus();
+    const selection = Selection.atEnd(this.view.state.doc);
+    const transaction = this.view.state.tr.setSelection(selection);
+    this.view.dispatch(transaction);
+    this.view.focus();
   };
 
   render = () => {
