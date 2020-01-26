@@ -23,8 +23,6 @@ type Props = {
   auto?: boolean;
   className?: string;
   children?: React.ReactNode;
-  onDragOver?: (event: DragEvent) => any;
-  onDragEnter?: (event: DragEvent) => any;
 };
 
 const Flex = styled.div<Props>`

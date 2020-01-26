@@ -1,6 +1,6 @@
 import * as React from "react";
 import ReactDOM from "react-dom";
-import { EditorView } from "prosemirror-view";
+import { EditorView, Decoration } from "prosemirror-view";
 import Extension from "../lib/Extension";
 import Node from "../nodes/Node";
 import Editor from "../";
@@ -18,6 +18,8 @@ export default class ComponentView {
   extension: Extension;
   node: Node;
   view: EditorView;
+  getPos: boolean | (() => number);
+  decorations: Decoration<{ [key: string]: any }>[];
   isSelected = false;
   containerElement: HTMLElement;
   contentElement: HTMLElement;
@@ -25,10 +27,15 @@ export default class ComponentView {
   contentDOM: HTMLElement;
 
   // See https://prosemirror.net/docs/ref/#view.NodeView
-  constructor(component, { editor, extension, node, view }) {
+  constructor(
+    component,
+    { editor, extension, node, view, getPos, decorations }
+  ) {
     this.component = component;
     this.editor = editor;
     this.extension = extension;
+    this.getPos = getPos;
+    this.decorations = decorations;
     this.node = node;
     this.view = view;
     this.containerElement = node.type.spec.inline

@@ -5,7 +5,7 @@ import { dropCursor } from "prosemirror-dropcursor";
 import { gapCursor } from "prosemirror-gapcursor";
 import { MarkdownParser, MarkdownSerializer } from "prosemirror-markdown";
 import { EditorView } from "prosemirror-view";
-import { Node as PMNode, Schema } from "prosemirror-model";
+import { Node as ProsemirrorNode, Schema } from "prosemirror-model";
 import { inputRules, InputRule } from "prosemirror-inputrules";
 import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
@@ -71,7 +71,7 @@ export type Props = {
   onSearchLink?: (term: string) => Promise<Array<Record<string, any>>>;
   onClickLink?: (href: string) => void;
   onClickHashtag?: (tag: string) => void;
-  getLinkComponent?: (node: PMNode) => any;
+  getLinkComponent?: (node: ProsemirrorNode) => any;
   onShowToast?: (message: string) => void;
   className?: string;
   style?: Record<string, any>;
@@ -100,7 +100,9 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
   plugins: Plugin[];
   keymaps: Plugin[];
   inputRules: InputRule[];
-  nodeViews: { [name: string]: PMNode };
+  nodeViews: {
+    [name: string]: (node, view, getPos, decorations) => ComponentView;
+  };
   nodes: { [name: string]: Node };
   marks: { [name: string]: Mark };
   commands: Record<string, any>;
@@ -221,7 +223,7 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
     return this.props.extensions
       .filter((extension: Node) => extension.component)
       .reduce((nodeViews, extension: Node) => {
-        const nodeView = (node, view) => {
+        const nodeView = (node, view, getPos, decorations) => {
           const { component } = extension;
 
           return new ComponentView(component, {
@@ -229,6 +231,8 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
             extension,
             node,
             view,
+            getPos,
+            decorations,
           });
         };
 
@@ -298,11 +302,8 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
     const view = new EditorView(this.element, {
       state: this.createState(),
       editable: () => !this.props.readOnly,
+      nodeViews: this.nodeViews,
     });
-
-    // view.setProps({
-    //   nodeViews: this.nodeViews,
-    // });
 
     return view;
   }
@@ -334,10 +335,6 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
         return text;
       });
     }
-  };
-
-  cancelEvent = (ev: Event) => {
-    ev.preventDefault();
   };
 
   handleSave = () => {
@@ -376,8 +373,6 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
       <Flex
         style={style}
         className={className}
-        // onDragOver={this.cancelEvent}
-        // onDragEnter={this.cancelEvent}
         align="flex-start"
         justify="center"
         column
