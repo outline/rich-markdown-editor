@@ -1,5 +1,5 @@
 import { wrappingInputRule } from "prosemirror-inputrules";
-import toggleList from "../lib/toggleList";
+import toggleList from "../commands/toggleList";
 import Node from "./Node";
 
 export default class OrderedList extends Node {

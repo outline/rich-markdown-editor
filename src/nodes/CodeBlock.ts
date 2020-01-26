@@ -100,9 +100,9 @@ export default class CodeBlock extends Node {
     };
   }
 
-  // commands({ type, schema }) {
-  //   return () => toggleBlockType(type, schema.nodes.paragraph);
-  // }
+  commands({ type }) {
+    return () => setBlockType(type);
+  }
 
   keys({ type }) {
     return {

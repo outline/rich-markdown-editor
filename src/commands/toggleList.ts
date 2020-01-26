@@ -2,14 +2,7 @@ import { NodeType } from "prosemirror-model";
 import { EditorState, Transaction } from "prosemirror-state";
 import { wrapInList, liftListItem } from "prosemirror-schema-list";
 import { findParentNode } from "prosemirror-utils";
-
-function isList(node, schema) {
-  return (
-    node.type === schema.nodes.bullet_list ||
-    node.type === schema.nodes.ordered_list ||
-    node.type === schema.nodes.todo_list
-  );
-}
+import isList from "../queries/isList";
 
 export default function toggleList(listType: NodeType, itemType: NodeType) {
   return (state: EditorState, dispatch: (tr: Transaction) => void) => {

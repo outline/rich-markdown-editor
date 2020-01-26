@@ -1,3 +1,4 @@
+import { NodeType } from "prosemirror-model";
 import { setBlockType } from "prosemirror-commands";
 import Node from "./Node";
 
@@ -21,6 +22,10 @@ export default class Paragraph extends Node {
     return {
       "Shift-Ctrl-0": setBlockType(type),
     };
+  }
+
+  commands({ type }: { type: NodeType }) {
+    return (attrs: Record<string, any>) => setBlockType(type, attrs);
   }
 
   toMarkdown(state, node) {

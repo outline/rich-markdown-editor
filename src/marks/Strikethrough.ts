@@ -30,10 +30,6 @@ export default class Strikethrough extends Mark {
     };
   }
 
-  commands({ type }) {
-    return () => toggleMark(type);
-  }
-
   inputRules({ type }) {
     return [markInputRule(/~([^~]+)~$/, type)];
   }

@@ -64,11 +64,11 @@ export default class Heading extends Node {
     };
   }
 
-  // commands({ type, schema }: { type: ProsemirrorNode; schema: Schema }) {
-  //   return (attrs: Record<string, any>) => {
-  //     return toggleBlockType(type, schema.nodes.paragraph, attrs);
-  //   };
-  // }
+  commands({ type }: { type: NodeType }) {
+    return (attrs: Record<string, any>) => {
+      return setBlockType(type, attrs);
+    };
+  }
 
   keys({ type }: { type: NodeType }) {
     return this.options.levels.reduce(

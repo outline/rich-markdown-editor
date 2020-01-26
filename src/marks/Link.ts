@@ -2,7 +2,7 @@ import { toggleMark } from "prosemirror-commands";
 import { Plugin } from "prosemirror-state";
 import { InputRule } from "prosemirror-inputrules";
 import getMarkAttrs from "../lib/getMarkAttrs";
-import Node from "./Mark";
+import Mark from "./Mark";
 
 const LINK_INPUT_REGEX = /\[(.+|:?)]\((\S+)\)/;
 
@@ -28,7 +28,7 @@ function isPlainURL(link, parent, index, side) {
   return !link.isInSet(next.marks);
 }
 
-export default class Link extends Node {
+export default class Link extends Mark {
   get name() {
     return "link";
   }
@@ -77,6 +77,10 @@ export default class Link extends Node {
         return tr;
       }),
     ];
+  }
+
+  commands({ type }) {
+    return () => toggleMark(type, { href: "" });
   }
 
   keys({ type }) {

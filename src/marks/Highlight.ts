@@ -1,8 +1,8 @@
 import { toggleMark } from "prosemirror-commands";
 import markInputRule from "../lib/markInputRule";
-import Node from "./Mark";
+import Mark from "./Mark";
 
-export default class Highlight extends Node {
+export default class Highlight extends Mark {
   get name() {
     return "mark";
   }

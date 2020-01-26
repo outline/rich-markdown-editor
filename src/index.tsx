@@ -17,6 +17,7 @@ import { baseKeymap } from "prosemirror-commands";
 import styled, { ThemeProvider } from "styled-components";
 import { light as lightTheme, dark as darkTheme } from "./theme";
 import Flex from "./components/Flex";
+import Menu from "./components/Menu";
 import Extension from "./lib/Extension";
 import ExtensionManager from "./lib/ExtensionManager";
 import ComponentView from "./lib/ComponentView";
@@ -46,7 +47,6 @@ import Link from "./marks/Link";
 import Strikethrough from "./marks/Strikethrough";
 
 // plugins
-import Change from "./plugins/Change";
 import History from "./plugins/History";
 import Keys from "./plugins/Keys";
 import Placeholder from "./plugins/Placeholder";
@@ -77,6 +77,7 @@ export type Props = {
   onClickHashtag?: (tag: string) => void;
   getLinkComponent?: (node: ProsemirrorNode) => any;
   onShowToast?: (message: string) => void;
+  tooltip: React.Component;
   className?: string;
   style?: Record<string, any>;
 };
@@ -195,7 +196,6 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
         new SmartText(),
         new TrailingNode(),
         new MarkdownPaste(),
-        new Change({ onChange: this.handleChange }),
         new Keys({
           onSave: this.handleSave,
           onSaveAndExit: this.handleSaveAndExit,
@@ -305,6 +305,24 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
       state: this.createState(),
       editable: () => !this.props.readOnly,
       nodeViews: this.nodeViews,
+      dispatchTransaction: transaction => {
+        const { state, transactions } = this.view.state.applyTransaction(
+          transaction
+        );
+
+        this.view.updateState(state);
+
+        // If any of the transactions being dispatched resulted in the doc
+        // changing then call our own change handler to let the outside world
+        // know
+        if (transactions.some(tr => tr.docChanged)) {
+          this.handleChange();
+        }
+
+        // Because Prosemirror and React are not linked we must tell React that
+        // a render is needed whenever the Prosemirror state changes.
+        this.forceUpdate();
+      },
     });
 
     return view;
@@ -368,7 +386,7 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
   };
 
   render = () => {
-    const { dark, readOnly, style, className } = this.props;
+    const { dark, readOnly, style, tooltip, className } = this.props;
     const theme = this.props.theme || (dark ? darkTheme : lightTheme);
 
     return (
@@ -386,6 +404,13 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
               readOnly={readOnly}
               ref={ref => (this.element = ref)}
             />
+            {this.view && (
+              <Menu
+                view={this.view}
+                commands={this.commands}
+                tooltip={tooltip}
+              />
+            )}
           </React.Fragment>
         </ThemeProvider>
       </Flex>

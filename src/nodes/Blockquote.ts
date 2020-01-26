@@ -1,3 +1,4 @@
+import { setBlockType } from "prosemirror-commands";
 import { wrappingInputRule } from "prosemirror-inputrules";
 import Node from "./Node";
 
@@ -17,6 +18,10 @@ export default class Blockquote extends Node {
 
   inputRules({ type }) {
     return [wrappingInputRule(/^\s*>\s$/, type)];
+  }
+
+  commands({ type }) {
+    return () => setBlockType(type);
   }
 
   toMarkdown(state, node) {

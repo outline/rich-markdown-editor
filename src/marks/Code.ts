@@ -1,6 +1,6 @@
 import { toggleMark } from "prosemirror-commands";
 import markInputRule from "../lib/markInputRule";
-import Node from "./Mark";
+import Mark from "./Mark";
 
 function backticksFor(node, side) {
   const ticks = /`+/g;
@@ -23,14 +23,14 @@ function backticksFor(node, side) {
   return result;
 }
 
-export default class Code extends Node {
+export default class Code extends Mark {
   get name() {
     return "code_inline";
   }
 
   get schema() {
     return {
-      excludes: "strong em link",
+      excludes: "strong em link mark strikethrough",
       parseDOM: [{ tag: "code" }],
       toDOM: () => ["code", { spellCheck: false }],
     };
