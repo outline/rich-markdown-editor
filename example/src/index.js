@@ -1,4 +1,3 @@
-// @flow
 import * as React from "react";
 import { debounce } from "lodash";
 import ReactDOM from "react-dom";
@@ -20,10 +19,7 @@ const defaultValue = savedText || exampleText;
 //   }
 // }
 
-class Example extends React.Component<
-  *,
-  { readOnly: boolean, dark: boolean, value?: string }
-> {
+class Example extends React.Component {
   state = {
     readOnly: false,
     dark: localStorage.getItem("dark") === "enabled",
@@ -100,7 +96,7 @@ class Example extends React.Component<
               );
             });
           }}
-          getLinkComponent={node => {
+          getLinkComponent={() => {
             // if (node.data.get("href").match(/google/)) {
             //   return GoogleEmbed;
             // }
