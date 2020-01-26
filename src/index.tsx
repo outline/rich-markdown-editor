@@ -5,7 +5,12 @@ import { dropCursor } from "prosemirror-dropcursor";
 import { gapCursor } from "prosemirror-gapcursor";
 import { MarkdownParser, MarkdownSerializer } from "prosemirror-markdown";
 import { EditorView } from "prosemirror-view";
-import { Node as ProsemirrorNode, Schema } from "prosemirror-model";
+import {
+  Node as ProsemirrorNode,
+  Schema,
+  NodeSpec,
+  MarkSpec,
+} from "prosemirror-model";
 import { inputRules, InputRule } from "prosemirror-inputrules";
 import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
@@ -17,7 +22,7 @@ import ExtensionManager from "./lib/ExtensionManager";
 import ComponentView from "./lib/ComponentView";
 
 // nodes
-import Node from "./nodes/Node";
+import ReactNode from "./nodes/ReactNode";
 import Doc from "./nodes/Doc";
 import Text from "./nodes/Text";
 import Blockquote from "./nodes/Blockquote";
@@ -33,7 +38,6 @@ import OrderedList from "./nodes/OrderedList";
 import Paragraph from "./nodes/Paragraph";
 
 // marks
-import Mark from "./marks/Mark";
 import Bold from "./marks/Bold";
 import Code from "./marks/Code";
 import Highlight from "./marks/Highlight";
@@ -103,8 +107,8 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
   nodeViews: {
     [name: string]: (node, view, getPos, decorations) => ComponentView;
   };
-  nodes: { [name: string]: Node };
-  marks: { [name: string]: Mark };
+  nodes: { [name: string]: NodeSpec };
+  marks: { [name: string]: MarkSpec };
   commands: Record<string, any>;
 
   componentDidMount() {
@@ -220,13 +224,11 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
   }
 
   createNodeViews() {
-    return this.props.extensions
-      .filter((extension: Node) => extension.component)
-      .reduce((nodeViews, extension: Node) => {
+    return this.extensions.extensions
+      .filter((extension: ReactNode) => extension.component)
+      .reduce((nodeViews, extension: ReactNode) => {
         const nodeView = (node, view, getPos, decorations) => {
-          const { component } = extension;
-
-          return new ComponentView(component, {
+          return new ComponentView(extension.component, {
             editor: this,
             extension,
             node,

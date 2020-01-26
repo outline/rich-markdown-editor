@@ -1,6 +1,6 @@
 import Extension from "../lib/Extension";
 
-export default class Mark extends Extension {
+export default abstract class Mark extends Extension {
   get type() {
     return "mark";
   }

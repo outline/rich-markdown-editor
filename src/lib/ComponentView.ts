@@ -9,7 +9,7 @@ type Component = (options: {
   node: Node;
   isSelected: boolean;
   isEditable: boolean;
-  innerRef: (HTMLElement) => any;
+  innerRef: (HTMLElement) => void;
 }) => React.ReactElement;
 
 export default class ComponentView {
