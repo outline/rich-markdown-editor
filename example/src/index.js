@@ -107,7 +107,6 @@ class Example extends React.Component<
           }}
           dark={this.state.dark}
           autoFocus
-          toc
         />
       </div>
     );

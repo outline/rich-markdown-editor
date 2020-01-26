@@ -32,7 +32,6 @@ import Image from "./nodes/Image";
 import ListItem from "./nodes/ListItem";
 import OrderedList from "./nodes/OrderedList";
 import Paragraph from "./nodes/Paragraph";
-import Paste from "./nodes/Paste";
 
 // marks
 import Mark from "./marks/Mark";
@@ -50,7 +49,7 @@ import Keys from "./plugins/Keys";
 import Placeholder from "./plugins/Placeholder";
 import SmartText from "./plugins/SmartText";
 import TrailingNode from "./plugins/TrailingNode";
-// import MarkdownPaste from "./plugins/MarkdownPaste";
+import MarkdownPaste from "./plugins/MarkdownPaste";
 
 export const theme = lightTheme;
 
@@ -110,8 +109,7 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
       new History(),
       new SmartText(),
       new TrailingNode(),
-      // new MarkdownPaste(),
-      new Paste(),
+      new MarkdownPaste(),
     ],
     tooltip: "span",
   };
@@ -122,7 +120,6 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
   schema: Schema;
   serializer: MarkdownSerializer;
   parser: MarkdownParser;
-  pasteParser: MarkdownParser;
   plugins: Plugin[];
   keymaps: Plugin[];
   inputRules: InputRule[];
@@ -172,7 +169,6 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
     this.keymaps = this.createKeymaps();
     this.serializer = this.createSerializer();
     this.parser = this.createParser();
-    this.pasteParser = this.createPasteParser();
     this.inputRules = this.createInputRules();
     this.pasteRules = this.createPasteRules();
     this.nodeViews = this.createNodeViews();
@@ -270,16 +266,6 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
   createParser() {
     return this.extensions.parser({
       schema: this.schema,
-    });
-  }
-
-  createPasteParser() {
-    return this.extensions.parser({
-      schema: new Schema({
-        nodes: this.nodes,
-        marks: this.marks,
-        topNode: "paste",
-      }),
     });
   }
 
