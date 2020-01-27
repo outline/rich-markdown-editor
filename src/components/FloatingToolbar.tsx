@@ -12,22 +12,17 @@ type Props = {
 export default class FloatingToolbar extends React.Component<Props> {
   menuRef = React.createRef<HTMLDivElement>();
   state = {
-    style: {
-      left: 0,
-      top: 0,
-    },
+    left: 0,
+    top: 0,
+    offset: 0,
   };
 
   componentDidMount() {
-    this.setState({
-      style: this.calculateStyle(this.props),
-    });
+    this.setState(this.calculateStyle(this.props));
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    this.setState({
-      style: this.calculateStyle(nextProps),
-    });
+    this.setState(this.calculateStyle(nextProps));
   }
 
   calculateStyle(props) {
@@ -42,6 +37,8 @@ export default class FloatingToolbar extends React.Component<Props> {
       };
     }
 
+    // based on the start and end of the selection calculate the position at
+    // the center top
     const anchorPos = view.coordsAtPos(selection.$anchor.pos);
     const headPos = view.coordsAtPos(selection.$head.pos);
     const halfSelection = Math.abs(anchorPos.left - headPos.left) / 2;
@@ -53,6 +50,9 @@ export default class FloatingToolbar extends React.Component<Props> {
       centerOfSelection = anchorPos.left + halfSelection;
     }
 
+    // position the menu so that it is centered over the selection except in
+    // the cases where it would extend off the edge of the screen. In these
+    // instances leave a margin
     const { offsetWidth, offsetHeight } = this.menuRef.current;
     const margin = 12;
     const left = Math.min(
@@ -64,9 +64,15 @@ export default class FloatingToolbar extends React.Component<Props> {
       Math.max(margin, anchorPos.top - offsetHeight)
     );
 
+    // if the menu has been offset to not extend offscreen then we should adjust
+    // the position of the triangle underneath to correctly point to the center
+    // of the selection still
+    const offset = left - (centerOfSelection - offsetWidth / 2);
+
     return {
       left,
       top,
+      offset,
     };
   }
 
@@ -75,21 +81,32 @@ export default class FloatingToolbar extends React.Component<Props> {
     const isActive = !view.state.selection.empty;
 
     return (
-      <Wrapper active={isActive} ref={this.menuRef} style={this.state.style}>
+      <Wrapper
+        active={isActive}
+        ref={this.menuRef}
+        top={this.state.top}
+        left={this.state.left}
+        offset={this.state.offset}
+      >
         <Menu {...this.props} />
       </Wrapper>
     );
   }
 }
 
-export const Wrapper = styled.div<{ active: boolean }>`
+export const Wrapper = styled.div<{
+  active: boolean;
+  top: number;
+  left: number;
+  offset: number;
+}>`
   padding: 8px 16px;
   position: absolute;
   z-index: ${props => {
     return props.theme.zIndex + 100;
   }};
-  top: -10000px;
-  left: -10000px;
+  top: ${props => props.top}px;
+  left: ${props => props.left}px;
   opacity: 0;
   background-color: ${props => props.theme.toolbarBackground};
   border-radius: 4px;
@@ -114,7 +131,7 @@ export const Wrapper = styled.div<{ active: boolean }>`
     z-index: -1;
     position: absolute;
     bottom: -2px;
-    left: 50%;
+    left: calc(50% - ${props => props.offset || 0}px);
   }
 
   * {

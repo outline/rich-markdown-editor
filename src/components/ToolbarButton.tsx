@@ -14,6 +14,7 @@ export default styled.button<Props>`
   transition: opacity 100ms ease-in-out;
   padding: 0;
   opacity: 0.7;
+  outline: none;
 
   &:first-child {
     margin-left: 0;
