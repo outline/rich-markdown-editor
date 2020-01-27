@@ -94,13 +94,17 @@ export default class Link extends Mark {
       new Plugin({
         props: {
           handleClick: (view, pos, event) => {
-            if (view.props.editable) return false;
+            // allow opening links in editing mode with the meta/cmd key
+            if (view.props.editable && !event.metaKey) {
+              return false;
+            }
 
             const { schema } = view.state;
             const attrs = getMarkAttrs(view.state, schema.marks.link);
 
             if (attrs.href && event.target instanceof HTMLAnchorElement) {
               event.stopPropagation();
+              event.preventDefault();
               window.open(attrs.href);
             }
           },
