@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Portal } from "react-portal";
 import { EditorView } from "prosemirror-view";
 import styled from "styled-components";
 import Menu from "./Menu";
@@ -18,14 +19,14 @@ export default class FloatingToolbar extends React.Component<Props> {
   };
 
   componentDidMount() {
-    this.setState(this.calculateStyle(this.props));
+    this.setState(this.calculatePosition(this.props));
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    this.setState(this.calculateStyle(nextProps));
+    this.setState(this.calculatePosition(nextProps));
   }
 
-  calculateStyle(props) {
+  calculatePosition(props) {
     const { view } = props;
 
     const { selection } = view.state;
@@ -70,8 +71,8 @@ export default class FloatingToolbar extends React.Component<Props> {
     const offset = left - (centerOfSelection - offsetWidth / 2);
 
     return {
-      left,
-      top,
+      left: left + window.scrollX,
+      top: top + window.scrollY,
       offset,
     };
   }
@@ -81,15 +82,17 @@ export default class FloatingToolbar extends React.Component<Props> {
     const isActive = !view.state.selection.empty;
 
     return (
-      <Wrapper
-        active={isActive}
-        ref={this.menuRef}
-        top={this.state.top}
-        left={this.state.left}
-        offset={this.state.offset}
-      >
-        <Menu {...this.props} />
-      </Wrapper>
+      <Portal>
+        <Wrapper
+          active={isActive}
+          ref={this.menuRef}
+          top={this.state.top}
+          left={this.state.left}
+          offset={this.state.offset}
+        >
+          <Menu {...this.props} />
+        </Wrapper>
+      </Portal>
     );
   }
 }
