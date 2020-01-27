@@ -1,4 +1,4 @@
-const isNodeActive = (type, attrs = {}) => state => {
+const isNodeActive = (type, attrs = undefined) => state => {
   const { $from, to, node } = state.selection;
 
   if (node) {

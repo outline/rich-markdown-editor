@@ -17,7 +17,7 @@ import { baseKeymap } from "prosemirror-commands";
 import styled, { ThemeProvider } from "styled-components";
 import { light as lightTheme, dark as darkTheme } from "./theme";
 import Flex from "./components/Flex";
-import Menu from "./components/Menu";
+import FloatingToolbar from "./components/FloatingToolbar";
 import Extension from "./lib/Extension";
 import ExtensionManager from "./lib/ExtensionManager";
 import ComponentView from "./lib/ComponentView";
@@ -404,12 +404,16 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
               readOnly={readOnly}
               ref={ref => (this.element = ref)}
             />
-            {this.view && (
-              <Menu
-                view={this.view}
-                commands={this.commands}
-                tooltip={tooltip}
-              />
+            {!readOnly && (
+              <React.Fragment>
+                {this.view && (
+                  <FloatingToolbar
+                    view={this.view}
+                    commands={this.commands}
+                    tooltip={tooltip}
+                  />
+                )}
+              </React.Fragment>
             )}
           </React.Fragment>
         </ThemeProvider>

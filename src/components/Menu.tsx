@@ -7,23 +7,20 @@ import {
   Heading2Icon,
   ItalicIcon,
   BlockQuoteIcon,
-  //   LinkIcon,
+  LinkIcon,
   StrikethroughIcon,
 } from "outline-icons";
+import { withTheme } from "styled-components";
 import isNodeActive from "../queries/isNodeActive";
+import isMarkActive from "../queries/isMarkActive";
+import ToolbarButton from "./ToolbarButton";
+import ToolbarSeparator from "./ToolbarSeparator";
 
 type Props = {
   tooltip: React.Component;
   commands: Record<string, any>;
   view: EditorView;
-};
-
-const isMarkActive = type => state => {
-  const { from, $from, to, empty } = state.selection;
-
-  return empty
-    ? type.isInSet(state.storedMarks || $from.marks())
-    : state.doc.rangeHasMark(from, to, type);
+  theme: Record<string, string>;
 };
 
 const getMenuItems = ({ schema }) => {
@@ -31,25 +28,25 @@ const getMenuItems = ({ schema }) => {
     [
       {
         name: "strong",
-        title: "Bold",
+        tooltip: "Bold",
         icon: BoldIcon,
         active: isMarkActive(schema.marks.strong),
       },
       {
         name: "em",
-        title: "Italic",
+        tooltip: "Italic",
         icon: ItalicIcon,
         active: isMarkActive(schema.marks.em),
       },
       {
         name: "strikethrough",
-        title: "Strikethrough",
+        tooltip: "Strikethrough",
         icon: StrikethroughIcon,
         active: isMarkActive(schema.marks.strikethrough),
       },
       {
         name: "code_inline",
-        title: "Code",
+        tooltip: "Code",
         icon: CodeIcon,
         active: isMarkActive(schema.marks.code_inline),
       },
@@ -57,30 +54,39 @@ const getMenuItems = ({ schema }) => {
     [
       {
         name: "heading",
-        title: "Heading",
+        tooltip: "Heading",
         icon: Heading1Icon,
         active: isNodeActive(schema.nodes.heading, { level: 1 }),
         attrs: { level: 1 },
       },
       {
         name: "heading",
-        title: "Subheading",
+        tooltip: "Subheading",
         icon: Heading2Icon,
         active: isNodeActive(schema.nodes.heading, { level: 2 }),
         attrs: { level: 2 },
       },
       {
         name: "blockquote",
-        title: "Quote",
+        tooltip: "Quote",
         icon: BlockQuoteIcon,
         active: isNodeActive(schema.nodes.blockquote),
         attrs: { level: 2 },
       },
     ],
+    [
+      {
+        name: "link",
+        tooltip: "Create link",
+        icon: LinkIcon,
+        active: isMarkActive(schema.marks.link),
+        attrs: { href: "" },
+      },
+    ],
   ];
 };
 
-export default class Menu extends React.Component<Props> {
+class Menu extends React.Component<Props> {
   render() {
     const { state } = this.props.view;
     const Tooltip = this.props.tooltip;
@@ -90,20 +96,21 @@ export default class Menu extends React.Component<Props> {
       <div>
         {sections.map((section, index) => (
           <React.Fragment key={index}>
-            {!!index && <span>-</span>}
+            {!!index && <ToolbarSeparator />}
             {section.map((item, index) => {
               const Icon = item.icon;
               const isActive = item.active(state);
 
               return (
-                <button
+                <ToolbarButton
                   key={index}
-                  onClick={event => this.props.commands[item.name](item.attrs)}
+                  onClick={() => this.props.commands[item.name](item.attrs)}
+                  active={isActive}
                 >
-                  <Tooltip tooltip={item.title} placement="top">
-                    <Icon /> {item.title} {isActive ? "active" : "inactive"}
+                  <Tooltip tooltip={item.tooltip} placement="top">
+                    <Icon color={this.props.theme.toolbarItem} />
                   </Tooltip>
-                </button>
+                </ToolbarButton>
               );
             })}
           </React.Fragment>
@@ -112,3 +119,5 @@ export default class Menu extends React.Component<Props> {
     );
   }
 }
+
+export default withTheme(Menu);

@@ -1,6 +1,6 @@
-import { setBlockType } from "prosemirror-commands";
 import { wrappingInputRule } from "prosemirror-inputrules";
 import Node from "./Node";
+import toggleWrap from "../commands/toggleWrap";
 
 export default class Blockquote extends Node {
   get name() {
@@ -21,7 +21,7 @@ export default class Blockquote extends Node {
   }
 
   commands({ type }) {
-    return () => setBlockType(type);
+    return () => toggleWrap(type);
   }
 
   toMarkdown(state, node) {
