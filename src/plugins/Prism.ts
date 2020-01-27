@@ -1,5 +1,5 @@
 import refractor from "refractor/core";
-import { flatten } from "lodash";
+import { flattenDeep } from "lodash";
 import { Plugin, PluginKey } from "prosemirror-state";
 import { Decoration, DecorationSet } from "prosemirror-view";
 import { findBlockNodes } from "prosemirror-utils";
@@ -38,7 +38,7 @@ function getDecorations({ doc, name }) {
 
     const nodes = refractor.highlight(block.node.textContent, language);
 
-    flatten(parseNodes(nodes))
+    flattenDeep(parseNodes(nodes))
       .map(node => {
         const from = startPos;
         const to = from + node.text.length;
@@ -53,7 +53,7 @@ function getDecorations({ doc, name }) {
       })
       .forEach(node => {
         const decoration = Decoration.inline(node.from, node.to, {
-          class: node.classes.join(" "),
+          class: (node.classes || []).join(" "),
         });
         decorations.push(decoration);
       });
