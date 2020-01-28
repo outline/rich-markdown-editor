@@ -1,4 +1,5 @@
 import { wrappingInputRule } from "prosemirror-inputrules";
+import toggleList from "../commands/toggleList";
 import Node from "./Node";
 
 export default class CheckboxList extends Node {
@@ -17,6 +18,10 @@ export default class CheckboxList extends Node {
         },
       ],
     };
+  }
+
+  commands({ type, schema }) {
+    return () => toggleList(type, schema.nodes.checkbox_item);
   }
 
   inputRules({ type }) {

@@ -4,10 +4,14 @@ import { EditorView } from "prosemirror-view";
 import { findParentNode } from "prosemirror-utils";
 import styled from "styled-components";
 import {
-  Heading1Icon,
-  Heading2Icon,
   BlockQuoteIcon,
   BulletedListIcon,
+  CodeIcon,
+  Heading1Icon,
+  Heading2Icon,
+  HorizontalRuleIcon,
+  OrderedListIcon,
+  TodoListIcon,
 } from "outline-icons";
 import isNodeActive from "../queries/isNodeActive";
 
@@ -56,12 +60,42 @@ const getMenuItems = ({ schema }) => {
       shortcut: "^ ⇧ 8",
     },
     {
+      name: "ordered_list",
+      tooltip: "Ordered list",
+      icon: OrderedListIcon,
+      active: isNodeActive(schema.nodes.ordered_list),
+      shortcut: "^ ⇧ 9",
+    },
+    {
+      name: "checkbox_list",
+      tooltip: "Todo list",
+      icon: TodoListIcon,
+      active: isNodeActive(schema.nodes.checkbox_list),
+      keywords: "checklist checkbox task",
+    },
+    {
       name: "blockquote",
       tooltip: "Quote",
       icon: BlockQuoteIcon,
       active: isNodeActive(schema.nodes.blockquote),
       shortcut: "⌘ ]",
       attrs: { level: 2 },
+    },
+    {
+      name: "code_block",
+      tooltip: "Code block",
+      icon: CodeIcon,
+      active: isNodeActive(schema.nodes.code_block),
+      shortcut: "^ ⇧ \\",
+      keywords: "script",
+    },
+    {
+      name: "hr",
+      tooltip: "Break",
+      icon: HorizontalRuleIcon,
+      active: isNodeActive(schema.nodes.hr),
+      shortcut: "⌘ _",
+      keywords: "horizontal rule line",
     },
   ];
 };
@@ -71,7 +105,9 @@ export default class BlockMenu extends React.Component<Props> {
 
   state = {
     left: 0,
-    top: 0,
+    top: undefined,
+    bottom: undefined,
+    isAbove: false,
   };
 
   componentDidMount() {
@@ -137,15 +173,24 @@ export default class BlockMenu extends React.Component<Props> {
     const startPos = view.coordsAtPos(selection.$from.pos);
     const { offsetHeight } = this.menuRef.current;
     const paragraph = view.domAtPos(selection.$from.pos);
-    const { left, bottom } = paragraph.node.getBoundingClientRect();
-    const idealTop = startPos.top - offsetHeight;
+    const { top, left, bottom } = paragraph.node.getBoundingClientRect();
     const margin = 12;
-    const top = idealTop < margin ? bottom : idealTop;
 
-    return {
-      left: left + window.scrollX,
-      top: top + window.scrollY,
-    };
+    if (startPos.top - offsetHeight > margin) {
+      return {
+        left: left + window.scrollX,
+        top: undefined,
+        bottom: window.scrollY + window.innerHeight - top,
+        isAbove: false,
+      };
+    } else {
+      return {
+        left: left + window.scrollX,
+        top: bottom + window.scrollY,
+        bottom: undefined,
+        isAbove: true,
+      };
+    }
   }
 
   get filtered() {
@@ -168,12 +213,7 @@ export default class BlockMenu extends React.Component<Props> {
 
     return (
       <Portal>
-        <Wrapper
-          active={isActive}
-          ref={this.menuRef}
-          top={this.state.top}
-          left={this.state.left}
-        >
+        <Wrapper active={isActive} ref={this.menuRef} {...this.state}>
           <List>
             {this.filtered.map((item, index) => {
               const Icon = item.icon;
@@ -182,7 +222,7 @@ export default class BlockMenu extends React.Component<Props> {
                 <ListItem key={index}>
                   <MenuItem onClick={() => this.insertBlock(item)}>
                     <Icon />
-                    &nbsp;{item.tooltip}
+                    &nbsp;&nbsp;{item.tooltip}
                     <Shortcut>{item.shortcut}</Shortcut>
                   </MenuItem>
                 </ListItem>
@@ -238,21 +278,23 @@ const MenuItem = styled.button`
 export const Wrapper = styled.div<{
   active: boolean;
   top: number;
+  bottom: number;
   left: number;
+  isAbove: boolean;
 }>`
-  margin: 8px 0;
   position: absolute;
   z-index: ${props => {
     return props.theme.zIndex + 100;
   }};
-  top: ${props => props.top}px;
+  ${props => props.top && `top: ${props.top}px`};
+  ${props => props.bottom && `bottom: ${props.bottom}px`};
   left: ${props => props.left}px;
   background-color: ${props => props.theme.background};
   border-radius: 4px;
   box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px,
     rgba(0, 0, 0, 0.08) 0px 4px 8px, rgba(0, 0, 0, 0.08) 0px 2px 4px;
   opacity: 0;
-  transform: scale(0.92);
+  transform: scale(0.95);
   transition: opacity 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275),
     transform 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
   transition-delay: 150ms;
@@ -261,16 +303,17 @@ export const Wrapper = styled.div<{
   pointer-events: none;
   white-space: nowrap;
   width: 300px;
-  height: 240px;
+  max-height: 240px;
+  overflow: hidden;
 
   * {
     box-sizing: border-box;
   }
 
-  ${({ active }) =>
+  ${({ active, isAbove }) =>
     active &&
     `
-    transform: translateY(-6px) scale(1);
+    transform: translateY(${isAbove ? "6px" : "-6px"}) scale(1);
     pointer-events: all;
     opacity: 1;
   `};

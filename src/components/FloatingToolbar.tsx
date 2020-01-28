@@ -31,7 +31,10 @@ export default class FloatingToolbar extends React.Component<Props> {
 
     const { selection } = view.state;
 
-    if (!selection || selection.empty) {
+    // If there is no selection, the selection is empty or the selection is a
+    // NodeSelection instead of a TextSelection then hide the formatting
+    // toolbar offscreen
+    if (!selection || selection.empty || selection.node) {
       return {
         left: -1000,
         top: 0,

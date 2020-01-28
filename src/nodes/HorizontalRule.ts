@@ -1,4 +1,5 @@
 import { InputRule } from "prosemirror-inputrules";
+import { setBlockType } from "prosemirror-commands";
 import Node from "./Node";
 
 export default class HorizontalRule extends Node {
@@ -13,6 +14,13 @@ export default class HorizontalRule extends Node {
       toDOM() {
         return ["div", ["hr"]];
       },
+    };
+  }
+
+  commands({ type }) {
+    return () => (state, dispatch) => {
+      dispatch(state.tr.replaceSelectionWith(type.create()).scrollIntoView());
+      return true;
     };
   }
 
