@@ -1,5 +1,4 @@
 import { InputRule } from "prosemirror-inputrules";
-import { setBlockType } from "prosemirror-commands";
 import Node from "./Node";
 
 export default class HorizontalRule extends Node {

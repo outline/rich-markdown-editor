@@ -180,7 +180,7 @@ export default class BlockMenu extends React.Component<Props> {
       return {
         left: left + window.scrollX,
         top: undefined,
-        bottom: window.scrollY + window.innerHeight - top,
+        bottom: window.innerHeight - top - window.scrollY,
         isAbove: false,
       };
     } else {
