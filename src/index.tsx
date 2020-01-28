@@ -18,6 +18,7 @@ import styled, { ThemeProvider } from "styled-components";
 import { light as lightTheme, dark as darkTheme } from "./theme";
 import Flex from "./components/Flex";
 import FloatingToolbar from "./components/FloatingToolbar";
+import BlockMenu from "./components/BlockMenu";
 import Extension from "./lib/Extension";
 import ExtensionManager from "./lib/ExtensionManager";
 import ComponentView from "./lib/ComponentView";
@@ -47,6 +48,7 @@ import Link from "./marks/Link";
 import Strikethrough from "./marks/Strikethrough";
 
 // plugins
+import BlockMenuTrigger from "./plugins/BlockMenuTrigger";
 import History from "./plugins/History";
 import Keys from "./plugins/Keys";
 import Placeholder from "./plugins/Placeholder";
@@ -82,7 +84,12 @@ export type Props = {
   style?: Record<string, any>;
 };
 
-class RichMarkdownEditor extends React.PureComponent<Props> {
+type State = {
+  blockMenuOpen: boolean;
+  blockMenuSearch: string;
+};
+
+class RichMarkdownEditor extends React.PureComponent<Props, State> {
   static defaultProps = {
     defaultValue: "",
     placeholder: "Write something nice…",
@@ -94,6 +101,11 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
     },
     extensions: [],
     tooltip: "span",
+  };
+
+  state = {
+    blockMenuOpen: false,
+    blockMenuSearch: "",
   };
 
   extensions: ExtensionManager;
@@ -200,6 +212,13 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
           onSave: this.handleSave,
           onSaveAndExit: this.handleSaveAndExit,
           onCancel: this.props.onCancel,
+        }),
+        new BlockMenuTrigger({
+          onOpen: this.handleOpenBlockMenu,
+          onClose: this.handleCloseBlockMenu,
+          onSelect: this.handleSelectBlockMenu,
+          onNavigateUp: this.handleUpBlockMenu,
+          onNavigateDown: this.handleDownBlockMenu,
         }),
         ...this.props.extensions,
       ],
@@ -371,6 +390,19 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
     }
   };
 
+  handleOpenBlockMenu = (search: string) => {
+    this.setState({ blockMenuOpen: true, blockMenuSearch: search });
+  };
+
+  handleCloseBlockMenu = () => {
+    if (!this.state.blockMenuOpen) return;
+    this.setState({ blockMenuOpen: false });
+  };
+
+  handleSelectBlockMenu = () => {
+    //
+  };
+
   focusAtStart = () => {
     const selection = Selection.atStart(this.view.state.doc);
     const transaction = this.view.state.tr.setSelection(selection);
@@ -404,15 +436,20 @@ class RichMarkdownEditor extends React.PureComponent<Props> {
               readOnly={readOnly}
               ref={ref => (this.element = ref)}
             />
-            {!readOnly && (
+            {!readOnly && this.view && (
               <React.Fragment>
-                {this.view && (
-                  <FloatingToolbar
-                    view={this.view}
-                    commands={this.commands}
-                    tooltip={tooltip}
-                  />
-                )}
+                <FloatingToolbar
+                  view={this.view}
+                  commands={this.commands}
+                  tooltip={tooltip}
+                />
+                <BlockMenu
+                  view={this.view}
+                  commands={this.commands}
+                  isActive={this.state.blockMenuOpen}
+                  search={this.state.blockMenuSearch}
+                  onSubmit={this.handleCloseBlockMenu}
+                />
               </React.Fragment>
             )}
           </React.Fragment>

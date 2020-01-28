@@ -24,6 +24,12 @@ export default class Blockquote extends Node {
     return () => toggleWrap(type);
   }
 
+  keys({ type }) {
+    return {
+      "Mod-]": toggleWrap(type),
+    };
+  }
+
   toMarkdown(state, node) {
     state.wrapBlock("> ", null, node, () => state.renderContent(node));
   }

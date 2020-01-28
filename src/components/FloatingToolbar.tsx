@@ -40,16 +40,10 @@ export default class FloatingToolbar extends React.Component<Props> {
 
     // based on the start and end of the selection calculate the position at
     // the center top
-    const anchorPos = view.coordsAtPos(selection.$anchor.pos);
-    const headPos = view.coordsAtPos(selection.$head.pos);
-    const halfSelection = Math.abs(anchorPos.left - headPos.left) / 2;
-    let centerOfSelection;
-
-    if (anchorPos.left > headPos.left) {
-      centerOfSelection = headPos.left + halfSelection;
-    } else {
-      centerOfSelection = anchorPos.left + halfSelection;
-    }
+    const startPos = view.coordsAtPos(selection.$from.pos);
+    const endPos = view.coordsAtPos(selection.$to.pos);
+    const halfSelection = Math.abs(endPos.left - startPos.left) / 2;
+    const centerOfSelection = startPos.left + halfSelection;
 
     // position the menu so that it is centered over the selection except in
     // the cases where it would extend off the edge of the screen. In these
@@ -62,7 +56,7 @@ export default class FloatingToolbar extends React.Component<Props> {
     );
     const top = Math.min(
       window.innerHeight - offsetHeight - margin,
-      Math.max(margin, anchorPos.top - offsetHeight)
+      Math.max(margin, startPos.top - offsetHeight)
     );
 
     // if the menu has been offset to not extend offscreen then we should adjust
