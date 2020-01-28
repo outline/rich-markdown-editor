@@ -2,7 +2,7 @@ import * as React from "react";
 import { Portal } from "react-portal";
 import { EditorView } from "prosemirror-view";
 import { findParentNode } from "prosemirror-utils";
-import styled from "styled-components";
+import styled, { withTheme } from "styled-components";
 import {
   BlockQuoteIcon,
   BulletedListIcon,
@@ -12,8 +12,8 @@ import {
   HorizontalRuleIcon,
   OrderedListIcon,
   TodoListIcon,
+  ImageIcon,
 } from "outline-icons";
-import isNodeActive from "../queries/isNodeActive";
 
 type Props = {
   isActive: boolean;
@@ -23,84 +23,81 @@ type Props = {
   onSubmit: () => void;
 };
 
-const getMenuItems = ({ schema }) => {
+const getMenuItems = () => {
   return [
     {
       name: "heading",
-      tooltip: "Big heading",
+      title: "Big heading",
       keywords: "h1 heading1 title",
       icon: Heading1Icon,
-      active: isNodeActive(schema.nodes.heading, { level: 1 }),
       shortcut: "⌘ ⇧ 1",
       attrs: { level: 1 },
     },
     {
       name: "heading",
-      tooltip: "Medium heading",
+      title: "Medium heading",
       keywords: "h2 heading2",
       icon: Heading2Icon,
-      active: isNodeActive(schema.nodes.heading, { level: 2 }),
       shortcut: "⌘ ⇧ 2",
       attrs: { level: 2 },
     },
     {
       name: "heading",
-      tooltip: "Small heading",
+      title: "Small heading",
       keywords: "h3 heading3",
       icon: Heading2Icon,
-      active: isNodeActive(schema.nodes.heading, { level: 3 }),
       shortcut: "⌘ ⇧ 3",
       attrs: { level: 2 },
     },
     {
       name: "bullet_list",
-      tooltip: "Bulleted list",
+      title: "Bulleted list",
       icon: BulletedListIcon,
-      active: isNodeActive(schema.nodes.bullet_list),
       shortcut: "^ ⇧ 8",
     },
     {
       name: "ordered_list",
-      tooltip: "Ordered list",
+      title: "Ordered list",
       icon: OrderedListIcon,
-      active: isNodeActive(schema.nodes.ordered_list),
       shortcut: "^ ⇧ 9",
     },
     {
       name: "checkbox_list",
-      tooltip: "Todo list",
+      title: "Todo list",
       icon: TodoListIcon,
-      active: isNodeActive(schema.nodes.checkbox_list),
       keywords: "checklist checkbox task",
     },
     {
       name: "blockquote",
-      tooltip: "Quote",
+      title: "Quote",
       icon: BlockQuoteIcon,
-      active: isNodeActive(schema.nodes.blockquote),
       shortcut: "⌘ ]",
       attrs: { level: 2 },
     },
     {
       name: "code_block",
-      tooltip: "Code block",
+      title: "Code block",
       icon: CodeIcon,
-      active: isNodeActive(schema.nodes.code_block),
       shortcut: "^ ⇧ \\",
       keywords: "script",
     },
     {
       name: "hr",
-      tooltip: "Break",
+      title: "Break",
       icon: HorizontalRuleIcon,
-      active: isNodeActive(schema.nodes.hr),
       shortcut: "⌘ _",
       keywords: "horizontal rule line",
+    },
+    {
+      name: "image",
+      title: "Image",
+      icon: ImageIcon,
+      keywords: "picture photo",
     },
   ];
 };
 
-export default class BlockMenu extends React.Component<Props> {
+class BlockMenu extends React.Component<Props> {
   menuRef = React.createRef<HTMLDivElement>();
 
   state = {
@@ -174,7 +171,7 @@ export default class BlockMenu extends React.Component<Props> {
     const { offsetHeight } = this.menuRef.current;
     const paragraph = view.domAtPos(selection.$from.pos);
     const { top, left, bottom } = paragraph.node.getBoundingClientRect();
-    const margin = 12;
+    const margin = 24;
 
     if (startPos.top - offsetHeight > margin) {
       return {
@@ -195,39 +192,48 @@ export default class BlockMenu extends React.Component<Props> {
 
   get filtered() {
     const { search = "" } = this.props;
-    const { state } = this.props.view;
-    const items = getMenuItems(state);
+    const items = getMenuItems();
 
     return items.filter(item => {
       const n = search.toLowerCase();
 
       return (
-        item.tooltip.toLowerCase().includes(n) ||
+        item.title.toLowerCase().includes(n) ||
         (item.keywords && item.keywords.toLowerCase().includes(n))
       );
     });
   }
 
   render() {
-    const { isActive } = this.props;
+    const { isActive, theme } = this.props;
+    const items = this.filtered;
 
     return (
       <Portal>
         <Wrapper active={isActive} ref={this.menuRef} {...this.state}>
           <List>
-            {this.filtered.map((item, index) => {
+            {items.map((item, index) => {
               const Icon = item.icon;
+              const selected = index === 0;
 
               return (
                 <ListItem key={index}>
-                  <MenuItem onClick={() => this.insertBlock(item)}>
-                    <Icon />
-                    &nbsp;&nbsp;{item.tooltip}
+                  <MenuItem
+                    onClick={() => this.insertBlock(item)}
+                    selected={selected}
+                  >
+                    <Icon color={selected ? theme.black : undefined} />
+                    &nbsp;&nbsp;{item.title}
                     <Shortcut>{item.shortcut}</Shortcut>
                   </MenuItem>
                 </ListItem>
               );
             })}
+            {items.length === 0 && (
+              <ListItem>
+                <Empty>No results</Empty>
+              </ListItem>
+            )}
           </List>
         </Wrapper>
       </Portal>
@@ -242,7 +248,6 @@ const Shortcut = styled.span`
 `;
 
 const List = styled.ol`
-  overflow-y: auto;
   list-style: none;
   text-align: left;
   height: 100%;
@@ -255,7 +260,19 @@ const ListItem = styled.li`
   margin: 0;
 `;
 
-const MenuItem = styled.button`
+const Empty = styled.div`
+  display: flex;
+  align-items: center;
+  color: ${props => props.theme.textSecondary};
+  font-weight: 500;
+  font-size: 14px;
+  height: 36px;
+  padding: 0 16px;
+`;
+
+const MenuItem = styled.button<{
+  selected: boolean;
+}>`
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -265,7 +282,9 @@ const MenuItem = styled.button`
   height: 36px;
   cursor: pointer;
   border: none;
-  background: none;
+  color: ${props => (props.selected ? props.theme.black : props.theme.text)};
+  background: ${props =>
+    props.selected ? props.theme.blockToolbarTrigger : "none"};
   padding: 0 16px;
   outline: none;
 
@@ -282,6 +301,8 @@ export const Wrapper = styled.div<{
   left: number;
   isAbove: boolean;
 }>`
+  color: ${props => props.theme.text};
+  font-family: ${props => props.theme.fontFamily};
   position: absolute;
   z-index: ${props => {
     return props.theme.zIndex + 100;
@@ -305,6 +326,7 @@ export const Wrapper = styled.div<{
   width: 300px;
   max-height: 240px;
   overflow: hidden;
+  overflow-y: auto;
 
   * {
     box-sizing: border-box;
@@ -322,3 +344,5 @@ export const Wrapper = styled.div<{
     display: none;
   }
 `;
+
+export default withTheme(BlockMenu);
