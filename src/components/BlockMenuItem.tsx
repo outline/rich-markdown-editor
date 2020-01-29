@@ -5,7 +5,6 @@ import theme from "../theme";
 
 type Props = {
   selected: boolean;
-  children: React.ReactNode;
   onClick: () => void;
   theme: typeof theme;
   icon: typeof React.Component;

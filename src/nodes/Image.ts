@@ -61,7 +61,7 @@ const findPlaceholder = function(state, id) {
   return found.length ? found[0].from : null;
 };
 
-const insertFiles = function(view, event, pos, files, options) {
+export const insertFiles = function(view, event, pos, files, options) {
   // filter to only include image files
   const images = files.filter(file => /image/i.test(file.type));
   if (images.length === 0) return;

@@ -96,7 +96,7 @@ class Menu extends React.Component<Props> {
       <div>
         {items.map((item, index) => {
           if (item.separator) {
-            return <ToolbarSeparator />;
+            return <ToolbarSeparator key={index} />;
           }
           const Icon = item.icon;
           const isActive = item.active(state);

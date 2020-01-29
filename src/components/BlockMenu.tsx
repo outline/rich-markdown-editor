@@ -15,12 +15,19 @@ import {
   ImageIcon,
 } from "outline-icons";
 import BlockMenuItem from "./BlockMenuItem";
+import VisuallyHidden from "./VisuallyHidden";
+import getDataTransferFiles from "../lib/getDataTransferFiles";
+import { insertFiles } from "../nodes/Image";
 
 type Props = {
   isActive: boolean;
   commands: Record<string, any>;
   view: EditorView;
   search: string;
+  uploadImage: (file: File) => Promise<string>;
+  onImageUploadStart: () => void;
+  onImageUploadStop: () => void;
+  onShowToast: (message: string) => void;
   onSubmit: () => void;
 };
 
@@ -54,6 +61,13 @@ const getMenuItems = () => {
       separator: true,
     },
     {
+      name: "checkbox_list",
+      title: "Todo list",
+      icon: TodoListIcon,
+      keywords: "checklist checkbox task",
+      shortcut: "^ ⇧ 7",
+    },
+    {
       name: "bullet_list",
       title: "Bulleted list",
       icon: BulletedListIcon,
@@ -64,12 +78,6 @@ const getMenuItems = () => {
       title: "Ordered list",
       icon: OrderedListIcon,
       shortcut: "^ ⇧ 9",
-    },
-    {
-      name: "checkbox_list",
-      title: "Todo list",
-      icon: TodoListIcon,
-      keywords: "checklist checkbox task",
     },
     {
       separator: true,
@@ -106,6 +114,7 @@ const getMenuItems = () => {
 
 class BlockMenu extends React.Component<Props> {
   menuRef = React.createRef<HTMLDivElement>();
+  inputRef = React.createRef<HTMLInputElement>();
 
   state = {
     left: 0,
@@ -144,7 +153,11 @@ class BlockMenu extends React.Component<Props> {
 
       const selected = this.filtered[this.state.selectedIndex];
       if (selected) {
-        this.insertBlock(selected);
+        if (selected.name === "image") {
+          this.triggerImagePick();
+        } else {
+          this.insertBlock(selected);
+        }
       } else {
         this.props.onSubmit();
       }
@@ -174,6 +187,44 @@ class BlockMenu extends React.Component<Props> {
         ),
       });
     }
+  };
+
+  triggerImagePick = () => {
+    if (this.inputRef.current) {
+      this.inputRef.current.click();
+    }
+  };
+
+  handleImagePicked = event => {
+    const files = getDataTransferFiles(event);
+
+    const {
+      view,
+      uploadImage,
+      onImageUploadStart,
+      onImageUploadStop,
+      onShowToast,
+    } = this.props;
+    const { state, dispatch } = view;
+    const parent = findParentNode(node => !!node)(state.selection);
+
+    if (parent) {
+      dispatch(
+        state.tr.insertText(
+          "",
+          parent.pos,
+          parent.pos + parent.node.textContent.length + 1
+        )
+      );
+    }
+
+    insertFiles(view, event, parent.pos, files, {
+      uploadImage,
+      onImageUploadStart,
+      onImageUploadStop,
+      onShowToast,
+    });
+    this.props.onSubmit();
   };
 
   insertBlock(item) {
@@ -282,7 +333,11 @@ class BlockMenu extends React.Component<Props> {
               return (
                 <ListItem key={index}>
                   <BlockMenuItem
-                    onClick={() => this.insertBlock(item)}
+                    onClick={() =>
+                      item.name === "image"
+                        ? this.triggerImagePick()
+                        : this.insertBlock(item)
+                    }
                     selected={selected}
                     icon={item.icon}
                     title={item.title}
@@ -297,6 +352,14 @@ class BlockMenu extends React.Component<Props> {
               </ListItem>
             )}
           </List>
+          <VisuallyHidden>
+            <input
+              type="file"
+              ref={this.inputRef}
+              onChange={this.handleImagePicked}
+              accept="image/*"
+            />
+          </VisuallyHidden>
         </Wrapper>
       </Portal>
     );

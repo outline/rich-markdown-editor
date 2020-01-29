@@ -79,7 +79,7 @@ export type Props = {
   onClickHashtag?: (tag: string) => void;
   getLinkComponent?: (node: ProsemirrorNode) => any;
   onShowToast?: (message: string) => void;
-  tooltip: React.Component;
+  tooltip: typeof React.Component;
   className?: string;
   style?: Record<string, any>;
 };
@@ -216,9 +216,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new BlockMenuTrigger({
           onOpen: this.handleOpenBlockMenu,
           onClose: this.handleCloseBlockMenu,
-          onSelect: this.handleSelectBlockMenu,
-          onNavigateUp: this.handleUpBlockMenu,
-          onNavigateDown: this.handleDownBlockMenu,
         }),
         ...this.props.extensions,
       ],
@@ -399,10 +396,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     this.setState({ blockMenuOpen: false });
   };
 
-  handleSelectBlockMenu = () => {
-    //
-  };
-
   focusAtStart = () => {
     const selection = Selection.atStart(this.view.state.doc);
     const transaction = this.view.state.tr.setSelection(selection);
@@ -449,6 +442,10 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   isActive={this.state.blockMenuOpen}
                   search={this.state.blockMenuSearch}
                   onSubmit={this.handleCloseBlockMenu}
+                  uploadImage={this.props.uploadImage}
+                  onImageUploadStart={this.props.onImageUploadStart}
+                  onImageUploadStop={this.props.onImageUploadStop}
+                  onShowToast={this.props.onShowToast}
                 />
               </React.Fragment>
             )}
@@ -594,7 +591,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
   ul.checkbox_list {
     list-style: none;
     padding-left: 0;
-    margin-left: 0;
+    margin-left: -4px;
 
     ul.checkbox_list {
       padding-left: 20px;

@@ -20,6 +20,12 @@ export default class CheckboxList extends Node {
     };
   }
 
+  keys({ type, schema }) {
+    return {
+      "Shift-Ctrl-7": toggleList(type, schema.nodes.checkbox_item),
+    };
+  }
+
   commands({ type, schema }) {
     return () => toggleList(type, schema.nodes.checkbox_item);
   }
