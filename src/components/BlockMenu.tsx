@@ -128,14 +128,15 @@ class BlockMenu extends React.Component<Props> {
     window.addEventListener("keydown", this.handleKeyDown);
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (nextProps.isActive && !this.props.isActive) {
-      this.setState(this.calculatePosition(nextProps));
-    }
-  }
-
   componentDidUpdate(prevProps) {
-    if (prevProps.search !== this.props.search) {
+    if (!prevProps.isActive && this.props.isActive) {
+      const position = this.calculatePosition(this.props);
+
+      this.setState({
+        selectedIndex: 0,
+        ...position,
+      });
+    } else if (prevProps.search !== this.props.search) {
       this.setState({ selectedIndex: 0 });
     }
   }
@@ -144,7 +145,7 @@ class BlockMenu extends React.Component<Props> {
     window.removeEventListener("keydown", this.handleKeyDown);
   }
 
-  handleKeyDown = event => {
+  handleKeyDown = (event: KeyboardEvent) => {
     if (!this.props.isActive) return;
 
     if (event.key === "Enter") {
