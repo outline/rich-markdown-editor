@@ -9,7 +9,7 @@ const colors = {
   primary: "#1AB6FF",
   greyLight: "#F4F7FA",
   grey: "#E8EBED",
-  greyMid: "#9BA6B2",
+  greyMid: "#C5CCD3",
   greyDark: "#DAE1E9",
 };
 

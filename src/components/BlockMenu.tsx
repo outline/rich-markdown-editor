@@ -47,7 +47,7 @@ const getMenuItems = () => {
       keywords: "h3 heading3",
       icon: Heading2Icon,
       shortcut: "⌘ ⇧ 3",
-      attrs: { level: 2 },
+      attrs: { level: 3 },
     },
     {
       name: "bullet_list",
@@ -251,7 +251,7 @@ const List = styled.ol`
   list-style: none;
   text-align: left;
   height: 100%;
-  padding: 0;
+  padding: 8px 0;
   margin: 0;
 `;
 
@@ -290,6 +290,7 @@ const MenuItem = styled.button<{
 
   &:hover,
   &:active {
+    color: ${props => props.theme.black};
     background: ${props => props.theme.blockToolbarTrigger};
   }
 `;

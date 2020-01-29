@@ -3,7 +3,8 @@ import { InputRule } from "prosemirror-inputrules";
 import Extension from "../lib/Extension";
 
 const MAX_MATCH = 500;
-const INSERT_REGEX = /^\/(\w+)?$/;
+const OPEN_REGEX = /^\/(\w+)?$/;
+const CLOSE_REGEX = /(^(?!\/(\w+)?)(.*)$|^\/((\w+)\s.*|\s)$)/;
 
 // based on the input rules code in Prosemirror, here:
 // https://github.com/ProseMirror/prosemirror-inputrules/blob/master/src/inputrules.js
@@ -25,7 +26,7 @@ function run(view, from, to, regex, handler) {
   );
 
   const match = regex.exec(textBefore);
-  const tr = match && handler(state, match, from - match[0].length, to);
+  const tr = handler(state, match, match ? from - match[0].length : from, to);
   if (!tr) return false;
   return true;
 }
@@ -52,9 +53,11 @@ export default class BlockMenuTrigger extends Extension {
               // and any characters removed, before we evaluate the rule.
               setTimeout(() => {
                 const { pos } = view.state.selection.$from;
-                return run(view, pos, pos, INSERT_REGEX, (state, match) => {
+                return run(view, pos, pos, OPEN_REGEX, (state, match) => {
                   if (match) {
                     this.options.onOpen(match[1]);
+                  } else {
+                    this.options.onClose();
                   }
                   return null;
                 });
@@ -70,9 +73,9 @@ export default class BlockMenuTrigger extends Extension {
             ) {
               const { pos } = view.state.selection.$from;
 
-              return run(view, pos, pos, INSERT_REGEX, () => {
+              return run(view, pos, pos, OPEN_REGEX, (state, match) => {
                 // just tell Prosemirror we handled it and not to do anything
-                return true;
+                return match ? true : null;
               });
             }
 
@@ -87,7 +90,7 @@ export default class BlockMenuTrigger extends Extension {
     return [
       // main regex should match only:
       // /word
-      new InputRule(INSERT_REGEX, (state, match) => {
+      new InputRule(OPEN_REGEX, (state, match) => {
         if (match) {
           this.options.onOpen(match[1]);
         }
@@ -97,15 +100,12 @@ export default class BlockMenuTrigger extends Extension {
       // /<space>word
       // /<space>
       // /word<space>
-      new InputRule(
-        /(^(?!\/(\w+)?)(.*)$|^\/((\w+)\s.*|\s)$)/,
-        (state, match) => {
-          if (match) {
-            this.options.onClose();
-          }
-          return null;
+      new InputRule(CLOSE_REGEX, (state, match) => {
+        if (match) {
+          this.options.onClose();
         }
-      ),
+        return null;
+      }),
     ];
   }
 }
