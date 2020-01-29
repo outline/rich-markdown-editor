@@ -17,7 +17,7 @@ import {
 import BlockMenuItem from "./BlockMenuItem";
 import VisuallyHidden from "./VisuallyHidden";
 import getDataTransferFiles from "../lib/getDataTransferFiles";
-import { insertFiles } from "../nodes/Image";
+import insertFiles from "../commands/insertFiles";
 
 type Props = {
   isActive: boolean;
