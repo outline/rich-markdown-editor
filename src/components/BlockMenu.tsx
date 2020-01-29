@@ -2,7 +2,7 @@ import * as React from "react";
 import { Portal } from "react-portal";
 import { EditorView } from "prosemirror-view";
 import { findParentNode } from "prosemirror-utils";
-import styled, { withTheme } from "styled-components";
+import styled from "styled-components";
 import {
   BlockQuoteIcon,
   BulletedListIcon,
@@ -14,14 +14,13 @@ import {
   TodoListIcon,
   ImageIcon,
 } from "outline-icons";
-import theme from "../theme";
+import BlockMenuItem from "./BlockMenuItem";
 
 type Props = {
   isActive: boolean;
   commands: Record<string, any>;
   view: EditorView;
   search: string;
-  theme: typeof theme;
   onSubmit: () => void;
 };
 
@@ -263,7 +262,7 @@ class BlockMenu extends React.Component<Props> {
   }
 
   render() {
-    const { isActive, theme } = this.props;
+    const { isActive } = this.props;
     const items = this.filtered;
 
     return (
@@ -278,19 +277,17 @@ class BlockMenu extends React.Component<Props> {
                   </ListItem>
                 );
               }
-              const Icon = item.icon;
               const selected = index === this.state.selectedIndex;
 
               return (
                 <ListItem key={index}>
-                  <MenuItem
+                  <BlockMenuItem
                     onClick={() => this.insertBlock(item)}
                     selected={selected}
-                  >
-                    <Icon color={selected ? theme.black : undefined} />
-                    &nbsp;&nbsp;{item.title}
-                    <Shortcut>{item.shortcut}</Shortcut>
-                  </MenuItem>
+                    icon={item.icon}
+                    title={item.title}
+                    shortcut={item.shortcut}
+                  ></BlockMenuItem>
                 </ListItem>
               );
             })}
@@ -305,12 +302,6 @@ class BlockMenu extends React.Component<Props> {
     );
   }
 }
-
-const Shortcut = styled.span`
-  color: ${props => props.theme.textSecondary};
-  flex-grow: 1;
-  text-align: right;
-`;
 
 const List = styled.ol`
   list-style: none;
@@ -333,31 +324,6 @@ const Empty = styled.div`
   font-size: 14px;
   height: 36px;
   padding: 0 16px;
-`;
-
-const MenuItem = styled.button<{
-  selected: boolean;
-}>`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  font-weight: 500;
-  font-size: 14px;
-  width: 100%;
-  height: 36px;
-  cursor: pointer;
-  border: none;
-  color: ${props => (props.selected ? props.theme.black : props.theme.text)};
-  background: ${props =>
-    props.selected ? props.theme.blockToolbarTrigger : "none"};
-  padding: 0 16px;
-  outline: none;
-
-  &:hover,
-  &:active {
-    color: ${props => props.theme.black};
-    background: ${props => props.theme.blockToolbarTrigger};
-  }
 `;
 
 export const Wrapper = styled.div<{
@@ -417,4 +383,4 @@ export const Wrapper = styled.div<{
   }
 `;
 
-export default withTheme(BlockMenu);
+export default BlockMenu;

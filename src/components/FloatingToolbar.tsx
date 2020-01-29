@@ -5,7 +5,7 @@ import styled from "styled-components";
 import Menu from "./Menu";
 
 type Props = {
-  tooltip: React.Component;
+  tooltip: typeof React.Component;
   commands: Record<string, any>;
   view: EditorView;
 };
