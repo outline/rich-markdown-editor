@@ -50,6 +50,7 @@ export const light = {
   text: colors.almostBlack,
   code: colors.lightBlack,
   cursor: colors.black,
+  divider: colors.greyMid,
 
   toolbarBackground: colors.lightBlack,
   toolbarInput: colors.white10,
@@ -77,6 +78,7 @@ export const dark = {
   text: colors.almostWhite,
   code: colors.almostWhite,
   cursor: colors.white,
+  divider: "#4E5C6E",
 
   toolbarBackground: colors.white,
   toolbarInput: colors.black10,

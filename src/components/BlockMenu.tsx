@@ -14,12 +14,14 @@ import {
   TodoListIcon,
   ImageIcon,
 } from "outline-icons";
+import theme from "../theme";
 
 type Props = {
   isActive: boolean;
   commands: Record<string, any>;
   view: EditorView;
   search: string;
+  theme: typeof theme;
   onSubmit: () => void;
 };
 
@@ -50,6 +52,9 @@ const getMenuItems = () => {
       attrs: { level: 3 },
     },
     {
+      separator: true,
+    },
+    {
       name: "bullet_list",
       title: "Bulleted list",
       icon: BulletedListIcon,
@@ -66,6 +71,9 @@ const getMenuItems = () => {
       title: "Todo list",
       icon: TodoListIcon,
       keywords: "checklist checkbox task",
+    },
+    {
+      separator: true,
     },
     {
       name: "blockquote",
@@ -194,14 +202,32 @@ class BlockMenu extends React.Component<Props> {
     const { search = "" } = this.props;
     const items = getMenuItems();
 
-    return items.filter(item => {
-      const n = search.toLowerCase();
+    const filtered = items.filter(item => {
+      if (item.separator) return true;
 
+      const n = search.toLowerCase();
       return (
         item.title.toLowerCase().includes(n) ||
         (item.keywords && item.keywords.toLowerCase().includes(n))
       );
     });
+
+    // this block literally just trims unneccessary separators from the results
+    return filtered.reduce((acc, item, index) => {
+      // trim separators from start / end
+      if (item.separator && index === 0) return acc;
+      if (item.separator && index === filtered.length - 1) return acc;
+
+      // trim double separators looking ahead / behind
+      const prev = filtered[index - 1];
+      if (prev && prev.separator && item.separator) return acc;
+
+      const next = filtered[index + 1];
+      if (next && next.separator && item.separator) return acc;
+
+      // otherwise, continue
+      return [...acc, item];
+    }, []);
   }
 
   render() {
@@ -213,6 +239,13 @@ class BlockMenu extends React.Component<Props> {
         <Wrapper active={isActive} ref={this.menuRef} {...this.state}>
           <List>
             {items.map((item, index) => {
+              if (item.separator) {
+                return (
+                  <ListItem key={index}>
+                    <hr />
+                  </ListItem>
+                );
+              }
               const Icon = item.icon;
               const selected = index === 0;
 
@@ -331,6 +364,12 @@ export const Wrapper = styled.div<{
 
   * {
     box-sizing: border-box;
+  }
+
+  hr {
+    border: 0;
+    height: 0;
+    border-top: 1px solid ${props => props.theme.divider};
   }
 
   ${({ active, isAbove }) =>
