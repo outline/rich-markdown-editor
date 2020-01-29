@@ -113,6 +113,7 @@ class BlockMenu extends React.Component<Props> {
     top: undefined,
     bottom: undefined,
     isAbove: false,
+    selectedIndex: 0,
   };
 
   componentDidMount() {
@@ -122,6 +123,12 @@ class BlockMenu extends React.Component<Props> {
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.isActive && !this.props.isActive) {
       this.setState(this.calculatePosition(nextProps));
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.search !== this.props.search) {
+      this.setState({ selectedIndex: 0 });
     }
   }
 
@@ -136,12 +143,37 @@ class BlockMenu extends React.Component<Props> {
       event.preventDefault();
       event.stopPropagation();
 
-      const selected = this.filtered[0];
+      const selected = this.filtered[this.state.selectedIndex];
       if (selected) {
         this.insertBlock(selected);
       } else {
         this.props.onSubmit();
       }
+    }
+
+    if (event.key === "ArrowUp") {
+      const prevIndex = this.state.selectedIndex - 1;
+      const prev = this.filtered[prevIndex];
+
+      this.setState({
+        selectedIndex: Math.max(
+          0,
+          prev && prev.separator ? prevIndex - 1 : prevIndex
+        ),
+      });
+    }
+
+    if (event.key === "ArrowDown") {
+      const total = this.filtered.length - 1;
+      const nextIndex = this.state.selectedIndex + 1;
+      const next = this.filtered[nextIndex];
+
+      this.setState({
+        selectedIndex: Math.min(
+          next && next.separator ? nextIndex + 1 : nextIndex,
+          total
+        ),
+      });
     }
   };
 
@@ -247,7 +279,7 @@ class BlockMenu extends React.Component<Props> {
                 );
               }
               const Icon = item.icon;
-              const selected = index === 0;
+              const selected = index === this.state.selectedIndex;
 
               return (
                 <ListItem key={index}>
