@@ -550,6 +550,26 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
   h5,
   h6 {
     font-weight: 500;
+
+    &:before {
+      display: ${props => (props.readOnly ? "none" : "block")};
+      position: absolute;
+      font-family: ${props => props.theme.fontFamilyMono};
+      color: ${props => props.theme.textSecondary};
+      font-size: 13px;
+      left: -26px;
+    }
+  }
+
+  h1:not(:first-child):before { content: "H1"; line-height: 3em; }
+  h2:before { content: "H2"; line-height: 2.8em; }
+  h3:before { content: "H3"; line-height: 2.3em; }
+  h4:before { content: "H4"; line-height: 2.2em; }
+  h5:before { content: "H5"; }
+  h6:before { content: "H6"; }
+
+  .with-emoji {
+    margin-left: -1em;
   }
 
   blockquote {
@@ -770,14 +790,13 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
 
   .block-menu-trigger {
     height: 1em;
-    color: ${props => props.theme.text};
-    opacity: .65;
+    color: ${props => props.theme.textSecondary};
     background: none;
     border-radius: 100%;
     font-size: 30px;
     position: absolute;
     transform: scale(0.9);
-    transition: opacity 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    transition: color 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275),
     transform 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
     outline: none;
     border: 0;
@@ -787,9 +806,9 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
 
     &:hover,
     &:focus {
-      opacity: 1;
       cursor: pointer;
       transform: scale(1);
+      color: ${props => props.theme.text};
     }
   }
 

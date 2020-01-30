@@ -1,7 +1,11 @@
+import emojiRegex from "emoji-regex";
+import { Plugin } from "prosemirror-state";
+import { Decoration, DecorationSet } from "prosemirror-view";
 import { Node as ProsemirrorNode, NodeType } from "prosemirror-model";
 import { textblockTypeInputRule } from "prosemirror-inputrules";
 import { setBlockType } from "prosemirror-commands";
 import { MarkdownSerializerState } from "prosemirror-markdown";
+import backspaceToParagraph from "../commands/backspaceToParagraph";
 import Node from "./Node";
 
 export default class Heading extends Node {
@@ -83,25 +87,40 @@ export default class Heading extends Node {
 
     return {
       ...options,
-      Backspace: (state, dispatch) => {
-        const { $from, from, to } = state.selection;
-
-        // check we're in a heading node
-        if ($from.parent.type !== type) return null;
-
-        // check if we're at the beginning of the heading
-        const $pos = state.doc.resolve(from - 1);
-        if ($pos.parent === $from.parent) return null;
-
-        // okay, replace it with a paragraph
-        dispatch(
-          state.tr
-            .setBlockType(from, to, this.editor.schema.nodes.paragraph)
-            .scrollIntoView()
-        );
-        return true;
-      },
+      Backspace: backspaceToParagraph(type),
     };
+  }
+
+  get plugins() {
+    return [
+      new Plugin({
+        props: {
+          decorations: state => {
+            const { doc } = state;
+            const decorations: Decoration[] = [];
+
+            doc.descendants((node, pos) => {
+              if (node.type.name === this.name && node.attrs.level === 1) {
+                const regex = emojiRegex();
+                const text = node.textContent;
+                const matches = regex.exec(text);
+                const firstEmoji = matches ? matches[0] : null;
+                const startsWithEmoji =
+                  firstEmoji && text.startsWith(firstEmoji);
+
+                const decoration = Decoration.node(pos, pos + node.nodeSize, {
+                  class: startsWithEmoji ? "with-emoji" : undefined,
+                  "data-emoji": firstEmoji,
+                });
+                decorations.push(decoration);
+              }
+            });
+
+            return DecorationSet.create(doc, decorations);
+          },
+        },
+      }),
+    ];
   }
 
   inputRules({ type }: { type: NodeType }) {

@@ -105,9 +105,11 @@ export default class BlockMenuTrigger extends Extension {
                   return icon;
                 })
               );
+
+              return DecorationSet.create(state.doc, decorations);
             }
 
-            return DecorationSet.create(state.doc, decorations);
+            return;
           },
         },
       }),
