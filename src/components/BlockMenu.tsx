@@ -28,7 +28,7 @@ type Props = {
   onImageUploadStart: () => void;
   onImageUploadStop: () => void;
   onShowToast: (message: string) => void;
-  onSubmit: () => void;
+  onClose: () => void;
 };
 
 const getMenuItems = () => {
@@ -98,10 +98,10 @@ const getMenuItems = () => {
     },
     {
       name: "hr",
-      title: "Break",
+      title: "Divider",
       icon: HorizontalRuleIcon,
       shortcut: "⌘ _",
-      keywords: "horizontal rule line",
+      keywords: "horizontal rule break line",
     },
     {
       name: "image",
@@ -160,7 +160,7 @@ class BlockMenu extends React.Component<Props> {
           this.insertBlock(selected);
         }
       } else {
-        this.props.onSubmit();
+        this.props.onClose();
       }
     }
 
@@ -176,7 +176,7 @@ class BlockMenu extends React.Component<Props> {
       });
     }
 
-    if (event.key === "ArrowDown") {
+    if (event.key === "ArrowDown" || event.key === "Tab") {
       const total = this.filtered.length - 1;
       const nextIndex = this.state.selectedIndex + 1;
       const next = this.filtered[nextIndex];
@@ -187,6 +187,10 @@ class BlockMenu extends React.Component<Props> {
           total
         ),
       });
+    }
+
+    if (event.key === "Escape") {
+      this.props.onClose();
     }
   };
 
@@ -225,7 +229,7 @@ class BlockMenu extends React.Component<Props> {
       onImageUploadStop,
       onShowToast,
     });
-    this.props.onSubmit();
+    this.props.onClose();
   };
 
   insertBlock(item) {
@@ -243,7 +247,7 @@ class BlockMenu extends React.Component<Props> {
     }
 
     this.props.commands[item.name](item.attrs);
-    this.props.onSubmit();
+    this.props.onClose();
   }
 
   calculatePosition(props) {

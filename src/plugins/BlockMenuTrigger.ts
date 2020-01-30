@@ -69,7 +69,8 @@ export default class BlockMenuTrigger extends Extension {
             if (
               event.key === "Enter" ||
               event.key === "ArrowUp" ||
-              event.key === "ArrowDown"
+              event.key === "ArrowDown" ||
+              event.key === "Tab"
             ) {
               const { pos } = view.state.selection.$from;
 
