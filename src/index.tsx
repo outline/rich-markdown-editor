@@ -772,6 +772,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     height: 1em;
     color: ${props => props.theme.text};
     opacity: .65;
+    background: none;
     border-radius: 100%;
     font-size: 30px;
     position: absolute;
@@ -784,7 +785,8 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     margin-top: -6px;
     left: -36px;
 
-    &:hover {
+    &:hover,
+    &:focus {
       opacity: 1;
       cursor: pointer;
       transform: scale(1);

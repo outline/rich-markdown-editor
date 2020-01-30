@@ -71,7 +71,7 @@ export default class Heading extends Node {
   }
 
   keys({ type }: { type: NodeType }) {
-    return this.options.levels.reduce(
+    const options = this.options.levels.reduce(
       (items, level) => ({
         ...items,
         ...{
@@ -80,6 +80,28 @@ export default class Heading extends Node {
       }),
       {}
     );
+
+    return {
+      ...options,
+      Backspace: (state, dispatch) => {
+        const { $from, from, to } = state.selection;
+
+        // check we're in a heading node
+        if ($from.parent.type !== type) return null;
+
+        // check if we're at the beginning of the heading
+        const $pos = state.doc.resolve(from - 1);
+        if ($pos.parent === $from.parent) return null;
+
+        // okay, replace it with a paragraph
+        dispatch(
+          state.tr
+            .setBlockType(from, to, this.editor.schema.nodes.paragraph)
+            .scrollIntoView()
+        );
+        return true;
+      },
+    };
   }
 
   inputRules({ type }: { type: NodeType }) {
