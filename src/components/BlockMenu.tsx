@@ -3,21 +3,12 @@ import { Portal } from "react-portal";
 import { EditorView } from "prosemirror-view";
 import { findParentNode } from "prosemirror-utils";
 import styled from "styled-components";
-import {
-  BlockQuoteIcon,
-  BulletedListIcon,
-  CodeIcon,
-  Heading1Icon,
-  Heading2Icon,
-  HorizontalRuleIcon,
-  OrderedListIcon,
-  TodoListIcon,
-  ImageIcon,
-} from "outline-icons";
+
 import BlockMenuItem from "./BlockMenuItem";
 import VisuallyHidden from "./VisuallyHidden";
 import getDataTransferFiles from "../lib/getDataTransferFiles";
 import insertFiles from "../commands/insertFiles";
+import getMenuItems from "../menus/block";
 
 type Props = {
   isActive: boolean;
@@ -29,87 +20,6 @@ type Props = {
   onImageUploadStop: () => void;
   onShowToast: (message: string) => void;
   onClose: () => void;
-};
-
-const getMenuItems = () => {
-  return [
-    {
-      name: "heading",
-      title: "Big heading",
-      keywords: "h1 heading1 title",
-      icon: Heading1Icon,
-      shortcut: "⌘ ⇧ 1",
-      attrs: { level: 1 },
-    },
-    {
-      name: "heading",
-      title: "Medium heading",
-      keywords: "h2 heading2",
-      icon: Heading2Icon,
-      shortcut: "⌘ ⇧ 2",
-      attrs: { level: 2 },
-    },
-    {
-      name: "heading",
-      title: "Small heading",
-      keywords: "h3 heading3",
-      icon: Heading2Icon,
-      shortcut: "⌘ ⇧ 3",
-      attrs: { level: 3 },
-    },
-    {
-      separator: true,
-    },
-    {
-      name: "checkbox_list",
-      title: "Todo list",
-      icon: TodoListIcon,
-      keywords: "checklist checkbox task",
-      shortcut: "^ ⇧ 7",
-    },
-    {
-      name: "bullet_list",
-      title: "Bulleted list",
-      icon: BulletedListIcon,
-      shortcut: "^ ⇧ 8",
-    },
-    {
-      name: "ordered_list",
-      title: "Ordered list",
-      icon: OrderedListIcon,
-      shortcut: "^ ⇧ 9",
-    },
-    {
-      separator: true,
-    },
-    {
-      name: "blockquote",
-      title: "Quote",
-      icon: BlockQuoteIcon,
-      shortcut: "⌘ ]",
-      attrs: { level: 2 },
-    },
-    {
-      name: "code_block",
-      title: "Code block",
-      icon: CodeIcon,
-      shortcut: "^ ⇧ \\",
-      keywords: "script",
-    },
-    {
-      name: "hr",
-      title: "Divider",
-      icon: HorizontalRuleIcon,
-      shortcut: "⌘ _",
-      keywords: "horizontal rule break line",
-    },
-    {
-      name: "image",
-      title: "Image",
-      icon: ImageIcon,
-      keywords: "picture photo",
-    },
-  ];
 };
 
 class BlockMenu extends React.Component<Props> {
@@ -171,7 +81,7 @@ class BlockMenu extends React.Component<Props> {
       this.setState({
         selectedIndex: Math.max(
           0,
-          prev && prev.separator ? prevIndex - 1 : prevIndex
+          prev && prev.name === "separator" ? prevIndex - 1 : prevIndex
         ),
       });
     }
@@ -183,7 +93,7 @@ class BlockMenu extends React.Component<Props> {
 
       this.setState({
         selectedIndex: Math.min(
-          next && next.separator ? nextIndex + 1 : nextIndex,
+          next && next.name === "separator" ? nextIndex + 1 : nextIndex,
           total
         ),
       });
@@ -290,7 +200,7 @@ class BlockMenu extends React.Component<Props> {
     const items = getMenuItems();
 
     const filtered = items.filter(item => {
-      if (item.separator) return true;
+      if (item.name === "separator") return true;
 
       const n = search.toLowerCase();
       return (
@@ -302,15 +212,18 @@ class BlockMenu extends React.Component<Props> {
     // this block literally just trims unneccessary separators from the results
     return filtered.reduce((acc, item, index) => {
       // trim separators from start / end
-      if (item.separator && index === 0) return acc;
-      if (item.separator && index === filtered.length - 1) return acc;
+      if (item.name === "separator" && index === 0) return acc;
+      if (item.name === "separator" && index === filtered.length - 1)
+        return acc;
 
       // trim double separators looking ahead / behind
       const prev = filtered[index - 1];
-      if (prev && prev.separator && item.separator) return acc;
+      if (prev && prev.name === "separator" && item.name === "separator")
+        return acc;
 
       const next = filtered[index + 1];
-      if (next && next.separator && item.separator) return acc;
+      if (next && next.name === "separator" && item.name === "separator")
+        return acc;
 
       // otherwise, continue
       return [...acc, item];
@@ -326,7 +239,7 @@ class BlockMenu extends React.Component<Props> {
         <Wrapper active={isActive} ref={this.menuRef} {...this.state}>
           <List>
             {items.map((item, index) => {
-              if (item.separator) {
+              if (item.name === "separator") {
                 return (
                   <ListItem key={index}>
                     <hr />

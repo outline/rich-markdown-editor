@@ -44,6 +44,7 @@ const MenuItem = styled.button<{
   justify-content: flex-start;
   font-weight: 500;
   font-size: 14px;
+  line-height: 1;
   width: 100%;
   height: 36px;
   cursor: pointer;

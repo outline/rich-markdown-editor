@@ -2,6 +2,7 @@ import * as React from "react";
 import { Portal } from "react-portal";
 import { EditorView } from "prosemirror-view";
 import styled from "styled-components";
+import getMenuItems from "../menus/formatting";
 import Menu from "./Menu";
 
 type Props = {
@@ -10,7 +11,7 @@ type Props = {
   view: EditorView;
 };
 
-export default class FloatingToolbar extends React.Component<Props> {
+export default class FormattingToolbar extends React.Component<Props> {
   menuRef = React.createRef<HTMLDivElement>();
   state = {
     left: 0,
@@ -77,6 +78,7 @@ export default class FloatingToolbar extends React.Component<Props> {
   render() {
     const { view } = this.props;
     const isActive = !view.state.selection.empty;
+    const items = getMenuItems(view.state);
 
     return (
       <Portal>
@@ -87,7 +89,7 @@ export default class FloatingToolbar extends React.Component<Props> {
           left={this.state.left}
           offset={this.state.offset}
         >
-          <Menu {...this.props} />
+          <Menu items={items} {...this.props} />
         </Wrapper>
       </Portal>
     );
