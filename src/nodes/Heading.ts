@@ -110,7 +110,6 @@ export default class Heading extends Node {
 
                 const decoration = Decoration.node(pos, pos + node.nodeSize, {
                   class: startsWithEmoji ? "with-emoji" : undefined,
-                  "data-emoji": firstEmoji,
                 });
                 decorations.push(decoration);
               }
