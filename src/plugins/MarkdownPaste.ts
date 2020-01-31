@@ -1,5 +1,7 @@
 import { Plugin } from "prosemirror-state";
+import { toggleMark } from "prosemirror-commands";
 import Extension from "../lib/Extension";
+import isUrl from "../lib/isUrl";
 
 export default class MarkdownPaste extends Extension {
   get name() {
@@ -15,6 +17,20 @@ export default class MarkdownPaste extends Extension {
 
             const text = event.clipboardData.getData("text/plain");
             const html = event.clipboardData.getData("text/html");
+            const { state, dispatch } = view;
+
+            // first check if the clipboard contents can be parsed as a url
+            // if so, just paste the link mark directly onto the selected text.
+            if (isUrl(text) && !state.selection.empty) {
+              toggleMark(this.editor.schema.marks.link, { href: text })(
+                state,
+                dispatch
+              );
+              return true;
+            }
+
+            // otherwise, if we have html then fallback to the default HTML
+            // parser behavior that comes with Prosemirror.
             if (text.length === 0 || html) return false;
 
             event.preventDefault();

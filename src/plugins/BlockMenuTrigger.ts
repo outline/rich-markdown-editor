@@ -121,7 +121,7 @@ export default class BlockMenuTrigger extends Extension {
       // main regex should match only:
       // /word
       new InputRule(OPEN_REGEX, (state, match) => {
-        if (match) {
+        if (match && state.selection.$from.parent.type.name === "paragraph") {
           this.options.onOpen(match[1]);
         }
         return null;

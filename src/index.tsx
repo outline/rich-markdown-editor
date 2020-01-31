@@ -789,7 +789,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
   }
 
   .block-menu-trigger {
-    display: none;
+    display: block;
     height: 1em;
     color: ${props => props.theme.textSecondary};
     background: none;
@@ -811,10 +811,6 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
       transform: scale(1);
       color: ${props => props.theme.text};
     }
-  }
-
-  .ProseMirror-focused .block-menu-trigger {
-    display: block;
   }
 
   .ProseMirror-gapcursor {
