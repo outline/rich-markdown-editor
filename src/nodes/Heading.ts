@@ -6,6 +6,7 @@ import { textblockTypeInputRule } from "prosemirror-inputrules";
 import { setBlockType } from "prosemirror-commands";
 import { MarkdownSerializerState } from "prosemirror-markdown";
 import backspaceToParagraph from "../commands/backspaceToParagraph";
+import toggleBlockType from "../commands/toggleBlockType";
 import Node from "./Node";
 
 export default class Heading extends Node {
@@ -68,9 +69,9 @@ export default class Heading extends Node {
     };
   }
 
-  commands({ type }: { type: NodeType }) {
+  commands({ type, schema }) {
     return (attrs: Record<string, any>) => {
-      return setBlockType(type, attrs);
+      return toggleBlockType(type, schema.nodes.paragraph, attrs);
     };
   }
 
