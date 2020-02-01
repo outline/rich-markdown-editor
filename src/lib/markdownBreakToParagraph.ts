@@ -2,14 +2,13 @@ import MarkdownIt from "markdown-it";
 import Token from "markdown-it/lib/token";
 
 function isHardbreak(token: Token) {
-  return (token.children || []).filter(
-    child =>
-      child.type === "hardbreak" ||
-      (child.type === "text" && child.content === "\\")
+  return (
+    token.type === "hardbreak" ||
+    (token.type === "text" && token.content === "\\")
   );
 }
 
-export default function(md: MarkdownIt) {
+export default function markdownBreakToParagraphs(md: MarkdownIt) {
   // insert a new rule after the "inline" rules are parsed
   md.core.ruler.after("inline", "to-paragraph", state => {
     const { Token } = state;
@@ -17,13 +16,16 @@ export default function(md: MarkdownIt) {
 
     // work backwards through the tokens and find text that looks like a br
     for (let i = tokens.length - 1; i > 0; i--) {
-      const matches = isHardbreak(tokens[i]);
+      const matches = tokens[i].children
+        ? tokens[i].children.filter(isHardbreak)
+        : [];
 
       if (matches.length) {
-        const nodes = [];
         let token;
+
+        const nodes = [];
         const children = tokens[i].children.filter(
-          c => c.type !== "hardbreak" && c.type !== "text"
+          child => !isHardbreak(child)
         );
 
         let count = matches.length;
