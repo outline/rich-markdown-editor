@@ -549,6 +549,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
   h4,
   h5,
   h6 {
+    color: ${props => props.theme.text};
     font-weight: 500;
 
     &:before {
