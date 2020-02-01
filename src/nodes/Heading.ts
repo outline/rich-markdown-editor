@@ -1,5 +1,6 @@
 import emojiRegex from "emoji-regex";
 import { Plugin } from "prosemirror-state";
+import copy from "copy-to-clipboard";
 import { Decoration, DecorationSet } from "prosemirror-view";
 import { Node as ProsemirrorNode, NodeType } from "prosemirror-model";
 import { textblockTypeInputRule } from "prosemirror-inputrules";
@@ -39,7 +40,14 @@ export default class Heading extends Node {
         tag: `h${level}`,
         attrs: { level },
       })),
-      toDOM: (node: ProsemirrorNode) => [`h${node.attrs.level}`, 0],
+      toDOM: node => {
+        const button = document.createElement("button");
+        button.innerText = "#";
+        button.className = "heading-anchor";
+        button.addEventListener("click", this.handleCopyLink(node));
+
+        return [`h${node.attrs.level}`, button, ["span", 0]];
+      },
     };
   }
 
@@ -63,6 +71,17 @@ export default class Heading extends Node {
       return toggleBlockType(type, schema.nodes.paragraph, attrs);
     };
   }
+
+  handleCopyLink = () => {
+    return event => {
+      const slug = `#${event.target.parentElement.parentElement.name}`;
+      copy(window.location.href + slug);
+
+      if (this.options.onShowToast) {
+        this.options.onShowToast("Link copied to clipboard");
+      }
+    };
+  };
 
   keys({ type }: { type: NodeType }) {
     const options = this.options.levels.reduce(
@@ -88,7 +107,7 @@ export default class Heading extends Node {
           decorations: state => {
             const { doc } = state;
             const decorations: Decoration[] = [];
-            let index = 0;
+            const index = 0;
 
             doc.descendants((node, pos) => {
               if (node.type.name !== this.name) return;
@@ -111,7 +130,8 @@ export default class Heading extends Node {
 
               decorations.push(
                 Decoration.node(pos, pos + node.nodeSize, {
-                  name: headingToSlug(node, index++),
+                  name: headingToSlug(node, index),
+                  class: "heading-name",
                   nodeName: "a",
                 })
               );

@@ -549,7 +549,6 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
   h4,
   h5,
   h6 {
-    color: ${props => props.theme.text};
     font-weight: 500;
 
     &:before {
@@ -558,19 +557,52 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
       font-family: ${props => props.theme.fontFamilyMono};
       color: ${props => props.theme.textSecondary};
       font-size: 13px;
-      left: -26px;
+      left: -24px;
     }
   }
 
-  h1:not(:first-child):before { content: "H1"; line-height: 3em; }
+  h1:before { content: "H1"; line-height: 3em; }
   h2:before { content: "H2"; line-height: 2.8em; }
   h3:before { content: "H3"; line-height: 2.3em; }
   h4:before { content: "H4"; line-height: 2.2em; }
   h5:before { content: "H5"; }
   h6:before { content: "H6"; }
 
+  .heading-name {
+    color: ${props => props.theme.text};
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  .heading-name:first-child h1 {
+    &:before,
+    .heading-anchor {
+      display: none;
+    }
+  }
+
   .with-emoji {
     margin-left: -1em;
+  }
+
+  .heading-anchor {
+    display: ${props => (props.readOnly ? "block" : "none")};
+    color: ${props => props.theme.textSecondary};
+    background: none;
+    border: 0;
+    outline: none;
+    padding: 2px 4px;
+    margin: 0;
+    position: absolute;
+    font-family: ${props => props.theme.fontFamilyMono};
+    font-size: 22px;
+    left: -1.3em;
+
+    &:focus {
+      color: ${props => props.theme.text};
+    }
   }
 
   blockquote {
