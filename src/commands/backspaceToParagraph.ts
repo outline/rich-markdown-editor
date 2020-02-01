@@ -1,6 +1,9 @@
 export default function backspaceToParagraph(type) {
   return (state, dispatch) => {
-    const { $from, from, to } = state.selection;
+    const { $from, from, to, empty } = state.selection;
+
+    // if the selection has anything in it then use standard delete behavior
+    if (!empty) return null;
 
     // check we're in a matching node
     if ($from.parent.type !== type) return null;

@@ -1,3 +1,4 @@
+import { Node } from "prosemirror-model";
 import { escape } from "lodash";
 import slugify from "slugify";
 
@@ -9,9 +10,8 @@ function safeSlugify(text: string) {
 
 // calculates a unique slug for this heading based on it's text and position
 // in the document that is as stable as possible
-export default function headingToSlug(text: string) {
-  return safeSlugify(text);
-  // const index = indexOfType(document, node);
-  // if (index === 0) return slugified;
-  // return `${slugified}-${index}`;
+export default function headingToSlug(node: Node, index: number) {
+  const slugified = safeSlugify(node.textContent);
+  if (index === 0) return slugified;
+  return `${slugified}-${index}`;
 }

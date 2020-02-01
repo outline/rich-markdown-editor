@@ -7,6 +7,7 @@ import { setBlockType } from "prosemirror-commands";
 import { MarkdownSerializerState } from "prosemirror-markdown";
 import backspaceToParagraph from "../commands/backspaceToParagraph";
 import toggleBlockType from "../commands/toggleBlockType";
+import headingToSlug from "../lib/headingToSlug";
 import Node from "./Node";
 
 export default class Heading extends Node {
@@ -26,6 +27,9 @@ export default class Heading extends Node {
         level: {
           default: 1,
         },
+        slug: {
+          default: "",
+        },
       },
       content: "inline*",
       group: "block",
@@ -38,21 +42,6 @@ export default class Heading extends Node {
       toDOM: (node: ProsemirrorNode) => [`h${node.attrs.level}`, 0],
     };
   }
-
-  // component({ node, options, innerRef, isSelected, isEditable }) {
-  //   const level = `h${node.attrs.level}`;
-  //   const id = headingToSlug(node.textContent);
-
-  //   return (
-  //     <StyledHeading as={level}>
-  //       <HiddenAnchor id={id} />
-  //       <CollapseToggle collapsed={false} contentEditable={false}>
-  //         <CollapsedIcon />
-  //       </CollapseToggle>
-  //       <div ref={innerRef} />
-  //     </StyledHeading>
-  //   );
-  // }
 
   toMarkdown(state: MarkdownSerializerState, node: ProsemirrorNode) {
     state.write(state.repeat("#", node.attrs.level) + " ");
@@ -99,9 +88,13 @@ export default class Heading extends Node {
           decorations: state => {
             const { doc } = state;
             const decorations: Decoration[] = [];
+            let index = 0;
 
             doc.descendants((node, pos) => {
-              if (node.type.name === this.name && node.attrs.level === 1) {
+              if (node.type.name !== this.name) return;
+
+              // offset emoji in document title node
+              if (node.attrs.level === 1) {
                 const regex = emojiRegex();
                 const text = node.textContent;
                 const matches = regex.exec(text);
@@ -109,11 +102,19 @@ export default class Heading extends Node {
                 const startsWithEmoji =
                   firstEmoji && text.startsWith(firstEmoji);
 
-                const decoration = Decoration.node(pos, pos + node.nodeSize, {
-                  class: startsWithEmoji ? "with-emoji" : undefined,
-                });
-                decorations.push(decoration);
+                decorations.push(
+                  Decoration.node(pos, pos + node.nodeSize, {
+                    class: startsWithEmoji ? "with-emoji" : undefined,
+                  })
+                );
               }
+
+              decorations.push(
+                Decoration.node(pos, pos + node.nodeSize, {
+                  name: headingToSlug(node, index++),
+                  nodeName: "a",
+                })
+              );
             });
 
             return DecorationSet.create(doc, decorations);
