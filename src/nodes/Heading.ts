@@ -28,9 +28,6 @@ export default class Heading extends Node {
         level: {
           default: 1,
         },
-        slug: {
-          default: "",
-        },
       },
       content: "inline*",
       group: "block",
@@ -74,6 +71,8 @@ export default class Heading extends Node {
 
   handleCopyLink = () => {
     return event => {
+      // this is unfortunate but appears to be the best way to grab the anchor
+      // as it's added directly to the dom by a decoration.
       const slug = `#${event.target.parentElement.parentElement.name}`;
       copy(window.location.href + slug);
 

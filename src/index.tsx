@@ -183,7 +183,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new CodeBlock(),
         new CheckboxList(),
         new CheckboxItem(),
-        new Heading(),
+        new Heading({
+          onShowToast: this.props.onShowToast,
+        }),
         new HorizontalRule(),
         new Image({
           uploadImage: this.props.uploadImage,
@@ -196,7 +198,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new Code(),
         new Highlight(),
         new Italic(),
-
         new Link({
           onClickLink: this.props.onClickLink,
           onClickHashtag: this.props.onClickHashtag,
@@ -573,6 +574,10 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
 
     &:hover {
       text-decoration: none;
+
+      .heading-anchor {
+        opacity: 1;
+      }
     }
   }
 
@@ -588,19 +593,23 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
   }
 
   .heading-anchor {
+    opacity: 0;
     display: ${props => (props.readOnly ? "block" : "none")};
     color: ${props => props.theme.textSecondary};
+    cursor: pointer;
     background: none;
     border: 0;
     outline: none;
-    padding: 2px 4px;
+    padding: 2px 12px 2px 4px;
     margin: 0;
     position: absolute;
+    transition: opacity 100ms ease-in-out;
     font-family: ${props => props.theme.fontFamilyMono};
     font-size: 22px;
     left: -1.3em;
 
-    &:focus {
+    &:focus,
+    &:hover {
       color: ${props => props.theme.text};
     }
   }
