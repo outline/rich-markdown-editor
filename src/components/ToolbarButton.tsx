@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-type Props = { active: boolean };
+type Props = { active?: boolean };
 
 export default styled.button<Props>`
   display: inline-block;

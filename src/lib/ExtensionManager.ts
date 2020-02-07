@@ -1,12 +1,9 @@
-import markdownit from "markdown-it";
 import { Schema } from "prosemirror-model";
 import { keymap } from "prosemirror-keymap";
 import { MarkdownSerializer, MarkdownParser } from "prosemirror-markdown";
-import markPlugin from "markdown-it-mark";
 import Editor from "../";
-import checkboxPlugin from "./markdownItCheckbox";
-import breakPlugin from "./markdownBreakToParagraph";
 import Extension from "./Extension";
+import rules from "./markdown/rules";
 import Node from "../nodes/Node";
 import Mark from "../marks/Mark";
 
@@ -71,17 +68,7 @@ export default class ExtensionManager {
         };
       }, {});
 
-    return new MarkdownParser(
-      schema,
-      markdownit("default", {
-        breaks: false,
-        html: false,
-      })
-        .use(breakPlugin)
-        .use(checkboxPlugin)
-        .use(markPlugin),
-      tokens
-    );
+    return new MarkdownParser(schema, rules, tokens);
   }
 
   get marks() {

@@ -19,8 +19,8 @@ function BlockMenuItem({ selected, onClick, title, shortcut, icon }: Props) {
     node => {
       if (selected && node) {
         scrollIntoView(node, {
-          scrollMode: "always",
-          block: "nearest",
+          scrollMode: "if-needed",
+          block: "center",
         });
       }
     },

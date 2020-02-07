@@ -3,7 +3,9 @@ import { Portal } from "react-portal";
 import { EditorView } from "prosemirror-view";
 import styled from "styled-components";
 import getMenuItems from "../menus/formatting";
+import LinkEditor from "./LinkEditor";
 import Menu from "./Menu";
+import isMarkActive from "../queries/isMarkActive";
 
 type Props = {
   tooltip: typeof React.Component;
@@ -77,8 +79,10 @@ export default class FormattingToolbar extends React.Component<Props> {
 
   render() {
     const { view } = this.props;
-    const isActive = !view.state.selection.empty;
-    const items = getMenuItems(view.state);
+    const { state } = view;
+    const isActive = !state.selection.empty;
+    const items = getMenuItems(state);
+    const link = isMarkActive(state.schema.marks.link)(state);
 
     return (
       <Portal>
@@ -89,14 +93,18 @@ export default class FormattingToolbar extends React.Component<Props> {
           left={this.state.left}
           offset={this.state.offset}
         >
-          <Menu items={items} {...this.props} />
+          {link ? (
+            <LinkEditor link={link} {...this.props} />
+          ) : (
+            <Menu items={items} {...this.props} />
+          )}
         </Wrapper>
       </Portal>
     );
   }
 }
 
-export const Wrapper = styled.div<{
+const Wrapper = styled.div<{
   active: boolean;
   top: number;
   left: number;
@@ -109,6 +117,7 @@ export const Wrapper = styled.div<{
   }};
   top: ${props => props.top}px;
   left: ${props => props.left}px;
+  width: 316px;
   opacity: 0;
   background-color: ${props => props.theme.toolbarBackground};
   border-radius: 4px;

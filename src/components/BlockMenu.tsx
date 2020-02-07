@@ -75,6 +75,8 @@ class BlockMenu extends React.Component<Props> {
     }
 
     if (event.key === "ArrowUp") {
+      event.preventDefault();
+      event.stopPropagation();
       const prevIndex = this.state.selectedIndex - 1;
       const prev = this.filtered[prevIndex];
 
@@ -87,6 +89,8 @@ class BlockMenu extends React.Component<Props> {
     }
 
     if (event.key === "ArrowDown" || event.key === "Tab") {
+      event.preventDefault();
+      event.stopPropagation();
       const total = this.filtered.length - 1;
       const nextIndex = this.state.selectedIndex + 1;
       const next = this.filtered[nextIndex];

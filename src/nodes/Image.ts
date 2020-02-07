@@ -97,7 +97,7 @@ export default class Image extends Node {
           {
             class: "image",
           },
-          ["img", node.attrs],
+          ["img", { ...node.attrs, contentEditable: false }],
           ["p", { class: "caption" }, 0],
         ];
       },

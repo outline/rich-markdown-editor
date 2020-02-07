@@ -845,7 +845,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     border: 0;
     line-height: 1;
     margin-top: -6px;
-    left: -36px;
+    left: -34px;
 
     &:hover,
     &:focus {

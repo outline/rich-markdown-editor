@@ -4,14 +4,14 @@ function matches(token) {
   return token.content.match(CHECKBOX_REGEX);
 }
 
-function isInline(token) {
+function isInline(token): boolean {
   return token.type === "inline";
 }
-function isParagraph(token) {
+function isParagraph(token): boolean {
   return token.type === "paragraph_open";
 }
 
-function looksLikeChecklist(tokens, index) {
+function looksLikeChecklist(tokens, index): boolean {
   return (
     isInline(tokens[index]) &&
     isParagraph(tokens[index - 1]) &&
@@ -19,11 +19,11 @@ function looksLikeChecklist(tokens, index) {
   );
 }
 
-function isChecklistItem(tokens, index) {
+function isChecklistItem(tokens, index): boolean {
   return tokens[index].type === "checkbox_item_open";
 }
 
-export default function(md) {
+export default function markdownItCheckbox(md): void {
   let lastId = 0;
 
   // insert a new rule after the "inline" rules are parsed
@@ -84,4 +84,5 @@ export default function(md) {
       }
     }
   });
+  console.log(md);
 }

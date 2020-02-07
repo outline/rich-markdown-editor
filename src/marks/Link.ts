@@ -80,7 +80,7 @@ export default class Link extends Mark {
   }
 
   commands({ type }) {
-    return () => toggleMark(type, { href: "" });
+    return ({ href } = { href: "" }) => toggleMark(type, { href });
   }
 
   keys({ type }) {

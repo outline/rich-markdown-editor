@@ -4,6 +4,7 @@ import { EditorView } from "prosemirror-view";
 import { withTheme } from "styled-components";
 import ToolbarButton from "./ToolbarButton";
 import ToolbarSeparator from "./ToolbarSeparator";
+import theme from "../theme";
 
 type MenuItem = {
   name: string | "separator";
@@ -17,7 +18,7 @@ type Props = {
   tooltip: typeof React.Component;
   commands: Record<string, any>;
   view: EditorView;
-  theme: Record<string, string>;
+  theme: typeof theme;
   items: MenuItem[];
 };
 
