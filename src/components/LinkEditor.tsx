@@ -44,7 +44,7 @@ class LinkEditor extends React.Component<Props> {
     );
   };
 
-  handleKeyDown = (event: KeyboardEvent): void => {
+  handleKeyDown = (event: React.KeyboardEvent): void => {
     if (event.key === "Enter") {
       event.preventDefault();
       this.moveSelectionToEnd();
