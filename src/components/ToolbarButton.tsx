@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-type Props = { active?: boolean };
+type Props = { active?: boolean; disabled?: boolean };
 
 export default styled.button<Props>`
   display: inline-block;
@@ -24,5 +24,10 @@ export default styled.button<Props>`
     opacity: 1;
   }
 
-  ${({ active }) => active && "opacity: 1;"};
+  &:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+
+  ${props => props.active && "opacity: 1;"};
 `;

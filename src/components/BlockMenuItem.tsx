@@ -5,6 +5,7 @@ import theme from "../theme";
 
 type Props = {
   selected: boolean;
+  disabled?: boolean;
   onClick: () => void;
   theme: typeof theme;
   icon: typeof React.Component;
@@ -12,7 +13,14 @@ type Props = {
   shortcut: string;
 };
 
-function BlockMenuItem({ selected, onClick, title, shortcut, icon }: Props) {
+function BlockMenuItem({
+  selected,
+  disabled,
+  onClick,
+  title,
+  shortcut,
+  icon,
+}: Props) {
   const Icon = icon;
 
   const ref = React.useCallback(
@@ -28,7 +36,11 @@ function BlockMenuItem({ selected, onClick, title, shortcut, icon }: Props) {
   );
 
   return (
-    <MenuItem selected={selected} onClick={onClick} ref={ref}>
+    <MenuItem
+      selected={selected}
+      onClick={disabled ? undefined : onClick}
+      ref={ref}
+    >
       <Icon color={selected ? theme.black : undefined} />
       &nbsp;&nbsp;{title}
       <Shortcut>{shortcut}</Shortcut>
@@ -49,6 +61,7 @@ const MenuItem = styled.button<{
   height: 36px;
   cursor: pointer;
   border: none;
+  opacity: ${props => (props.disabled ? ".5" : "1")};
   color: ${props => (props.selected ? props.theme.black : props.theme.text)};
   background: ${props =>
     props.selected ? props.theme.blockToolbarTrigger : "none"};

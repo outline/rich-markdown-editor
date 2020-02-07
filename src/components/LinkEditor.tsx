@@ -18,9 +18,12 @@ type Props = {
 };
 
 class LinkEditor extends React.Component<Props> {
-  inputRef = React.createRef<HTMLInputElement>();
   discardInputValue = false;
   initialValue: string = this.props.mark.attrs.href;
+
+  state = {
+    value: this.props.mark.attrs.href,
+  };
 
   componentWillUnmount = () => {
     if (this.discardInputValue) {
@@ -28,7 +31,7 @@ class LinkEditor extends React.Component<Props> {
     }
 
     // update the link saved as the mark whenever the link editor closes
-    const href = (this.inputRef.current.value || "").trim();
+    const href = (this.state.value || "").trim();
     if (!href) {
       return this.handleRemoveLink();
     }
@@ -53,14 +56,13 @@ class LinkEditor extends React.Component<Props> {
 
     if (event.key === "Escape") {
       event.preventDefault();
-      this.inputRef.current.value = this.initialValue;
-      this.moveSelectionToEnd();
+      this.setState({ value: this.initialValue }, this.moveSelectionToEnd);
       return;
     }
   };
 
-  handleChange = () => {
-    //
+  handleChange = event => {
+    this.setState({ value: event.target.value });
   };
 
   handleOpenLink = () => {
@@ -89,14 +91,16 @@ class LinkEditor extends React.Component<Props> {
     return (
       <Wrapper>
         <Input
-          ref={this.inputRef}
-          defaultValue={mark.attrs.href}
+          value={this.state.value}
           placeholder="Search or paste a link…"
           onKeyDown={this.handleKeyDown}
           onChange={this.handleChange}
           autoFocus={mark.attrs.href === ""}
         />
-        <ToolbarButton onClick={this.handleOpenLink}>
+        <ToolbarButton
+          onClick={this.handleOpenLink}
+          disabled={!this.state.value}
+        >
           <Tooltip tooltip="Open link" placement="top">
             <OpenIcon color={this.props.theme.toolbarItem} />
           </Tooltip>
