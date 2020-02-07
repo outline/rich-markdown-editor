@@ -1,4 +1,5 @@
 import * as React from "react";
+import { setTextSelection } from "prosemirror-utils";
 import { EditorView } from "prosemirror-view";
 import { Mark } from "prosemirror-model";
 import { TrashIcon, OpenIcon } from "outline-icons";
@@ -18,10 +19,20 @@ type Props = {
 
 class LinkEditor extends React.Component<Props> {
   inputRef = React.createRef<HTMLInputElement>();
+  discardInputValue = false;
+  initialValue: string = this.props.mark.attrs.href;
 
   componentWillUnmount = () => {
+    if (this.discardInputValue) {
+      return;
+    }
+
     // update the link saved as the mark whenever the link editor closes
-    const href = this.inputRef.current.value || "";
+    const href = (this.inputRef.current.value || "").trim();
+    if (!href) {
+      return this.handleRemoveLink();
+    }
+
     const { from, to } = this.props;
     const { state, dispatch } = this.props.view;
     const markType = state.schema.marks.link;
@@ -33,8 +44,19 @@ class LinkEditor extends React.Component<Props> {
     );
   };
 
-  handleKeyDown = () => {
-    //
+  handleKeyDown = (event: KeyboardEvent): void => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      this.moveSelectionToEnd();
+      return;
+    }
+
+    if (event.key === "Escape") {
+      event.preventDefault();
+      this.inputRef.current.value = this.initialValue;
+      this.moveSelectionToEnd();
+      return;
+    }
   };
 
   handleChange = () => {
@@ -46,7 +68,18 @@ class LinkEditor extends React.Component<Props> {
   };
 
   handleRemoveLink = () => {
-    //
+    this.discardInputValue = true;
+    const { from, to, mark } = this.props;
+    const { state, dispatch } = this.props.view;
+
+    dispatch(state.tr.removeMark(from, to, mark));
+  };
+
+  moveSelectionToEnd = () => {
+    const { to, view } = this.props;
+    const { state, dispatch } = view;
+    dispatch(setTextSelection(to)(state.tr));
+    view.focus();
   };
 
   render() {
