@@ -82,8 +82,9 @@ export default class CodeBlock extends Node {
         const select = document.createElement("select");
         select.addEventListener("change", this.handleLanguageChange);
 
-        this.languageOptions.forEach(([value, label]) => {
+        this.languageOptions.forEach(([key, label]) => {
           const option = document.createElement("option");
+          const value = key === "none" ? "" : key;
           option.value = value;
           option.innerText = label;
           option.selected = node.attrs.language === value;

@@ -34,5 +34,5 @@ export default function getMarkRange($pos = null, type = null) {
     endIndex += 1;
   }
 
-  return { from: startPos, to: endPos };
+  return { from: startPos, to: endPos, mark };
 }

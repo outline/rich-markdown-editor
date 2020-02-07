@@ -3,13 +3,14 @@ import { EditorView } from "prosemirror-view";
 import { Mark } from "prosemirror-model";
 import { TrashIcon, OpenIcon } from "outline-icons";
 import styled, { withTheme } from "styled-components";
-import getMarkRange from "../queries/getMarkRange";
 import theme from "../theme";
 import Flex from "./Flex";
 import ToolbarButton from "./ToolbarButton";
 
 type Props = {
-  link: Mark;
+  mark: Mark;
+  from: number;
+  to: number;
   tooltip: typeof React.Component;
   view: EditorView;
   theme: typeof theme;
@@ -21,19 +22,14 @@ class LinkEditor extends React.Component<Props> {
   componentWillUnmount = () => {
     // update the link saved as the mark whenever the link editor closes
     const href = this.inputRef.current.value || "";
+    const { from, to } = this.props;
     const { state, dispatch } = this.props.view;
     const markType = state.schema.marks.link;
-    console.log(markType);
-
-    const range = getMarkRange(state.selection.$from, markType);
-    console.log(range);
-
-    if (!range) return;
 
     dispatch(
       state.tr
-        .removeMark(range.from, range.to, markType)
-        .addMark(range.from, range.to, markType.create({ href }))
+        .removeMark(from, to, markType)
+        .addMark(from, to, markType.create({ href }))
     );
   };
 
@@ -41,12 +37,12 @@ class LinkEditor extends React.Component<Props> {
     //
   };
 
-  handleChange = event => {
+  handleChange = () => {
     //
   };
 
   handleOpenLink = () => {
-    window.open(this.props.link.attrs.href);
+    window.open(this.props.mark.attrs.href);
   };
 
   handleRemoveLink = () => {
@@ -54,18 +50,18 @@ class LinkEditor extends React.Component<Props> {
   };
 
   render() {
-    const { link } = this.props;
+    const { mark } = this.props;
     const Tooltip = this.props.tooltip;
 
     return (
       <Wrapper>
         <Input
           ref={this.inputRef}
-          defaultValue={link.attrs.href}
+          defaultValue={mark.attrs.href}
           placeholder="Search or paste a link…"
           onKeyDown={this.handleKeyDown}
           onChange={this.handleChange}
-          autoFocus={link.attrs.href === ""}
+          autoFocus={mark.attrs.href === ""}
         />
         <ToolbarButton onClick={this.handleOpenLink}>
           <Tooltip tooltip="Open link" placement="top">

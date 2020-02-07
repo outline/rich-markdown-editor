@@ -1,4 +1,4 @@
-const isMarkActive = type => state => {
+const isMarkActive = type => (state): boolean => {
   const { from, $from, to, empty } = state.selection;
 
   return empty

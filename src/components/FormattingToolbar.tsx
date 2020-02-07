@@ -6,6 +6,7 @@ import getMenuItems from "../menus/formatting";
 import LinkEditor from "./LinkEditor";
 import Menu from "./Menu";
 import isMarkActive from "../queries/isMarkActive";
+import getMarkRange from "../queries/getMarkRange";
 
 type Props = {
   tooltip: typeof React.Component;
@@ -83,6 +84,7 @@ export default class FormattingToolbar extends React.Component<Props> {
     const isActive = !state.selection.empty;
     const items = getMenuItems(state);
     const link = isMarkActive(state.schema.marks.link)(state);
+    const range = getMarkRange(state.selection.$from, state.schema.marks.link);
 
     return (
       <Portal>
@@ -93,8 +95,13 @@ export default class FormattingToolbar extends React.Component<Props> {
           left={this.state.left}
           offset={this.state.offset}
         >
-          {link ? (
-            <LinkEditor link={link} {...this.props} />
+          {link && range ? (
+            <LinkEditor
+              mark={range.mark}
+              from={range.from}
+              to={range.to}
+              {...this.props}
+            />
           ) : (
             <Menu items={items} {...this.props} />
           )}
