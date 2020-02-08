@@ -12,7 +12,6 @@
     "prepublish": "yarn build"
   },
   "dependencies": {
-    "boundless-arrow-key-navigation": "^1.1.0",
     "copy-to-clipboard": "^3.0.8",
     "emoji-regex": "^8.0.0",
     "lodash": "^4.17.11",

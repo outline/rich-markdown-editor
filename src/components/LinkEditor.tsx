@@ -2,12 +2,13 @@ import * as React from "react";
 import { setTextSelection } from "prosemirror-utils";
 import { EditorView } from "prosemirror-view";
 import { Mark } from "prosemirror-model";
-import { TrashIcon, OpenIcon, CloseIcon } from "outline-icons";
+import { TrashIcon, OpenIcon } from "outline-icons";
 import styled, { withTheme } from "styled-components";
 import isUrl from "../lib/isUrl";
 import theme from "../theme";
 import Flex from "./Flex";
 import ToolbarButton from "./ToolbarButton";
+import LinkSearchResult from "./LinkSearchResult";
 
 export type SearchResult = {
   title: string;
@@ -30,6 +31,7 @@ class LinkEditor extends React.Component<Props> {
   initialValue: string = this.props.mark.attrs.href;
 
   state = {
+    selectedIndex: -1,
     value: this.props.mark.attrs.href,
     results: [],
   };
@@ -51,6 +53,12 @@ class LinkEditor extends React.Component<Props> {
       href = `https://${href}`;
     }
 
+    this.save(href);
+  };
+
+  save = (href: string): void => {
+    this.discardInputValue = true;
+
     const { from, to } = this.props;
     const { state, dispatch } = this.props.view;
     const markType = state.schema.marks.link;
@@ -65,7 +73,12 @@ class LinkEditor extends React.Component<Props> {
   handleKeyDown = (event: React.KeyboardEvent): void => {
     if (event.key === "Enter") {
       event.preventDefault();
+
+      if (this.state.selectedIndex >= 0) {
+        this.save(this.state.results[this.state.selectedIndex].url);
+      }
       this.moveSelectionToEnd();
+
       return;
     }
 
@@ -73,6 +86,21 @@ class LinkEditor extends React.Component<Props> {
       event.preventDefault();
       this.setState({ value: this.initialValue }, this.moveSelectionToEnd);
       return;
+    }
+
+    if (event.key === "ArrowDown" || event.key === "Tab") {
+      event.preventDefault();
+      event.stopPropagation();
+      const total = this.state.results.length - 1;
+      const nextIndex = this.state.selectedIndex + 1;
+      const next = this.state.results[nextIndex];
+
+      this.setState({
+        selectedIndex: Math.min(
+          next && next.name === "separator" ? nextIndex + 1 : nextIndex,
+          total
+        ),
+      });
     }
   };
 
@@ -82,6 +110,7 @@ class LinkEditor extends React.Component<Props> {
     this.setState({
       value,
       results: looksLikeUrl ? [] : this.state.results,
+      selectedIndex: -1,
     });
 
     // if it doesn't seem to be a url, try searching for matching documents
@@ -110,6 +139,12 @@ class LinkEditor extends React.Component<Props> {
     const { state, dispatch } = this.props.view;
 
     dispatch(state.tr.removeMark(from, to, mark));
+  };
+
+  handleSearchResultClick = (url: string) => event => {
+    event.preventDefault();
+    this.save(url);
+    this.moveSelectionToEnd();
   };
 
   moveSelectionToEnd = () => {
@@ -148,11 +183,14 @@ class LinkEditor extends React.Component<Props> {
         </ToolbarButton>
         {showResults && (
           <SearchResults>
-            <ol>
-              {this.state.results.map(result => (
-                <li key={result.url}>{result.title}</li>
-              ))}
-            </ol>
+            {this.state.results.map((result, index) => (
+              <LinkSearchResult
+                key={result.url}
+                title={result.title}
+                onClick={this.handleSearchResultClick(result.url)}
+                selected={index === this.state.selectedIndex}
+              />
+            ))}
           </SearchResults>
         )}
       </Wrapper>
@@ -166,7 +204,7 @@ const Wrapper = styled(Flex)`
   min-width: 300px;
 `;
 
-const SearchResults = styled.div`
+const SearchResults = styled.ol`
   background: ${props => props.theme.toolbarBackground};
   position: absolute;
   top: 100%;
@@ -174,6 +212,7 @@ const SearchResults = styled.div`
   height: auto;
   left: 0;
   padding: 8px;
+  margin: 0;
   margin-top: -3px;
   margin-bottom: 0;
   border-radius: 0 0 4px 4px;

@@ -84,5 +84,4 @@ export default function markdownItCheckbox(md): void {
       }
     }
   });
-  console.log(md);
 }

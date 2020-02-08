@@ -48,14 +48,6 @@ document automatically.
 
 Allows additional [Prosemirror plugins](https://prosemirror.net/docs/ref/#state.Plugin_System) to be passed to the underlying Prosemirror instance.
 
-#### `schema`
-
-Allows additional Slate schema to be passed to the underlying Slate editor.
-
-#### `serializer`
-
-Allows overriding the serializer, defaults to `slate-md-serializer` when not set.
-
 #### `theme`
 
 Allows overriding the inbuilt theme to brand the editor, for example use your own font face and brand colors to have the editor fit within your application. See the [inbuilt theme](/src/theme.js) for an example of the keys that should be provided.
@@ -100,7 +92,7 @@ This callback is triggered when the `Cmd+Escape` is hit within the editor. You m
 
 This callback is triggered when the contents of the editor changes, usually due to user input such as a keystroke or using formatting options. You may use this to locally persist the editors state, see the [inbuilt example](/example/index.js).
 
-As of `v4.0.0` this callback returns a function which when called returns the current text value of the document. This optimization is made to avoid serializing the state of the document to text on every change event, allowing the host app to choose when it needs the serialized value.
+It returns a function which when called returns the current text value of the document. This optimization is made to avoid serializing the state of the document to text on every change event, allowing the host app to choose when it needs the serialized value.
 
 #### `onImageUploadStart`
 
@@ -168,27 +160,7 @@ import { history } from "react-router";
 
 #### `getLinkComponent(Node)`
 
-This callback allows links to request an alternative component to display instead of an inline link. Given a link node return `undefined` for no replacement or a valid React component to replace the standard link display. This is particularly useful for "embeds".
-
-### Hiding Toolbar Buttons
-
-Buttons in either of the pop-up toolbars can be hidden by using a custom theme or overriding the supplied theme.
-
-```javascript
-import Editor, { theme } from 'rich-markdown-editor';
-
-const hiddenToolbarButtons = {
-  blocks: [
-    'image',
-    'table'
-  ],
-  marks: ['deleted', 'code', 'link', 'italic']
-};
-
-<Editor
-  theme={{ hiddenToolbarButtons, ...theme }}
-/>
-```
+This callback allows links to "request" an alternative component to display instead of an inline link. Given a link node return `undefined` for no replacement or a valid React component to replace the standard link display. This is used to support embeds.
 
 
 ## Contributing
