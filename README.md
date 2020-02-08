@@ -135,7 +135,7 @@ notification system, or simplisticly use `window.alert(message)`.
 
 #### `onClickLink(href: string)`
 
-This callback allows overriding of link handling. It's often the case that you want to have external links open a new window whilst internal links may use something like `react-router` to navigate. If no callback is provided then default behavior will apply to all links. eg:
+This callback allows overriding of link handling. It's often the case that you want to have external links open a new window and have internal links use something like `react-router` to navigate. If no callback is provided then default behavior of opening a new tab will apply to all links. eg:
 
 
 ```javascript

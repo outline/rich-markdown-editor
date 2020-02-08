@@ -10,6 +10,8 @@ import getDataTransferFiles from "../lib/getDataTransferFiles";
 import insertFiles from "../commands/insertFiles";
 import getMenuItems from "../menus/block";
 
+const SSR = typeof window === "undefined";
+
 type Props = {
   isActive: boolean;
   commands: Record<string, any>;
@@ -27,7 +29,7 @@ class BlockMenu extends React.Component<Props> {
   inputRef = React.createRef<HTMLInputElement>();
 
   state = {
-    left: 0,
+    left: -1000,
     top: undefined,
     bottom: undefined,
     isAbove: false,
@@ -35,7 +37,9 @@ class BlockMenu extends React.Component<Props> {
   };
 
   componentDidMount() {
-    window.addEventListener("keydown", this.handleKeyDown);
+    if (!SSR) {
+      window.addEventListener("keydown", this.handleKeyDown);
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -52,7 +56,9 @@ class BlockMenu extends React.Component<Props> {
   }
 
   componentWillUnmount() {
-    window.removeEventListener("keydown", this.handleKeyDown);
+    if (!SSR) {
+      window.removeEventListener("keydown", this.handleKeyDown);
+    }
   }
 
   handleKeyDown = (event: KeyboardEvent) => {
@@ -166,13 +172,13 @@ class BlockMenu extends React.Component<Props> {
 
   calculatePosition(props) {
     const { view } = props;
-
     const { selection } = view.state;
 
-    if (!props.isActive) {
+    if (!props.isActive || SSR) {
       return {
         left: -1000,
         top: 0,
+        bottom: undefined,
       };
     }
 

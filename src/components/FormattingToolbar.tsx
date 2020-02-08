@@ -3,14 +3,18 @@ import { Portal } from "react-portal";
 import { EditorView } from "prosemirror-view";
 import styled from "styled-components";
 import getMenuItems from "../menus/formatting";
-import LinkEditor from "./LinkEditor";
+import LinkEditor, { SearchResult } from "./LinkEditor";
 import Menu from "./Menu";
 import isMarkActive from "../queries/isMarkActive";
 import getMarkRange from "../queries/getMarkRange";
 
+const SSR = typeof window === "undefined";
+
 type Props = {
   tooltip: typeof React.Component;
   commands: Record<string, any>;
+  onSearchLink?: (term: string) => Promise<SearchResult[]>;
+  onClickLink: (url: string) => void;
   view: EditorView;
 };
 
@@ -38,7 +42,7 @@ export default class FormattingToolbar extends React.Component<Props> {
     // If there is no selection, the selection is empty or the selection is a
     // NodeSelection instead of a TextSelection then hide the formatting
     // toolbar offscreen
-    if (!selection || selection.empty || selection.node) {
+    if (!selection || selection.empty || selection.node || SSR) {
       return {
         left: -1000,
         top: 0,

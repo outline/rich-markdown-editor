@@ -105,7 +105,13 @@ export default class Link extends Mark {
             if (attrs.href && event.target instanceof HTMLAnchorElement) {
               event.stopPropagation();
               event.preventDefault();
-              window.open(attrs.href);
+
+              const isHashtag = attrs.href.startsWith("#");
+              if (isHashtag && this.options.onClickHashtag) {
+                this.options.onClickHashtag(attrs.href);
+              } else {
+                this.options.onClickLink(attrs.href);
+              }
             }
           },
         },

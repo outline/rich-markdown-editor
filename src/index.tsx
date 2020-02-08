@@ -17,6 +17,7 @@ import { baseKeymap } from "prosemirror-commands";
 import styled, { ThemeProvider } from "styled-components";
 import { light as lightTheme, dark as darkTheme } from "./theme";
 import Flex from "./components/Flex";
+import { SearchResult } from "./components/LinkEditor";
 import FormattingToolbar from "./components/FormattingToolbar";
 import BlockMenu from "./components/BlockMenu";
 import Extension from "./lib/Extension";
@@ -67,15 +68,15 @@ export type Props = {
   autoFocus?: boolean;
   readOnly?: boolean;
   dark?: boolean;
-  theme?: Record<string, any>;
+  theme?: typeof theme;
   uploadImage?: (file: File) => Promise<string>;
   onSave?: ({ done: boolean }) => void;
   onCancel?: () => void;
   onChange: (value: () => string) => void;
   onImageUploadStart?: () => void;
   onImageUploadStop?: () => void;
-  onSearchLink?: (term: string) => Promise<Array<Record<string, any>>>;
-  onClickLink?: (href: string) => void;
+  onSearchLink?: (term: string) => Promise<SearchResult[]>;
+  onClickLink: (href: string) => void;
   onClickHashtag?: (tag: string) => void;
   getLinkComponent?: (node: ProsemirrorNode) => any;
   onShowToast?: (message: string) => void;
@@ -98,6 +99,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     },
     onImageUploadStop: () => {
       // no default behavior
+    },
+    onClickLink: href => {
+      window.open(href, "_blank");
     },
     extensions: [],
     tooltip: "span",
@@ -435,6 +439,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                 <FormattingToolbar
                   view={this.view}
                   commands={this.commands}
+                  onSearchLink={this.props.onSearchLink}
+                  onClickLink={this.props.onClickLink}
                   tooltip={tooltip}
                 />
                 <BlockMenu

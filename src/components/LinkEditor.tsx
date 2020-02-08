@@ -2,17 +2,25 @@ import * as React from "react";
 import { setTextSelection } from "prosemirror-utils";
 import { EditorView } from "prosemirror-view";
 import { Mark } from "prosemirror-model";
-import { TrashIcon, OpenIcon } from "outline-icons";
+import { TrashIcon, OpenIcon, CloseIcon } from "outline-icons";
 import styled, { withTheme } from "styled-components";
+import isUrl from "../lib/isUrl";
 import theme from "../theme";
 import Flex from "./Flex";
 import ToolbarButton from "./ToolbarButton";
+
+export type SearchResult = {
+  title: string;
+  url: string;
+};
 
 type Props = {
   mark: Mark;
   from: number;
   to: number;
   tooltip: typeof React.Component;
+  onSearchLink?: (term: string) => Promise<SearchResult[]>;
+  onClickLink: (url: string) => void;
   view: EditorView;
   theme: typeof theme;
 };
@@ -23,6 +31,7 @@ class LinkEditor extends React.Component<Props> {
 
   state = {
     value: this.props.mark.attrs.href,
+    results: [],
   };
 
   componentWillUnmount = () => {
@@ -31,9 +40,15 @@ class LinkEditor extends React.Component<Props> {
     }
 
     // update the link saved as the mark whenever the link editor closes
-    const href = (this.state.value || "").trim();
+    let href = (this.state.value || "").trim();
     if (!href) {
       return this.handleRemoveLink();
+    }
+
+    // if the input doesn't start with a protocol or relative slash, make sure
+    // a protocol is added
+    if (!isUrl(href) && !href.startsWith("/")) {
+      href = `https://${href}`;
     }
 
     const { from, to } = this.props;
@@ -61,15 +76,35 @@ class LinkEditor extends React.Component<Props> {
     }
   };
 
-  handleChange = event => {
-    this.setState({ value: event.target.value });
+  handleChange = async (event): Promise<void> => {
+    const value = event.target.value.trim();
+    const looksLikeUrl = isUrl(value);
+    this.setState({
+      value,
+      results: looksLikeUrl ? [] : this.state.results,
+    });
+
+    // if it doesn't seem to be a url, try searching for matching documents
+    if (value && !looksLikeUrl && this.props.onSearchLink) {
+      try {
+        const results = await this.props.onSearchLink(value);
+        this.setState({ results });
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      this.setState({ results: [] });
+    }
   };
 
-  handleOpenLink = () => {
-    window.open(this.props.mark.attrs.href);
+  handleOpenLink = (event): void => {
+    const { href } = this.props.mark.attrs;
+
+    event.preventDefault();
+    this.props.onClickLink(href);
   };
 
-  handleRemoveLink = () => {
+  handleRemoveLink = (): void => {
     this.discardInputValue = true;
     const { from, to, mark } = this.props;
     const { state, dispatch } = this.props.view;
@@ -87,6 +122,7 @@ class LinkEditor extends React.Component<Props> {
   render() {
     const { mark } = this.props;
     const Tooltip = this.props.tooltip;
+    const showResults = this.state.results.length > 0;
 
     return (
       <Wrapper>
@@ -110,6 +146,15 @@ class LinkEditor extends React.Component<Props> {
             <TrashIcon color={this.props.theme.toolbarItem} />
           </Tooltip>
         </ToolbarButton>
+        {showResults && (
+          <SearchResults>
+            <ol>
+              {this.state.results.map(result => (
+                <li key={result.url}>{result.title}</li>
+              ))}
+            </ol>
+          </SearchResults>
+        )}
       </Wrapper>
     );
   }
@@ -119,6 +164,19 @@ const Wrapper = styled(Flex)`
   margin-left: -8px;
   margin-right: -8px;
   min-width: 300px;
+`;
+
+const SearchResults = styled.div`
+  background: ${props => props.theme.toolbarBackground};
+  position: absolute;
+  top: 100%;
+  width: 100%;
+  height: auto;
+  left: 0;
+  padding: 8px;
+  margin-top: -3px;
+  margin-bottom: 0;
+  border-radius: 0 0 4px 4px;
 `;
 
 const Input = styled.input`
