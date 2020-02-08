@@ -88,18 +88,24 @@ class LinkEditor extends React.Component<Props> {
       return;
     }
 
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      event.stopPropagation();
+      const prevIndex = this.state.selectedIndex - 1;
+
+      this.setState({
+        selectedIndex: Math.max(0, prevIndex),
+      });
+    }
+
     if (event.key === "ArrowDown" || event.key === "Tab") {
       event.preventDefault();
       event.stopPropagation();
       const total = this.state.results.length - 1;
       const nextIndex = this.state.selectedIndex + 1;
-      const next = this.state.results[nextIndex];
 
       this.setState({
-        selectedIndex: Math.min(
-          next && next.name === "separator" ? nextIndex + 1 : nextIndex,
-          total
-        ),
+        selectedIndex: Math.min(nextIndex, total),
       });
     }
   };
