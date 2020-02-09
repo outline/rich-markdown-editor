@@ -66,6 +66,8 @@ class Example extends React.Component {
             Update value
           </button>
         </div>
+        <br />
+        <br />
         <Editor
           id="example"
           readOnly={this.state.readOnly}

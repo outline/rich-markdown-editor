@@ -483,16 +483,6 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     font-feature-settings: "liga" 0; /* the above doesn't seem to work in Edge */
   }
 
-  .placeholder {
-    &:before {
-      display: block;
-      content: attr(data-empty-text);
-      pointer-events: none;
-      height: 0;
-      color: ${props => props.theme.placeholder};
-    }
-  }
-
   pre {
     white-space: pre-wrap;
   }
@@ -558,7 +548,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
   h6 {
     font-weight: 500;
 
-    &:before {
+    &:not(.placeholder):before {
       display: ${props => (props.readOnly ? "none" : "block")};
       position: absolute;
       font-family: ${props => props.theme.fontFamilyMono};
@@ -568,12 +558,12 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     }
   }
 
-  h1:before { content: "H1"; line-height: 3em; }
-  h2:before { content: "H2"; line-height: 2.8em; }
-  h3:before { content: "H3"; line-height: 2.3em; }
-  h4:before { content: "H4"; line-height: 2.2em; }
-  h5:before { content: "H5"; }
-  h6:before { content: "H6"; }
+  h1:not(.placeholder):before { content: "H1"; line-height: 3em; }
+  h2:not(.placeholder):before { content: "H2"; line-height: 2.8em; }
+  h3:not(.placeholder):before { content: "H3"; line-height: 2.3em; }
+  h4:not(.placeholder):before { content: "H4"; line-height: 2.2em; }
+  h5:not(.placeholder):before { content: "H5"; }
+  h6:not(.placeholder):before { content: "H6"; }
 
   .heading-name {
     color: ${props => props.theme.text};
@@ -587,7 +577,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     }
   }
 
-  .heading-name:first-child h1 {
+  .heading-name:first-child h1:not(.placeholder) {
     &:before,
     .heading-anchor {
       display: none;
@@ -617,6 +607,16 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     &:focus,
     &:hover {
       color: ${props => props.theme.text};
+    }
+  }
+
+  .placeholder {
+    &:before {
+      display: block;
+      content: attr(data-empty-text);
+      pointer-events: none;
+      height: 0;
+      color: ${props => props.theme.placeholder};
     }
   }
 
