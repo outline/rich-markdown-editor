@@ -53,8 +53,9 @@ class Example extends React.Component {
     if (body) body.style.backgroundColor = this.state.dark ? "#181A1B" : "#FFF";
 
     return (
-      <div style={{ marginTop: "60px" }}>
-        <p>
+      <div>
+        <div>
+          <br />
           <button type="button" onClick={this.handleToggleReadOnly}>
             {this.state.readOnly ? "Editable" : "Read Only"}
           </button>
@@ -64,7 +65,7 @@ class Example extends React.Component {
           <button type="button" onClick={this.handleUpdateValue}>
             Update value
           </button>
-        </p>
+        </div>
         <Editor
           id="example"
           readOnly={this.state.readOnly}

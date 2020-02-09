@@ -19,7 +19,9 @@ function LinkSearchResult({ title, ...rest }: Props) {
   );
 }
 
-const ListItem = styled.li`
+const ListItem = styled.li<{
+  selected: boolean;
+}>`
   display: flex;
   align-items: center;
   height: 28px;
