@@ -39,6 +39,11 @@ import Image from "./nodes/Image";
 import ListItem from "./nodes/ListItem";
 import OrderedList from "./nodes/OrderedList";
 import Paragraph from "./nodes/Paragraph";
+import Table from "./nodes/Table";
+import TableCell from "./nodes/TableCell";
+import TableHeadCell from "./nodes/TableHeadCell";
+import TableHeader from "./nodes/TableHeader";
+import TableRow from "./nodes/TableRow";
 
 // marks
 import Bold from "./marks/Bold";
@@ -198,6 +203,11 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           onShowToast: this.props.onShowToast,
         }),
         new ListItem(),
+        new Table(),
+        new TableCell(),
+        new TableHeadCell(),
+        new TableHeader(),
+        new TableRow(),
         new Bold(),
         new Code(),
         new Highlight(),
