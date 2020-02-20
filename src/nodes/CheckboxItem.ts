@@ -50,7 +50,7 @@ export default class CheckboxItem extends Node {
             checked: node.attrs.checked ? true : undefined,
           },
         ],
-        ["label", 0],
+        ["span", 0],
       ],
     };
   }

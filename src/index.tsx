@@ -668,7 +668,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     }
   }
 
-  ul.checkbox_list li.checked {
+  ul.checkbox_list li.checked > span > p {
     color: ${props => props.theme.textSecondary};
     text-decoration: line-through;
   }
