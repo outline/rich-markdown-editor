@@ -95,7 +95,7 @@ export default class CheckboxItem extends Node {
   }
 
   toMarkdown(state, node) {
-    state.write(node.attrs.checked ? "x] " : " ] ");
+    state.write(node.attrs.checked ? "[x] " : "[ ] ");
     state.renderInline(node);
   }
 

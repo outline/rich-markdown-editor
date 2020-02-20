@@ -35,7 +35,7 @@ export default class CheckboxList extends Node {
   }
 
   toMarkdown(state, node) {
-    state.renderList(node, "  ", () => "- [");
+    state.renderList(node, "  ", () => "- ");
   }
 
   parseMarkdown() {
