@@ -654,7 +654,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
 
     ul,
     ol {
-      margin: 0.1em;
+      margin: 0;
     }
   }
 
@@ -677,7 +677,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     margin-right: 6px;
   }
 
-  li p {
+  li p:first-child {
     display: inline;
     margin: 0;
   }
