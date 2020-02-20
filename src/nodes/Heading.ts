@@ -4,7 +4,7 @@ import copy from "copy-to-clipboard";
 import { Decoration, DecorationSet } from "prosemirror-view";
 import { Node as ProsemirrorNode, NodeType } from "prosemirror-model";
 import { textblockTypeInputRule } from "prosemirror-inputrules";
-import { setBlockType, splitBlock } from "prosemirror-commands";
+import { setBlockType } from "prosemirror-commands";
 import { MarkdownSerializerState } from "prosemirror-markdown";
 import backspaceToParagraph from "../commands/backspaceToParagraph";
 import toggleBlockType from "../commands/toggleBlockType";
@@ -96,7 +96,7 @@ export default class Heading extends Node {
     return {
       ...options,
       Backspace: backspaceToParagraph(type),
-      Tab: splitBlock,
+      //Tab: splitBlock,
     };
   }
 

@@ -31,6 +31,7 @@ import Text from "./nodes/Text";
 import Blockquote from "./nodes/Blockquote";
 import BulletList from "./nodes/BulletList";
 import CodeBlock from "./nodes/CodeBlock";
+import CodeFence from "./nodes/CodeFence";
 import CheckboxList from "./nodes/CheckboxList";
 import CheckboxItem from "./nodes/CheckboxItem";
 import Heading from "./nodes/Heading";
@@ -185,8 +186,10 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new Blockquote(),
         new BulletList(),
         new CodeBlock(),
+        new CodeFence(),
         new CheckboxList(),
         new CheckboxItem(),
+        new ListItem(),
         new Heading({
           onShowToast: this.props.onShowToast,
         }),
@@ -197,7 +200,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           onImageUploadStop: this.props.onImageUploadStop,
           onShowToast: this.props.onShowToast,
         }),
-        new ListItem(),
         new Bold(),
         new Code(),
         new Highlight(),
