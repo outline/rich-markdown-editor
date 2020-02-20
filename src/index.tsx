@@ -697,12 +697,25 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
   }
 
   .code-block {
-    select {
-      display: ${props => (props.readOnly ? "none" : "inline")};
+    position: relative;
+
+    select,
+    button {
+      display: none;
+      position: absolute;
+      z-index: 1;
+      top: 4px;
+      right: 4px;
     }
 
-    button {
-      display: ${props => (props.readOnly ? "inline" : "none")};
+    &:hover {
+      select {
+        display: ${props => (props.readOnly ? "none" : "inline")};
+      }
+  
+      button {
+        display: ${props => (props.readOnly ? "inline" : "none")};
+      }
     }
   }
 
