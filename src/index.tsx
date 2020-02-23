@@ -684,6 +684,12 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     margin: 0;
   }
 
+  hr {
+    height: 0;
+    border: 0;
+    border-top: 1px solid ${props => props.theme.horizontalRule};
+  }
+
   code {
     border-radius: 4px;
     border: 1px solid ${props => props.theme.codeBorder};
