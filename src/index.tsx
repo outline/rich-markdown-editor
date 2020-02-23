@@ -852,7 +852,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
   }
 
   .block-menu-trigger {
-    display: block;
+    display: ${props => (props.readOnly ? "none" : "block")};
     height: 1em;
     color: ${props => props.theme.textSecondary};
     background: none;
