@@ -674,6 +674,8 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
   }
 
   ul.checkbox_list li input {
+    pointer-events: ${props => (props.readOnly ? "none" : "initial")};
+    opacity: ${props => (props.readOnly ? 0.75 : 1)};
     margin-right: 6px;
   }
 
