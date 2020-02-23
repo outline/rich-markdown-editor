@@ -99,10 +99,10 @@ class Example extends React.Component {
               );
             });
           }}
-          getLinkComponent={() => {
-            // if (node.data.get("href").match(/google/)) {
-            //   return GoogleEmbed;
-            // }
+          getLinkComponent={href => {
+            if (href.match(/google/)) {
+              return GoogleEmbed;
+            }
           }}
           dark={this.state.dark}
           autoFocus

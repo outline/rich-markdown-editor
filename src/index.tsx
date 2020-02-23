@@ -34,6 +34,7 @@ import CodeBlock from "./nodes/CodeBlock";
 import CodeFence from "./nodes/CodeFence";
 import CheckboxList from "./nodes/CheckboxList";
 import CheckboxItem from "./nodes/CheckboxItem";
+import Embed from "./nodes/Embed";
 import Heading from "./nodes/Heading";
 import HorizontalRule from "./nodes/HorizontalRule";
 import Image from "./nodes/Image";
@@ -79,7 +80,7 @@ export type Props = {
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
   onClickLink: (href: string) => void;
   onClickHashtag?: (tag: string) => void;
-  getLinkComponent?: (node: ProsemirrorNode) => any;
+  getLinkComponent?: (node: ProsemirrorNode) => typeof React.Component | void;
   onShowToast?: (message: string) => void;
   tooltip: typeof React.Component;
   className?: string;
@@ -189,6 +190,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new CodeFence(),
         new CheckboxList(),
         new CheckboxItem(),
+        new Embed(),
         new ListItem(),
         new Heading({
           onShowToast: this.props.onShowToast,

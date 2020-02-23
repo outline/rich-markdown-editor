@@ -21,7 +21,7 @@ function looksLikeChecklist(tokens, index): boolean {
 
 export default function markdownItCheckbox(md): void {
   // insert a new rule after the "inline" rules are parsed
-  md.core.ruler.after("inline", "checkbox-list", state => {
+  md.core.ruler.after("inline", "checkboxes", state => {
     const tokens = state.tokens;
 
     // work backwards through the tokens and find text that looks like a checkbox

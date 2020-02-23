@@ -10,7 +10,7 @@ function isHardbreak(token: Token) {
 
 export default function markdownBreakToParagraphs(md: MarkdownIt) {
   // insert a new rule after the "inline" rules are parsed
-  md.core.ruler.after("inline", "to-paragraph", state => {
+  md.core.ruler.after("inline", "breaks", state => {
     const { Token } = state;
     const tokens = state.tokens;
 

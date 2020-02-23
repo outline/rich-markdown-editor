@@ -3,18 +3,20 @@ import { keymap } from "prosemirror-keymap";
 import { MarkdownSerializer, MarkdownParser } from "prosemirror-markdown";
 import Editor from "../";
 import Extension from "./Extension";
-import rules from "./markdown/rules";
+import makeRules from "./markdown/rules";
 import Node from "../nodes/Node";
 import Mark from "../marks/Mark";
 
 export default class ExtensionManager {
   extensions: Extension[];
+  getLinkComponent: Function;
 
   constructor(extensions: Extension[] = [], editor: Editor) {
     extensions.forEach(extension => {
       extension.bindEditor(editor);
     });
     this.extensions = extensions;
+    this.getLinkComponent = editor.props.getLinkComponent;
   }
 
   get nodes() {
@@ -68,7 +70,11 @@ export default class ExtensionManager {
         };
       }, {});
 
-    return new MarkdownParser(schema, rules, tokens);
+    return new MarkdownParser(
+      schema,
+      makeRules({ getLinkComponent: this.getLinkComponent }),
+      tokens
+    );
   }
 
   get marks() {
