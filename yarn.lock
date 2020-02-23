@@ -3986,10 +3986,10 @@ os-tmpdir@~1.0.2:
   resolved "https://registry.yarnpkg.com/os-tmpdir/-/os-tmpdir-1.0.2.tgz#bbe67406c79aa85c5cfec766fe5734555dfa1274"
   integrity sha1-u+Z0BseaqFxc/sdm/lc0VV36EnQ=
 
-outline-icons@^1.10.0:
-  version "1.12.0"
-  resolved "https://registry.yarnpkg.com/outline-icons/-/outline-icons-1.12.0.tgz#baa8f34c59a64285d43868eb3b37038b5a50b6ec"
-  integrity sha512-7uR26jzlD0U/EOB28fvgeZbcAgH2S6GOVQh+0+heLM5EbRcJ63SzUo4WsvDGeMNtRzJx73oRUve78a0rTzXbJg==
+outline-icons@^1.13.0:
+  version "1.13.0"
+  resolved "https://registry.yarnpkg.com/outline-icons/-/outline-icons-1.13.0.tgz#61ea3824a2ec23ea91bb636aa7e1ba6ebf0c2da6"
+  integrity sha512-kG/3ugK8lqAz0b4n8yiuw3XENqoIlTguYQ/NiU5A4ccbOV16HESBVau6ftwIoLbHbio6vEMdRNRwD4GQFtUDFw==
 
 p-defer@^1.0.0:
   version "1.0.0"
