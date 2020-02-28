@@ -80,7 +80,7 @@ export type Props = {
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
   onClickLink: (href: string) => void;
   onClickHashtag?: (tag: string) => void;
-  getLinkComponent?: (node: ProsemirrorNode) => typeof React.Component | void;
+  getLinkComponent?: (href: string) => typeof React.Component | void;
   onShowToast?: (message: string) => void;
   tooltip: typeof React.Component;
   className?: string;

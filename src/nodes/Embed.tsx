@@ -32,6 +32,15 @@ export default class Embed extends Node {
     );
   }
 
+  commands({ type }) {
+    return attrs => (state, dispatch) => {
+      dispatch(
+        state.tr.replaceSelectionWith(type.create(attrs)).scrollIntoView()
+      );
+      return true;
+    };
+  }
+
   toMarkdown(state, node) {
     state.ensureNewLine();
     state.write(
