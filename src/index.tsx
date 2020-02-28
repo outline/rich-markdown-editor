@@ -5,12 +5,7 @@ import { dropCursor } from "prosemirror-dropcursor";
 import { gapCursor } from "prosemirror-gapcursor";
 import { MarkdownParser, MarkdownSerializer } from "prosemirror-markdown";
 import { EditorView } from "prosemirror-view";
-import {
-  Node as ProsemirrorNode,
-  Schema,
-  NodeSpec,
-  MarkSpec,
-} from "prosemirror-model";
+import { Schema, NodeSpec, MarkSpec } from "prosemirror-model";
 import { inputRules, InputRule } from "prosemirror-inputrules";
 import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
