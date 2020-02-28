@@ -13,8 +13,8 @@ export default function rules({
     breaks: false,
     html: false,
   })
-    .use(breakPlugin)
     .use(embedsPlugin(getLinkComponent))
+    .use(breakPlugin)
     .use(checkboxPlugin)
     .use(markPlugin);
 }

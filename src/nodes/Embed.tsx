@@ -1,3 +1,4 @@
+import * as React from "react";
 import Node from "./Node";
 
 export default class Embed extends Node {
@@ -22,12 +23,21 @@ export default class Embed extends Node {
     };
   }
 
+  component({ node }) {
+    const Component = node.attrs.component;
+    return (
+      <div contentEditable={false}>
+        <Component attrs={node.attrs} />
+      </div>
+    );
+  }
+
   toMarkdown(state, node) {
     state.ensureNewLine();
     state.write(
       "[" + state.esc(node.attrs.href) + "](" + state.esc(node.attrs.href) + ")"
     );
-    state.ensureNewLine();
+    state.write("\n\n");
   }
 
   parseMarkdown() {

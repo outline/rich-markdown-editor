@@ -17,6 +17,7 @@
     "no-unused-vars": 2,
     "no-mixed-operators": "off",
     "jsx-a11y/href-no-hash": "off",
+    "react/prop-types": "off",
     "prettier/prettier": [
       "error",
       {

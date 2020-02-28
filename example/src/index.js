@@ -12,12 +12,12 @@ This is example content. It is persisted between reloads in localStorage.
 `;
 const defaultValue = savedText || exampleText;
 
-// class GoogleEmbed extends React.Component<*> {
-//   render() {
-//     const { attributes, node } = this.props;
-//     return <p {...attributes}>Google Embed ({node.data.get("href")})</p>;
-//   }
-// }
+class GoogleEmbed extends React.Component {
+  render() {
+    const { attrs } = this.props;
+    return <p>Google Embed ({attrs.href})</p>;
+  }
+}
 
 class Example extends React.Component {
   state = {

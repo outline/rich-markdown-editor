@@ -41,6 +41,7 @@ export default function markdownBreakToParagraphs(md: MarkdownIt) {
           text.content = "";
 
           token = new Token("inline", "", 0);
+          token.level = 1;
           token.children = isLast ? [text, ...children] : [text];
           token.content = "";
           nodes.push(token);
