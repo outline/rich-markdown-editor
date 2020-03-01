@@ -9,6 +9,7 @@ type Component = (options: {
   node: Node;
   isSelected: boolean;
   isEditable: boolean;
+  getPos: () => number;
   innerRef: (HTMLElement) => void;
 }) => React.ReactElement;
 
@@ -18,7 +19,7 @@ export default class ComponentView {
   extension: Extension;
   node: Node;
   view: EditorView;
-  getPos: boolean | (() => number);
+  getPos: () => number;
   decorations: Decoration<{ [key: string]: any }>[];
   isSelected = false;
   containerElement: HTMLElement;
@@ -57,6 +58,7 @@ export default class ComponentView {
         node: this.node,
         isSelected: this.isSelected,
         isEditable: this.view.editable,
+        getPos: this.getPos,
         innerRef: node => {
           // move the contentDOM node inside the inner reference after rendering
           if (node && this.contentDOM && !node.contains(this.contentDOM)) {

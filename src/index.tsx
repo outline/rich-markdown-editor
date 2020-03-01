@@ -79,7 +79,7 @@ export type Props = {
   onShowToast?: (message: string) => void;
   tooltip: typeof React.Component;
   className?: string;
-  style?: Record<string, any>;
+  style?: Record<string, string>;
 };
 
 type State = {
@@ -496,16 +496,14 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
 
   .image {
     text-align: center;
+
+    img {
+      pointer-events: ${props => (props.readOnly ? "initial" : "none")};
+    }
   }
 
   .image.placeholder img {
     opacity: 0.5;
-  }
-
-  .caption {
-    height: 1em;
-    color: ${props => props.theme.textSecondary};
-    text-align: center;
   }
 
   .ProseMirror-hideselection *::selection {

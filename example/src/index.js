@@ -94,7 +94,7 @@ class Example extends React.Component {
             // Delay to simulate time taken to upload
             return new Promise(resolve => {
               setTimeout(
-                () => resolve("https://loremflickr.com/400/400"),
+                () => resolve("https://loremflickr.com/4000/4000"),
                 1500
               );
             });
