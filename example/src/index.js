@@ -45,8 +45,9 @@ class Example extends React.Component {
   };
 
   handleChange = debounce(value => {
-    console.log(value);
-    localStorage.setItem("saved", value());
+    const text = value();
+    console.log(text);
+    localStorage.setItem("saved", text);
   }, 250);
 
   render() {
