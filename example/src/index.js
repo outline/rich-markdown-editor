@@ -45,6 +45,7 @@ class Example extends React.Component {
   };
 
   handleChange = debounce(value => {
+    console.log(value);
     localStorage.setItem("saved", value());
   }, 250);
 
@@ -94,7 +95,7 @@ class Example extends React.Component {
             // Delay to simulate time taken to upload
             return new Promise(resolve => {
               setTimeout(
-                () => resolve("https://loremflickr.com/4000/4000"),
+                () => resolve("https://loremflickr.com/1000/1000"),
                 1500
               );
             });
