@@ -5,12 +5,7 @@ import { dropCursor } from "prosemirror-dropcursor";
 import { gapCursor } from "prosemirror-gapcursor";
 import { MarkdownParser, MarkdownSerializer } from "prosemirror-markdown";
 import { EditorView } from "prosemirror-view";
-import {
-  Node as ProsemirrorNode,
-  Schema,
-  NodeSpec,
-  MarkSpec,
-} from "prosemirror-model";
+import { Schema, NodeSpec, MarkSpec } from "prosemirror-model";
 import { inputRules, InputRule } from "prosemirror-inputrules";
 import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
@@ -31,8 +26,10 @@ import Text from "./nodes/Text";
 import Blockquote from "./nodes/Blockquote";
 import BulletList from "./nodes/BulletList";
 import CodeBlock from "./nodes/CodeBlock";
+import CodeFence from "./nodes/CodeFence";
 import CheckboxList from "./nodes/CheckboxList";
 import CheckboxItem from "./nodes/CheckboxItem";
+import Embed from "./nodes/Embed";
 import Heading from "./nodes/Heading";
 import HorizontalRule from "./nodes/HorizontalRule";
 import Image from "./nodes/Image";
@@ -83,11 +80,11 @@ export type Props = {
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
   onClickLink: (href: string) => void;
   onClickHashtag?: (tag: string) => void;
-  getLinkComponent?: (node: ProsemirrorNode) => any;
+  getLinkComponent?: (href: string) => typeof React.Component | void;
   onShowToast?: (message: string) => void;
   tooltip: typeof React.Component;
   className?: string;
-  style?: Record<string, any>;
+  style?: Record<string, string>;
 };
 
 type State = {
@@ -190,8 +187,11 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new Blockquote(),
         new BulletList(),
         new CodeBlock(),
+        new CodeFence(),
         new CheckboxList(),
         new CheckboxItem(),
+        new Embed(),
+        new ListItem(),
         new Heading({
           onShowToast: this.props.onShowToast,
         }),
@@ -202,7 +202,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           onImageUploadStop: this.props.onImageUploadStop,
           onShowToast: this.props.onShowToast,
         }),
-        new ListItem(),
         new Table(),
         new TableCell(),
         new TableHeadCell(),
@@ -381,9 +380,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   handleChange = () => {
     if (this.props.onChange && !this.props.readOnly) {
       this.props.onChange(() => {
-        const text = this.value();
-        console.log(text);
-        return text;
+        return this.value();
       });
     }
   };
@@ -507,16 +504,14 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
 
   .image {
     text-align: center;
+
+    img {
+      pointer-events: ${props => (props.readOnly ? "initial" : "none")};
+    }
   }
 
   .image.placeholder img {
     opacity: 0.5;
-  }
-
-  .caption {
-    height: 1em;
-    color: ${props => props.theme.textSecondary};
-    text-align: center;
   }
 
   .ProseMirror-hideselection *::selection {
@@ -662,7 +657,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
 
     ul,
     ol {
-      margin: 0.1em;
+      margin: 0;
     }
   }
 
@@ -676,18 +671,26 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     }
   }
 
-  ul.checkbox_list li.checked {
+  ul.checkbox_list li.checked > span > p {
     color: ${props => props.theme.textSecondary};
     text-decoration: line-through;
   }
 
   ul.checkbox_list li input {
+    pointer-events: ${props => (props.readOnly ? "none" : "initial")};
+    opacity: ${props => (props.readOnly ? 0.75 : 1)};
     margin-right: 6px;
   }
 
-  li p {
+  li p:first-child {
     display: inline;
     margin: 0;
+  }
+
+  hr {
+    height: 0;
+    border: 0;
+    border-top: 1px solid ${props => props.theme.horizontalRule};
   }
 
   code {
@@ -705,12 +708,25 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
   }
 
   .code-block {
-    select {
-      display: ${props => (props.readOnly ? "none" : "inline")};
+    position: relative;
+
+    select,
+    button {
+      display: none;
+      position: absolute;
+      z-index: 1;
+      top: 4px;
+      right: 4px;
     }
 
-    button {
-      display: ${props => (props.readOnly ? "inline" : "none")};
+    &:hover {
+      select {
+        display: ${props => (props.readOnly ? "none" : "inline")};
+      }
+  
+      button {
+        display: ${props => (props.readOnly ? "inline" : "none")};
+      }
     }
   }
 
@@ -847,7 +863,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
   }
 
   .block-menu-trigger {
-    display: block;
+    display: ${props => (props.readOnly ? "none" : "block")};
     height: 1em;
     color: ${props => props.theme.textSecondary};
     background: none;

@@ -12,12 +12,12 @@ This is example content. It is persisted between reloads in localStorage.
 `;
 const defaultValue = savedText || exampleText;
 
-// class GoogleEmbed extends React.Component<*> {
-//   render() {
-//     const { attributes, node } = this.props;
-//     return <p {...attributes}>Google Embed ({node.data.get("href")})</p>;
-//   }
-// }
+class GoogleEmbed extends React.Component {
+  render() {
+    const { attrs } = this.props;
+    return <p>Google Embed ({attrs.href})</p>;
+  }
+}
 
 class Example extends React.Component {
   state = {
@@ -45,7 +45,9 @@ class Example extends React.Component {
   };
 
   handleChange = debounce(value => {
-    localStorage.setItem("saved", value());
+    const text = value();
+    console.log(text);
+    localStorage.setItem("saved", text);
   }, 250);
 
   render() {
@@ -94,15 +96,15 @@ class Example extends React.Component {
             // Delay to simulate time taken to upload
             return new Promise(resolve => {
               setTimeout(
-                () => resolve("https://loremflickr.com/400/400"),
+                () => resolve("https://loremflickr.com/1000/1000"),
                 1500
               );
             });
           }}
-          getLinkComponent={() => {
-            // if (node.data.get("href").match(/google/)) {
-            //   return GoogleEmbed;
-            // }
+          getLinkComponent={href => {
+            if (href.match(/google/)) {
+              return GoogleEmbed;
+            }
           }}
           dark={this.state.dark}
           autoFocus

@@ -20,13 +20,25 @@ export default class MarkdownPaste extends Extension {
             const { state, dispatch } = view;
 
             // first check if the clipboard contents can be parsed as a url
-            // if so, just paste the link mark directly onto the selected text.
-            if (isUrl(text) && !state.selection.empty) {
-              toggleMark(this.editor.schema.marks.link, { href: text })(
-                state,
-                dispatch
-              );
-              return true;
+            if (isUrl(text)) {
+              // just paste the link mark directly onto the selected text
+              if (!state.selection.empty) {
+                toggleMark(this.editor.schema.marks.link, { href: text })(
+                  state,
+                  dispatch
+                );
+                return true;
+              }
+
+              // Is this link embedable? Create an embed!
+              const component = this.editor.props.getLinkComponent(text);
+              if (component) {
+                this.editor.commands.embed({
+                  href: text,
+                  component,
+                });
+                return true;
+              }
             }
 
             // otherwise, if we have html then fallback to the default HTML

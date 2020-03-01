@@ -1,12 +1,20 @@
 import markdownit from "markdown-it";
 import markPlugin from "markdown-it-mark";
-import checkboxPlugin from "./markdownItCheckbox";
-import breakPlugin from "./markdownBreakToParagraph";
+import checkboxPlugin from "./checkboxes";
+import embedsPlugin from "./embeds";
+import breakPlugin from "./breaks";
 
-export default markdownit("default", {
-  breaks: false,
-  html: false,
-})
-  .use(breakPlugin)
-  .use(checkboxPlugin)
-  .use(markPlugin);
+export default function rules({
+  getLinkComponent,
+}: {
+  getLinkComponent: Function;
+}) {
+  return markdownit("default", {
+    breaks: false,
+    html: false,
+  })
+    .use(embedsPlugin(getLinkComponent))
+    .use(breakPlugin)
+    .use(checkboxPlugin)
+    .use(markPlugin);
+}

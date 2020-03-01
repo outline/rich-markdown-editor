@@ -1,5 +1,8 @@
+import * as React from "react";
 import { Plugin } from "prosemirror-state";
 import { InputRule } from "prosemirror-inputrules";
+import styled from "styled-components";
+import ImageZoom from "react-medium-image-zoom";
 import getDataTransferFiles from "../lib/getDataTransferFiles";
 import uploadPlaceholderPlugin from "../lib/uploadPlaceholder";
 import insertFiles from "../commands/insertFiles";
@@ -104,10 +107,63 @@ export default class Image extends Node {
     };
   }
 
+  handleKeyDown = event => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      return;
+    }
+  };
+
+  handleBlur = ({ node, getPos }) => event => {
+    const alt = event.target.innerText;
+    const src = node.attrs.src;
+    if (alt === node.attrs.alt) return;
+
+    const { view } = this.editor;
+    const { tr } = view.state;
+
+    // update meta on object
+    const pos = getPos();
+    const transaction = tr.setNodeMarkup(pos, null, {
+      src,
+      alt,
+    });
+    view.dispatch(transaction);
+  };
+
+  component = options => {
+    const { alt, src } = options.node.attrs;
+
+    return (
+      <div className="image" contentEditable={false}>
+        <ImageZoom
+          image={{
+            src,
+            alt,
+            style: {
+              maxWidth: "100%",
+              maxHeight: "75vh",
+            },
+          }}
+          shouldRespectMaxDimension
+        />
+        <Caption
+          onKeyDown={this.handleKeyDown}
+          onBlur={this.handleBlur(options)}
+          tabIndex={-1}
+          contentEditable={options.isEditable}
+          suppressContentEditableWarning
+        >
+          {alt}
+        </Caption>
+      </div>
+    );
+  };
+
   toMarkdown(state, node) {
     state.write(
       "![" +
-        state.esc(node.textContent || "") +
+        state.esc(node.attrs.alt.replace("\n", "") || "") +
         "](" +
         state.esc(node.attrs.src) +
         ")"
@@ -162,3 +218,24 @@ export default class Image extends Node {
     return [uploadPlaceholderPlugin, uploadPlugin(this.options)];
   }
 }
+
+const Caption = styled.p`
+  border: 0;
+  display: block;
+  font-size: 13px;
+  font-style: italic;
+  color: ${props => props.theme.textSecondary};
+  padding: 2px 0;
+  line-height: 16px;
+  text-align: center;
+  width: 100%;
+  min-height: 1em;
+  outline: none;
+  background: none;
+  resize: none;
+
+  &:empty:not(:focus):before {
+    color: ${props => props.theme.placeholder};
+    content: "Write a caption";
+  }
+`;

@@ -68,7 +68,7 @@ export const light = {
   quote: colors.greyDark,
   codeBackground: colors.greyLight,
   codeBorder: colors.grey,
-  horizontalRule: colors.grey,
+  horizontalRule: colors.greyMid,
   imageErrorBackground: colors.greyLight,
 };
 

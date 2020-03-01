@@ -1,14 +1,17 @@
 import * as React from "react";
 import ReactDOM from "react-dom";
+import { ThemeProvider } from "styled-components";
 import { EditorView, Decoration } from "prosemirror-view";
 import Extension from "../lib/Extension";
 import Node from "../nodes/Node";
+import { light as lightTheme, dark as darkTheme } from "../theme";
 import Editor from "../";
 
 type Component = (options: {
   node: Node;
   isSelected: boolean;
   isEditable: boolean;
+  getPos: () => number;
   innerRef: (HTMLElement) => void;
 }) => React.ReactElement;
 
@@ -18,7 +21,7 @@ export default class ComponentView {
   extension: Extension;
   node: Node;
   view: EditorView;
-  getPos: boolean | (() => number);
+  getPos: () => number;
   decorations: Decoration<{ [key: string]: any }>[];
   isSelected = false;
   containerElement: HTMLElement;
@@ -52,24 +55,34 @@ export default class ComponentView {
   }
 
   renderElement() {
+    const { dark } = this.editor.props;
+    const theme = this.editor.props.theme || (dark ? darkTheme : lightTheme);
+
+    const children = this.component({
+      node: this.node,
+      isSelected: this.isSelected,
+      isEditable: this.view.editable,
+      getPos: this.getPos,
+      innerRef: node => {
+        // move the contentDOM node inside the inner reference after rendering
+        if (node && this.contentDOM && !node.contains(this.contentDOM)) {
+          node.appendChild(this.contentDOM);
+        }
+      },
+    });
+
+    console.log("renderElement");
     ReactDOM.render(
-      this.component({
-        node: this.node,
-        isSelected: this.isSelected,
-        isEditable: this.view.editable,
-        innerRef: node => {
-          // move the contentDOM node inside the inner reference after rendering
-          if (node && this.contentDOM && !node.contains(this.contentDOM)) {
-            node.appendChild(this.contentDOM);
-          }
-        },
-      }),
+      <ThemeProvider theme={theme}>{children}</ThemeProvider>,
       this.containerElement
     );
   }
 
   update(node) {
-    if (node.type !== this.node.type) return false;
+    if (node.type !== this.node.type) {
+      return false;
+    }
+
     this.node = node;
     this.renderElement();
     return true;
@@ -92,9 +105,9 @@ export default class ComponentView {
   stopEvent(ev: Event) {
     return (
       ev.type === "keypress" ||
-      ev.type === "input" ||
       ev.type === "keydown" ||
       ev.type === "keyup" ||
+      ev.type === "input" ||
       ev.type === "paste"
     );
   }

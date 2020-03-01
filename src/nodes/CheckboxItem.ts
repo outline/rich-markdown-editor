@@ -22,9 +22,9 @@ export default class CheckboxItem extends Node {
         },
       },
       group: "block",
-      content: "(paragraph|checkbox_list)+",
+      content: "paragraph block*",
       defining: true,
-      draggable: true,
+      draggable: false,
       parseDOM: [
         {
           tag: `li[data-type="${this.name}"]`,
@@ -50,7 +50,7 @@ export default class CheckboxItem extends Node {
             checked: node.attrs.checked ? true : undefined,
           },
         ],
-        ["label", 0],
+        ["span", 0],
       ],
     };
   }
@@ -96,7 +96,7 @@ export default class CheckboxItem extends Node {
 
   toMarkdown(state, node) {
     state.write(node.attrs.checked ? "[x] " : "[ ] ");
-    state.renderInline(node);
+    state.renderContent(node);
   }
 
   parseMarkdown() {
