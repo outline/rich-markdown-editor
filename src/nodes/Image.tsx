@@ -189,6 +189,7 @@ export default class Image extends Node {
       const node = type.create(attrs);
       const transaction = state.tr.insert(position, node);
       dispatch(transaction);
+      return true;
     };
   }
 

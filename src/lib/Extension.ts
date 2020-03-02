@@ -1,6 +1,8 @@
 /* eslint-disable no-unused-vars */
 import Editor from "../";
 
+type Command = (attrs) => (state, dispatch) => any;
+
 export default class Extension {
   options: Record<string, any>;
   editor: Editor;
@@ -36,10 +38,8 @@ export default class Extension {
     return [];
   }
 
-  commands(options) {
-    return attrs => {
-      // noop
-    };
+  commands(options): Record<string, Command> | Command {
+    return attrs => () => false;
   }
 
   get defaultOptions() {
