@@ -71,7 +71,6 @@ export default class ComponentView {
       },
     });
 
-    console.log("renderElement");
     ReactDOM.render(
       <ThemeProvider theme={theme}>{children}</ThemeProvider>,
       this.containerElement

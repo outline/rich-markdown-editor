@@ -9,8 +9,18 @@ export default class TableRow extends Node {
   get schema() {
     return {
       ...TableNodes.table_row,
-      content: "(th | td | thead)*",
+      content: "(th | td)*",
     };
+  }
+
+  toMarkdown(state, node) {
+    if (state.headerBuffer) {
+      state.write(state.headerBuffer + "--|\n");
+      state.headerBuffer = undefined;
+    }
+    state.write("| ");
+    state.renderInline(node);
+    state.write("\n");
   }
 
   parseMarkdown() {

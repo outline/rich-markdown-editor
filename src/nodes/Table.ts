@@ -74,6 +74,11 @@ export default class Table extends Node {
     };
   }
 
+  toMarkdown(state, node) {
+    state.renderContent(node);
+    state.closeBlock(node);
+  }
+
   parseMarkdown() {
     return { block: "table" };
   }

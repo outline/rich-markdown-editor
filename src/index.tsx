@@ -39,7 +39,6 @@ import Paragraph from "./nodes/Paragraph";
 import Table from "./nodes/Table";
 import TableCell from "./nodes/TableCell";
 import TableHeadCell from "./nodes/TableHeadCell";
-import TableHeader from "./nodes/TableHeader";
 import TableRow from "./nodes/TableRow";
 
 // marks
@@ -205,7 +204,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new Table(),
         new TableCell(),
         new TableHeadCell(),
-        new TableHeader(),
         new TableRow(),
         new Bold(),
         new Code(),
@@ -860,6 +858,27 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
 
   .token.entity {
     cursor: help;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 4px;
+    border: 1px solid ${props => props.theme.tableDivider};
+    margin-top: 1em;
+
+    tr {
+      position: relative;
+      border-bottom: 1px solid ${props => props.theme.tableDivider};
+    }
+
+    td, th {
+      position: relative;
+      vertical-align: top;
+      border-right: 1px solid ${props => props.theme.tableDivider};
+      position: relative;
+      padding: 4px 8px;
+    }
   }
 
   .block-menu-trigger {

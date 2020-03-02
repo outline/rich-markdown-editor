@@ -10,6 +10,11 @@ export default class TableCell extends Node {
     return TableNodes.table_cell;
   }
 
+  toMarkdown(state, node) {
+    state.text(node.textContent);
+    state.write(" | ");
+  }
+
   parseMarkdown() {
     return { block: "td" };
   }
