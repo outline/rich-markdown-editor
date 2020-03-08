@@ -11,8 +11,9 @@ export default class TableHeadCell extends Node {
   }
 
   toMarkdown(state, node) {
-    state.text(node.textContent);
-    state.write(" | ");
+    state.renderInline(node);
+    state.closed = false;
+    state.out = `${state.out.replace(/\n?\n$/, "")} | `;
 
     if (!state.headerBuffer) {
       state.headerBuffer = "|--";

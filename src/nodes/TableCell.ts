@@ -11,8 +11,9 @@ export default class TableCell extends Node {
   }
 
   toMarkdown(state, node) {
-    state.text(node.textContent);
-    state.write(" | ");
+    state.renderInline(node);
+    state.closed = false;
+    state.out = `${state.out.replace(/\n?\n$/, "")} | `;
   }
 
   parseMarkdown() {
