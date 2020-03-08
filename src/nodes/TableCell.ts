@@ -13,7 +13,7 @@ export default class TableCell extends Node {
   toMarkdown(state, node) {
     state.renderInline(node);
     state.closed = false;
-    state.out = `${state.out.replace(/\n?\n$/, "")} | `;
+    state.out = `${state.out.replace(/\\?\n?\n$/, "")} | `;
   }
 
   parseMarkdown() {
