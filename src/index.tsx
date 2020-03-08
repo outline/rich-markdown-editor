@@ -423,7 +423,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         align="flex-start"
         justify="center"
         column
-        auto
       >
         <ThemeProvider theme={theme}>
           <React.Fragment>
@@ -542,6 +541,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
   h5,
   h6 {
     font-weight: 500;
+    cursor: default;
 
     &:not(.placeholder):before {
       display: ${props => (props.readOnly ? "none" : "block")};
@@ -573,7 +573,12 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
   }
 
   .heading-name:first-child h1:not(.placeholder) {
-    &:before,
+    &:before {
+      display: none;
+    }
+  }
+
+  .heading-name:first-child h1 {
     .heading-anchor {
       display: none;
     }
@@ -608,7 +613,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
   .placeholder {
     &:before {
       display: block;
-      content: attr(data-empty-text);
+      content: ${props => (props.readOnly ? "" : "attr(data-empty-text)")};
       pointer-events: none;
       height: 0;
       color: ${props => props.theme.placeholder};
