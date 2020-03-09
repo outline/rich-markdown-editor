@@ -76,7 +76,7 @@ export type Props = {
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
   onClickLink: (href: string) => void;
   onClickHashtag?: (tag: string) => void;
-  onKeyDown: (event: KeyboardEvent) => any;
+  onKeyDown: (event: React.KeyboardEvent<HTMLDivElement>) => void;
   getLinkComponent?: (href: string) => typeof React.Component | void;
   onShowToast?: (message: string) => void;
   tooltip: typeof React.Component;
