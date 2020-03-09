@@ -9,6 +9,7 @@ import Editor from "../";
 
 type Component = (options: {
   node: Node;
+  theme: typeof lightTheme;
   isSelected: boolean;
   isEditable: boolean;
   getPos: () => number;
@@ -59,6 +60,7 @@ export default class ComponentView {
     const theme = this.editor.props.theme || (dark ? darkTheme : lightTheme);
 
     const children = this.component({
+      theme,
       node: this.node,
       isSelected: this.isSelected,
       isEditable: this.view.editable,
@@ -71,7 +73,6 @@ export default class ComponentView {
       },
     });
 
-    console.log("renderElement");
     ReactDOM.render(
       <ThemeProvider theme={theme}>{children}</ThemeProvider>,
       this.containerElement

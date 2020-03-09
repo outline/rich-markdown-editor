@@ -10,8 +10,8 @@ export default class Placeholder extends Extension {
   get defaultOptions() {
     return {
       emptyNodeClass: "placeholder",
-      headingPlaceholder: "Write something…",
-      paragraphPlaceholder: "…or don't",
+      placeholder: "",
+      bodyPlaceholder: "",
     };
   }
 
@@ -39,8 +39,8 @@ export default class Placeholder extends Extension {
                 class: this.options.emptyNodeClass,
                 "data-empty-text":
                   pos === 0
-                    ? this.options.headingPlaceholder
-                    : this.options.paragraphPlaceholder,
+                    ? this.options.placeholder
+                    : this.options.bodyPlaceholder,
               });
               decorations.push(decoration);
             });

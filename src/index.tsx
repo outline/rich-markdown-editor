@@ -61,6 +61,7 @@ export type Props = {
   value?: string;
   defaultValue: string;
   placeholder: string;
+  bodyPlaceholder: string;
   extensions: Extension[];
   autoFocus?: boolean;
   readOnly?: boolean;
@@ -91,6 +92,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   static defaultProps = {
     defaultValue: "",
     placeholder: "Write something nice…",
+    bodyPlaceholder: "…or don't",
     onImageUploadStart: () => {
       // no default behavior
     },
@@ -207,7 +209,10 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         }),
         new Strikethrough(),
         new OrderedList(),
-        new Placeholder(),
+        new Placeholder({
+          placeholder: this.props.placeholder,
+          bodyPlaceholder: this.props.bodyPlaceholder,
+        }),
         new History(),
         new SmartText(),
         new TrailingNode(),
