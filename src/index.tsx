@@ -76,6 +76,7 @@ export type Props = {
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
   onClickLink: (href: string) => void;
   onClickHashtag?: (tag: string) => void;
+  onKeyDown: (event: KeyboardEvent) => any;
   getLinkComponent?: (href: string) => typeof React.Component | void;
   onShowToast?: (message: string) => void;
   tooltip: typeof React.Component;
@@ -418,11 +419,12 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   render = () => {
-    const { dark, readOnly, style, tooltip, className } = this.props;
+    const { dark, readOnly, style, tooltip, className, onKeyDown } = this.props;
     const theme = this.props.theme || (dark ? darkTheme : lightTheme);
 
     return (
       <Flex
+        onKeyDown={onKeyDown}
         style={style}
         className={className}
         align="flex-start"
