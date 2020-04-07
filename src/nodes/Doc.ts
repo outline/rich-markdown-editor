@@ -7,7 +7,7 @@ export default class Doc extends Node {
 
   get schema() {
     return {
-      content: "heading block+",
+      content: "block+",
     };
   }
 }

@@ -33,11 +33,7 @@ previously saved content for the user to continue editing.
 
 #### `placeholder`
 
-Allows overriding of the placeholder text displayed in the title. The default is "Write something nice…".
-
-#### `bodyPlaceholder`
-
-Allows overriding of the placeholder text displayed in the body. The default is "…or dont".
+Allows overriding of the placeholder. The default is "Write something nice…".
 
 #### `readOnly`
 
