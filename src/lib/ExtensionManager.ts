@@ -11,12 +11,15 @@ export default class ExtensionManager {
   extensions: Extension[];
   getLinkComponent: Function;
 
-  constructor(extensions: Extension[] = [], editor: Editor) {
-    extensions.forEach(extension => {
-      extension.bindEditor(editor);
-    });
+  constructor(extensions: Extension[] = [], editor?: Editor) {
+    if (editor) {
+      extensions.forEach(extension => {
+        extension.bindEditor(editor);
+      });
+    }
+
     this.extensions = extensions;
-    this.getLinkComponent = editor.props.getLinkComponent;
+    this.getLinkComponent = editor ? editor.props.getLinkComponent : undefined;
   }
 
   get nodes() {
@@ -31,7 +34,7 @@ export default class ExtensionManager {
       );
   }
 
-  get serializer() {
+  serializer() {
     const nodes = this.extensions
       .filter(extension => extension.type === "node")
       .reduce(

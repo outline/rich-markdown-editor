@@ -54,6 +54,8 @@ import SmartText from "./plugins/SmartText";
 import TrailingNode from "./plugins/TrailingNode";
 import MarkdownPaste from "./plugins/MarkdownPaste";
 
+export { schema, parser, serializer } from "./server";
+
 export const theme = lightTheme;
 
 export type Props = {
@@ -175,6 +177,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   }
 
   createExtensions() {
+    // adding nodes here? Update schema.ts for serialization on the server
     return new ExtensionManager(
       [
         new Doc(),
@@ -291,7 +294,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   }
 
   createSerializer() {
-    return this.extensions.serializer;
+    return this.extensions.serializer();
   }
 
   createParser() {
