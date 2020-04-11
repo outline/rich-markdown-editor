@@ -47,9 +47,19 @@ export default class Toolbar extends React.Component<Props, State> {
     }
   };
 
-  componentWillReceiveProps = debounce(() => {
-    this.update();
-  }, 100);
+  componentDidUpdate = prevProps => {
+    this.updateIfPropsChanged(prevProps);
+  };
+
+  updateIfPropsChanged = debounce(
+    prevProps => {
+      if (!isEqual(this.props, prevProps)) {
+        this.update();
+      }
+    },
+    100,
+    { leading: true, trailing: true },
+  );
 
   hideLinkToolbar = () => {
     this.setState({ link: undefined });
@@ -138,7 +148,7 @@ export default class Toolbar extends React.Component<Props, State> {
     const left =
       rect.left + window.scrollX - this.menu.offsetWidth / 2 + rect.width / 2;
     newState.top = `${Math.round(
-      rect.top + window.scrollY - this.menu.offsetHeight
+      rect.top + window.scrollY - this.menu.offsetHeight,
     )}px`;
     newState.left = `${Math.round(Math.max(padding, left))}px`;
 
