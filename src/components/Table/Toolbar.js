@@ -39,30 +39,30 @@ class Toolbar extends React.Component<Props, State> {
     left: 0,
   };
 
-  componentWillReceiveProps() {
-    if (!this.props.cell) return;
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (!nextProps.cell) return;
 
-    const element = findDOMNode(this.props.cell);
+    const element = findDOMNode(nextProps.cell);
     if (!(element instanceof HTMLElement)) return;
 
     const rect = element.getBoundingClientRect();
-    const menuWidth = MENU_WIDTHS[this.props.type];
+    const menuWidth = MENU_WIDTHS[nextProps.type];
     const menuHeight = 40;
 
     // Position the menu correctly depending on the type, cell and scroll position
     const left =
-      MENU_ALIGN[this.props.type] === "center"
+      MENU_ALIGN[nextProps.type] === "center"
         ? Math.round(
-            rect.left + window.scrollX + rect.width / 2 - menuWidth / 2
+            rect.left + window.scrollX + rect.width / 2 - menuWidth / 2,
           )
         : Math.round(rect.left + window.scrollX - menuWidth / 2);
     const top = Math.round(rect.top + window.scrollY - menuHeight - 12);
 
-    this.setState(state => {
-      if (state.left !== left || state.top !== top) {
-        return { left, top };
-      }
-    });
+    if (prevState.left !== left || prevState.top !== top) {
+      return { left, top };
+    }
+
+    return null;
   }
 
   render() {
