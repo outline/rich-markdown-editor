@@ -95,7 +95,7 @@ export default class Link extends Mark {
         props: {
           handleClick: (view, pos, event) => {
             // allow opening links in editing mode with the meta/cmd key
-            if (view.props.editable && !event.metaKey) {
+            if (view.props.editable(view.state) && !event.metaKey) {
               return false;
             }
 
@@ -103,14 +103,19 @@ export default class Link extends Mark {
             const attrs = getMarkAttrs(view.state, schema.marks.link);
 
             if (attrs.href && event.target instanceof HTMLAnchorElement) {
-              event.stopPropagation();
-              event.preventDefault();
-
               const isHashtag = attrs.href.startsWith("#");
               if (isHashtag && this.options.onClickHashtag) {
+                event.stopPropagation();
+                event.preventDefault();
                 this.options.onClickHashtag(attrs.href);
-              } else {
+                return true;
+              }
+
+              if (this.options.onClickLink) {
+                event.stopPropagation();
+                event.preventDefault();
                 this.options.onClickLink(attrs.href);
+                return true;
               }
             }
           },

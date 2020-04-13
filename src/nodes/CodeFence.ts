@@ -77,6 +77,7 @@ export default class CodeBlock extends Node {
       toDOM: node => {
         const button = document.createElement("button");
         button.innerText = "Copy";
+        button.type = "button";
         button.addEventListener("click", this.handleCopyToClipboard(node));
 
         const select = document.createElement("select");

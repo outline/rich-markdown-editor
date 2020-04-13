@@ -58,6 +58,8 @@ import SmartText from "./plugins/SmartText";
 import TrailingNode from "./plugins/TrailingNode";
 import MarkdownPaste from "./plugins/MarkdownPaste";
 
+export { schema, parser, serializer } from "./server";
+
 export const theme = lightTheme;
 
 export type Props = {
@@ -79,6 +81,7 @@ export type Props = {
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
   onClickLink: (href: string) => void;
   onClickHashtag?: (tag: string) => void;
+  onKeyDown: (event: React.KeyboardEvent<HTMLDivElement>) => void;
   getLinkComponent?: (href: string) => typeof React.Component | void;
   onShowToast?: (message: string) => void;
   tooltip: typeof React.Component;
@@ -178,6 +181,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   }
 
   createExtensions() {
+    // adding nodes here? Update schema.ts for serialization on the server
     return new ExtensionManager(
       [
         new Doc(),
@@ -215,7 +219,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         }),
         new Strikethrough(),
         new OrderedList(),
-        new Placeholder(),
+        new Placeholder({
+          placeholder: this.props.placeholder,
+        }),
         new History(),
         new SmartText(),
         new TrailingNode(),
@@ -296,7 +302,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   }
 
   createSerializer() {
-    return this.extensions.serializer;
+    return this.extensions.serializer();
   }
 
   createParser() {
@@ -421,17 +427,17 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   render = () => {
-    const { dark, readOnly, style, tooltip, className } = this.props;
+    const { dark, readOnly, style, tooltip, className, onKeyDown } = this.props;
     const theme = this.props.theme || (dark ? darkTheme : lightTheme);
 
     return (
       <Flex
+        onKeyDown={onKeyDown}
         style={style}
         className={className}
         align="flex-start"
         justify="center"
         column
-        auto
       >
         <ThemeProvider theme={theme}>
           <React.Fragment>
@@ -550,6 +556,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
   h5,
   h6 {
     font-weight: 500;
+    cursor: default;
 
     &:not(.placeholder):before {
       display: ${props => (props.readOnly ? "none" : "block")};
@@ -581,7 +588,12 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
   }
 
   .heading-name:first-child h1:not(.placeholder) {
-    &:before,
+    &:before {
+      display: none;
+    }
+  }
+
+  .heading-name:first-child h1 {
     .heading-anchor {
       display: none;
     }
@@ -616,7 +628,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
   .placeholder {
     &:before {
       display: block;
-      content: attr(data-empty-text);
+      content: ${props => (props.readOnly ? "" : "attr(data-empty-text)")};
       pointer-events: none;
       height: 0;
       color: ${props => props.theme.placeholder};

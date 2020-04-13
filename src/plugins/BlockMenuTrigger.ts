@@ -97,6 +97,7 @@ export default class BlockMenuTrigger extends Extension {
               decorations.push(
                 Decoration.widget(parent.pos, () => {
                   const icon = document.createElement("button");
+                  icon.type = "button";
                   icon.className = "block-menu-trigger";
                   icon.innerText = "+";
                   icon.addEventListener("click", () => {

@@ -10,8 +10,7 @@ export default class Placeholder extends Extension {
   get defaultOptions() {
     return {
       emptyNodeClass: "placeholder",
-      headingPlaceholder: "Write something…",
-      paragraphPlaceholder: "…or don't",
+      placeholder: "",
     };
   }
 
@@ -24,20 +23,20 @@ export default class Placeholder extends Extension {
             const decorations: Decoration[] = [];
             const completelyEmpty =
               doc.textContent === "" &&
-              doc.childCount <= 2 &&
-              doc.content.size <= 4;
+              doc.childCount <= 1 &&
+              doc.content.size <= 2;
 
             doc.descendants((node, pos) => {
               if (!completelyEmpty) {
                 return;
               }
+              if (pos !== 0 || node.type.name !== "paragraph") {
+                return;
+              }
 
               const decoration = Decoration.node(pos, pos + node.nodeSize, {
                 class: this.options.emptyNodeClass,
-                "data-empty-text":
-                  pos === 0
-                    ? this.options.headingPlaceholder
-                    : this.options.paragraphPlaceholder,
+                "data-empty-text": this.options.placeholder,
               });
               decorations.push(decoration);
             });

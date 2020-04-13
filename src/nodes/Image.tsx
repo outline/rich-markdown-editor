@@ -163,7 +163,7 @@ export default class Image extends Node {
   toMarkdown(state, node) {
     state.write(
       "![" +
-        state.esc(node.attrs.alt.replace("\n", "") || "") +
+        state.esc((node.attrs.alt || "").replace("\n", "") || "") +
         "](" +
         state.esc(node.attrs.src) +
         ")"
