@@ -8,6 +8,12 @@ export default function getMarkAttrs(state: EditorState, type: Node) {
 
   state.doc.nodesBetween(from, to, (node: PMNode) => {
     marks = [...marks, ...node.marks];
+
+    if (node.content) {
+      node.content.forEach(content => {
+        marks = [...marks, ...content.marks];
+      });
+    }
   });
 
   const mark = marks.find(markItem => markItem.type.name === type.name);
