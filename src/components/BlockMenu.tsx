@@ -333,7 +333,7 @@ export const Wrapper = styled.div<{
   ${props => props.top && `top: ${props.top}px`};
   ${props => props.bottom && `bottom: ${props.bottom}px`};
   left: ${props => props.left}px;
-  background-color: ${props => props.theme.background};
+  background-color: ${props => props.theme.blockToolbarBackground};
   border-radius: 4px;
   box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px,
     rgba(0, 0, 0, 0.08) 0px 4px 8px, rgba(0, 0, 0, 0.08) 0px 2px 4px;
