@@ -246,7 +246,12 @@ class BlockMenu extends React.Component<Props> {
 
     return (
       <Portal>
-        <Wrapper active={isActive} ref={this.menuRef} {...this.state}>
+        <Wrapper
+          id="block-menu-container"
+          active={isActive}
+          ref={this.menuRef}
+          {...this.state}
+        >
           <List>
             {items.map((item, index) => {
               if (item.name === "separator") {
@@ -256,7 +261,7 @@ class BlockMenu extends React.Component<Props> {
                   </ListItem>
                 );
               }
-              const selected = index === this.state.selectedIndex;
+              const selected = index === this.state.selectedIndex && isActive;
 
               return (
                 <ListItem key={index}>

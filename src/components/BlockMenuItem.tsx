@@ -29,6 +29,12 @@ function BlockMenuItem({
         scrollIntoView(node, {
           scrollMode: "if-needed",
           block: "center",
+          boundary: parent => {
+            // All the parent elements of your target are checked until they
+            // reach the #block-menu-container. Prevents body and other parent
+            // elements from being scrolled
+            return parent.id !== "block-menu-container";
+          },
         });
       }
     },
