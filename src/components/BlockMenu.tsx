@@ -253,7 +253,12 @@ class BlockMenu extends React.Component<Props> {
 
     return (
       <Portal>
-        <Wrapper active={isActive} ref={this.menuRef} {...this.state}>
+        <Wrapper
+          id="block-menu-container"
+          active={isActive}
+          ref={this.menuRef}
+          {...this.state}
+        >
           <List>
             {items.map((item, index) => {
               if (item.name === "separator") {
@@ -263,7 +268,7 @@ class BlockMenu extends React.Component<Props> {
                   </ListItem>
                 );
               }
-              const selected = index === this.state.selectedIndex;
+              const selected = index === this.state.selectedIndex && isActive;
 
               return (
                 <ListItem key={index}>
@@ -340,7 +345,7 @@ export const Wrapper = styled.div<{
   ${props => props.top && `top: ${props.top}px`};
   ${props => props.bottom && `bottom: ${props.bottom}px`};
   left: ${props => props.left}px;
-  background-color: ${props => props.theme.background};
+  background-color: ${props => props.theme.blockToolbarBackground};
   border-radius: 4px;
   box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px,
     rgba(0, 0, 0, 0.08) 0px 4px 8px, rgba(0, 0, 0, 0.08) 0px 2px 4px;

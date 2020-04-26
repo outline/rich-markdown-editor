@@ -56,7 +56,7 @@ export const light = {
   toolbarInput: colors.white10,
   toolbarItem: colors.white,
 
-  blockToolbarBackground: colors.greyLight,
+  blockToolbarBackground: colors.white,
   blockToolbarTrigger: colors.greyMid,
   blockToolbarTriggerIcon: colors.white,
   blockToolbarItem: colors.almostBlack,
@@ -84,7 +84,7 @@ export const dark = {
   toolbarInput: colors.black10,
   toolbarItem: colors.lightBlack,
 
-  blockToolbarBackground: colors.white,
+  blockToolbarBackground: colors.almostBlack,
   blockToolbarTrigger: colors.almostWhite,
   blockToolbarTriggerIcon: colors.almostBlack,
   blockToolbarItem: colors.lightBlack,
