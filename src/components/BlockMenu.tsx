@@ -180,8 +180,11 @@ class BlockMenu extends React.Component<Props> {
   calculatePosition(props) {
     const { view } = props;
     const { selection } = view.state;
+    const startPos = view.coordsAtPos(selection.$from.pos);
+    const { offsetHeight } = this.menuRef.current;
+    const paragraph = view.domAtPos(selection.$from.pos);
 
-    if (!props.isActive || SSR) {
+    if (!props.isActive || !paragraph.node || SSR) {
       return {
         left: -1000,
         top: 0,
@@ -189,9 +192,6 @@ class BlockMenu extends React.Component<Props> {
       };
     }
 
-    const startPos = view.coordsAtPos(selection.$from.pos);
-    const { offsetHeight } = this.menuRef.current;
-    const paragraph = view.domAtPos(selection.$from.pos);
     const { top, left, bottom } = paragraph.node.getBoundingClientRect();
     const margin = 24;
 

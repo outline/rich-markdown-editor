@@ -65,7 +65,7 @@ export default class Table extends Node {
   }
 
   toMarkdown(state, node) {
-    state.renderContent(node);
+    state.renderTable(node);
     state.closeBlock(node);
   }
 
