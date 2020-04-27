@@ -12,6 +12,7 @@ type MenuItem = {
   icon?: typeof React.Component;
   attrs?: Record<string, any>;
   active?: (state: EditorState) => boolean;
+  visible?: boolean;
 };
 
 type Props = {
@@ -31,6 +32,9 @@ class Menu extends React.Component<Props> {
     return (
       <div>
         {items.map((item, index) => {
+          if (item.visible === false) {
+            return null;
+          }
           if (item.name === "separator") {
             return <ToolbarSeparator key={index} />;
           }

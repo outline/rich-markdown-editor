@@ -128,7 +128,6 @@ const Wrapper = styled.div<{
   }};
   top: ${props => props.top}px;
   left: ${props => props.left}px;
-  width: 316px;
   opacity: 0;
   background-color: ${props => props.theme.toolbarBackground};
   border-radius: 4px;
