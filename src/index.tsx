@@ -9,6 +9,7 @@ import { Schema, NodeSpec, MarkSpec } from "prosemirror-model";
 import { inputRules, InputRule } from "prosemirror-inputrules";
 import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
+import { selectColumn, selectRow, selectTable } from "prosemirror-utils";
 import styled, { ThemeProvider } from "styled-components";
 import { light as lightTheme, dark as darkTheme } from "./theme";
 import Flex from "./components/Flex";
@@ -206,8 +207,13 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           onShowToast: this.props.onShowToast,
         }),
         new Table(),
-        new TableCell(),
-        new TableHeadCell(),
+        new TableCell({
+          onSelectTable: this.handleSelectTable,
+          onSelectRow: this.handleSelectRow,
+        }),
+        new TableHeadCell({
+          onSelectColumn: this.handleSelectColumn,
+        }),
         new TableRow(),
         new Bold(),
         new Code(),
@@ -410,6 +416,18 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   handleCloseBlockMenu = () => {
     if (!this.state.blockMenuOpen) return;
     this.setState({ blockMenuOpen: false });
+  };
+
+  handleSelectRow = (index: number, state: EditorState) => {
+    this.view.dispatch(selectRow(index)(state.tr));
+  };
+
+  handleSelectColumn = (index: number, state: EditorState) => {
+    this.view.dispatch(selectColumn(index)(state.tr));
+  };
+
+  handleSelectTable = (state: EditorState) => {
+    this.view.dispatch(selectTable(state.tr));
   };
 
   focusAtStart = () => {
@@ -884,12 +902,48 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
       border-bottom: 1px solid ${props => props.theme.tableDivider};
     }
 
+    th {
+      background: ${props => props.theme.tableHeaderBackground};
+    }
+
     td, th {
       position: relative;
       vertical-align: top;
-      border-right: 1px solid ${props => props.theme.tableDivider};
+      border: 1px solid ${props => props.theme.tableDivider};
       position: relative;
       padding: 4px 8px;
+    }
+
+    .grip-column {
+      cursor: pointer;
+      position: absolute;
+      top: -16px;
+      left: 0;
+      width: 100%;
+      height: 12px;
+      background: ${props => props.theme.tableDivider};
+    }
+
+    .grip-row {
+      cursor: pointer;
+      position: absolute;
+      left: -16px;
+      top: 0;
+      height: 100%;
+      width: 12px;
+      background: ${props => props.theme.tableDivider};
+    }
+
+    .grip-table {
+      cursor: pointer;
+      background: ${props => props.theme.tableDivider};
+      width: 13px;
+      height: 13px;
+      border-radius: 13px;
+      border: 2px solid #FFF;
+      position: absolute;
+      top: -18px;
+      left: -18px;
     }
   }
 

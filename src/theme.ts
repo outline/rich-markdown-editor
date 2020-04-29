@@ -61,7 +61,7 @@ export const light = {
   blockToolbarTriggerIcon: colors.white,
   blockToolbarItem: colors.almostBlack,
 
-  tableDivider: colors.grey,
+  tableDivider: colors.greyMid,
   tableSelected: colors.primary,
   tableSelectedBackground: "#E5F7FF",
 
