@@ -1,6 +1,10 @@
 import { DecorationSet, Decoration } from "prosemirror-view";
 import { Plugin } from "prosemirror-state";
-import { getCellsInColumn } from "prosemirror-utils";
+import {
+  isTableSelected,
+  isRowSelected,
+  getCellsInColumn,
+} from "prosemirror-utils";
 import TableNodes from "./TableNodes";
 import Node from "./Node";
 
@@ -35,9 +39,15 @@ export default class TableCell extends Node {
                 if (index === 0) {
                   decorations.push(
                     Decoration.widget(pos + 1, () => {
+                      let className = "grip-table";
+                      const selected = isTableSelected(selection);
+                      if (selected) {
+                        className += " selected";
+                      }
                       const grip = document.createElement("a");
-                      grip.className = "grip-table";
-                      grip.addEventListener("click", () => {
+                      grip.className = className;
+                      grip.addEventListener("click", event => {
+                        event.preventDefault();
                         this.options.onSelectTable(state);
                       });
                       return grip;
@@ -46,9 +56,21 @@ export default class TableCell extends Node {
                 }
                 decorations.push(
                   Decoration.widget(pos + 1, () => {
+                    const rowSelected = isRowSelected(index)(selection);
+
+                    let className = "grip-row";
+                    if (rowSelected) {
+                      className += " selected";
+                    }
+                    if (index === 0) {
+                      className += " first";
+                    } else if (index === cells.length - 1) {
+                      className += " last";
+                    }
                     const grip = document.createElement("a");
-                    grip.className = "grip-row";
-                    grip.addEventListener("click", () => {
+                    grip.className = className;
+                    grip.addEventListener("click", event => {
+                      event.preventDefault();
                       this.options.onSelectRow(index, state);
                     });
                     return grip;

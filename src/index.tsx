@@ -912,6 +912,11 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
       border: 1px solid ${props => props.theme.tableDivider};
       position: relative;
       padding: 4px 8px;
+      
+    }
+
+    .selectedCell {
+      background: ${props => props.theme.tableSelectedBackground};
     }
 
     .grip-column {
@@ -922,6 +927,17 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
       width: 100%;
       height: 12px;
       background: ${props => props.theme.tableDivider};
+      border-bottom: 3px solid ${props => props.theme.background};
+
+      &.first {
+        border-top-left-radius: 3px;
+      }
+      &.last {
+        border-top-right-radius: 3px;
+      }
+      &.selected {
+        background: ${props => props.theme.tableSelected};
+      }
     }
 
     .grip-row {
@@ -932,6 +948,17 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
       height: 100%;
       width: 12px;
       background: ${props => props.theme.tableDivider};
+      border-right: 3px solid ${props => props.theme.background};
+
+      &.first {
+        border-top-left-radius: 3px;
+      }
+      &.last {
+        border-bottom-left-radius: 3px;
+      }
+      &.selected {
+        background: ${props => props.theme.tableSelected};
+      }
     }
 
     .grip-table {
@@ -940,11 +967,53 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
       width: 13px;
       height: 13px;
       border-radius: 13px;
-      border: 2px solid #FFF;
+      border: 2px solid ${props => props.theme.background};
       position: absolute;
       top: -18px;
       left: -18px;
+
+      &.selected {
+        background: ${props => props.theme.tableSelected};
+      }
     }
+  }
+
+  .scrollable-wrapper {
+    position: relative;
+    margin: 0.5em 0px;
+  }
+
+  .scrollable-shadow {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -1em;
+    width: 16px;
+    transition: box-shadow 250ms ease-in-out;
+    border: 0px solid transparent;
+    border-left-width: 1em;
+    pointer-events: none;
+
+    &.left {
+      box-shadow: 16px 0 16px -16px inset rgba(0,0,0,0.25);
+      border-left: 1em solid ${props => props.theme.background};
+    }
+
+    &.right {
+      right: 0;
+      left: auto;
+      box-shadow: -16px 0 16px -16px inset rgba(0,0,0,0.25);
+    }
+  }
+
+  .scrollable {
+    overflow-y: hidden;
+    overflow-x: scroll;
+    padding-left: 1em;
+    margin-left: -1em;
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
+    transition: border 250ms ease-in-out 0s;
   }
 
   .block-menu-trigger {

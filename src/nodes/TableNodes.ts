@@ -15,7 +15,13 @@ export default {
     group: "block",
     parseDOM: [{ tag: "table" }],
     toDOM() {
-      return ["div", { class: "table-wrapper" }, ["table", ["tbody", 0]]];
+      return [
+        "div",
+        { class: "scrollable-wrapper" },
+        ["div", { class: "scrollable" }, ["table", ["tbody", 0]]],
+        ["div", { class: "scrollable-shadow" }],
+        ["div", { class: "scrollable-shadow" }],
+      ];
     },
   },
 };

@@ -1,6 +1,6 @@
 import { DecorationSet, Decoration } from "prosemirror-view";
 import { Plugin } from "prosemirror-state";
-import { getCellsInRow } from "prosemirror-utils";
+import { isColumnSelected, getCellsInRow } from "prosemirror-utils";
 import TableNodes from "./TableNodes";
 import Node from "./Node";
 
@@ -34,9 +34,20 @@ export default class TableHeadCell extends Node {
               cells.forEach(({ pos }, index) => {
                 decorations.push(
                   Decoration.widget(pos + 1, () => {
+                    const colSelected = isColumnSelected(index)(selection);
+                    let className = "grip-column";
+                    if (colSelected) {
+                      className += " selected";
+                    }
+                    if (index === 0) {
+                      className += " first";
+                    } else if (index === cells.length - 1) {
+                      className += " last";
+                    }
                     const grip = document.createElement("a");
-                    grip.className = "grip-column";
-                    grip.addEventListener("click", () => {
+                    grip.className = className;
+                    grip.addEventListener("click", event => {
+                      event.preventDefault();
                       this.options.onSelectColumn(index, state);
                     });
                     return grip;
