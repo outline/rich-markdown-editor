@@ -121,7 +121,10 @@ export default class FormattingToolbar extends React.Component<Props> {
     if (isTableSelection) {
       items = getTableMenuItems();
     } else if (isColSelection) {
-      items = getTableColMenuItems();
+      // TODO: There must be a more reliable way of getting the column index
+      const path = selection.$from.path;
+      const index = path[path.length - 5];
+      items = getTableColMenuItems(index);
     } else if (isRowSelection) {
       items = getTableRowMenuItems();
     } else {

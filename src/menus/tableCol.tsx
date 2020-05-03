@@ -5,27 +5,27 @@ import {
   AlignCenterIcon,
 } from "outline-icons";
 
-export default function tableColMenuItems() {
+export default function tableColMenuItems(index) {
   return [
     {
       name: "setColumnAttr",
       tooltip: "Align left",
       icon: AlignLeftIcon,
-      attrs: { alignment: "left" },
+      attrs: { index, alignment: "left" },
       active: () => true,
     },
     {
       name: "setColumnAttr",
       tooltip: "Align center",
       icon: AlignCenterIcon,
-      attrs: { alignment: "center" },
+      attrs: { index, alignment: "center" },
       active: () => true,
     },
     {
       name: "setColumnAttr",
       tooltip: "Align right",
       icon: AlignRightIcon,
-      attrs: { alignment: "right" },
+      attrs: { index, alignment: "right" },
       active: () => true,
     },
     {

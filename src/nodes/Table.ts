@@ -43,10 +43,15 @@ export default class Table extends Node {
         dispatch(tr);
       },
       setColumnAttr: ({ index, alignment }) => (state, dispatch) => {
+        console.log(index, alignment);
         const cells = getCellsInColumn(index)(state.selection);
-        // cells.forEach(node => {
-
-        // })
+        let transaction = state.tr;
+        cells.forEach(({ pos }) => {
+          transaction = transaction.setNodeMarkup(pos, null, {
+            alignment,
+          });
+        });
+        dispatch(transaction);
       },
       addColumnBefore: () => addColumnBefore,
       addColumnAfter: () => addColumnAfter,
