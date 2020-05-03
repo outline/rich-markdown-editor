@@ -2,7 +2,11 @@ import * as React from "react";
 import { Portal } from "react-portal";
 import { EditorView } from "prosemirror-view";
 import styled from "styled-components";
-import getMenuItems from "../menus/formatting";
+import { isEqual } from "lodash";
+import getTableColMenuItems from "../menus/tableCol";
+import getTableRowMenuItems from "../menus/tableRow";
+import getTableMenuItems from "../menus/table";
+import getFormattingMenuItems from "../menus/formatting";
 import LinkEditor, { SearchResult } from "./LinkEditor";
 import Menu from "./Menu";
 import isMarkActive from "../queries/isMarkActive";
@@ -18,83 +22,121 @@ type Props = {
   view: EditorView;
 };
 
+const menuRef = React.createRef<HTMLDivElement>();
+
+function calculatePosition(props) {
+  const { view } = props;
+  const { selection } = view.state;
+
+  // If there is no selection, the selection is empty or the selection is a
+  // NodeSelection instead of a TextSelection then hide the formatting
+  // toolbar offscreen
+  if (!selection || selection.empty || selection.node || SSR) {
+    return {
+      left: -1000,
+      top: 0,
+      offset: 0,
+    };
+  }
+
+  // based on the start and end of the selection calculate the position at
+  // the center top
+  const startPos = view.coordsAtPos(selection.$from.pos);
+  const endPos = view.coordsAtPos(selection.$to.pos);
+
+  // tables are an oddity, and need their own logic
+  const isColSelection = selection.isColSelection && selection.isColSelection();
+  const isRowSelection = selection.isRowSelection && selection.isRowSelection();
+
+  if (isRowSelection) {
+    endPos.left = startPos.left + 12;
+  } else if (isColSelection) {
+    const { node: element } = view.domAtPos(selection.$from.pos);
+    const { width } = element.getBoundingClientRect();
+    endPos.left = startPos.left + width;
+  }
+
+  const halfSelection = Math.abs(endPos.left - startPos.left) / 2;
+  const centerOfSelection = startPos.left + halfSelection;
+
+  // position the menu so that it is centered over the selection except in
+  // the cases where it would extend off the edge of the screen. In these
+  // instances leave a margin
+  const { offsetWidth, offsetHeight } = menuRef.current;
+  const margin = 12;
+  const left = Math.min(
+    window.innerWidth - offsetWidth - margin,
+    Math.max(margin, centerOfSelection - offsetWidth / 2)
+  );
+  const top = Math.min(
+    window.innerHeight - offsetHeight - margin,
+    Math.max(margin, startPos.top - offsetHeight)
+  );
+
+  // if the menu has been offset to not extend offscreen then we should adjust
+  // the position of the triangle underneath to correctly point to the center
+  // of the selection still
+  const offset = left - (centerOfSelection - offsetWidth / 2);
+
+  return {
+    left: left + window.scrollX,
+    top: top + window.scrollY,
+    offset,
+  };
+}
+
 export default class FormattingToolbar extends React.Component<Props> {
-  menuRef = React.createRef<HTMLDivElement>();
   state = {
     left: 0,
     top: 0,
     offset: 0,
   };
 
-  componentDidMount() {
-    this.setState(this.calculatePosition(this.props));
-  }
+  componentDidUpdate() {
+    const newState = calculatePosition(this.props);
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    this.setState(this.calculatePosition(nextProps));
-  }
-
-  calculatePosition(props) {
-    const { view } = props;
-
-    const { selection } = view.state;
-
-    // If there is no selection, the selection is empty or the selection is a
-    // NodeSelection instead of a TextSelection then hide the formatting
-    // toolbar offscreen
-    if (!selection || selection.empty || selection.node || SSR) {
-      return {
-        left: -1000,
-        top: 0,
-      };
+    if (!isEqual(newState, this.state)) {
+      this.setState(newState);
     }
+  }
 
-    // based on the start and end of the selection calculate the position at
-    // the center top
-    const startPos = view.coordsAtPos(selection.$from.pos);
-    const endPos = view.coordsAtPos(selection.$to.pos);
-    const halfSelection = Math.abs(endPos.left - startPos.left) / 2;
-    const centerOfSelection = startPos.left + halfSelection;
-
-    // position the menu so that it is centered over the selection except in
-    // the cases where it would extend off the edge of the screen. In these
-    // instances leave a margin
-    const { offsetWidth, offsetHeight } = this.menuRef.current;
-    const margin = 12;
-    const left = Math.min(
-      window.innerWidth - offsetWidth - margin,
-      Math.max(margin, centerOfSelection - offsetWidth / 2)
-    );
-    const top = Math.min(
-      window.innerHeight - offsetHeight - margin,
-      Math.max(margin, startPos.top - offsetHeight)
-    );
-
-    // if the menu has been offset to not extend offscreen then we should adjust
-    // the position of the triangle underneath to correctly point to the center
-    // of the selection still
-    const offset = left - (centerOfSelection - offsetWidth / 2);
-
-    return {
-      left: left + window.scrollX,
-      top: top + window.scrollY,
-      offset,
-    };
+  componentDidMount() {
+    this.setState(calculatePosition(this.props));
   }
 
   render() {
     const { view } = this.props;
     const { state } = view;
-    const isActive = !state.selection.empty;
-    const items = getMenuItems(state);
+    const { selection }: { selection: any } = state;
+    const isActive = !selection.empty;
+    const isColSelection =
+      selection.isColSelection && selection.isColSelection();
+    const isRowSelection =
+      selection.isRowSelection && selection.isRowSelection();
+    const isTableSelection = isColSelection && isRowSelection;
     const link = isMarkActive(state.schema.marks.link)(state);
-    const range = getMarkRange(state.selection.$from, state.schema.marks.link);
+    const range = getMarkRange(selection.$from, state.schema.marks.link);
+
+    let items = [];
+    if (isTableSelection) {
+      items = getTableMenuItems();
+    } else if (isColSelection) {
+      items = getTableColMenuItems();
+    } else if (isRowSelection) {
+      items = getTableRowMenuItems();
+    } else {
+      items = getFormattingMenuItems(state);
+    }
+
+    if (!items.length) {
+      return null;
+    }
 
     return (
       <Portal>
         <Wrapper
           active={isActive}
-          ref={this.menuRef}
+          ref={menuRef}
           top={this.state.top}
           left={this.state.left}
           offset={this.state.offset}

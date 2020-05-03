@@ -912,11 +912,11 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
       border: 1px solid ${props => props.theme.tableDivider};
       position: relative;
       padding: 4px 8px;
-      
     }
 
     .selectedCell {
-      background: ${props => props.theme.tableSelectedBackground};
+      background: ${props =>
+        props.readOnly ? "inherit" : props.theme.tableSelectedBackground};
     }
 
     .grip-column {
@@ -928,7 +928,11 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
       height: 12px;
       background: ${props => props.theme.tableDivider};
       border-bottom: 3px solid ${props => props.theme.background};
+      display: ${props => (props.readOnly ? "none" : "block")};
 
+      &:hover {
+        background: ${props => props.theme.text};
+      }
       &.first {
         border-top-left-radius: 3px;
       }
@@ -949,7 +953,11 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
       width: 12px;
       background: ${props => props.theme.tableDivider};
       border-right: 3px solid ${props => props.theme.background};
+      display: ${props => (props.readOnly ? "none" : "block")};
 
+      &:hover {
+        background: ${props => props.theme.text};
+      }
       &.first {
         border-top-left-radius: 3px;
       }
@@ -971,7 +979,11 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
       position: absolute;
       top: -18px;
       left: -18px;
+      display: ${props => (props.readOnly ? "none" : "block")};
 
+      &:hover {
+        background: ${props => props.theme.text};
+      }
       &.selected {
         background: ${props => props.theme.tableSelected};
       }
