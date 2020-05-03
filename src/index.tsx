@@ -912,6 +912,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
       border: 1px solid ${props => props.theme.tableDivider};
       position: relative;
       padding: 4px 8px;
+      text-align: left;
     }
 
     .selectedCell {

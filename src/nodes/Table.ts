@@ -15,7 +15,7 @@ import {
   setCellAttr,
   fixTables,
 } from "prosemirror-tables";
-import { createTable } from "prosemirror-utils";
+import { getCellsInColumn, createTable } from "prosemirror-utils";
 import { TextSelection } from "prosemirror-state";
 import TableNodes from "./TableNodes";
 
@@ -41,6 +41,12 @@ export default class Table extends Node {
 
         tr.setSelection(TextSelection.near(resolvedPos));
         dispatch(tr);
+      },
+      setColumnAttr: ({ index, alignment }) => (state, dispatch) => {
+        const cells = getCellsInColumn(index)(state.selection);
+        // cells.forEach(node => {
+
+        // })
       },
       addColumnBefore: () => addColumnBefore,
       addColumnAfter: () => addColumnAfter,

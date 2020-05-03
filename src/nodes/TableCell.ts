@@ -22,7 +22,10 @@ export default class TableCell extends Node {
   }
 
   parseMarkdown() {
-    return { block: "td" };
+    return {
+      block: "td",
+      getAttrs: tok => ({ alignment: tok.info }),
+    };
   }
 
   get plugins() {

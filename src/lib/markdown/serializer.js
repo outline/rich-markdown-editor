@@ -300,14 +300,14 @@ export class MarkdownSerializerState {
   renderTable(node) {
     this.flushClose(1);
 
-    let headerBuffer;
+    let headerBuffer = "";
     const prevTable = this.inTable;
     this.inTable = true;
 
     // rows
     node.forEach((row, _, i) => {
       if (headerBuffer) {
-        this.out += `${headerBuffer}--|\n`;
+        this.out += `${headerBuffer}|\n`;
         headerBuffer = undefined;
       }
 
@@ -321,10 +321,14 @@ export class MarkdownSerializerState {
         });
 
         if (i === 0) {
-          if (!headerBuffer) {
-            headerBuffer = "|--";
+          if (cell.attrs.alignment === "center") {
+            headerBuffer += "|:---:";
+          } else if (cell.attrs.alignment === "left") {
+            headerBuffer += "|:---";
+          } else if (cell.attrs.alignment === "right") {
+            headerBuffer += "|---:";
           } else {
-            headerBuffer += "--|--";
+            headerBuffer += "|----";
           }
         }
       });

@@ -23,10 +23,17 @@ export default function markdownTables(md: MarkdownIt) {
         tokens.splice(i, 1);
       }
 
-      // markdown-it table parser does not return paragraphs inside the cells
-      // but prosemirror requires them, so we add 'em in here.
       if (["th_open", "td_open"].includes(tokens[i].type)) {
+        // markdown-it table parser does not return paragraphs inside the cells
+        // but prosemirror requires them, so we add 'em in here.
         tokens.splice(i + 1, 0, new Token("paragraph_open", "p", 1));
+
+        // markdown-it table parser stores alignment as html styles, convert
+        // to a simple string here
+        if (tokens[i].attrs) {
+          const style = tokens[i].attrs[0][1];
+          tokens[i].info = style.split(":")[1];
+        }
       }
 
       if (["th_close", "td_close"].includes(tokens[i].type)) {

@@ -18,7 +18,10 @@ export default class TableHeadCell extends Node {
   }
 
   parseMarkdown() {
-    return { block: "th" };
+    return {
+      block: "th",
+      getAttrs: tok => ({ alignment: tok.info }),
+    };
   }
 
   get plugins() {
