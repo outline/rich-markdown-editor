@@ -3,6 +3,8 @@ import {
   AlignLeftIcon,
   AlignRightIcon,
   AlignCenterIcon,
+  InsertLeftIcon,
+  InsertRightIcon,
 } from "outline-icons";
 import { EditorState } from "prosemirror-state";
 import isNodeActive from "../queries/isNodeActive";
@@ -43,6 +45,21 @@ export default function tableColMenuItems(state: EditorState, index) {
         rowspan: 1,
         alignment: "right",
       }),
+    },
+    {
+      name: "separator",
+    },
+    {
+      name: "addColumnBefore",
+      tooltip: "Insert column before",
+      icon: InsertLeftIcon,
+      active: () => false,
+    },
+    {
+      name: "addColumnAfter",
+      tooltip: "Insert column after",
+      icon: InsertRightIcon,
+      active: () => false,
     },
     {
       name: "separator",

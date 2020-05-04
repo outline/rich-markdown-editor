@@ -43,7 +43,6 @@ export default class Table extends Node {
         dispatch(tr);
       },
       setColumnAttr: ({ index, alignment }) => (state, dispatch) => {
-        console.log(index, alignment);
         const cells = getCellsInColumn(index)(state.selection);
         let transaction = state.tr;
         cells.forEach(({ pos }) => {
