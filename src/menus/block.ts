@@ -7,6 +7,7 @@ import {
   Heading3Icon,
   HorizontalRuleIcon,
   OrderedListIcon,
+  TableIcon,
   TodoListIcon,
   ImageIcon,
 } from "outline-icons";
@@ -61,6 +62,12 @@ export default function blockMenuItems() {
     },
     {
       name: "separator",
+    },
+    {
+      name: "table",
+      title: "Table",
+      icon: TableIcon,
+      attrs: { rowsCount: 3, colsCount: 3 },
     },
     {
       name: "blockquote",

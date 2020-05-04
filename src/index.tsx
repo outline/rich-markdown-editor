@@ -9,11 +9,12 @@ import { Schema, NodeSpec, MarkSpec } from "prosemirror-model";
 import { inputRules, InputRule } from "prosemirror-inputrules";
 import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
+import { selectColumn, selectRow, selectTable } from "prosemirror-utils";
 import styled, { ThemeProvider } from "styled-components";
 import { light as lightTheme, dark as darkTheme } from "./theme";
 import Flex from "./components/Flex";
 import { SearchResult } from "./components/LinkEditor";
-import FormattingToolbar from "./components/FormattingToolbar";
+import FloatingToolbar from "./components/FloatingToolbar";
 import BlockMenu from "./components/BlockMenu";
 import Extension from "./lib/Extension";
 import ExtensionManager from "./lib/ExtensionManager";
@@ -36,6 +37,10 @@ import Image from "./nodes/Image";
 import ListItem from "./nodes/ListItem";
 import OrderedList from "./nodes/OrderedList";
 import Paragraph from "./nodes/Paragraph";
+import Table from "./nodes/Table";
+import TableCell from "./nodes/TableCell";
+import TableHeadCell from "./nodes/TableHeadCell";
+import TableRow from "./nodes/TableRow";
 
 // marks
 import Bold from "./marks/Bold";
@@ -201,6 +206,15 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           onImageUploadStop: this.props.onImageUploadStop,
           onShowToast: this.props.onShowToast,
         }),
+        new Table(),
+        new TableCell({
+          onSelectTable: this.handleSelectTable,
+          onSelectRow: this.handleSelectRow,
+        }),
+        new TableHeadCell({
+          onSelectColumn: this.handleSelectColumn,
+        }),
+        new TableRow(),
         new Bold(),
         new Code(),
         new Highlight(),
@@ -404,6 +418,18 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     this.setState({ blockMenuOpen: false });
   };
 
+  handleSelectRow = (index: number, state: EditorState) => {
+    this.view.dispatch(selectRow(index)(state.tr));
+  };
+
+  handleSelectColumn = (index: number, state: EditorState) => {
+    this.view.dispatch(selectColumn(index)(state.tr));
+  };
+
+  handleSelectTable = (state: EditorState) => {
+    this.view.dispatch(selectTable(state.tr));
+  };
+
   focusAtStart = () => {
     const selection = Selection.atStart(this.view.state.doc);
     const transaction = this.view.state.tr.setSelection(selection);
@@ -439,7 +465,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
             />
             {!readOnly && this.view && (
               <React.Fragment>
-                <FormattingToolbar
+                <FloatingToolbar
                   view={this.view}
                   commands={this.commands}
                   onSearchLink={this.props.onSearchLink}
@@ -862,6 +888,146 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
 
   .token.entity {
     cursor: help;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 4px;
+    border: 1px solid ${props => props.theme.tableDivider};
+    margin-top: 1em;
+
+    tr {
+      position: relative;
+      border-bottom: 1px solid ${props => props.theme.tableDivider};
+    }
+
+    th {
+      background: ${props => props.theme.tableHeaderBackground};
+    }
+
+    td, th {
+      position: relative;
+      vertical-align: top;
+      border: 1px solid ${props => props.theme.tableDivider};
+      position: relative;
+      padding: 4px 8px;
+      text-align: left;
+      min-width: 100px;
+    }
+
+    .selectedCell {
+      background: ${props =>
+        props.readOnly ? "inherit" : props.theme.tableSelectedBackground};
+    }
+
+    .grip-column {
+      cursor: pointer;
+      position: absolute;
+      top: -16px;
+      left: 0;
+      width: 100%;
+      height: 12px;
+      background: ${props => props.theme.tableDivider};
+      border-bottom: 3px solid ${props => props.theme.background};
+      display: ${props => (props.readOnly ? "none" : "block")};
+
+      &:hover {
+        background: ${props => props.theme.text};
+      }
+      &.first {
+        border-top-left-radius: 3px;
+      }
+      &.last {
+        border-top-right-radius: 3px;
+      }
+      &.selected {
+        background: ${props => props.theme.tableSelected};
+      }
+    }
+
+    .grip-row {
+      cursor: pointer;
+      position: absolute;
+      left: -16px;
+      top: 0;
+      height: 100%;
+      width: 12px;
+      background: ${props => props.theme.tableDivider};
+      border-right: 3px solid ${props => props.theme.background};
+      display: ${props => (props.readOnly ? "none" : "block")};
+
+      &:hover {
+        background: ${props => props.theme.text};
+      }
+      &.first {
+        border-top-left-radius: 3px;
+      }
+      &.last {
+        border-bottom-left-radius: 3px;
+      }
+      &.selected {
+        background: ${props => props.theme.tableSelected};
+      }
+    }
+
+    .grip-table {
+      cursor: pointer;
+      background: ${props => props.theme.tableDivider};
+      width: 13px;
+      height: 13px;
+      border-radius: 13px;
+      border: 2px solid ${props => props.theme.background};
+      position: absolute;
+      top: -18px;
+      left: -18px;
+      display: ${props => (props.readOnly ? "none" : "block")};
+
+      &:hover {
+        background: ${props => props.theme.text};
+      }
+      &.selected {
+        background: ${props => props.theme.tableSelected};
+      }
+    }
+  }
+
+  .scrollable-wrapper {
+    position: relative;
+    margin: 0.5em 0px;
+  }
+
+  .scrollable {
+    overflow-y: hidden;
+    overflow-x: scroll;
+    padding-left: 1em;
+    margin-left: -1em;
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
+    transition: border 250ms ease-in-out 0s;
+  }
+
+  .scrollable-shadow {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -1em;
+    width: 16px;
+    transition: box-shadow 250ms ease-in-out;
+    border: 0px solid transparent;
+    border-left-width: 1em;
+    pointer-events: none;
+
+    &.left {
+      box-shadow: 16px 0 16px -16px inset rgba(0,0,0,0.25);
+      border-left: 1em solid ${props => props.theme.background};
+    }
+
+    &.right {
+      right: 0;
+      left: auto;
+      box-shadow: -16px 0 16px -16px inset rgba(0,0,0,0.25);
+    }
   }
 
   .block-menu-trigger {

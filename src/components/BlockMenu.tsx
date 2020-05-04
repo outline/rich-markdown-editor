@@ -1,4 +1,5 @@
 import * as React from "react";
+import { capitalize } from "lodash";
 import { Portal } from "react-portal";
 import { EditorView } from "prosemirror-view";
 import { findParentNode } from "prosemirror-utils";
@@ -166,15 +167,24 @@ class BlockMenu extends React.Component<Props> {
       );
     }
 
-    this.props.commands[item.name](item.attrs);
+    const command = this.props.commands[item.name];
+    if (command) {
+      command(item.attrs);
+    } else {
+      this.props.commands[`create${capitalize(item.name)}`](item.attrs);
+    }
+
     this.props.onClose();
   }
 
   calculatePosition(props) {
     const { view } = props;
     const { selection } = view.state;
+    const startPos = view.coordsAtPos(selection.$from.pos);
+    const { offsetHeight } = this.menuRef.current;
+    const paragraph = view.domAtPos(selection.$from.pos);
 
-    if (!props.isActive || SSR) {
+    if (!props.isActive || !paragraph.node || SSR) {
       return {
         left: -1000,
         top: 0,
@@ -182,9 +192,6 @@ class BlockMenu extends React.Component<Props> {
       };
     }
 
-    const startPos = view.coordsAtPos(selection.$from.pos);
-    const { offsetHeight } = this.menuRef.current;
-    const paragraph = view.domAtPos(selection.$from.pos);
     const { top, left, bottom } = paragraph.node.getBoundingClientRect();
     const margin = 24;
 

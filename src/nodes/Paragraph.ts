@@ -30,7 +30,11 @@ export default class Paragraph extends Node {
   toMarkdown(state, node) {
     // render empty paragraphs as hard breaks to ensure that newlines are
     // persisted between reloads (this breaks from markdown tradition)
-    if (node.textContent.trim() === "" && node.childCount === 0) {
+    if (
+      node.textContent.trim() === "" &&
+      node.childCount === 0 &&
+      !state.inTable
+    ) {
       state.write("\\\n");
     } else {
       state.renderInline(node);
