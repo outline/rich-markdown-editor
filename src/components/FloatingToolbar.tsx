@@ -11,6 +11,7 @@ import LinkEditor, { SearchResult } from "./LinkEditor";
 import Menu from "./Menu";
 import isMarkActive from "../queries/isMarkActive";
 import getMarkRange from "../queries/getMarkRange";
+import isNodeActive from "../queries/isNodeActive";
 
 const SSR = typeof window === "undefined";
 
@@ -31,7 +32,13 @@ function calculatePosition(props) {
   // If there is no selection, the selection is empty or the selection is a
   // NodeSelection instead of a TextSelection then hide the formatting
   // toolbar offscreen
-  if (!selection || selection.empty || selection.node || SSR) {
+  if (
+    !selection ||
+    !menuRef.current ||
+    selection.empty ||
+    selection.node ||
+    SSR
+  ) {
     return {
       left: -1000,
       top: 0,
@@ -109,6 +116,13 @@ export default class FloatingToolbar extends React.Component<Props> {
     const { state } = view;
     const { selection }: { selection: any } = state;
     const isActive = !selection.empty;
+    const isCodeSelection = isNodeActive(state.schema.nodes.code_block)(state);
+
+    // toolbar is disabled in code blocks, no bold / italic etc
+    if (isCodeSelection) {
+      return null;
+    }
+
     const isColSelection =
       selection.isColSelection && selection.isColSelection();
     const isRowSelection =
