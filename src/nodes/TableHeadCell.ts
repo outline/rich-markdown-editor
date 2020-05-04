@@ -11,7 +11,7 @@ export default class TableHeadCell extends Node {
   get schema() {
     return {
       content: "paragraph+",
-      tableRole: "cell",
+      tableRole: "header_cell",
       isolating: true,
       parseDOM: [{ tag: "th" }],
       toDOM(node) {

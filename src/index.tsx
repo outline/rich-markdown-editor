@@ -913,6 +913,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
       position: relative;
       padding: 4px 8px;
       text-align: left;
+      min-width: 100px;
     }
 
     .selectedCell {
@@ -996,6 +997,16 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     margin: 0.5em 0px;
   }
 
+  .scrollable {
+    overflow-y: hidden;
+    overflow-x: scroll;
+    padding-left: 1em;
+    margin-left: -1em;
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
+    transition: border 250ms ease-in-out 0s;
+  }
+
   .scrollable-shadow {
     position: absolute;
     top: 0;
@@ -1017,16 +1028,6 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
       left: auto;
       box-shadow: -16px 0 16px -16px inset rgba(0,0,0,0.25);
     }
-  }
-
-  .scrollable {
-    overflow-y: hidden;
-    overflow-x: scroll;
-    padding-left: 1em;
-    margin-left: -1em;
-    border-left: 1px solid transparent;
-    border-right: 1px solid transparent;
-    transition: border 250ms ease-in-out 0s;
   }
 
   .block-menu-trigger {

@@ -1,4 +1,5 @@
 import Node from "./Node";
+import { DecorationSet, Decoration } from "prosemirror-view";
 import {
   tableEditing,
   goToNextCell,
@@ -16,7 +17,7 @@ import {
   fixTables,
 } from "prosemirror-tables";
 import { getCellsInColumn, createTable } from "prosemirror-utils";
-import { TextSelection } from "prosemirror-state";
+import { Plugin, TextSelection } from "prosemirror-state";
 
 export default class Table extends Node {
   get name() {
@@ -34,9 +35,11 @@ export default class Table extends Node {
         return [
           "div",
           { class: "scrollable-wrapper" },
-          ["div", { class: "scrollable" }, ["table", ["tbody", 0]]],
-          ["div", { class: "scrollable-shadow" }],
-          ["div", { class: "scrollable-shadow" }],
+          [
+            "div",
+            { class: "scrollable" },
+            ["table", { class: "rme-table" }, ["tbody", 0]],
+          ],
         ];
       },
     };
@@ -95,6 +98,43 @@ export default class Table extends Node {
   }
 
   get plugins() {
-    return [tableEditing()];
+    return [
+      tableEditing(),
+      new Plugin({
+        props: {
+          decorations: state => {
+            const { doc } = state;
+            const decorations: Decoration[] = [];
+            let index = 0;
+
+            doc.descendants((node, pos) => {
+              if (node.type.name !== this.name) return;
+
+              const elements = document.getElementsByClassName("rme-table");
+              const table = elements[index];
+              if (!table) return;
+
+              const element = table.parentElement;
+              const shadowRight = !!(
+                element && element.scrollWidth > element.clientWidth
+              );
+
+              if (shadowRight) {
+                decorations.push(
+                  Decoration.widget(pos + 1, () => {
+                    const shadow = document.createElement("div");
+                    shadow.className = "scrollable-shadow right";
+                    return shadow;
+                  })
+                );
+              }
+              index++;
+            });
+
+            return DecorationSet.create(doc, decorations);
+          },
+        },
+      }),
+    ];
   }
 }
