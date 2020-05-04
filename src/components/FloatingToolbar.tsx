@@ -85,7 +85,7 @@ function calculatePosition(props) {
   };
 }
 
-export default class FormattingToolbar extends React.Component<Props> {
+export default class FloatingToolbar extends React.Component<Props> {
   state = {
     left: 0,
     top: 0,
