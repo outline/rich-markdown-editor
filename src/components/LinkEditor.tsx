@@ -84,7 +84,12 @@ class LinkEditor extends React.Component<Props> {
 
     if (event.key === "Escape") {
       event.preventDefault();
-      this.setState({ value: this.initialValue }, this.moveSelectionToEnd);
+
+      if (this.initialValue) {
+        this.setState({ value: this.initialValue }, this.moveSelectionToEnd);
+      } else {
+        this.handleRemoveLink();
+      }
       return;
     }
 
