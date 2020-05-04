@@ -5,7 +5,6 @@ import {
   isRowSelected,
   getCellsInColumn,
 } from "prosemirror-utils";
-import TableNodes from "./TableNodes";
 import Node from "./Node";
 
 export default class TableCell extends Node {
@@ -14,7 +13,26 @@ export default class TableCell extends Node {
   }
 
   get schema() {
-    return TableNodes.table_cell;
+    return {
+      content: "paragraph+",
+      tableRole: "cell",
+      isolating: true,
+      parseDOM: [{ tag: "td" }],
+      toDOM(node) {
+        return [
+          "td",
+          node.attrs.alignment
+            ? { style: `text-align: ${node.attrs.alignment}` }
+            : {},
+          0,
+        ];
+      },
+      attrs: {
+        colspan: { default: 1 },
+        rowspan: { default: 1 },
+        alignment: { default: null },
+      },
+    };
   }
 
   toMarkdown(state, node) {

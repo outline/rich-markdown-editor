@@ -17,7 +17,6 @@ import {
 } from "prosemirror-tables";
 import { getCellsInColumn, createTable } from "prosemirror-utils";
 import { TextSelection } from "prosemirror-state";
-import TableNodes from "./TableNodes";
 
 export default class Table extends Node {
   get name() {
@@ -26,8 +25,20 @@ export default class Table extends Node {
 
   get schema() {
     return {
-      ...TableNodes.table,
       content: "tr+",
+      tableRole: "table",
+      isolating: true,
+      group: "block",
+      parseDOM: [{ tag: "table" }],
+      toDOM() {
+        return [
+          "div",
+          { class: "scrollable-wrapper" },
+          ["div", { class: "scrollable" }, ["table", ["tbody", 0]]],
+          ["div", { class: "scrollable-shadow" }],
+          ["div", { class: "scrollable-shadow" }],
+        ];
+      },
     };
   }
 
