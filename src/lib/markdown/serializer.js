@@ -80,7 +80,7 @@ export class MarkdownSerializerState {
   flushClose(size) {
     if (this.closed) {
       if (!this.atBlank()) this.out += "\n";
-      if (size === null) size = 2;
+      if (size === null || size === undefined) size = 2;
       if (size > 1) {
         let delimMin = this.delim;
         const trim = /\s+$/.exec(delimMin);
