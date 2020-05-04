@@ -49,7 +49,7 @@ export default class TableHeadCell extends Node {
                     }
                     const grip = document.createElement("a");
                     grip.className = className;
-                    grip.addEventListener("click", event => {
+                    grip.addEventListener("mousedown", event => {
                       event.preventDefault();
                       this.options.onSelectColumn(index, state);
                     });

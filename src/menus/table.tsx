@@ -6,7 +6,7 @@ export default function tableMenuItems() {
       name: "deleteTable",
       tooltip: "Delete table",
       icon: TrashIcon,
-      active: () => true,
+      active: () => false,
     },
   ];
 }

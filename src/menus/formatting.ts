@@ -9,9 +9,9 @@ import {
   StrikethroughIcon,
 } from "outline-icons";
 import { isInTable } from "prosemirror-tables";
+import { EditorState } from "prosemirror-state";
 import isNodeActive from "../queries/isNodeActive";
 import isMarkActive from "../queries/isMarkActive";
-import { EditorState } from "prosemirror-state";
 
 export default function formattingMenuItems(state: EditorState) {
   const { schema } = state;

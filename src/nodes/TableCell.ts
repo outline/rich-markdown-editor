@@ -49,7 +49,7 @@ export default class TableCell extends Node {
                       }
                       const grip = document.createElement("a");
                       grip.className = className;
-                      grip.addEventListener("click", event => {
+                      grip.addEventListener("mousedown", event => {
                         event.preventDefault();
                         this.options.onSelectTable(state);
                       });
@@ -72,7 +72,7 @@ export default class TableCell extends Node {
                     }
                     const grip = document.createElement("a");
                     grip.className = className;
-                    grip.addEventListener("click", event => {
+                    grip.addEventListener("mousedown", event => {
                       event.preventDefault();
                       this.options.onSelectRow(index, state);
                     });

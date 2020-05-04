@@ -6,7 +6,7 @@ export default function tableColMenuItems() {
       name: "deleteRow",
       tooltip: "Delete row",
       icon: TrashIcon,
-      active: () => true,
+      active: () => false,
     },
   ];
 }
