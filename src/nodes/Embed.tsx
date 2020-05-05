@@ -23,12 +23,17 @@ export default class Embed extends Node {
     };
   }
 
-  component({ node }) {
+  component({ isEditable, isSelected, theme, node }) {
     const Component = node.attrs.component;
 
     return (
       <div contentEditable={false}>
-        <Component attrs={node.attrs} />
+        <Component
+          attrs={node.attrs}
+          isEditable={isEditable}
+          isSelected={isSelected}
+          theme={theme}
+        />
       </div>
     );
   }

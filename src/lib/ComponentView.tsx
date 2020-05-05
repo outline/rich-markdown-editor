@@ -103,14 +103,8 @@ export default class ComponentView {
     }
   }
 
-  stopEvent(ev: Event) {
-    return (
-      ev.type === "keypress" ||
-      ev.type === "keydown" ||
-      ev.type === "keyup" ||
-      ev.type === "input" ||
-      ev.type === "paste"
-    );
+  stopEvent() {
+    return true;
   }
 
   destroy() {
