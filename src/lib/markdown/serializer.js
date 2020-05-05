@@ -74,7 +74,7 @@ export class MarkdownSerializerState {
     //   Defaults to false.
     this.options = options || {};
     if (typeof this.options.tightLists === "undefined")
-      this.options.tightLists = false;
+      this.options.tightLists = true;
   }
 
   flushClose(size) {
@@ -287,6 +287,8 @@ export class MarkdownSerializerState {
         ? node.attrs.tight
         : this.options.tightLists;
     const prevTight = this.inTightList;
+    const prevList = this.inList;
+    this.inList = true;
     this.inTightList = isTight;
     node.forEach((child, _, i) => {
       if (i && isTight) this.flushClose(1);
@@ -294,6 +296,7 @@ export class MarkdownSerializerState {
         this.render(child, node, i)
       );
     });
+    this.inList = prevList;
     this.inTightList = prevTight;
   }
 
