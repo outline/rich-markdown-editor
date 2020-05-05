@@ -894,7 +894,6 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     width: 100%;
     border-collapse: collapse;
     border-radius: 4px;
-    border: 1px solid ${props => props.theme.tableDivider};
     margin-top: 1em;
 
     tr {
