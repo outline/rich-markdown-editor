@@ -5,6 +5,7 @@ import clike from "refractor/lang/clike";
 import csharp from "refractor/lang/csharp";
 import java from "refractor/lang/java";
 import javascript from "refractor/lang/javascript";
+import json from "refractor/lang/json";
 import markup from "refractor/lang/markup";
 import php from "refractor/lang/php";
 import python from "refractor/lang/python";
@@ -29,6 +30,7 @@ export default class CodeBlock extends Node {
       csharp,
       java,
       javascript,
+      json,
       markup,
       php,
       python,
@@ -48,6 +50,7 @@ export default class CodeBlock extends Node {
       markup: "HTML",
       java: "Java",
       javascript: "JavaScript",
+      json: "JSON",
       php: "PHP",
       powershell: "Powershell",
       python: "Python",
