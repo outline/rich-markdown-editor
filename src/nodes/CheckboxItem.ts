@@ -21,7 +21,6 @@ export default class CheckboxItem extends Node {
           default: false,
         },
       },
-      group: "block",
       content: "paragraph block*",
       defining: true,
       draggable: false,
@@ -91,6 +90,8 @@ export default class CheckboxItem extends Node {
       Enter: splitListItem(type),
       Tab: sinkListItem(type),
       "Shift-Tab": liftListItem(type),
+      "Mod-]": sinkListItem(type),
+      "Mod-[": liftListItem(type),
     };
   }
 
