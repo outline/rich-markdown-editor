@@ -1,3 +1,7 @@
+Keep up to date with https://github.com/outline/rich-markdown-editor
+https://stefanbauer.me/articles/how-to-keep-your-git-fork-up-to-date
+
+
 > READ THIS: The `10.0.0` prereleases are based on the [ProseMirror fork](https://github.com/outline/rich-markdown-editor/pull/150) and are not yet production ready or feature complete. Continue to use `9.x` for the most reliable editor.
 
 
