@@ -43,6 +43,14 @@ class BlockMenu extends React.Component<Props> {
     }
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return (
+      nextProps.search !== this.props.search ||
+      nextProps.isActive !== this.props.isActive ||
+      nextState !== this.state
+    );
+  }
+
   componentDidUpdate(prevProps) {
     if (!prevProps.isActive && this.props.isActive) {
       const position = this.calculatePosition(this.props);
