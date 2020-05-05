@@ -1,17 +1,20 @@
 import { TrashIcon, InsertAboveIcon, InsertBelowIcon } from "outline-icons";
 
-export default function tableColMenuItems() {
+export default function tableRowMenuItems(state, index) {
   return [
     {
-      name: "addRowBefore",
-      tooltip: "Insert column before",
+      name: "addRowAfter",
+      tooltip: "Insert row before",
       icon: InsertAboveIcon,
+      attrs: { index: index - 1 },
       active: () => false,
+      visible: index !== 0,
     },
     {
       name: "addRowAfter",
-      tooltip: "Insert column after",
+      tooltip: "Insert row after",
       icon: InsertBelowIcon,
+      attrs: { index },
       active: () => false,
     },
     {

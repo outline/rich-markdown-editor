@@ -6,8 +6,6 @@ import {
   addColumnBefore,
   addColumnAfter,
   deleteColumn,
-  addRowBefore,
-  addRowAfter,
   deleteRow,
   deleteTable,
   toggleHeaderColumn,
@@ -16,7 +14,12 @@ import {
   setCellAttr,
   fixTables,
 } from "prosemirror-tables";
-import { getCellsInColumn, createTable } from "prosemirror-utils";
+import {
+  getCellsInColumn,
+  createTable,
+  moveRow,
+  addRowAt,
+} from "prosemirror-utils";
 import { Plugin, TextSelection } from "prosemirror-state";
 
 export default class Table extends Node {
@@ -69,8 +72,16 @@ export default class Table extends Node {
       addColumnBefore: () => addColumnBefore,
       addColumnAfter: () => addColumnAfter,
       deleteColumn: () => deleteColumn,
-      addRowBefore: () => addRowBefore,
-      addRowAfter: () => addRowAfter,
+      addRowAfter: ({ index }) => (state, dispatch) => {
+        if (index === 0) {
+          // A little hack to avoid cloning the heading row by cloning the row
+          // beneath and then moving it to the right index.
+          const tr = addRowAt(index + 2, true)(state.tr);
+          dispatch(moveRow(index + 2, index + 1)(tr));
+        } else {
+          dispatch(addRowAt(index + 1, true)(state.tr));
+        }
+      },
       deleteRow: () => deleteRow,
       deleteTable: () => deleteTable,
       toggleHeaderColumn: () => toggleHeaderColumn,

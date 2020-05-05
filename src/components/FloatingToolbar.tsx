@@ -140,7 +140,10 @@ export default class FloatingToolbar extends React.Component<Props> {
       const index = path[path.length - 5];
       items = getTableColMenuItems(state, index);
     } else if (isRowSelection) {
-      items = getTableRowMenuItems();
+      // TODO: There must be a more reliable way of getting the row index
+      const path = selection.$from.path;
+      const index = path[path.length - 8];
+      items = getTableRowMenuItems(state, index);
     } else {
       items = getFormattingMenuItems(state);
     }
