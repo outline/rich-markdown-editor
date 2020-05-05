@@ -10,12 +10,15 @@ import {
 } from "outline-icons";
 import { isInTable } from "prosemirror-tables";
 import { EditorState } from "prosemirror-state";
-import isNodeActive from "../queries/isNodeActive";
+import isInList from "../queries/isInList";
 import isMarkActive from "../queries/isMarkActive";
+import isNodeActive from "../queries/isNodeActive";
 
 export default function formattingMenuItems(state: EditorState) {
   const { schema } = state;
   const isTable = isInTable(state);
+  const isList = isInList(state);
+  const allowBlocks = !isTable && !isList;
 
   return [
     {
@@ -44,7 +47,7 @@ export default function formattingMenuItems(state: EditorState) {
     },
     {
       name: "separator",
-      visible: !isTable,
+      visible: allowBlocks,
     },
     {
       name: "heading",
@@ -52,7 +55,7 @@ export default function formattingMenuItems(state: EditorState) {
       icon: Heading1Icon,
       active: isNodeActive(schema.nodes.heading, { level: 1 }),
       attrs: { level: 1 },
-      visible: !isTable,
+      visible: allowBlocks,
     },
     {
       name: "heading",
@@ -60,7 +63,7 @@ export default function formattingMenuItems(state: EditorState) {
       icon: Heading2Icon,
       active: isNodeActive(schema.nodes.heading, { level: 2 }),
       attrs: { level: 2 },
-      visible: !isTable,
+      visible: allowBlocks,
     },
     {
       name: "blockquote",
@@ -68,7 +71,7 @@ export default function formattingMenuItems(state: EditorState) {
       icon: BlockQuoteIcon,
       active: isNodeActive(schema.nodes.blockquote),
       attrs: { level: 2 },
-      visible: !isTable,
+      visible: allowBlocks,
     },
     {
       name: "separator",
