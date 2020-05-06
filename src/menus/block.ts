@@ -19,7 +19,7 @@ export default function blockMenuItems() {
       title: "Big heading",
       keywords: "h1 heading1 title",
       icon: Heading1Icon,
-      shortcut: "⌘ ⇧ 1",
+      shortcut: "^ ⇧ 1",
       attrs: { level: 1 },
     },
     {
@@ -27,7 +27,7 @@ export default function blockMenuItems() {
       title: "Medium heading",
       keywords: "h2 heading2",
       icon: Heading2Icon,
-      shortcut: "⌘ ⇧ 2",
+      shortcut: "^ ⇧ 2",
       attrs: { level: 2 },
     },
     {
@@ -35,7 +35,7 @@ export default function blockMenuItems() {
       title: "Small heading",
       keywords: "h3 heading3",
       icon: Heading3Icon,
-      shortcut: "⌘ ⇧ 3",
+      shortcut: "^ ⇧ 3",
       attrs: { level: 3 },
     },
     {
