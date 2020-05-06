@@ -79,6 +79,7 @@ export const dark = {
   code: colors.almostWhite,
   cursor: colors.white,
   divider: "#4E5C6E",
+  placeholder: "#52657A",
 
   toolbarBackground: colors.white,
   toolbarInput: colors.black10,

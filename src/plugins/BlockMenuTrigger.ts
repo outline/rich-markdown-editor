@@ -91,21 +91,48 @@ export default class BlockMenuTrigger extends Extension {
 
             const decorations: Decoration[] = [];
             const isEmpty = parent && !parent.node.textContent;
+            const isSlash = parent && parent.node.textContent === "/";
             const isTopLevel = state.selection.$from.depth === 1;
 
-            if (isEmpty && isTopLevel) {
-              decorations.push(
-                Decoration.widget(parent.pos, () => {
-                  const icon = document.createElement("button");
-                  icon.type = "button";
-                  icon.className = "block-menu-trigger";
-                  icon.innerText = "+";
-                  icon.addEventListener("click", () => {
-                    this.options.onOpen("");
-                  });
-                  return icon;
-                })
-              );
+            if (isTopLevel) {
+              if (isEmpty) {
+                decorations.push(
+                  Decoration.widget(parent.pos, () => {
+                    const icon = document.createElement("button");
+                    icon.type = "button";
+                    icon.className = "block-menu-trigger";
+                    icon.innerText = "+";
+                    icon.addEventListener("click", () => {
+                      this.options.onOpen("");
+                    });
+                    return icon;
+                  })
+                );
+
+                decorations.push(
+                  Decoration.node(
+                    parent.pos,
+                    parent.pos + parent.node.nodeSize,
+                    {
+                      class: "placeholder",
+                      "data-empty-text": "Type '/' to insert…",
+                    }
+                  )
+                );
+              }
+
+              if (isSlash) {
+                decorations.push(
+                  Decoration.node(
+                    parent.pos,
+                    parent.pos + parent.node.nodeSize,
+                    {
+                      class: "placeholder",
+                      "data-empty-text": "  Keep typing to filter…",
+                    }
+                  )
+                );
+              }
 
               return DecorationSet.create(state.doc, decorations);
             }
