@@ -13,6 +13,7 @@ import {
   toggleHeaderCell,
   setCellAttr,
   fixTables,
+  isInTable,
 } from "prosemirror-tables";
 import {
   getCellsInColumn,
@@ -96,6 +97,16 @@ export default class Table extends Node {
     return {
       Tab: goToNextCell(1),
       "Shift-Tab": goToNextCell(-1),
+      Enter: (state, dispatch) => {
+        if (!isInTable(state)) return false;
+
+        // TODO: Adding row at the end for now, can we find the current cell
+        // row index and add the row below that?
+        const cells = getCellsInColumn(0)(state.selection);
+
+        dispatch(addRowAt(cells.length, true)(state.tr));
+        return true;
+      },
     };
   }
 

@@ -12,6 +12,8 @@ import Menu from "./Menu";
 import isMarkActive from "../queries/isMarkActive";
 import getMarkRange from "../queries/getMarkRange";
 import isNodeActive from "../queries/isNodeActive";
+import getColumnIndex from "../queries/getColumnIndex";
+import getRowIndex from "../queries/getRowIndex";
 
 const SSR = typeof window === "undefined";
 
@@ -123,27 +125,19 @@ export default class FloatingToolbar extends React.Component<Props> {
       return null;
     }
 
-    const isColSelection =
-      selection.isColSelection && selection.isColSelection();
-    const isRowSelection =
-      selection.isRowSelection && selection.isRowSelection();
-    const isTableSelection = isColSelection && isRowSelection;
+    const colIndex = getColumnIndex(state.selection);
+    const rowIndex = getRowIndex(state.selection);
+    const isTableSelection = colIndex !== undefined && rowIndex !== undefined;
     const link = isMarkActive(state.schema.marks.link)(state);
     const range = getMarkRange(selection.$from, state.schema.marks.link);
 
     let items = [];
     if (isTableSelection) {
       items = getTableMenuItems();
-    } else if (isColSelection) {
-      // TODO: There must be a more reliable way of getting the column index
-      const path = selection.$from.path;
-      const index = path[path.length - 5];
-      items = getTableColMenuItems(state, index);
-    } else if (isRowSelection) {
-      // TODO: There must be a more reliable way of getting the row index
-      const path = selection.$from.path;
-      const index = path[path.length - 8];
-      items = getTableRowMenuItems(state, index);
+    } else if (colIndex !== undefined) {
+      items = getTableColMenuItems(state, colIndex);
+    } else if (rowIndex !== undefined) {
+      items = getTableRowMenuItems(state, rowIndex);
     } else {
       items = getFormattingMenuItems(state);
     }
