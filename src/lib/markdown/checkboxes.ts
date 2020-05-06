@@ -1,17 +1,20 @@
+import MarkdownIt from "markdown-it";
+import Token from "markdown-it/lib/token";
+
 const CHECKBOX_REGEX = /\[(X|\s|_|-)\](\s(.*))?/i;
 
-function matches(token) {
+function matches(token: Token) {
   return token.content.match(CHECKBOX_REGEX);
 }
 
-function isInline(token): boolean {
+function isInline(token: Token): boolean {
   return token.type === "inline";
 }
-function isParagraph(token): boolean {
+function isParagraph(token: Token): boolean {
   return token.type === "paragraph_open";
 }
 
-function looksLikeChecklist(tokens, index): boolean {
+function looksLikeChecklist(tokens: Token[], index: number) {
   return (
     isInline(tokens[index]) &&
     isParagraph(tokens[index - 1]) &&
@@ -19,7 +22,7 @@ function looksLikeChecklist(tokens, index): boolean {
   );
 }
 
-export default function markdownItCheckbox(md): void {
+export default function markdownItCheckbox(md: MarkdownIt): void {
   // insert a new rule after the "inline" rules are parsed
   md.core.ruler.after("inline", "checkboxes", state => {
     const tokens = state.tokens;
@@ -59,5 +62,7 @@ export default function markdownItCheckbox(md): void {
         tokens[j].type = "checkbox_item_close";
       }
     }
+
+    return false;
   });
 }

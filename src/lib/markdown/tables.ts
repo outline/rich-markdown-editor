@@ -40,5 +40,7 @@ export default function markdownTables(md: MarkdownIt) {
         tokens.splice(i, 0, new Token("paragraph_close", "p", -1));
       }
     }
+
+    return false;
   });
 }

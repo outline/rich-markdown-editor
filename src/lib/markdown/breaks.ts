@@ -53,5 +53,7 @@ export default function markdownBreakToParagraphs(md: MarkdownIt) {
         tokens.splice(i - 1, 3, ...nodes);
       }
     }
+
+    return false;
   });
 }

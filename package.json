@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.14.149",
-    "@types/markdown-it": "^0.0.9",
+    "@types/markdown-it": "^10.0.1",
     "@types/prosemirror-commands": "^1.0.1",
     "@types/prosemirror-dropcursor": "^1.0.0",
     "@types/prosemirror-gapcursor": "^1.0.1",

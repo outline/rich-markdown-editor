@@ -70,6 +70,8 @@ export default function(getLinkComponent) {
           }
         }
       }
+
+      return false;
     });
   };
 }
