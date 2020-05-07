@@ -64,6 +64,9 @@ A React component that will be wrapped around items that have an optional toolti
 - `placement`: Enum `top`, `bottom`, `left`, `right`
 - `children`: The component that the tooltip wraps, must be rendered
 
+#### `headingsOffset`
+
+A number that will offset the document headings by a number of levels. For example, if you already nest the editor under a main `h1` title you might want the user to only be able to create `h2` headings and below, in this case you would set the prop to `1`.
 
 ### Callbacks
 

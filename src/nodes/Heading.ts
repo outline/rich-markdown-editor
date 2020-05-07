@@ -44,7 +44,11 @@ export default class Heading extends Node {
         button.className = "heading-anchor";
         button.addEventListener("click", this.handleCopyLink());
 
-        return [`h${node.attrs.level}`, button, ["span", 0]];
+        return [
+          `h${node.attrs.level + (this.options.offset || 0)}`,
+          button,
+          ["span", 0],
+        ];
       },
     };
   }

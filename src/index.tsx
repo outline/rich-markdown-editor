@@ -73,6 +73,7 @@ export type Props = {
   readOnly?: boolean;
   dark?: boolean;
   theme?: typeof theme;
+  headingsOffset?: number;
   uploadImage?: (file: File) => Promise<string>;
   onSave?: ({ done: boolean }) => void;
   onCancel?: () => void;
@@ -198,6 +199,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new ListItem(),
         new Heading({
           onShowToast: this.props.onShowToast,
+          offset: this.props.headingsOffset,
         }),
         new HorizontalRule(),
         new Image({
