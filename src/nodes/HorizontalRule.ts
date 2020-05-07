@@ -47,7 +47,7 @@ export default class HorizontalRule extends Node {
   }
 
   toMarkdown(state, node) {
-    state.write(node.attrs.markup || "---");
+    state.write(node.attrs.markup || "\n---");
     state.closeBlock(node);
   }
 
