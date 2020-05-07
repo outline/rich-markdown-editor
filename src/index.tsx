@@ -381,7 +381,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       // querySelector will throw an error if the hash begins with a number
       // or contains a period. This is protected against now by safeSlugify
       // however previous links may be in the wild.
-      console.warn("Attempted to scroll to invalid hash", err);
+      console.warn(`Attempted to scroll to invalid hash: ${hash}`, err);
     }
   }
 
@@ -604,18 +604,6 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
       .heading-anchor {
         opacity: 1;
       }
-    }
-  }
-
-  .heading-name:first-child h1:not(.placeholder) {
-    &:before {
-      display: none;
-    }
-  }
-
-  .heading-name:first-child h1 {
-    .heading-anchor {
-      display: none;
     }
   }
 
