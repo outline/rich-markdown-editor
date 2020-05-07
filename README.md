@@ -5,7 +5,7 @@
 A React and [Prosemirror](https://prosemirror.net/) based editor that powers [Outline](http://getoutline.com) and can also be used for displaying content in a read-only fashion.
 The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown.
 
-> Important Note: This project is **not attempting** to be an all-purpose Markdown editor. It is built for the [Outline](http://getoutline.com) knowledge base, and whilst others are welcome to fork or use this package in your own products, development decisions are centered around the needs of Outline. 
+> Important Note: This project is **not attempting to be an all-purpose Markdown editor**. It is built for the [Outline](http://getoutline.com) knowledge base, and whilst others are welcome to fork or use this package in your own products, development decisions are centered around the needs of Outline. 
 
 ## Usage
 
@@ -50,11 +50,11 @@ Allows additional [Prosemirror plugins](https://prosemirror.net/docs/ref/#state.
 
 #### `theme`
 
-Allows overriding the inbuilt theme to brand the editor, for example use your own font face and brand colors to have the editor fit within your application. See the [inbuilt theme](/src/theme.js) for an example of the keys that should be provided.
+Allows overriding the inbuilt theme to brand the editor, for example use your own font face and brand colors to have the editor fit within your application. See the [inbuilt theme](/src/theme.ts) for an example of the keys that should be provided.
 
 #### `dark`
 
-With `dark` set to `true` the editor will use a default dark theme that's included. See the [source here](/src/theme.js).
+With `dark` set to `true` the editor will use a default dark theme that's included. See the [source here](/src/theme.ts).
 
 #### `tooltip`
 
@@ -107,7 +107,7 @@ Triggered once an image upload has succeeded or failed.
 
 #### `onSearchLink(term: string)`
 
-The editor provides an ability to search for links to insert from the formatting toolbar. If this callback is provided it should accept a search term as the only parameter and return a promise that resolves to an array of [SearchResult](/src/types.js) objects. eg:
+The editor provides an ability to search for links to insert from the formatting toolbar. If this callback is provided it should accept a search term as the only parameter and return a promise that resolves to an array of objects. eg:
 
 #### `onShowToast(message: string)`
 
