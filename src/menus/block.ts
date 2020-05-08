@@ -10,6 +10,7 @@ import {
   TableIcon,
   TodoListIcon,
   ImageIcon,
+  PinIcon,
 } from "outline-icons";
 
 export default function blockMenuItems() {
@@ -89,6 +90,12 @@ export default function blockMenuItems() {
       icon: HorizontalRuleIcon,
       shortcut: "⌘ _",
       keywords: "horizontal rule break line",
+    },
+    {
+      name: "notice",
+      title: "Notice",
+      icon: PinIcon,
+      keywords: "notice info highlight",
     },
     {
       name: "image",
