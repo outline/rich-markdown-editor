@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "copy-to-clipboard": "^3.0.8",
-    "emoji-regex": "^8.0.0",
     "lodash": "^4.17.11",
     "markdown-it-mark": "^3.0.0",
     "outline-icons": "^1.13.0",

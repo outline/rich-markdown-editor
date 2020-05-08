@@ -1,4 +1,3 @@
-import emojiRegex from "emoji-regex";
 import { Plugin } from "prosemirror-state";
 import copy from "copy-to-clipboard";
 import { Decoration, DecorationSet } from "prosemirror-view";
@@ -116,22 +115,6 @@ export default class Heading extends Node {
 
             doc.descendants((node, pos) => {
               if (node.type.name !== this.name) return;
-
-              // offset emoji in document title node
-              if (node.attrs.level === 1) {
-                const regex = emojiRegex();
-                const text = node.textContent;
-                const matches = regex.exec(text);
-                const firstEmoji = matches ? matches[0] : null;
-                const startsWithEmoji =
-                  firstEmoji && text.startsWith(firstEmoji);
-
-                decorations.push(
-                  Decoration.node(pos, pos + node.nodeSize, {
-                    class: startsWithEmoji ? "with-emoji" : undefined,
-                  })
-                );
-              }
 
               decorations.push(
                 Decoration.node(pos, pos + node.nodeSize, {
