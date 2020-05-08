@@ -227,9 +227,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         }),
         new Strikethrough(),
         new OrderedList(),
-        new Placeholder({
-          placeholder: this.props.placeholder,
-        }),
         new History(),
         new SmartText(),
         new TrailingNode(),
@@ -242,6 +239,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new BlockMenuTrigger({
           onOpen: this.handleOpenBlockMenu,
           onClose: this.handleCloseBlockMenu,
+        }),
+        new Placeholder({
+          placeholder: this.props.placeholder,
         }),
         ...this.props.extensions,
       ],
