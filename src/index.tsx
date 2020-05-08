@@ -35,6 +35,7 @@ import Heading from "./nodes/Heading";
 import HorizontalRule from "./nodes/HorizontalRule";
 import Image from "./nodes/Image";
 import ListItem from "./nodes/ListItem";
+import Notice from "./nodes/Notice";
 import OrderedList from "./nodes/OrderedList";
 import Paragraph from "./nodes/Paragraph";
 import Table from "./nodes/Table";
@@ -197,6 +198,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new CheckboxItem(),
         new Embed(),
         new ListItem(),
+        new Notice(),
         new Heading({
           onShowToast: this.props.onShowToast,
           offset: this.props.headingsOffset,
@@ -641,6 +643,12 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
       height: 0;
       color: ${props => props.theme.placeholder};
     }
+  }
+
+  .notice-block {
+    background: lightblue;
+    border-radius: 4px;
+    padding: 8px 16px;
   }
 
   blockquote {

@@ -4,6 +4,7 @@ import checkboxPlugin from "./checkboxes";
 import embedsPlugin from "./embeds";
 import breakPlugin from "./breaks";
 import tablesPlugin from "./tables";
+import noticesPlugin from "./notices";
 
 export default function rules({
   getLinkComponent,
@@ -18,5 +19,6 @@ export default function rules({
     .use(breakPlugin)
     .use(checkboxPlugin)
     .use(markPlugin)
-    .use(tablesPlugin);
+    .use(tablesPlugin)
+    .use(noticesPlugin);
 }
