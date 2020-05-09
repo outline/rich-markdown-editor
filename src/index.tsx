@@ -684,13 +684,13 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     list-style: none;
     padding-left: 0;
     margin-left: -4px;
-
-    ul.checkbox_list {
-      padding-left: 20px;
-    }
   }
 
-  ul.checkbox_list li.checked > span > p {
+  ul.checkbox_list li {
+    display: flex;
+  }
+
+  ul.checkbox_list li.checked > div > p {
     color: ${props => props.theme.textSecondary};
     text-decoration: line-through;
   }
