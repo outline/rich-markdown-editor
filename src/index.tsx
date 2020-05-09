@@ -433,6 +433,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     this.view.dispatch(selectTable(state.tr));
   };
 
+  // 'public' methods
   focusAtStart = () => {
     const selection = Selection.atStart(this.view.state.doc);
     const transaction = this.view.state.tr.setSelection(selection);
@@ -445,6 +446,19 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     const transaction = this.view.state.tr.setSelection(selection);
     this.view.dispatch(transaction);
     this.view.focus();
+  };
+
+  getHeadings = () => {
+    const headings = [];
+    this.view.state.doc.forEach(node => {
+      if (node.type.name === "heading") {
+        headings.push({
+          name: node.textContent,
+          level: node.attrs.level,
+        });
+      }
+    });
+    return headings;
   };
 
   render = () => {

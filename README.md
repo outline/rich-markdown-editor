@@ -171,6 +171,21 @@ import { history } from "react-router";
 
 This callback allows links to "request" an alternative component to display instead of an inline link. Given a link node return `undefined` for no replacement or a valid React component to replace the standard link display. This is used to support embeds.
 
+### Interface
+
+The Editor component exposes a few methods for interacting with the mounted editor.
+
+#### `focusAtStart`
+Place the cursor at the start of the document and focus it.
+
+#### `focusAtEnd`
+Place the cursor at the end of the document and focus it.
+
+#### `getHeadings`
+Returns an array of objects with the text content of all the headings in the document and
+their level in the hierarchy. This is useful to construct your own table of contents since
+the `toc` option was removed in v10.
+
 
 ## Contributing
 
