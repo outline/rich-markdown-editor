@@ -41,15 +41,20 @@ export default class CheckboxItem extends Node {
           class: node.attrs.checked ? "checked" : undefined,
         },
         [
-          "input",
+          "span",
           {
-            id: node.attrs.id,
-            type: "checkbox",
             contentEditable: false,
-            checked: node.attrs.checked ? true : undefined,
           },
+          [
+            "input",
+            {
+              id: node.attrs.id,
+              type: "checkbox",
+              checked: node.attrs.checked ? true : undefined,
+            },
+          ],
         ],
-        ["span", 0],
+        ["div", 0],
       ],
     };
   }
@@ -66,6 +71,9 @@ export default class CheckboxItem extends Node {
               event.target instanceof HTMLInputElement &&
               event.target.type === "checkbox"
             ) {
+              event.preventDefault();
+              event.stopPropagation();
+
               const result = view.posAtCoords({
                 left: event.clientX,
                 top: event.clientY,
