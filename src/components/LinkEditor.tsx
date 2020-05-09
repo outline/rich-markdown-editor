@@ -212,7 +212,7 @@ class LinkEditor extends React.Component<Props> {
 const Wrapper = styled(Flex)`
   margin-left: -8px;
   margin-right: -8px;
-  min-width: 300px;
+  min-width: 336px;
 `;
 
 const SearchResults = styled.ol`
