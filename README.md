@@ -70,7 +70,7 @@ A number that will offset the document headings by a number of levels. For examp
 
 ### Callbacks
 
-#### `uploadImage`
+#### `uploadImage(file: Blob): Promise<string>`
 
 If you want the editor to support images then this callback must be provided. The callback should accept a single `File` object and return a promise the resolves to a url when the image has been uploaded to a storage location, for example S3. eg:
 
@@ -83,37 +83,31 @@ If you want the editor to support images then this callback must be provided. Th
 />
 ```
 
-#### `onSave({ done: boolean })`
+#### `onSave({ done: boolean }): void`
 
 This callback is triggered when the user explicitly requests to save using a keyboard shortcut, `Cmd+S` or `Cmd+Enter`. You can use this as a signal to save the document to a remote server.
 
-#### `onCancel`
+#### `onCancel(): void`
 
 This callback is triggered when the `Cmd+Escape` is hit within the editor. You may use it to cancel editing.
 
-#### `onChange(() => value)`
+#### `onChange(() => value): void`
 
 This callback is triggered when the contents of the editor changes, usually due to user input such as a keystroke or using formatting options. You may use this to locally persist the editors state, see the [inbuilt example](/example/src/index.js).
 
 It returns a function which when called returns the current text value of the document. This optimization is made to avoid serializing the state of the document to text on every change event, allowing the host app to choose when it needs the serialized value.
 
-#### `onImageUploadStart`
+#### `onImageUploadStart(): void`
 
 This callback is triggered before `uploadImage` and can be used to show some UI that indicates an upload is in progress.
 
-#### `onImageUploadStop`
+#### `onImageUploadStop(): void`
 
 Triggered once an image upload has succeeded or failed.
 
-#### `onSearchLink(term: string)`
+#### `onSearchLink(term: string): Promise<{ title: string, url: string }[]>`
 
 The editor provides an ability to search for links to insert from the formatting toolbar. If this callback is provided it should accept a search term as the only parameter and return a promise that resolves to an array of objects. eg:
-
-#### `onShowToast(message: string)`
-
-Triggered when the editor wishes to show a toast message to the user. Hook into your apps
-notification system, or simplisticly use `window.alert(message)`.
-
 
 ```javascript
 <Editor
@@ -128,13 +122,13 @@ notification system, or simplisticly use `window.alert(message)`.
 />
 ```
 
-#### `onShowToast(message: string)`
+#### `onShowToast(message: string): void`
 
 Triggered when the editor wishes to show a toast message to the user. Hook into your apps
 notification system, or simplisticly use `window.alert(message)`.
 
 
-#### `onClickLink(href: string)`
+#### `onClickLink(href: string): void`
 
 This callback allows overriding of link handling. It's often the case that you want to have external links open a new window and have internal links use something like `react-router` to navigate. If no callback is provided then default behavior of opening a new tab will apply to all links. eg:
 
@@ -153,7 +147,7 @@ import { history } from "react-router";
 />
 ```
 
-#### `onClickHashtag(tag: string)`
+#### `onClickHashtag(tag: string): void`
 
 This callback allows handling of clicking on hashtags in the document text. If no callback is provided then hashtags will render as regular text, so you can choose if to support them or not by passing this prop.
 
@@ -167,7 +161,7 @@ import { history } from "react-router";
 />
 ```
 
-#### `getLinkComponent(url: string)`
+#### `getLinkComponent(url: string): void | ReactNode`
 
 This callback allows links to "request" an alternative component to display instead of an inline link. Given a url return `undefined` for no replacement or a valid React component to replace the standard link display. This is used to support embeds.
 
@@ -185,10 +179,10 @@ This callback allows links to "request" an alternative component to display inst
 
 The Editor component exposes a few methods for interacting with the mounted editor.
 
-#### `focusAtStart()`
+#### `focusAtStart(): void`
 Place the cursor at the start of the document and focus it.
 
-#### `focusAtEnd()`
+#### `focusAtEnd(): void`
 Place the cursor at the end of the document and focus it.
 
 #### `getHeadings(): { title: string, level: number }[]`
