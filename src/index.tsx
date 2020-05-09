@@ -649,6 +649,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     background: lightblue;
     border-radius: 4px;
     padding: 8px 16px;
+    margin: 8px 0;
   }
 
   blockquote {
