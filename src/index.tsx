@@ -453,7 +453,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     this.view.state.doc.forEach(node => {
       if (node.type.name === "heading") {
         headings.push({
-          name: node.textContent,
+          title: node.textContent,
           level: node.attrs.level,
         });
       }

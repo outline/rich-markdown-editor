@@ -167,21 +167,31 @@ import { history } from "react-router";
 />
 ```
 
-#### `getLinkComponent(Node)`
+#### `getLinkComponent(url: string)`
 
-This callback allows links to "request" an alternative component to display instead of an inline link. Given a link node return `undefined` for no replacement or a valid React component to replace the standard link display. This is used to support embeds.
+This callback allows links to "request" an alternative component to display instead of an inline link. Given a url return `undefined` for no replacement or a valid React component to replace the standard link display. This is used to support embeds.
+
+```javascript
+<Editor
+  getLinkComponent={url => {
+    if (url.match(/https?:\/\/youtube\.com/)) {
+      return <MyFancyYoutubeEmbed url={url} />;
+    }
+  }}
+/>
+```
 
 ### Interface
 
 The Editor component exposes a few methods for interacting with the mounted editor.
 
-#### `focusAtStart`
+#### `focusAtStart()`
 Place the cursor at the start of the document and focus it.
 
-#### `focusAtEnd`
+#### `focusAtEnd()`
 Place the cursor at the end of the document and focus it.
 
-#### `getHeadings`
+#### `getHeadings(): { title: string, level: number }[]`
 Returns an array of objects with the text content of all the headings in the document and
 their level in the hierarchy. This is useful to construct your own table of contents since
 the `toc` option was removed in v10.
