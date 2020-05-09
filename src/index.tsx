@@ -16,6 +16,7 @@ import Flex from "./components/Flex";
 import { SearchResult } from "./components/LinkEditor";
 import FloatingToolbar from "./components/FloatingToolbar";
 import BlockMenu from "./components/BlockMenu";
+import Tooltip from "./components/Tooltip";
 import Extension from "./lib/Extension";
 import ExtensionManager from "./lib/ExtensionManager";
 import ComponentView from "./lib/ComponentView";
@@ -110,7 +111,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       window.open(href, "_blank");
     },
     extensions: [],
-    tooltip: "span",
+    tooltip: Tooltip,
   };
 
   state = {
