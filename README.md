@@ -2,18 +2,14 @@ Keep up to date with https://github.com/outline/rich-markdown-editor
 https://stefanbauer.me/articles/how-to-keep-your-git-fork-up-to-date
 
 
-> READ THIS: The `10.0.0` prereleases are based on the [ProseMirror fork](https://github.com/outline/rich-markdown-editor/pull/150) and are not yet production ready or feature complete. Continue to use `9.x` for the most reliable editor.
-
-
 [![npm version](https://badge.fury.io/js/rich-markdown-editor.svg)](https://badge.fury.io/js/rich-markdown-editor) [![CircleCI](https://img.shields.io/circleci/project/github/outline/rich-markdown-editor.svg)](https://circleci.com/gh/outline/rich-markdown-editor) [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/outline) [![Formatted with Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat)](https://github.com/prettier/prettier)
 
 # rich-markdown-editor
 
-A React and [Slate](https://github.com/ianstormtaylor/slate) based editor that powers the [Outline wiki](http://getoutline.com) and can also be used for displaying content in a read-only fashion.
-The editor is WYSIWYG and includes many formatting tools whilst retaining the ability to write markdown
-shortcuts inline and output Markdown.
+A React and [Prosemirror](https://prosemirror.net/) based editor that powers [Outline](http://getoutline.com) and can also be used for displaying content in a read-only fashion.
+The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown.
 
-> Note: This project is **not attempting** to be an all-purpose Markdown editor. It renders and outputs a subset of the Markdown schema, as well as supporting markdown-like syntax as shortcuts for rich text editing.
+> Important Note: This project is **not attempting to be an all-purpose Markdown editor**. It is built for the [Outline](http://getoutline.com) knowledge base, and whilst others are welcome to fork or use this package in your own products, development decisions are centered around the needs of Outline. 
 
 ## Usage
 
@@ -41,44 +37,28 @@ previously saved content for the user to continue editing.
 
 #### `placeholder`
 
-Allows overriding of the placeholder text displayed in the main body content. The default is "Write something nice…".
+Allows overriding of the placeholder. The default is "Write something nice…".
 
 #### `readOnly`
 
-With `readOnly` set to `false` the editor is optimized for composition. When `true` the editor can be used to display previously written content – headings gain anchors, a table of contents displays and links become clickable.
+With `readOnly` set to `false` the editor is optimized for composition. When `true` the editor can be used to display previously written content – headings gain anchors and links become clickable.
 
 #### `autoFocus`
 
-When set `true` together with `readOnly` set to `false`, focus at the
+When set `true` together with `readOnly` set to `false`, focus at the end of the
 document automatically.
 
-#### `spellCheck`
+#### `extensions`
 
-Set to false to prevent spellchecking – defaults to true.
-
-#### `toc`
-
-With `toc` set to `true` the editor will display a table of contents for headings in the document. This is particularly useful for larger documents and allows quick jumping to key sections.
-
-#### `plugins`
-
-Allows additional [Slate plugins](https://github.com/ianstormtaylor/slate/blob/master/docs/general/plugins.md) to be passed to the underlying Slate editor.
-
-#### `schema`
-
-Allows additional Slate schema to be passed to the underlying Slate editor.
-
-#### `serializer`
-
-Allows overriding the serializer, defaults to `slate-md-serializer` when not set.
+Allows additional [Prosemirror plugins](https://prosemirror.net/docs/ref/#state.Plugin_System) to be passed to the underlying Prosemirror instance.
 
 #### `theme`
 
-Allows overriding the inbuilt theme to brand the editor, for example use your own font face and brand colors to have the editor fit within your application. See the [inbuilt theme](/src/theme.js) for an example of the keys that should be provided.
+Allows overriding the inbuilt theme to brand the editor, for example use your own font face and brand colors to have the editor fit within your application. See the [inbuilt theme](/src/theme.ts) for an example of the keys that should be provided.
 
 #### `dark`
 
-With `dark` set to `true` the editor will use a default dark theme that's included. See the [source here](/src/theme.js).
+With `dark` set to `true` the editor will use a default dark theme that's included. See the [source here](/src/theme.ts).
 
 #### `tooltip`
 
@@ -91,7 +71,6 @@ A React component that will be wrapped around items that have an optional toolti
 #### `headingsOffset`
 
 A number that will offset the document headings by a number of levels. For example, if you already nest the editor under a main `h1` title you might want the user to only be able to create `h2` headings and below, in this case you would set the prop to `1`.
-
 
 ### Callbacks
 
@@ -118,9 +97,9 @@ This callback is triggered when the `Cmd+Escape` is hit within the editor. You m
 
 #### `onChange(() => value)`
 
-This callback is triggered when the contents of the editor changes, usually due to user input such as a keystroke or using formatting options. You may use this to locally persist the editors state, see the [inbuilt example](/example/index.js).
+This callback is triggered when the contents of the editor changes, usually due to user input such as a keystroke or using formatting options. You may use this to locally persist the editors state, see the [inbuilt example](/example/src/index.js).
 
-As of `v4.0.0` this callback returns a function which when called returns the current text value of the document. This optimization is made to avoid serializing the state of the document to text on every change event, allowing the host app to choose when it needs this value.
+It returns a function which when called returns the current text value of the document. This optimization is made to avoid serializing the state of the document to text on every change event, allowing the host app to choose when it needs the serialized value.
 
 #### `onImageUploadStart`
 
@@ -132,7 +111,13 @@ Triggered once an image upload has succeeded or failed.
 
 #### `onSearchLink(term: string)`
 
-The editor provides an ability to search for links to insert from the formatting toolbar. If this callback is provided it should accept a search term as the only parameter and return a promise that resolves to an array of [SearchResult](/src/types.js) objects. eg:
+The editor provides an ability to search for links to insert from the formatting toolbar. If this callback is provided it should accept a search term as the only parameter and return a promise that resolves to an array of objects. eg:
+
+#### `onShowToast(message: string)`
+
+Triggered when the editor wishes to show a toast message to the user. Hook into your apps
+notification system, or simplisticly use `window.alert(message)`.
+
 
 ```javascript
 <Editor
@@ -155,7 +140,7 @@ notification system, or simplisticly use `window.alert(message)`.
 
 #### `onClickLink(href: string)`
 
-This callback allows overriding of link handling. It's often the case that you want to have external links open a new window whilst internal links may use something like `react-router` to navigate. If no callback is provided then default behavior will apply to all links. eg:
+This callback allows overriding of link handling. It's often the case that you want to have external links open a new window and have internal links use something like `react-router` to navigate. If no callback is provided then default behavior of opening a new tab will apply to all links. eg:
 
 
 ```javascript
@@ -188,55 +173,8 @@ import { history } from "react-router";
 
 #### `getLinkComponent(Node)`
 
-This callback allows links to request an alternative component to display instead of an inline link. Given a link node return `undefined` for no replacement or a valid React component to replace the standard link display. This is particularly useful for "embeds".
+This callback allows links to "request" an alternative component to display instead of an inline link. Given a link node return `undefined` for no replacement or a valid React component to replace the standard link display. This is used to support embeds.
 
-### Hiding Toolbar Buttons
-
-Buttons in either of the pop-up toolbars can be hidden by using a custom theme or overriding the supplied theme.
-
-```javascript
-import Editor, { theme } from 'rich-markdown-editor';
-
-const hiddenToolbarButtons = {
-  blocks: [
-    'image',
-    'table'
-  ],
-  marks: ['deleted', 'code', 'link', 'italic']
-};
-
-<Editor
-  theme={{ hiddenToolbarButtons, ...theme }}
-/>
-```
-
-### Customizing the serializer
-
-If on the need of customizing the serializer, you can customize it:
-
-```javascript
-// @flow
-import Editor from 'rich-markdown-editor';
-
-const MySerializer = {
-  deserialize: (str: string) => {
-    var v: Value;
-    // process given string and return a Value object
-    return v;
-  },
-  serialize: (value: Value) => {
-    var result = '';
-    // Transform given value into a string for storage
-    return result;
-  }
-};
-
-<Editor
-  serializer={MySerializer}
-/>
-```
-
-You can look [slate-md-serializer](https://github.com/tommoor/slate-md-serializer) for reference.
 
 ## Contributing
 

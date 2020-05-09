@@ -1,4 +1,3 @@
-// @flow
 import * as React from "react";
 import { debounce } from "lodash";
 import ReactDOM from "react-dom";
@@ -13,17 +12,18 @@ This is example content. It is persisted between reloads in localStorage.
 `;
 const defaultValue = savedText || exampleText;
 
-class GoogleEmbed extends React.Component<*> {
+class GoogleEmbed extends React.Component {
   render() {
-    const { attributes, node } = this.props;
-    return <p {...attributes}>Google Embed ({node.data.get("href")})</p>;
+    const { attrs } = this.props;
+    return <p>Google Embed ({attrs.href})</p>;
   }
 }
 
-class Example extends React.Component<*, { readOnly: boolean, dark: boolean }> {
+class Example extends React.Component {
   state = {
     readOnly: false,
     dark: localStorage.getItem("dark") === "enabled",
+    value: undefined,
   };
 
   handleToggleReadOnly = () => {
@@ -36,8 +36,18 @@ class Example extends React.Component<*, { readOnly: boolean, dark: boolean }> {
     localStorage.setItem("dark", dark ? "enabled" : "disabled");
   };
 
+  handleUpdateValue = () => {
+    const existing = localStorage.getItem("saved") || "";
+    const value = `${existing}\n\nedit!`;
+    localStorage.setItem("saved", value);
+
+    this.setState({ value });
+  };
+
   handleChange = debounce(value => {
-    localStorage.setItem("saved", value());
+    const text = value();
+    console.log(text);
+    localStorage.setItem("saved", text);
   }, 250);
 
   render() {
@@ -45,18 +55,25 @@ class Example extends React.Component<*, { readOnly: boolean, dark: boolean }> {
     if (body) body.style.backgroundColor = this.state.dark ? "#181A1B" : "#FFF";
 
     return (
-      <div style={{ marginTop: "60px" }}>
-        <p>
+      <div>
+        <div>
+          <br />
           <button type="button" onClick={this.handleToggleReadOnly}>
             {this.state.readOnly ? "Editable" : "Read Only"}
           </button>
           <button type="button" onClick={this.handleToggleDark}>
             {this.state.dark ? "Light Theme" : "Dark Theme"}
           </button>
-        </p>
+          <button type="button" onClick={this.handleUpdateValue}>
+            Update value
+          </button>
+        </div>
+        <br />
+        <br />
         <Editor
           id="example"
           readOnly={this.state.readOnly}
+          value={this.state.value}
           defaultValue={defaultValue}
           onSave={options => console.log("Save triggered", options)}
           onCancel={() => console.log("Cancel triggered")}
@@ -78,17 +95,19 @@ class Example extends React.Component<*, { readOnly: boolean, dark: boolean }> {
 
             // Delay to simulate time taken to upload
             return new Promise(resolve => {
-              setTimeout(() => resolve("http://lorempixel.com/400/200/"), 1500);
+              setTimeout(
+                () => resolve("https://loremflickr.com/1000/1000"),
+                1500
+              );
             });
           }}
-          getLinkComponent={node => {
-            if (node.data.get("href").match(/google/)) {
+          getLinkComponent={href => {
+            if (href.match(/google/)) {
               return GoogleEmbed;
             }
           }}
           dark={this.state.dark}
           autoFocus
-          toc
         />
       </div>
     );

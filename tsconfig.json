@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "sourceMap": true,
+    "strict": false,
+    "removeComments": true,
+    "noImplicitAny": false,
+    "esModuleInterop": true,
+    "allowJs": true,
+    "module": "commonjs",
+    "target": "es2017",
+    "jsx": "react",
+    "types": ["react"]
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "dist",
+    "node_modules"
+  ]
+}

@@ -1,27 +1,35 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require("path");
 
 module.exports = {
   mode: "development",
-  entry: [
-    "regenerator-runtime/runtime",
-    path.resolve(__dirname, "src", "index.js"),
-  ],
+
+  resolve: {
+    mainFields: ["browser", "main"],
+    extensions: [".ts", ".tsx", ".js"],
+  },
+
+  entry: path.resolve(__dirname, "src", "index.js"),
+
   output: {
     filename: "main.js",
     path: path.resolve(__dirname, "dist"),
   },
+
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.(tsx?|js)$/,
         exclude: /node_modules/,
-        use: {
-          loader: "babel-loader",
-        },
+        use: [
+          {
+            loader: "ts-loader",
+            options: {
+              transpileOnly: true,
+            },
+          },
+        ],
       },
     ],
-  },
-  resolve: {
-    mainFields: ["browser", "main"],
   },
 };
