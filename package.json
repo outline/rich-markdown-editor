@@ -1,5 +1,5 @@
 {
-  "name": "rich-markdown-editor",
+  "name": "traverse-markdown-editor",
   "description": "A rich text editor with Markdown shortcuts",
   "version": "10.0.0-13",
   "main": "dist/index.js",
@@ -81,7 +81,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/outline/rich-markdown-editor.git"
+    "url": "git+https://github.com/dominiczy/traverse-markdown-editor.git"
   },
   "keywords": [
     "editor",
@@ -91,7 +91,7 @@
   ],
   "author": "Tom Moor <tom.moor@gmail.com>",
   "bugs": {
-    "url": "https://github.com/outline/rich-markdown-editor/issues"
+    "url": "https://github.com/dominiczy/traverse-markdown-editor/issues"
   },
-  "homepage": "https://github.com/outline/rich-markdown-editor#readme"
+  "homepage": "https://github.com/dominiczy/traverse-markdown-editor#readme"
 }

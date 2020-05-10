@@ -4,7 +4,7 @@ https://stefanbauer.me/articles/how-to-keep-your-git-fork-up-to-date
 
 [![npm version](https://badge.fury.io/js/rich-markdown-editor.svg)](https://badge.fury.io/js/rich-markdown-editor) [![CircleCI](https://img.shields.io/circleci/project/github/outline/rich-markdown-editor.svg)](https://circleci.com/gh/outline/rich-markdown-editor) [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/outline) [![Formatted with Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat)](https://github.com/prettier/prettier)
 
-# rich-markdown-editor
+# traverse-markdown-editor
 
 A React and [Prosemirror](https://prosemirror.net/) based editor that powers [Outline](http://getoutline.com) and can also be used for displaying content in a read-only fashion.
 The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown.
@@ -14,7 +14,7 @@ The editor is WYSIWYG and includes formatting tools whilst retaining the ability
 ## Usage
 
 ```javascript
-import Editor from "rich-markdown-editor";
+import Editor from "traverse-markdown-editor";
 
 <Editor
   defaultValue="Hello world!"
