@@ -19,6 +19,9 @@ Steps to reproduce the behavior:
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
+**Version**
+If known, what is the version of the module in use.
+
 **Screenshots**
 If applicable, add screenshots or videos to help explain your problem.
 
