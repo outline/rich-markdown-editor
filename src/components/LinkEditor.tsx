@@ -37,18 +37,24 @@ class LinkEditor extends React.Component<Props> {
   };
 
   componentWillUnmount = () => {
+    // If we discarded the changes then nothing to do
     if (this.discardInputValue) {
       return;
     }
 
-    // update the link saved as the mark whenever the link editor closes
+    // If the link is the same as it was when the editor opened, nothing to do
+    if (this.state.value === this.initialValue) {
+      return;
+    }
+
+    // If the link is totally empty or only spaces then remove the mark
     let href = (this.state.value || "").trim();
     if (!href) {
       return this.handleRemoveLink();
     }
 
-    // if the input doesn't start with a protocol or relative slash, make sure
-    // a protocol is added
+    // If the input doesn't start with a protocol or relative slash, make sure
+    // a protocol is added to the beginning
     if (!isUrl(href) && !href.startsWith("/")) {
       href = `https://${href}`;
     }
@@ -58,7 +64,6 @@ class LinkEditor extends React.Component<Props> {
 
   save = (href: string): void => {
     this.discardInputValue = true;
-
     const { from, to } = this.props;
     const { state, dispatch } = this.props.view;
     const markType = state.schema.marks.link;
@@ -71,47 +76,49 @@ class LinkEditor extends React.Component<Props> {
   };
 
   handleKeyDown = (event: React.KeyboardEvent): void => {
-    if (event.key === "Enter") {
-      event.preventDefault();
+    switch (event.key) {
+      case "Enter": {
+        event.preventDefault();
 
-      if (this.state.selectedIndex >= 0) {
-        this.save(this.state.results[this.state.selectedIndex].url);
+        if (this.state.selectedIndex >= 0) {
+          this.save(this.state.results[this.state.selectedIndex].url);
+        }
+        this.moveSelectionToEnd();
+
+        return;
       }
-      this.moveSelectionToEnd();
+      case "Escape": {
+        event.preventDefault();
 
-      return;
-    }
-
-    if (event.key === "Escape") {
-      event.preventDefault();
-
-      if (this.initialValue) {
-        this.setState({ value: this.initialValue }, this.moveSelectionToEnd);
-      } else {
-        this.handleRemoveLink();
+        if (this.initialValue) {
+          this.setState({ value: this.initialValue }, this.moveSelectionToEnd);
+        } else {
+          this.handleRemoveLink();
+        }
+        return;
       }
-      return;
-    }
+      case "ArrowUp": {
+        event.preventDefault();
+        event.stopPropagation();
+        const prevIndex = this.state.selectedIndex - 1;
 
-    if (event.key === "ArrowUp") {
-      event.preventDefault();
-      event.stopPropagation();
-      const prevIndex = this.state.selectedIndex - 1;
+        this.setState({
+          selectedIndex: Math.max(0, prevIndex),
+        });
+        return;
+      }
+      case "ArrowDown":
+      case "Tab": {
+        event.preventDefault();
+        event.stopPropagation();
+        const total = this.state.results.length - 1;
+        const nextIndex = this.state.selectedIndex + 1;
 
-      this.setState({
-        selectedIndex: Math.max(0, prevIndex),
-      });
-    }
-
-    if (event.key === "ArrowDown" || event.key === "Tab") {
-      event.preventDefault();
-      event.stopPropagation();
-      const total = this.state.results.length - 1;
-      const nextIndex = this.state.selectedIndex + 1;
-
-      this.setState({
-        selectedIndex: Math.min(nextIndex, total),
-      });
+        this.setState({
+          selectedIndex: Math.min(nextIndex, total),
+        });
+        return;
+      }
     }
   };
 
