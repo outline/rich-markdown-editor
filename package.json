@@ -1,8 +1,9 @@
 {
   "name": "rich-markdown-editor",
   "description": "A rich text editor with Markdown shortcuts",
-  "version": "10.0.0-15",
-  "main": "dist/index.js",
+  "version": "10.0.0-16",
+  "main": "dist/lib/index.js",
+  "typings": "dist/@types/index.d.ts",
   "license": "BSD-3-Clause",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -11,6 +12,7 @@
     "build": "tsc",
     "prepublish": "yarn build"
   },
+  
   "dependencies": {
     "copy-to-clipboard": "^3.0.8",
     "lodash": "^4.17.11",
