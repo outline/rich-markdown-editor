@@ -702,7 +702,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
   ul,
   ol {
     margin: 0 0.1em;
-    padding-left: 1em;
+    padding: 0 0 0 1em;
 
     ul,
     ol {
@@ -712,8 +712,8 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
 
   ul.checkbox_list {
     list-style: none;
-    padding-left: 0;
-    margin-left: -4px;
+    padding: 0;
+    margin: 0;
   }
 
   ul.checkbox_list li {
@@ -728,7 +728,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
   ul.checkbox_list li input {
     pointer-events: ${props => (props.readOnly ? "none" : "initial")};
     opacity: ${props => (props.readOnly ? 0.75 : 1)};
-    margin-right: 0.5em;
+    margin: 0 0.5em 0 0;
     width: 16px;
     height: 16px;
   }
@@ -785,7 +785,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
   pre {
     display: block;
     overflow-x: auto;
-    padding: 1em 0;
+    padding: 0.75em 1em;
     line-height: 1.4em;
     position: relative;
     background: ${props => props.theme.codeBackground};
