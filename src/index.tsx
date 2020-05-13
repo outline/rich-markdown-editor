@@ -603,12 +603,28 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     }
   }
 
-  h1:not(.placeholder):before { content: "H1"; line-height: 3em; }
-  h2:not(.placeholder):before { content: "H2"; line-height: 2.8em; }
-  h3:not(.placeholder):before { content: "H3"; line-height: 2.3em; }
-  h4:not(.placeholder):before { content: "H4"; line-height: 2.2em; }
-  h5:not(.placeholder):before { content: "H5"; }
-  h6:not(.placeholder):before { content: "H6"; }
+  h1:not(.placeholder):before {
+    content: "H1";
+    line-height: 3em;
+  }
+  h2:not(.placeholder):before {
+    content: "H2";
+    line-height: 2.8em;
+  }
+  h3:not(.placeholder):before {
+    content: "H3";
+    line-height: 2.3em;
+  }
+  h4:not(.placeholder):before {
+    content: "H4";
+    line-height: 2.2em;
+  }
+  h5:not(.placeholder):before {
+    content: "H5";
+  }
+  h6:not(.placeholder):before {
+    content: "H6";
+  }
 
   .heading-name {
     color: ${props => props.theme.text};
@@ -758,7 +774,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
       select {
         display: ${props => (props.readOnly ? "none" : "inline")};
       }
-  
+
       button {
         display: ${props => (props.readOnly ? "inline" : "none")};
       }
@@ -776,7 +792,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     border: 1px solid ${props => props.theme.codeBorder};
 
     -webkit-font-smoothing: initial;
-    font-family: ${props => props.theme.fontFamilyMono}
+    font-family: ${props => props.theme.fontFamilyMono};
     font-size: 13px;
     direction: ltr;
     text-align: left;
@@ -812,7 +828,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
   }
 
   .token.namespace {
-    opacity: .7;
+    opacity: 0.7;
   }
 
   .token.operator,
@@ -912,7 +928,8 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
       background: ${props => props.theme.tableHeaderBackground};
     }
 
-    td, th {
+    td,
+    th {
       position: relative;
       vertical-align: top;
       border: 1px solid ${props => props.theme.tableDivider};
@@ -1025,14 +1042,14 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     pointer-events: none;
 
     &.left {
-      box-shadow: 16px 0 16px -16px inset rgba(0,0,0,0.25);
+      box-shadow: 16px 0 16px -16px inset rgba(0, 0, 0, 0.25);
       border-left: 1em solid ${props => props.theme.background};
     }
 
     &.right {
       right: 0;
       left: auto;
-      box-shadow: -16px 0 16px -16px inset rgba(0,0,0,0.25);
+      box-shadow: -16px 0 16px -16px inset rgba(0, 0, 0, 0.25);
     }
   }
 
@@ -1046,7 +1063,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     position: absolute;
     transform: scale(0.9);
     transition: color 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275),
-    transform 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transform 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
     outline: none;
     border: 0;
     line-height: 1;
@@ -1066,7 +1083,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     pointer-events: none;
     position: absolute;
   }
-  
+
   .ProseMirror-gapcursor:after {
     content: "";
     display: block;
@@ -1076,13 +1093,13 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     border-top: 1px solid ${props => props.theme.cursor};
     animation: ProseMirror-cursor-blink 1.1s steps(2, start) infinite;
   }
-  
+
   @keyframes ProseMirror-cursor-blink {
     to {
       visibility: hidden;
     }
   }
-  
+
   .ProseMirror-focused .ProseMirror-gapcursor {
     display: block;
   }
