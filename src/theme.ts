@@ -93,7 +93,7 @@ export const dark = {
   tableSelectedBackground: "#002333",
 
   quote: colors.greyDark,
-  codeBackground: colors.almostBlack,
+  codeBackground: colors.black,
   codeBorder: colors.lightBlack,
   codeString: "#3d8fd1",
   horizontalRule: colors.lightBlack,
