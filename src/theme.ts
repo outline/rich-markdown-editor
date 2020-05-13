@@ -42,6 +42,13 @@ export const base = {
   codePlaceholder: "#3d8fd1",
   codeInserted: "#202746",
   codeImportant: "#c94922",
+
+  blockToolbarBackground: colors.white,
+  blockToolbarTrigger: colors.greyMid,
+  blockToolbarTriggerIcon: colors.white,
+  blockToolbarItem: colors.almostBlack,
+  blockToolbarText: colors.almostBlack,
+  blockToolbarHoverBackground: colors.greyLight,
 };
 
 export const light = {
@@ -55,11 +62,6 @@ export const light = {
   toolbarBackground: colors.lightBlack,
   toolbarInput: colors.white10,
   toolbarItem: colors.white,
-
-  blockToolbarBackground: colors.white,
-  blockToolbarTrigger: colors.greyMid,
-  blockToolbarTriggerIcon: colors.white,
-  blockToolbarItem: colors.almostBlack,
 
   tableDivider: colors.greyMid,
   tableSelected: colors.primary,
@@ -84,11 +86,6 @@ export const dark = {
   toolbarBackground: colors.white,
   toolbarInput: colors.black10,
   toolbarItem: colors.lightBlack,
-
-  blockToolbarBackground: colors.almostBlack,
-  blockToolbarTrigger: colors.almostWhite,
-  blockToolbarTriggerIcon: colors.almostBlack,
-  blockToolbarItem: colors.lightBlack,
 
   tableDivider: colors.lightBlack,
   tableSelected: colors.primary,
