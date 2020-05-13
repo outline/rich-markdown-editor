@@ -748,7 +748,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     border-radius: 4px;
     border: 1px solid ${props => props.theme.codeBorder};
     padding: 3px 4px;
-    font-family: "Source Code Pro", Menlo, monospace;
+    font-family: ${props => props.theme.fontFamilyMono};
     font-size: 85%;
   }
 
@@ -763,6 +763,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
 
     select,
     button {
+      font-size: 13px;
       display: none;
       position: absolute;
       z-index: 1;
@@ -784,7 +785,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
   pre {
     display: block;
     overflow-x: auto;
-    padding: 0.5em 1em;
+    padding: 1em 0;
     line-height: 1.4em;
     position: relative;
     background: ${props => props.theme.codeBackground};
@@ -810,6 +811,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     margin: 0;
 
     code {
+      font-size: 13px;
       background: none;
       padding: 0;
       border: 0;
