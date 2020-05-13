@@ -19,27 +19,23 @@ import copy from "copy-to-clipboard";
 import Prism from "../plugins/Prism";
 import Node from "./Node";
 
-export default class CodeBlock extends Node {
-  constructor() {
-    super();
+[
+  bash,
+  css,
+  clike,
+  csharp,
+  java,
+  javascript,
+  json,
+  markup,
+  php,
+  python,
+  powershell,
+  ruby,
+  typescript,
+].forEach(refractor.register);
 
-    [
-      bash,
-      css,
-      clike,
-      csharp,
-      java,
-      javascript,
-      json,
-      markup,
-      php,
-      python,
-      powershell,
-      ruby,
-      typescript,
-    ].forEach(refractor.register);
-  }
-
+export default class CodeFence extends Node {
   get languageOptions() {
     return Object.entries({
       none: "None", // additional entry to disable highlighting
@@ -118,6 +114,9 @@ export default class CodeBlock extends Node {
   handleCopyToClipboard(node) {
     return () => {
       copy(node.textContent);
+      if (this.options.onShowToast) {
+        this.options.onShowToast("Copied to clipboard", "code_copied");
+      }
     };
   }
 

@@ -124,10 +124,12 @@ The editor provides an ability to search for links to insert from the formatting
 />
 ```
 
-#### `onShowToast(message: string): void`
+#### `onShowToast(message: string, id: string): void`
 
 Triggered when the editor wishes to show a toast message to the user. Hook into your apps
-notification system, or simplisticly use `window.alert(message)`.
+notification system, or simplisticly use `window.alert(message)`. The second parameter
+is a stable identifier you can use to identify the message if you'd prefer to write
+your own copy.
 
 
 #### `onClickLink(href: string): void`
