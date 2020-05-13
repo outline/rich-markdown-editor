@@ -718,7 +718,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
   }
 
   li p:first-child {
-    display: inline;
+    display: inline-block;
     margin: 0;
   }
 
