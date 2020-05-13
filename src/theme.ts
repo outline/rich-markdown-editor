@@ -49,6 +49,7 @@ export const base = {
   blockToolbarItem: colors.almostBlack,
   blockToolbarText: colors.almostBlack,
   blockToolbarHoverBackground: colors.greyLight,
+  blockToolbarDivider: colors.greyMid,
 };
 
 export const light = {
