@@ -594,6 +594,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
   h4,
   h5,
   h6 {
+    margin: 1em 0 0.5em;
     font-weight: 500;
     cursor: default;
 
@@ -604,6 +605,17 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
       color: ${props => props.theme.textSecondary};
       font-size: 13px;
       left: -24px;
+    }
+  }
+
+  a:first-child {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      margin-top: 0;
     }
   }
 
