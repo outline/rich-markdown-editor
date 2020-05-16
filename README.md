@@ -1,8 +1,9 @@
 Keep up to date with https://github.com/outline/rich-markdown-editor
 https://stefanbauer.me/articles/how-to-keep-your-git-fork-up-to-date
 
+[![npm version](https://badge.fury.io/js/rich-markdown-editor.svg)](https://badge.fury.io/js/rich-markdown-editor) [![CircleCI](https://img.shields.io/circleci/project/github/outline/rich-markdown-editor.svg)](https://circleci.com/gh/outline/rich-markdown-editor) [![Formatted with Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat)](https://github.com/prettier/prettier) [![TypeScript](https://camo.githubusercontent.com/21132e0838961fbecb75077042aa9b15bc0bf6f9/68747470733a2f2f62616467656e2e6e65742f62616467652f4275696c74253230576974682f547970655363726970742f626c7565)](https://www.typescriptlang.org/)
 
-[![npm version](https://badge.fury.io/js/rich-markdown-editor.svg)](https://badge.fury.io/js/rich-markdown-editor) [![CircleCI](https://img.shields.io/circleci/project/github/outline/rich-markdown-editor.svg)](https://circleci.com/gh/outline/rich-markdown-editor) [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/outline) [![Formatted with Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat)](https://github.com/prettier/prettier)
+
 
 # traverse-markdown-editor
 
@@ -74,7 +75,7 @@ A number that will offset the document headings by a number of levels. For examp
 
 ### Callbacks
 
-#### `uploadImage`
+#### `uploadImage(file: Blob): Promise<string>`
 
 If you want the editor to support images then this callback must be provided. The callback should accept a single `File` object and return a promise the resolves to a url when the image has been uploaded to a storage location, for example S3. eg:
 
@@ -87,37 +88,31 @@ If you want the editor to support images then this callback must be provided. Th
 />
 ```
 
-#### `onSave({ done: boolean })`
+#### `onSave({ done: boolean }): void`
 
 This callback is triggered when the user explicitly requests to save using a keyboard shortcut, `Cmd+S` or `Cmd+Enter`. You can use this as a signal to save the document to a remote server.
 
-#### `onCancel`
+#### `onCancel(): void`
 
 This callback is triggered when the `Cmd+Escape` is hit within the editor. You may use it to cancel editing.
 
-#### `onChange(() => value)`
+#### `onChange(() => value): void`
 
 This callback is triggered when the contents of the editor changes, usually due to user input such as a keystroke or using formatting options. You may use this to locally persist the editors state, see the [inbuilt example](/example/src/index.js).
 
 It returns a function which when called returns the current text value of the document. This optimization is made to avoid serializing the state of the document to text on every change event, allowing the host app to choose when it needs the serialized value.
 
-#### `onImageUploadStart`
+#### `onImageUploadStart(): void`
 
 This callback is triggered before `uploadImage` and can be used to show some UI that indicates an upload is in progress.
 
-#### `onImageUploadStop`
+#### `onImageUploadStop(): void`
 
 Triggered once an image upload has succeeded or failed.
 
-#### `onSearchLink(term: string)`
+#### `onSearchLink(term: string): Promise<{ title: string, url: string }[]>`
 
 The editor provides an ability to search for links to insert from the formatting toolbar. If this callback is provided it should accept a search term as the only parameter and return a promise that resolves to an array of objects. eg:
-
-#### `onShowToast(message: string)`
-
-Triggered when the editor wishes to show a toast message to the user. Hook into your apps
-notification system, or simplisticly use `window.alert(message)`.
-
 
 ```javascript
 <Editor
@@ -132,13 +127,15 @@ notification system, or simplisticly use `window.alert(message)`.
 />
 ```
 
-#### `onShowToast(message: string)`
+#### `onShowToast(message: string, id: string): void`
 
 Triggered when the editor wishes to show a toast message to the user. Hook into your apps
-notification system, or simplisticly use `window.alert(message)`.
+notification system, or simplisticly use `window.alert(message)`. The second parameter
+is a stable identifier you can use to identify the message if you'd prefer to write
+your own copy.
 
 
-#### `onClickLink(href: string)`
+#### `onClickLink(href: string): void`
 
 This callback allows overriding of link handling. It's often the case that you want to have external links open a new window and have internal links use something like `react-router` to navigate. If no callback is provided then default behavior of opening a new tab will apply to all links. eg:
 
@@ -157,7 +154,7 @@ import { history } from "react-router";
 />
 ```
 
-#### `onClickHashtag(tag: string)`
+#### `onClickHashtag(tag: string): void`
 
 This callback allows handling of clicking on hashtags in the document text. If no callback is provided then hashtags will render as regular text, so you can choose if to support them or not by passing this prop.
 
@@ -171,9 +168,34 @@ import { history } from "react-router";
 />
 ```
 
-#### `getLinkComponent(Node)`
+#### `getLinkComponent(url: string): void | ReactNode`
 
-This callback allows links to "request" an alternative component to display instead of an inline link. Given a link node return `undefined` for no replacement or a valid React component to replace the standard link display. This is used to support embeds.
+This callback allows links to "request" an alternative component to display instead of an inline link. Given a url return `undefined` for no replacement or a valid React component to replace the standard link display. This is used to support embeds.
+
+```javascript
+<Editor
+  getLinkComponent={url => {
+    if (url.match(/https?:\/\/youtube\.com/)) {
+      return <MyFancyYoutubeEmbed url={url} />;
+    }
+  }}
+/>
+```
+
+### Interface
+
+The Editor component exposes a few methods for interacting with the mounted editor.
+
+#### `focusAtStart(): void`
+Place the cursor at the start of the document and focus it.
+
+#### `focusAtEnd(): void`
+Place the cursor at the end of the document and focus it.
+
+#### `getHeadings(): { title: string, level: number }[]`
+Returns an array of objects with the text content of all the headings in the document and
+their level in the hierarchy. This is useful to construct your own table of contents since
+the `toc` option was removed in v10.
 
 
 ## Contributing

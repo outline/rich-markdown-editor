@@ -78,10 +78,14 @@ export default class Heading extends Node {
       // this is unfortunate but appears to be the best way to grab the anchor
       // as it's added directly to the dom by a decoration.
       const slug = `#${event.target.parentElement.parentElement.name}`;
-      copy(window.location.href + slug);
+
+      // the existing url might contain a hash already, lets make sure to remove
+      // that rather than appending another one.
+      const urlWithoutHash = window.location.href.split("#")[0];
+      copy(urlWithoutHash + slug);
 
       if (this.options.onShowToast) {
-        this.options.onShowToast("Link copied to clipboard");
+        this.options.onShowToast("Link copied to clipboard", "heading_copied");
       }
     };
   };

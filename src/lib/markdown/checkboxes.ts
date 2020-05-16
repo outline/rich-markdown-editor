@@ -1,7 +1,7 @@
 import MarkdownIt from "markdown-it";
 import Token from "markdown-it/lib/token";
 
-const CHECKBOX_REGEX = /\[(X|\s|_|-)\](\s(.*))?/i;
+const CHECKBOX_REGEX = /\[(X|\s|_|-)\]\s(.*)?/i;
 
 function matches(token: Token) {
   return token.content.match(CHECKBOX_REGEX);
@@ -32,7 +32,7 @@ export default function markdownItCheckbox(md: MarkdownIt): void {
       const matches = looksLikeChecklist(tokens, i);
       if (matches) {
         const value = matches[1];
-        const label = matches[3];
+        const label = matches[2];
         const checked = value.toLowerCase() === "x";
 
         // convert surrounding list tokens

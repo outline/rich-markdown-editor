@@ -378,7 +378,7 @@ export const Wrapper = styled.div<{
   hr {
     border: 0;
     height: 0;
-    border-top: 1px solid ${props => props.theme.divider};
+    border-top: 1px solid ${props => props.theme.blockToolbarDivider};
   }
 
   ${({ active, isAbove }) =>

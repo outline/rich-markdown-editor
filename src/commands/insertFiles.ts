@@ -80,7 +80,10 @@ const insertFiles = function(view, event, pos, files, options) {
 
         // let the user know
         if (onShowToast) {
-          onShowToast("Sorry, an error occurred uploading the image");
+          onShowToast(
+            "Sorry, an error occurred uploading the image",
+            "image_upload_error"
+          );
         }
       })
       // eslint-disable-next-line no-loop-func

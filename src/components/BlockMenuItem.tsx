@@ -68,7 +68,8 @@ const MenuItem = styled.button<{
   cursor: pointer;
   border: none;
   opacity: ${props => (props.disabled ? ".5" : "1")};
-  color: ${props => (props.selected ? props.theme.black : props.theme.text)};
+  color: ${props =>
+    props.selected ? props.theme.black : props.theme.blockToolbarText};
   background: ${props =>
     props.selected ? props.theme.blockToolbarTrigger : "none"};
   padding: 0 16px;
@@ -77,7 +78,7 @@ const MenuItem = styled.button<{
   &:hover,
   &:active {
     color: ${props => props.theme.black};
-    background: ${props => props.theme.greyLight};
+    background: ${props => props.theme.blockToolbarHoverBackground};
   }
 `;
 

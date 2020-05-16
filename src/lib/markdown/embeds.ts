@@ -23,6 +23,7 @@ export default function(getLinkComponent) {
     const simpleLink = href === token.content;
 
     if (!simpleLink) return false;
+    if (!getLinkComponent) return false;
     return getLinkComponent(href);
   }
 

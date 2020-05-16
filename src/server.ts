@@ -17,6 +17,10 @@ import Image from "./nodes/Image";
 import ListItem from "./nodes/ListItem";
 import OrderedList from "./nodes/OrderedList";
 import Paragraph from "./nodes/Paragraph";
+import Table from "./nodes/Table";
+import TableCell from "./nodes/TableCell";
+import TableHeadCell from "./nodes/TableHeadCell";
+import TableRow from "./nodes/TableRow";
 
 // marks
 import Bold from "./marks/Bold";
@@ -41,6 +45,10 @@ const extensions = new ExtensionManager([
   new Heading(),
   new HorizontalRule(),
   new Image(),
+  new Table(),
+  new TableCell(),
+  new TableHeadCell(),
+  new TableRow(),
   new Bold(),
   new Code(),
   new Highlight(),

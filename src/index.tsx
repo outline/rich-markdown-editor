@@ -192,8 +192,12 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new Paragraph(),
         new Blockquote(),
         new BulletList(),
-        new CodeBlock(),
-        new CodeFence(),
+        new CodeBlock({
+          onShowToast: this.props.onShowToast,
+        }),
+        new CodeFence({
+          onShowToast: this.props.onShowToast,
+        }),
         new CheckboxList(),
         new CheckboxItem(),
         new Embed(),
@@ -433,6 +437,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     this.view.dispatch(selectTable(state.tr));
   };
 
+  // 'public' methods
   focusAtStart = () => {
     const selection = Selection.atStart(this.view.state.doc);
     const transaction = this.view.state.tr.setSelection(selection);
@@ -445,6 +450,19 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     const transaction = this.view.state.tr.setSelection(selection);
     this.view.dispatch(transaction);
     this.view.focus();
+  };
+
+  getHeadings = () => {
+    const headings = [];
+    this.view.state.doc.forEach(node => {
+      if (node.type.name === "heading") {
+        headings.push({
+          title: node.textContent,
+          level: node.attrs.level,
+        });
+      }
+    });
+    return headings;
   };
 
   render = () => {
@@ -576,6 +594,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
   h4,
   h5,
   h6 {
+    margin: 1em 0 0.5em;
     font-weight: 500;
     cursor: default;
 
@@ -589,12 +608,39 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     }
   }
 
-  h1:not(.placeholder):before { content: "H1"; line-height: 3em; }
-  h2:not(.placeholder):before { content: "H2"; line-height: 2.8em; }
-  h3:not(.placeholder):before { content: "H3"; line-height: 2.3em; }
-  h4:not(.placeholder):before { content: "H4"; line-height: 2.2em; }
-  h5:not(.placeholder):before { content: "H5"; }
-  h6:not(.placeholder):before { content: "H6"; }
+  a:first-child {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      margin-top: 0;
+    }
+  }
+
+  h1:not(.placeholder):before {
+    content: "H1";
+    line-height: 3em;
+  }
+  h2:not(.placeholder):before {
+    content: "H2";
+    line-height: 2.8em;
+  }
+  h3:not(.placeholder):before {
+    content: "H3";
+    line-height: 2.3em;
+  }
+  h4:not(.placeholder):before {
+    content: "H4";
+    line-height: 2.2em;
+  }
+  h5:not(.placeholder):before {
+    content: "H5";
+  }
+  h6:not(.placeholder):before {
+    content: "H6";
+  }
 
   .heading-name {
     color: ${props => props.theme.text};
@@ -672,7 +718,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
   ul,
   ol {
     margin: 0 0.1em;
-    padding-left: 1em;
+    padding: 0 0 0 1em;
 
     ul,
     ol {
@@ -682,15 +728,15 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
 
   ul.checkbox_list {
     list-style: none;
-    padding-left: 0;
-    margin-left: -4px;
-
-    ul.checkbox_list {
-      padding-left: 20px;
-    }
+    padding: 0;
+    margin: 0;
   }
 
-  ul.checkbox_list li.checked > span > p {
+  ul.checkbox_list li {
+    display: flex;
+  }
+
+  ul.checkbox_list li.checked > div > p {
     color: ${props => props.theme.textSecondary};
     text-decoration: line-through;
   }
@@ -698,11 +744,13 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
   ul.checkbox_list li input {
     pointer-events: ${props => (props.readOnly ? "none" : "initial")};
     opacity: ${props => (props.readOnly ? 0.75 : 1)};
-    margin-right: 6px;
+    margin: 0 0.5em 0 0;
+    width: 16px;
+    height: 16px;
   }
 
   li p:first-child {
-    display: inline;
+    display: inline-block;
     margin: 0;
   }
 
@@ -716,7 +764,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     border-radius: 4px;
     border: 1px solid ${props => props.theme.codeBorder};
     padding: 3px 4px;
-    font-family: "Source Code Pro", Menlo, monospace;
+    font-family: ${props => props.theme.fontFamilyMono};
     font-size: 85%;
   }
 
@@ -731,6 +779,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
 
     select,
     button {
+      font-size: 13px;
       display: none;
       position: absolute;
       z-index: 1;
@@ -742,7 +791,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
       select {
         display: ${props => (props.readOnly ? "none" : "inline")};
       }
-  
+
       button {
         display: ${props => (props.readOnly ? "inline" : "none")};
       }
@@ -752,7 +801,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
   pre {
     display: block;
     overflow-x: auto;
-    padding: 0.5em 1em;
+    padding: 0.75em 1em;
     line-height: 1.4em;
     position: relative;
     background: ${props => props.theme.codeBackground};
@@ -760,7 +809,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     border: 1px solid ${props => props.theme.codeBorder};
 
     -webkit-font-smoothing: initial;
-    font-family: ${props => props.theme.fontFamilyMono}
+    font-family: ${props => props.theme.fontFamilyMono};
     font-size: 13px;
     direction: ltr;
     text-align: left;
@@ -778,6 +827,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     margin: 0;
 
     code {
+      font-size: 13px;
       background: none;
       padding: 0;
       border: 0;
@@ -796,7 +846,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
   }
 
   .token.namespace {
-    opacity: .7;
+    opacity: 0.7;
   }
 
   .token.operator,
@@ -896,7 +946,8 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
       background: ${props => props.theme.tableHeaderBackground};
     }
 
-    td, th {
+    td,
+    th {
       position: relative;
       vertical-align: top;
       border: 1px solid ${props => props.theme.tableDivider};
@@ -1009,14 +1060,14 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     pointer-events: none;
 
     &.left {
-      box-shadow: 16px 0 16px -16px inset rgba(0,0,0,0.25);
+      box-shadow: 16px 0 16px -16px inset rgba(0, 0, 0, 0.25);
       border-left: 1em solid ${props => props.theme.background};
     }
 
     &.right {
       right: 0;
       left: auto;
-      box-shadow: -16px 0 16px -16px inset rgba(0,0,0,0.25);
+      box-shadow: -16px 0 16px -16px inset rgba(0, 0, 0, 0.25);
     }
   }
 
@@ -1030,7 +1081,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     position: absolute;
     transform: scale(0.9);
     transition: color 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275),
-    transform 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transform 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
     outline: none;
     border: 0;
     line-height: 1;
@@ -1050,7 +1101,7 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     pointer-events: none;
     position: absolute;
   }
-  
+
   .ProseMirror-gapcursor:after {
     content: "";
     display: block;
@@ -1060,13 +1111,13 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     border-top: 1px solid ${props => props.theme.cursor};
     animation: ProseMirror-cursor-blink 1.1s steps(2, start) infinite;
   }
-  
+
   @keyframes ProseMirror-cursor-blink {
     to {
       visibility: hidden;
     }
   }
-  
+
   .ProseMirror-focused .ProseMirror-gapcursor {
     display: block;
   }

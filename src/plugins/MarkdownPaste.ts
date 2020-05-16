@@ -31,7 +31,11 @@ export default class MarkdownPaste extends Extension {
               }
 
               // Is this link embedable? Create an embed!
-              const component = this.editor.props.getLinkComponent(text);
+              const { getLinkComponent } = this.editor.props;
+              const component = getLinkComponent
+                ? getLinkComponent(text)
+                : undefined;
+
               if (component) {
                 this.editor.commands.embed({
                   href: text,
