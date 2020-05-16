@@ -348,7 +348,7 @@ export const Wrapper = styled.div<{
   font-family: ${props => props.theme.fontFamily};
   position: absolute;
   z-index: ${props => {
-    return props.theme.zIndex + 100;
+    return props.theme.zIndex + 9999;
   }};
   ${props => props.top && `top: ${props.top}px`};
   ${props => props.bottom && `bottom: ${props.bottom}px`};

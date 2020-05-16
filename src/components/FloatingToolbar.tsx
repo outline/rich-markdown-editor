@@ -180,7 +180,7 @@ const Wrapper = styled.div<{
   padding: 8px 16px;
   position: absolute;
   z-index: ${props => {
-    return props.theme.zIndex + 100;
+    return props.theme.zIndex + 9999;
   }};
   top: ${props => props.top}px;
   left: ${props => props.left}px;
