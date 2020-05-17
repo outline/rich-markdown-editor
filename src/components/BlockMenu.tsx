@@ -6,6 +6,7 @@ import { findParentNode } from "prosemirror-utils";
 import styled from "styled-components";
 import { EmbedDescriptor } from "../types";
 import BlockMenuItem from "./BlockMenuItem";
+import Input from "./Input";
 import VisuallyHidden from "./VisuallyHidden";
 import getDataTransferFiles from "../lib/getDataTransferFiles";
 import insertFiles from "../commands/insertFiles";
@@ -125,6 +126,7 @@ class BlockMenu extends React.Component<Props> {
 
     if (event.key === "Escape") {
       this.props.onClose();
+      this.props.view.focus();
     }
   };
 
@@ -146,6 +148,29 @@ class BlockMenu extends React.Component<Props> {
         return;
       }
 
+      this.insertBlock({
+        name: "embed",
+        attrs: {
+          href,
+          component: this.state.insertItem.component,
+          matches,
+        },
+      });
+    }
+
+    if (event.key === "Escape") {
+      this.props.onClose();
+      this.props.view.focus();
+    }
+  };
+
+  handleLinkInputPaste = (event: React.ClipboardEvent<HTMLInputElement>) => {
+    if (!this.props.isActive) return;
+
+    const href = event.clipboardData.getData("text/plain");
+    const matches = this.state.insertItem.matcher(href);
+
+    if (matches) {
       this.insertBlock({
         name: "embed",
         attrs: {
@@ -324,12 +349,19 @@ class BlockMenu extends React.Component<Props> {
           {...positioning}
         >
           {insertItem ? (
-            <input
-              type="text"
-              placeholder="Paste link…"
-              onKeyDown={this.handleLinkInputKeydown}
-              autoFocus
-            />
+            <LinkInputWrapper>
+              <LinkInput
+                type="text"
+                placeholder={
+                  insertItem.title
+                    ? `Paste a ${insertItem.title} link…`
+                    : "Paste a link…"
+                }
+                onKeyDown={this.handleLinkInputKeydown}
+                onPaste={this.handleLinkInputPaste}
+                autoFocus
+              />
+            </LinkInputWrapper>
           ) : (
             <List>
               {items.map((item, index) => {
@@ -383,6 +415,15 @@ class BlockMenu extends React.Component<Props> {
     );
   }
 }
+
+const LinkInputWrapper = styled.div`
+  margin: 8px;
+`;
+
+const LinkInput = styled(Input)`
+  height: 36px;
+  width: 100%;
+`;
 
 const List = styled.ol`
   list-style: none;

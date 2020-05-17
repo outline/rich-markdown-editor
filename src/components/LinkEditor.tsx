@@ -7,6 +7,7 @@ import styled, { withTheme } from "styled-components";
 import isUrl from "../lib/isUrl";
 import theme from "../theme";
 import Flex from "./Flex";
+import Input from "./Input";
 import ToolbarButton from "./ToolbarButton";
 import LinkSearchResult from "./LinkSearchResult";
 
@@ -234,18 +235,6 @@ const SearchResults = styled.ol`
   margin-top: -3px;
   margin-bottom: 0;
   border-radius: 0 0 4px 4px;
-`;
-
-const Input = styled.input`
-  font-size: 15px;
-  background: ${props => props.theme.toolbarInput};
-  color: ${props => props.theme.toolbarItem};
-  border-radius: 2px;
-  padding: 4px 8px;
-  border: 0;
-  margin: 0;
-  outline: none;
-  flex-grow: 1;
 `;
 
 export default withTheme(LinkEditor);
