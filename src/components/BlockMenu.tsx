@@ -4,7 +4,7 @@ import { Portal } from "react-portal";
 import { EditorView } from "prosemirror-view";
 import { findParentNode } from "prosemirror-utils";
 import styled from "styled-components";
-
+import { EmbedDescriptor } from "../types";
 import BlockMenuItem from "./BlockMenuItem";
 import VisuallyHidden from "./VisuallyHidden";
 import getDataTransferFiles from "../lib/getDataTransferFiles";
@@ -23,6 +23,7 @@ type Props = {
   onImageUploadStop: () => void;
   onShowToast: (message: string) => void;
   onClose: () => void;
+  embeds: EmbedDescriptor[];
 };
 
 class BlockMenu extends React.Component<Props> {
@@ -221,8 +222,23 @@ class BlockMenu extends React.Component<Props> {
   }
 
   get filtered() {
-    const { search = "" } = this.props;
-    const items = getMenuItems();
+    const { embeds, search = "" } = this.props;
+    let items = getMenuItems();
+    const embedItems = [];
+
+    for (const embed of embeds) {
+      if (embed.title && embed.icon) {
+        embedItems.push(embed);
+      }
+    }
+
+    if (embedItems.length) {
+      items.push({
+        name: "separator",
+      });
+      items = items.concat(embedItems);
+    }
+    console.log(items);
 
     const filtered = items.filter(item => {
       if (item.name === "separator") return true;
