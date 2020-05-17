@@ -425,6 +425,10 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     this.setState({ linkMenuOpen: true });
   };
 
+  handleCloseLinkMenu = () => {
+    this.setState({ linkMenuOpen: false });
+  };
+
   handleOpenBlockMenu = (search: string) => {
     this.setState({ blockMenuOpen: true, blockMenuSearch: search });
   };
@@ -509,6 +513,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   onCreateLink={this.props.onCreateLink}
                   onSearchLink={this.props.onSearchLink}
                   onClickLink={this.props.onClickLink}
+                  onClose={this.handleCloseLinkMenu}
                   tooltip={tooltip}
                 />
                 <BlockMenu

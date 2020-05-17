@@ -1,7 +1,13 @@
 import * as React from "react";
 import { setTextSelection } from "prosemirror-utils";
 import { EditorView } from "prosemirror-view";
-import { DocumentIcon, PlusIcon, TrashIcon, OpenIcon } from "outline-icons";
+import {
+  DocumentIcon,
+  CloseIcon,
+  PlusIcon,
+  TrashIcon,
+  OpenIcon,
+} from "outline-icons";
 import styled, { withTheme } from "styled-components";
 import isUrl from "../lib/isUrl";
 import theme from "../theme";
@@ -199,7 +205,11 @@ class LinkEditor extends React.Component<Props> {
         </ToolbarButton>
         <ToolbarButton onClick={this.handleRemoveLink}>
           <Tooltip tooltip="Remove link" placement="top">
-            <TrashIcon color={this.props.theme.toolbarItem} />
+            {this.initialValue ? (
+              <TrashIcon color={this.props.theme.toolbarItem} />
+            ) : (
+              <CloseIcon color={this.props.theme.toolbarItem} />
+            )}
           </Tooltip>
         </ToolbarButton>
         {showResults && (
@@ -219,7 +229,7 @@ class LinkEditor extends React.Component<Props> {
                 title={`Create new doc "${this.state.value}"`}
                 icon={<PlusIcon />}
                 onClick={() => {
-                  // TODO
+                  this.props.onCreateLink(this.state.value);
                 }}
                 selected={
                   this.state.results.length === this.state.selectedIndex
