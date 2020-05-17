@@ -78,7 +78,6 @@ Optionally define embeds which will be inserted in place of links when the `matc
 <Editor
   embeds={[
     {
-      name: "doc",
       title: "Google Doc",
       keywords: "google docs gdocs",
       icon: <GoogleDocIcon />,
