@@ -84,7 +84,14 @@ export default class Link extends Mark {
 
   keys({ type }) {
     return {
-      "Mod-k": toggleMark(type, { href: "" }),
+      "Mod-k": (state, dispatch) => {
+        if (state.selection.empty) {
+          this.options.onKeyboardShortcut();
+          return true;
+        }
+
+        return toggleMark(type, { href: "" })(state, dispatch);
+      },
     };
   }
 

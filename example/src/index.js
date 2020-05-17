@@ -12,6 +12,29 @@ This is example content. It is persisted between reloads in localStorage.
 `;
 const defaultValue = savedText || exampleText;
 
+const searchResults = [
+  {
+    title: "Hiring",
+    url: "/doc/1",
+  },
+  {
+    title: "Product Roadmap",
+    url: "/doc/2",
+  },
+  {
+    title: "Finances",
+    url: "/doc/3",
+  },
+  {
+    title: "Super secret stuff",
+    url: "/doc/4",
+  },
+  {
+    title: "Founder meeting notes",
+    url: "/doc/5",
+  },
+];
+
 class GoogleEmbed extends React.Component {
   render() {
     const { attrs } = this.props;
@@ -80,15 +103,13 @@ class Example extends React.Component {
           onChange={this.handleChange}
           onClickLink={href => console.log("Clicked link: ", href)}
           onClickHashtag={tag => console.log("Clicked hashtag: ", tag)}
+          onCreateLink={title => console.log("Tried to create a doc: ", title)}
           onShowToast={message => window.alert(message)}
           onSearchLink={async term => {
             console.log("Searched link: ", term);
-            return [
-              {
-                title: term,
-                url: "localhost",
-              },
-            ];
+            return searchResults.filter(result =>
+              result.title.toLowerCase().includes(term.toLowerCase())
+            );
           }}
           uploadImage={file => {
             console.log("File upload triggered: ", file);

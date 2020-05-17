@@ -4,16 +4,18 @@ import { NextIcon } from "outline-icons";
 
 type Props = {
   onClick: (event: React.MouseEvent) => void;
+  icon: React.ReactNode;
   selected: boolean;
   title: string;
 };
 
-function LinkSearchResult({ title, ...rest }: Props) {
+function LinkSearchResult({ title, icon, ...rest }: Props) {
   return (
     <ListItem {...rest}>
       <i>
         <NextIcon light />
       </i>
+      {icon}
       {title}
     </ListItem>
   );
@@ -32,6 +34,8 @@ const ListItem = styled.li<{
   text-decoration: none;
   overflow: hidden;
   white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
 
   i {
     visibility: ${props => (props.selected ? "visible" : "hidden")};

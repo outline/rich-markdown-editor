@@ -1,8 +1,7 @@
 import * as React from "react";
 import { setTextSelection } from "prosemirror-utils";
 import { EditorView } from "prosemirror-view";
-import { Mark } from "prosemirror-model";
-import { TrashIcon, OpenIcon } from "outline-icons";
+import { DocumentIcon, PlusIcon, TrashIcon, OpenIcon } from "outline-icons";
 import styled, { withTheme } from "styled-components";
 import isUrl from "../lib/isUrl";
 import theme from "../theme";
@@ -16,10 +15,11 @@ export type SearchResult = {
 };
 
 type Props = {
-  mark: Mark;
+  href: string;
   from: number;
   to: number;
   tooltip: typeof React.Component;
+  onCreateLink?: (title: string) => Promise<string>;
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
   onClickLink: (url: string) => void;
   view: EditorView;
@@ -28,11 +28,11 @@ type Props = {
 
 class LinkEditor extends React.Component<Props> {
   discardInputValue = false;
-  initialValue: string = this.props.mark.attrs.href;
+  initialValue: string = this.props.href;
 
   state = {
     selectedIndex: -1,
-    value: this.props.mark.attrs.href,
+    value: this.props.href,
     results: [],
   };
 
@@ -111,7 +111,7 @@ class LinkEditor extends React.Component<Props> {
       case "Tab": {
         event.preventDefault();
         event.stopPropagation();
-        const total = this.state.results.length - 1;
+        const total = this.state.results.length;
         const nextIndex = this.state.selectedIndex + 1;
 
         this.setState({
@@ -145,7 +145,7 @@ class LinkEditor extends React.Component<Props> {
   };
 
   handleOpenLink = (event): void => {
-    const { href } = this.props.mark.attrs;
+    const { href } = this.props;
 
     event.preventDefault();
     this.props.onClickLink(href);
@@ -153,6 +153,8 @@ class LinkEditor extends React.Component<Props> {
 
   handleRemoveLink = (): void => {
     this.discardInputValue = true;
+
+    // TODO: restore mark prop, but optional.
     const { from, to, mark } = this.props;
     const { state, dispatch } = this.props.view;
 
@@ -173,9 +175,10 @@ class LinkEditor extends React.Component<Props> {
   };
 
   render() {
-    const { mark } = this.props;
+    const { href } = this.props;
     const Tooltip = this.props.tooltip;
-    const showResults = this.state.results.length > 0;
+    const showResults = !!this.state.value;
+    const showCreateLink = !!this.props.onCreateLink;
 
     return (
       <Wrapper>
@@ -184,7 +187,7 @@ class LinkEditor extends React.Component<Props> {
           placeholder="Search or paste a link…"
           onKeyDown={this.handleKeyDown}
           onChange={this.handleChange}
-          autoFocus={mark.attrs.href === ""}
+          autoFocus={href === ""}
         />
         <ToolbarButton
           onClick={this.handleOpenLink}
@@ -205,10 +208,24 @@ class LinkEditor extends React.Component<Props> {
               <LinkSearchResult
                 key={result.url}
                 title={result.title}
+                icon={<DocumentIcon />}
                 onClick={this.handleSearchResultClick(result.url)}
                 selected={index === this.state.selectedIndex}
               />
             ))}
+            {showCreateLink && (
+              <LinkSearchResult
+                key="create"
+                title={`Create new doc "${this.state.value}"`}
+                icon={<PlusIcon />}
+                onClick={() => {
+                  // TODO
+                }}
+                selected={
+                  this.state.results.length === this.state.selectedIndex
+                }
+              />
+            )}
           </SearchResults>
         )}
       </Wrapper>

@@ -157,7 +157,7 @@ export default class FloatingToolbar extends React.Component<Props> {
         >
           {link && range ? (
             <LinkEditor
-              mark={range.mark}
+              href={range.mark.attrs.href}
               from={range.from}
               to={range.to}
               {...this.props}
