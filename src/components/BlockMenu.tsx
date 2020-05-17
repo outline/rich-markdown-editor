@@ -171,6 +171,9 @@ class BlockMenu extends React.Component<Props> {
     const matches = this.state.insertItem.matcher(href);
 
     if (matches) {
+      event.preventDefault();
+      event.stopPropagation();
+
       this.insertBlock({
         name: "embed",
         attrs: {

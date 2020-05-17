@@ -3,9 +3,9 @@ import styled from "styled-components";
 const Input = styled.input`
   font-size: 15px;
   background: ${props => props.theme.toolbarInput};
-  color: ${props => props.theme.toolbarItem};
+  color: ${props => props.theme.blockToolbarText};
   border-radius: 2px;
-  padding: 4px 8px;
+  padding: 3px 8px;
   border: 0;
   margin: 0;
   outline: none;
