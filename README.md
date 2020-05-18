@@ -189,10 +189,9 @@ Place the cursor at the start of the document and focus it.
 #### `focusAtEnd(): void`
 Place the cursor at the end of the document and focus it.
 
-#### `getHeadings(): { title: string, level: number }[]`
-Returns an array of objects with the text content of all the headings in the document and
-their level in the hierarchy. This is useful to construct your own table of contents since
-the `toc` option was removed in v10.
+#### `getHeadings(): { title: string, level: number, id: string }[]`
+Returns an array of objects with the text content of all the headings in the document,
+their level in the hierarchy, and the anchor id. This is useful to construct your own table of contents since the `toc` option was removed in v10.
 
 
 ## Contributing

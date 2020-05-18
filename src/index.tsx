@@ -20,6 +20,7 @@ import Tooltip from "./components/Tooltip";
 import Extension from "./lib/Extension";
 import ExtensionManager from "./lib/ExtensionManager";
 import ComponentView from "./lib/ComponentView";
+import headingToSlug from "./lib/headingToSlug";
 
 // nodes
 import ReactNode from "./nodes/ReactNode";
@@ -454,11 +455,29 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
   getHeadings = () => {
     const headings = [];
+    const previouslySeen = {};
+
     this.view.state.doc.forEach(node => {
       if (node.type.name === "heading") {
+        // calculate the optimal id
+        const id = headingToSlug(node);
+        let name = id;
+
+        // check if we've already used it, and if so how many times?
+        // Make the new id based on that number ensuring that we have
+        // unique ID's even when headings are identical
+        if (previouslySeen[id] > 0) {
+          name = headingToSlug(node, previouslySeen[id]);
+        }
+
+        // record that we've seen this id for the next loop
+        previouslySeen[id] =
+          previouslySeen[id] !== undefined ? previouslySeen[id] + 1 : 1;
+
         headings.push({
           title: node.textContent,
           level: node.attrs.level,
+          id: name,
         });
       }
     });

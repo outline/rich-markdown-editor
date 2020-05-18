@@ -77,12 +77,12 @@ export default class Heading extends Node {
     return event => {
       // this is unfortunate but appears to be the best way to grab the anchor
       // as it's added directly to the dom by a decoration.
-      const slug = `#${event.target.parentElement.parentElement.name}`;
+      const hash = `#${event.target.parentElement.parentElement.name}`;
 
       // the existing url might contain a hash already, lets make sure to remove
       // that rather than appending another one.
       const urlWithoutHash = window.location.href.split("#")[0];
-      copy(urlWithoutHash + slug);
+      copy(urlWithoutHash + hash);
 
       if (this.options.onShowToast) {
         this.options.onShowToast("Link copied to clipboard", "heading_copied");
@@ -104,7 +104,6 @@ export default class Heading extends Node {
     return {
       ...options,
       Backspace: backspaceToParagraph(type),
-      //Tab: splitBlock,
     };
   }
 
@@ -115,14 +114,29 @@ export default class Heading extends Node {
           decorations: state => {
             const { doc } = state;
             const decorations: Decoration[] = [];
-            const index = 0;
+            const previouslySeen = {};
 
             doc.descendants((node, pos) => {
               if (node.type.name !== this.name) return;
 
+              // calculate the optimal id
+              const id = headingToSlug(node);
+              let name = id;
+
+              // check if we've already used it, and if so how many times?
+              // Make the new id based on that number ensuring that we have
+              // unique ID's even when headings are identical
+              if (previouslySeen[id] > 0) {
+                name = headingToSlug(node, previouslySeen[id]);
+              }
+
+              // record that we've seen this id for the next loop
+              previouslySeen[id] =
+                previouslySeen[id] !== undefined ? previouslySeen[id] + 1 : 1;
+
               decorations.push(
                 Decoration.node(pos, pos + node.nodeSize, {
-                  name: headingToSlug(node, index),
+                  name,
                   class: "heading-name",
                   nodeName: "a",
                 })
