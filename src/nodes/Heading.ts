@@ -77,7 +77,7 @@ export default class Heading extends Node {
     return event => {
       // this is unfortunate but appears to be the best way to grab the anchor
       // as it's added directly to the dom by a decoration.
-      const hash = `#${event.target.parentElement.parentElement.name}`;
+      const hash = `#${event.target.parentElement.parentElement.id}`;
 
       // the existing url might contain a hash already, lets make sure to remove
       // that rather than appending another one.
@@ -120,23 +120,25 @@ export default class Heading extends Node {
               if (node.type.name !== this.name) return;
 
               // calculate the optimal id
-              const id = headingToSlug(node);
-              let name = id;
+              const slug = headingToSlug(node);
+              let id = slug;
 
               // check if we've already used it, and if so how many times?
               // Make the new id based on that number ensuring that we have
               // unique ID's even when headings are identical
-              if (previouslySeen[id] > 0) {
-                name = headingToSlug(node, previouslySeen[id]);
+              if (previouslySeen[slug] > 0) {
+                id = headingToSlug(node, previouslySeen[slug]);
               }
 
-              // record that we've seen this id for the next loop
-              previouslySeen[id] =
-                previouslySeen[id] !== undefined ? previouslySeen[id] + 1 : 1;
+              // record that we've seen this slug for the next loop
+              previouslySeen[slug] =
+                previouslySeen[slug] !== undefined
+                  ? previouslySeen[slug] + 1
+                  : 1;
 
               decorations.push(
                 Decoration.node(pos, pos + node.nodeSize, {
-                  name,
+                  id,
                   class: "heading-name",
                   nodeName: "a",
                 })
