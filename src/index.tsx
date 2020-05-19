@@ -14,6 +14,7 @@ import styled, { ThemeProvider } from "styled-components";
 import { light as lightTheme, dark as darkTheme } from "./theme";
 import Flex from "./components/Flex";
 import { SearchResult } from "./components/LinkEditor";
+import { EmbedDescriptor } from "./types";
 import FloatingToolbar from "./components/FloatingToolbar";
 import BlockMenu from "./components/BlockMenu";
 import Tooltip from "./components/Tooltip";
@@ -86,7 +87,7 @@ export type Props = {
   onClickLink: (href: string) => void;
   onClickHashtag?: (tag: string) => void;
   onKeyDown: (event: React.KeyboardEvent<HTMLDivElement>) => void;
-  getLinkComponent?: (href: string) => typeof React.Component | void;
+  embeds: EmbedDescriptor[];
   onShowToast?: (message: string) => void;
   tooltip: typeof React.Component;
   className?: string;
@@ -524,6 +525,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   onImageUploadStart={this.props.onImageUploadStart}
                   onImageUploadStop={this.props.onImageUploadStop}
                   onShowToast={this.props.onShowToast}
+                  embeds={this.props.embeds}
                 />
               </React.Fragment>
             )}

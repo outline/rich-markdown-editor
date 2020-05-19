@@ -70,6 +70,24 @@ A React component that will be wrapped around items that have an optional toolti
 
 A number that will offset the document headings by a number of levels. For example, if you already nest the editor under a main `h1` title you might want the user to only be able to create `h2` headings and below, in this case you would set the prop to `1`.
 
+#### `embeds`
+
+Optionally define embeds which will be inserted in place of links when the `matcher` function returns a truthy value. The matcher method's return value will be available on the component under `props.attrs.matches`. If `title` and `icon` are provided then the embed will also appear in the block menu.
+
+```javascript
+<Editor
+  embeds={[
+    {
+      title: "Google Doc",
+      keywords: "google docs gdocs",
+      icon: <GoogleDocIcon />,
+      matcher: href => href.matches(/docs.google.com/i),
+      component: GoogleDocEmbed
+    }
+  ]}
+/>
+```
+
 ### Callbacks
 
 #### `uploadImage(file: Blob): Promise<string>`
@@ -161,20 +179,6 @@ import { history } from "react-router";
 <Editor
   onClickHashtag={tag => {
     history.push(`/hashtags/${tag}`);
-  }}
-/>
-```
-
-#### `getLinkComponent(url: string): void | ReactNode`
-
-This callback allows links to "request" an alternative component to display instead of an inline link. Given a url return `undefined` for no replacement or a valid React component to replace the standard link display. This is used to support embeds.
-
-```javascript
-<Editor
-  getLinkComponent={url => {
-    if (url.match(/https?:\/\/youtube\.com/)) {
-      return <MyFancyYoutubeEmbed url={url} />;
-    }
   }}
 />
 ```

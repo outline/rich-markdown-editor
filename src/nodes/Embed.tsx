@@ -13,6 +13,7 @@ export default class Embed extends Node {
       attrs: {
         href: {},
         component: {},
+        matches: {},
       },
       parseDOM: [{ tag: "iframe" }],
       toDOM: node => [
@@ -60,6 +61,7 @@ export default class Embed extends Node {
       node: "embed",
       getAttrs: token => ({
         href: token.attrGet("href"),
+        matches: token.attrGet("matches"),
         component: token.attrGet("component"),
       }),
     };

@@ -31,17 +31,20 @@ export default class MarkdownPaste extends Extension {
               }
 
               // Is this link embedable? Create an embed!
-              const { getLinkComponent } = this.editor.props;
-              const component = getLinkComponent
-                ? getLinkComponent(text)
-                : undefined;
+              const { embeds } = this.editor.props;
 
-              if (component) {
-                this.editor.commands.embed({
-                  href: text,
-                  component,
-                });
-                return true;
+              if (embeds) {
+                for (const embed of embeds) {
+                  const matches = embed.matcher(text);
+                  if (matches) {
+                    this.editor.commands.embed({
+                      href: text,
+                      component: embed.component,
+                      matches,
+                    });
+                    return true;
+                  }
+                }
               }
             }
 
