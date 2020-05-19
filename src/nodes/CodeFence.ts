@@ -134,7 +134,12 @@ export default class CodeFence extends Node {
   };
 
   get plugins() {
-    return [Prism({ name: this.name })];
+    return [
+      Prism({
+        name: this.name,
+        deferred: !this.options.initialReadOnly,
+      }),
+    ];
   }
 
   inputRules({ type }) {
