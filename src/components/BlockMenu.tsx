@@ -98,36 +98,50 @@ class BlockMenu extends React.Component<Props> {
     if (event.key === "ArrowUp") {
       event.preventDefault();
       event.stopPropagation();
-      const prevIndex = this.state.selectedIndex - 1;
-      const prev = this.filtered[prevIndex];
 
-      this.setState({
-        selectedIndex: Math.max(
-          0,
-          prev && prev.name === "separator" ? prevIndex - 1 : prevIndex
-        ),
-      });
+      if (this.filtered.length) {
+        const prevIndex = this.state.selectedIndex - 1;
+        const prev = this.filtered[prevIndex];
+
+        this.setState({
+          selectedIndex: Math.max(
+            0,
+            prev && prev.name === "separator" ? prevIndex - 1 : prevIndex
+          ),
+        });
+      } else {
+        this.close();
+      }
     }
 
     if (event.key === "ArrowDown" || event.key === "Tab") {
       event.preventDefault();
       event.stopPropagation();
-      const total = this.filtered.length - 1;
-      const nextIndex = this.state.selectedIndex + 1;
-      const next = this.filtered[nextIndex];
 
-      this.setState({
-        selectedIndex: Math.min(
-          next && next.name === "separator" ? nextIndex + 1 : nextIndex,
-          total
-        ),
-      });
+      if (this.filtered.length) {
+        const total = this.filtered.length - 1;
+        const nextIndex = this.state.selectedIndex + 1;
+        const next = this.filtered[nextIndex];
+
+        this.setState({
+          selectedIndex: Math.min(
+            next && next.name === "separator" ? nextIndex + 1 : nextIndex,
+            total
+          ),
+        });
+      } else {
+        this.close();
+      }
     }
 
     if (event.key === "Escape") {
-      this.props.onClose();
-      this.props.view.focus();
+      this.close();
     }
+  };
+
+  close = () => {
+    this.props.onClose();
+    this.props.view.focus();
   };
 
   handleLinkInputKeydown = (event: React.KeyboardEvent<HTMLInputElement>) => {

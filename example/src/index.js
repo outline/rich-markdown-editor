@@ -15,7 +15,6 @@ const defaultValue = savedText || exampleText;
 class YoutubeEmbed extends React.Component {
   render() {
     const { attrs } = this.props;
-    console.log(this.props);
     const videoId = attrs.matches[1];
 
     return (
