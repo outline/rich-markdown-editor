@@ -112,6 +112,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     onClickLink: href => {
       window.open(href, "_blank");
     },
+    embeds: [],
     extensions: [],
     tooltip: Tooltip,
   };
