@@ -4,6 +4,23 @@ import { Plugin, PluginKey } from "prosemirror-state";
 import { Decoration, DecorationSet } from "prosemirror-view";
 import { findBlockNodes } from "prosemirror-utils";
 
+export const LANGUAGES = {
+  none: "None", // additional entry to disable highlighting
+  bash: "Bash",
+  css: "CSS",
+  clike: "C",
+  csharp: "C#",
+  markup: "HTML",
+  java: "Java",
+  javascript: "JavaScript",
+  json: "JSON",
+  php: "PHP",
+  powershell: "Powershell",
+  python: "Python",
+  ruby: "Ruby",
+  typescript: "TypeScript",
+};
+
 function getDecorations({ doc, name }) {
   const decorations = [];
   const blocks = findBlockNodes(doc).filter(
@@ -34,7 +51,13 @@ function getDecorations({ doc, name }) {
   blocks.forEach(block => {
     let startPos = block.pos + 1;
     const language = block.node.attrs.language;
-    if (!language || language === "none") return;
+    if (
+      !language ||
+      language === "none" ||
+      !Object.keys(LANGUAGES).includes(language)
+    ) {
+      return;
+    }
 
     const nodes = refractor.highlight(block.node.textContent, language);
 
