@@ -16,7 +16,7 @@ import typescript from "refractor/lang/typescript";
 import { setBlockType } from "prosemirror-commands";
 import { textblockTypeInputRule } from "prosemirror-inputrules";
 import copy from "copy-to-clipboard";
-import Prism from "../plugins/Prism";
+import Prism, { LANGUAGES } from "../plugins/Prism";
 import Node from "./Node";
 
 [
@@ -37,22 +37,7 @@ import Node from "./Node";
 
 export default class CodeFence extends Node {
   get languageOptions() {
-    return Object.entries({
-      none: "None", // additional entry to disable highlighting
-      bash: "Bash",
-      css: "CSS",
-      clike: "C",
-      csharp: "C#",
-      markup: "HTML",
-      java: "Java",
-      javascript: "JavaScript",
-      json: "JSON",
-      php: "PHP",
-      powershell: "Powershell",
-      python: "Python",
-      ruby: "Ruby",
-      typescript: "TypeScript",
-    });
+    return Object.entries(LANGUAGES);
   }
 
   get name() {
