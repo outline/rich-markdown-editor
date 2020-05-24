@@ -132,6 +132,7 @@ export default class Image extends Node {
   };
 
   component = options => {
+    const { theme } = options;
     const { alt, src } = options.node.attrs;
 
     return (
@@ -143,6 +144,11 @@ export default class Image extends Node {
             style: {
               maxWidth: "100%",
               maxHeight: "75vh",
+            },
+          }}
+          defaultStyles={{
+            overlay: {
+              backgroundColor: theme.background,
             },
           }}
           shouldRespectMaxDimension
