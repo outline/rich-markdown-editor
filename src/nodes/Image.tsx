@@ -153,15 +153,17 @@ export default class Image extends Node {
           }}
           shouldRespectMaxDimension
         />
-        <Caption
-          onKeyDown={this.handleKeyDown}
-          onBlur={this.handleBlur(options)}
-          tabIndex={-1}
-          contentEditable={options.isEditable}
-          suppressContentEditableWarning
-        >
-          {alt}
-        </Caption>
+        {(options.isEditable || alt) && (
+          <Caption
+            onKeyDown={this.handleKeyDown}
+            onBlur={this.handleBlur(options)}
+            tabIndex={-1}
+            contentEditable={options.isEditable}
+            suppressContentEditableWarning
+          >
+            {alt}
+          </Caption>
+        )}
       </div>
     );
   };
