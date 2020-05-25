@@ -769,8 +769,8 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     pointer-events: ${props => (props.readOnly ? "none" : "initial")};
     opacity: ${props => (props.readOnly ? 0.75 : 1)};
     margin: 0 0.5em 0 0;
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
   }
 
   li p:first-child {
