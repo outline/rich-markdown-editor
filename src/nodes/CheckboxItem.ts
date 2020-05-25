@@ -3,7 +3,6 @@ import {
   sinkListItem,
   liftListItem,
 } from "prosemirror-schema-list";
-import { Plugin } from "prosemirror-state";
 import Node from "./Node";
 
 export default class CheckboxItem extends Node {
