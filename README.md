@@ -70,6 +70,24 @@ A React component that will be wrapped around items that have an optional toolti
 
 A number that will offset the document headings by a number of levels. For example, if you already nest the editor under a main `h1` title you might want the user to only be able to create `h2` headings and below, in this case you would set the prop to `1`.
 
+#### `embeds`
+
+Optionally define embeds which will be inserted in place of links when the `matcher` function returns a truthy value. The matcher method's return value will be available on the component under `props.attrs.matches`. If `title` and `icon` are provided then the embed will also appear in the block menu.
+
+```javascript
+<Editor
+  embeds={[
+    {
+      title: "Google Doc",
+      keywords: "google docs gdocs",
+      icon: <GoogleDocIcon />,
+      matcher: href => href.matches(/docs.google.com/i),
+      component: GoogleDocEmbed
+    }
+  ]}
+/>
+```
+
 ### Callbacks
 
 #### `uploadImage(file: Blob): Promise<string>`
@@ -165,20 +183,6 @@ import { history } from "react-router";
 />
 ```
 
-#### `getLinkComponent(url: string): void | ReactNode`
-
-This callback allows links to "request" an alternative component to display instead of an inline link. Given a url return `undefined` for no replacement or a valid React component to replace the standard link display. This is used to support embeds.
-
-```javascript
-<Editor
-  getLinkComponent={url => {
-    if (url.match(/https?:\/\/youtube\.com/)) {
-      return <MyFancyYoutubeEmbed url={url} />;
-    }
-  }}
-/>
-```
-
 ### Interface
 
 The Editor component exposes a few methods for interacting with the mounted editor.
@@ -189,10 +193,9 @@ Place the cursor at the start of the document and focus it.
 #### `focusAtEnd(): void`
 Place the cursor at the end of the document and focus it.
 
-#### `getHeadings(): { title: string, level: number }[]`
-Returns an array of objects with the text content of all the headings in the document and
-their level in the hierarchy. This is useful to construct your own table of contents since
-the `toc` option was removed in v10.
+#### `getHeadings(): { title: string, level: number, id: string }[]`
+Returns an array of objects with the text content of all the headings in the document,
+their level in the hierarchy, and the anchor id. This is useful to construct your own table of contents since the `toc` option was removed in v10.
 
 
 ## Contributing

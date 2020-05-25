@@ -132,6 +132,7 @@ export default class Image extends Node {
   };
 
   component = options => {
+    const { theme } = options;
     const { alt, src } = options.node.attrs;
 
     return (
@@ -145,17 +146,24 @@ export default class Image extends Node {
               maxHeight: "75vh",
             },
           }}
+          defaultStyles={{
+            overlay: {
+              backgroundColor: theme.background,
+            },
+          }}
           shouldRespectMaxDimension
         />
-        <Caption
-          onKeyDown={this.handleKeyDown}
-          onBlur={this.handleBlur(options)}
-          tabIndex={-1}
-          contentEditable={options.isEditable}
-          suppressContentEditableWarning
-        >
-          {alt}
-        </Caption>
+        {(options.isEditable || alt) && (
+          <Caption
+            onKeyDown={this.handleKeyDown}
+            onBlur={this.handleBlur(options)}
+            tabIndex={-1}
+            contentEditable={options.isEditable}
+            suppressContentEditableWarning
+          >
+            {alt}
+          </Caption>
+        )}
       </div>
     );
   };

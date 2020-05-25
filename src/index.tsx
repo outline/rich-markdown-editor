@@ -14,6 +14,7 @@ import styled, { ThemeProvider } from "styled-components";
 import { light as lightTheme, dark as darkTheme } from "./theme";
 import Flex from "./components/Flex";
 import { SearchResult } from "./components/LinkEditor";
+import { EmbedDescriptor } from "./types";
 import FloatingToolbar from "./components/FloatingToolbar";
 import BlockMenu from "./components/BlockMenu";
 import LinkMenu from "./components/LinkMenu";
@@ -21,6 +22,7 @@ import Tooltip from "./components/Tooltip";
 import Extension from "./lib/Extension";
 import ExtensionManager from "./lib/ExtensionManager";
 import ComponentView from "./lib/ComponentView";
+import headingToSlug from "./lib/headingToSlug";
 
 // nodes
 import ReactNode from "./nodes/ReactNode";
@@ -87,7 +89,7 @@ export type Props = {
   onClickLink: (href: string) => void;
   onClickHashtag?: (tag: string) => void;
   onKeyDown: (event: React.KeyboardEvent<HTMLDivElement>) => void;
-  getLinkComponent?: (href: string) => typeof React.Component | void;
+  embeds: EmbedDescriptor[];
   onShowToast?: (message: string) => void;
   tooltip: typeof React.Component;
   className?: string;
@@ -113,6 +115,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     onClickLink: href => {
       window.open(href, "_blank");
     },
+    embeds: [],
     extensions: [],
     tooltip: Tooltip,
   };
@@ -197,9 +200,11 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new Blockquote(),
         new BulletList(),
         new CodeBlock({
+          initialReadOnly: this.props.readOnly,
           onShowToast: this.props.onShowToast,
         }),
         new CodeFence({
+          initialReadOnly: this.props.readOnly,
           onShowToast: this.props.onShowToast,
         }),
         new CheckboxList(),
@@ -467,11 +472,29 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
   getHeadings = () => {
     const headings = [];
+    const previouslySeen = {};
+
     this.view.state.doc.forEach(node => {
       if (node.type.name === "heading") {
+        // calculate the optimal slug
+        const slug = headingToSlug(node);
+        let id = slug;
+
+        // check if we've already used it, and if so how many times?
+        // Make the new id based on that number ensuring that we have
+        // unique ID's even when headings are identical
+        if (previouslySeen[slug] > 0) {
+          id = headingToSlug(node, previouslySeen[slug]);
+        }
+
+        // record that we've seen this slug for the next loop
+        previouslySeen[slug] =
+          previouslySeen[slug] !== undefined ? previouslySeen[slug] + 1 : 1;
+
         headings.push({
           title: node.textContent,
           level: node.attrs.level,
+          id,
         });
       }
     });
@@ -526,6 +549,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   onImageUploadStart={this.props.onImageUploadStart}
                   onImageUploadStop={this.props.onImageUploadStop}
                   onShowToast={this.props.onShowToast}
+                  embeds={this.props.embeds}
                 />
               </React.Fragment>
             )}
@@ -773,7 +797,6 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
   }
 
   li p:first-child {
-    display: inline-block;
     margin: 0;
   }
 
@@ -818,6 +841,11 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
       button {
         display: ${props => (props.readOnly ? "inline" : "none")};
       }
+    }
+
+    select:focus,
+    select:active {
+      display: inline;
     }
   }
 

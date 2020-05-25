@@ -78,7 +78,10 @@ const MenuItem = styled.button<{
   &:hover,
   &:active {
     color: ${props => props.theme.black};
-    background: ${props => props.theme.blockToolbarHoverBackground};
+    background: ${props =>
+      props.selected
+        ? props.theme.blockToolbarTrigger
+        : props.theme.blockToolbarHoverBackground};
   }
 `;
 

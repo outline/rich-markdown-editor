@@ -179,9 +179,7 @@ const Wrapper = styled.div<{
 }>`
   padding: 8px 16px;
   position: absolute;
-  z-index: ${props => {
-    return props.theme.zIndex + 100;
-  }};
+  z-index: ${props => props.theme.zIndex + 100};
   top: ${props => props.top}px;
   left: ${props => props.left}px;
   opacity: 0;
