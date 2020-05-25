@@ -12,7 +12,7 @@ This is example content. It is persisted between reloads in localStorage.
 `;
 const defaultValue = savedText || exampleText;
 
-const searchResults = [
+const docSearchResults = [
   {
     title: "Hiring",
     url: "/doc/1",
@@ -107,7 +107,7 @@ class Example extends React.Component {
           onShowToast={message => window.alert(message)}
           onSearchLink={async term => {
             console.log("Searched link: ", term);
-            return searchResults.filter(result =>
+            return docSearchResults.filter(result =>
               result.title.toLowerCase().includes(term.toLowerCase())
             );
           }}
