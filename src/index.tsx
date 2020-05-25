@@ -819,6 +819,11 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
         display: ${props => (props.readOnly ? "inline" : "none")};
       }
     }
+
+    select:focus,
+    select:active {
+      display: inline;
+    }
   }
 
   pre {
