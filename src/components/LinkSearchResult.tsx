@@ -1,19 +1,21 @@
 import * as React from "react";
-import styled from "styled-components";
+import styled, { withTheme } from "styled-components";
 import { NextIcon } from "outline-icons";
+import theme from "../theme";
 
 type Props = {
   onClick: (event: React.MouseEvent) => void;
   icon: React.ReactNode;
   selected: boolean;
   title: string;
+  theme: typeof theme;
 };
 
-function LinkSearchResult({ title, icon, ...rest }: Props) {
+function LinkSearchResult({ title, icon, theme, ...rest }: Props) {
   return (
     <ListItem {...rest}>
       <i>
-        <NextIcon light />
+        <NextIcon color={theme.toolbarItem} />
       </i>
       {icon}
       {title}
@@ -53,4 +55,4 @@ const ListItem = styled.li<{
   }
 `;
 
-export default LinkSearchResult;
+export default withTheme(LinkSearchResult);

@@ -127,8 +127,6 @@ class LinkEditor extends React.Component<Props> {
         const total = this.state.results.length;
         const nextIndex = this.state.selectedIndex + 1;
 
-        console.log({ nextIndex });
-
         this.setState({
           selectedIndex: Math.min(nextIndex, total),
         });
