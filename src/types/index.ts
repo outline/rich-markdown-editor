@@ -14,7 +14,6 @@ export type MenuItem = {
 };
 
 export type EmbedDescriptor = MenuItem & {
-  icon?: React.ReactNode;
   matcher: (url: string) => boolean | [];
   component: typeof React.Component;
 };
