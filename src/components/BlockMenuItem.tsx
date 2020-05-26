@@ -10,7 +10,7 @@ type Props = {
   theme: typeof theme;
   icon: typeof React.Component;
   title: string;
-  shortcut: string;
+  shortcut?: string;
 };
 
 function BlockMenuItem({

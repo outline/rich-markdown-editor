@@ -13,7 +13,8 @@ export default class MarkdownPaste extends Extension {
       new Plugin({
         props: {
           handlePaste: (view, event: ClipboardEvent) => {
-            if (!view.props.editable) return;
+            if (!view.props.editable) return false;
+            if (!event.clipboardData) return false;
 
             const text = event.clipboardData.getData("text/plain");
             const html = event.clipboardData.getData("text/html");
@@ -61,7 +62,10 @@ export default class MarkdownPaste extends Extension {
             // for the title we try and slice the extra node off if we can
             // before adding the parsed nodes to the doc
             try {
-              if (!slice.content.firstChild.textContent) {
+              if (
+                slice.content.firstChild &&
+                !slice.content.firstChild.textContent
+              ) {
                 slice = slice.removeBetween(0, 2);
               } else {
                 slice = slice.removeBetween(5, slice.size);

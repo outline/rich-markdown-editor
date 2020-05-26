@@ -46,7 +46,10 @@ export default function markdownItCheckbox(md: MarkdownIt): void {
 
         // remove [ ] [x] from list item label
         tokens[i].content = label;
-        tokens[i].children[0].content = label;
+        const tokenChildren = tokens[i].children;
+        if (tokenChildren) {
+          tokenChildren[0].content = label;
+        }
 
         // open list item and ensure checked state is transferred
         tokens[i - 2].type = "checkbox_item_open";

@@ -123,7 +123,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   extensions: ExtensionManager;
-  element?: HTMLElement;
+  element?: HTMLElement | null;
   view: EditorView;
   schema: Schema;
   serializer: MarkdownSerializer;
@@ -353,6 +353,10 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   }
 
   createView() {
+    if (!this.element) {
+      throw new Error("createView called before ref available");
+    }
+
     const view = new EditorView(this.element, {
       state: this.createState(),
       editable: () => !this.props.readOnly,
@@ -458,7 +462,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   getHeadings = () => {
-    const headings = [];
+    const headings: { title: string; level: number; id: string }[] = [];
     const previouslySeen = {};
 
     this.view.state.doc.forEach(node => {
@@ -537,7 +541,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 }
 
-const StyledEditor = styled("div")<{ readOnly: boolean }>`
+const StyledEditor = styled("div")<{ readOnly?: boolean }>`
   color: ${props => props.theme.text};
   background: ${props => props.theme.background};
   font-family: ${props => props.theme.fontFamily};

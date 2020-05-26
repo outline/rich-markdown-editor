@@ -1,6 +1,11 @@
+import { EditorState } from "prosemirror-state";
 import { TrashIcon, InsertAboveIcon, InsertBelowIcon } from "outline-icons";
+import { MenuItem } from "../types";
 
-export default function tableRowMenuItems(state, index) {
+export default function tableRowMenuItems(
+  state: EditorState,
+  index: number
+): MenuItem[] {
   return [
     {
       name: "addRowAfter",

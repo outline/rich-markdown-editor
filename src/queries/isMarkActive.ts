@@ -1,4 +1,6 @@
-const isMarkActive = type => (state): boolean => {
+import { EditorState } from "prosemirror-state";
+
+const isMarkActive = type => (state: EditorState): boolean => {
   const { from, $from, to, empty } = state.selection;
 
   return empty

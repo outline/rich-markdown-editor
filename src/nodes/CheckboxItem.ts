@@ -79,11 +79,13 @@ export default class CheckboxItem extends Node {
                 top: event.clientY,
               });
 
-              const transaction = tr.setNodeMarkup(result.inside, null, {
-                checked: !event.target.checked,
-              });
-              view.dispatch(transaction);
-              return true;
+              if (result) {
+                const transaction = tr.setNodeMarkup(result.inside, undefined, {
+                  checked: !event.target.checked,
+                });
+                view.dispatch(transaction);
+                return true;
+              }
             }
 
             return false;

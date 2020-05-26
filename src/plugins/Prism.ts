@@ -21,29 +21,30 @@ export const LANGUAGES = {
   typescript: "TypeScript",
 };
 
+type ParsedNode = {
+  text: string;
+  classes: string[];
+};
+
 function getDecorations({ doc, name }) {
-  const decorations = [];
+  const decorations: Decoration[] = [];
   const blocks = findBlockNodes(doc).filter(
     item => item.node.type.name === name
   );
 
   function parseNodes(
-    nodes,
-    className = []
-  ): { text: string; classes: string[] }[] {
+    nodes: refractor.RefractorNode[],
+    classNames: string[] = []
+  ): any {
     return nodes.map(node => {
-      const classes = [
-        ...className,
-        ...(node.properties ? node.properties.className : []),
-      ];
-
-      if (node.children) {
+      if (node.type === "element") {
+        const classes = [...classNames, ...(node.properties.className || [])];
         return parseNodes(node.children, classes);
       }
 
       return {
         text: node.value,
-        classes,
+        classes: classNames,
       };
     });
   }
@@ -62,7 +63,7 @@ function getDecorations({ doc, name }) {
     const nodes = refractor.highlight(block.node.textContent, language);
 
     flattenDeep(parseNodes(nodes))
-      .map(node => {
+      .map((node: ParsedNode) => {
         const from = startPos;
         const to = from + node.text.length;
 

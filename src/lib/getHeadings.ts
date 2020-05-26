@@ -1,10 +1,8 @@
 import { EditorView } from "prosemirror-view";
 import headingToSlug from "./headingToSlug";
 
-export default function getHeadings(
-  view: EditorView
-): { title: string; level: number; id: string }[] {
-  const headings = [];
+export default function getHeadings(view: EditorView) {
+  const headings: { title: string; level: number; id: string }[] = [];
   const previouslySeen = {};
 
   view.state.doc.forEach(node => {

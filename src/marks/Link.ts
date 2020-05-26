@@ -95,7 +95,7 @@ export default class Link extends Mark {
           handleDOMEvents: {
             click: (view, event: MouseEvent) => {
               // allow opening links in editing mode with the meta/cmd key
-              if (view.props.editable(view.state) && !event.metaKey) {
+              if (view.props.editable && !event.metaKey) {
                 return false;
               }
 
@@ -117,6 +117,8 @@ export default class Link extends Mark {
                   return true;
                 }
               }
+
+              return false;
             },
           },
         },

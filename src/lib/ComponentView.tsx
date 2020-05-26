@@ -25,8 +25,8 @@ export default class ComponentView {
   getPos: () => number;
   decorations: Decoration<{ [key: string]: any }>[];
   isSelected = false;
-  containerElement: HTMLElement;
-  contentElement: HTMLElement;
+  containerElement: HTMLElement | null;
+  contentElement: HTMLElement | null;
   dom: HTMLElement;
   contentDOM: HTMLElement;
 
@@ -108,7 +108,9 @@ export default class ComponentView {
   }
 
   destroy() {
-    ReactDOM.unmountComponentAtNode(this.containerElement);
+    if (this.containerElement) {
+      ReactDOM.unmountComponentAtNode(this.containerElement);
+    }
     this.containerElement = null;
     this.contentElement = null;
   }

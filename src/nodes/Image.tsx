@@ -24,6 +24,7 @@ const uploadPlugin = options =>
       handleDOMEvents: {
         paste(view, event: ClipboardEvent): boolean {
           if (!view.props.editable) return false;
+          if (!event.clipboardData) return false;
 
           // check if we actually pasted any files
           const files = Array.prototype.slice
@@ -50,13 +51,17 @@ const uploadPlugin = options =>
           if (files.length === 0) return false;
 
           // grab the position in the document for the cursor
-          const { pos } = view.posAtCoords({
+          const result = view.posAtCoords({
             left: event.clientX,
             top: event.clientY,
           });
 
-          insertFiles(view, event, pos, files, options);
-          return true;
+          if (result) {
+            insertFiles(view, event, result.pos, files, options);
+            return true;
+          }
+
+          return false;
         },
       },
     },
@@ -124,7 +129,7 @@ export default class Image extends Node {
 
     // update meta on object
     const pos = getPos();
-    const transaction = tr.setNodeMarkup(pos, null, {
+    const transaction = tr.setNodeMarkup(pos, undefined, {
       src,
       alt,
     });

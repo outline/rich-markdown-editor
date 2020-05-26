@@ -14,6 +14,7 @@ import getMarkRange from "../queries/getMarkRange";
 import isNodeActive from "../queries/isNodeActive";
 import getColumnIndex from "../queries/getColumnIndex";
 import getRowIndex from "../queries/getRowIndex";
+import { MenuItem } from "../types";
 
 const SSR = typeof window === "undefined";
 
@@ -131,7 +132,7 @@ export default class FloatingToolbar extends React.Component<Props> {
     const link = isMarkActive(state.schema.marks.link)(state);
     const range = getMarkRange(selection.$from, state.schema.marks.link);
 
-    let items = [];
+    let items: MenuItem[] = [];
     if (isTableSelection) {
       items = getTableMenuItems();
     } else if (colIndex !== undefined) {
