@@ -7,6 +7,7 @@ import getTableColMenuItems from "../menus/tableCol";
 import getTableRowMenuItems from "../menus/tableRow";
 import getTableMenuItems from "../menus/table";
 import getFormattingMenuItems from "../menus/formatting";
+import SelectionToolbar from "./SelectionToolbar";
 import LinkEditor, { SearchResult } from "./LinkEditor";
 import Menu from "./Menu";
 import isMarkActive from "../queries/isMarkActive";
@@ -24,8 +25,6 @@ type Props = {
   onClickLink: (url: string) => void;
   view: EditorView;
 };
-
-const menuRef = React.createRef<HTMLDivElement>();
 
 function calculatePosition(props) {
   const { view } = props;
@@ -95,24 +94,6 @@ function calculatePosition(props) {
 }
 
 export default class FloatingToolbar extends React.Component<Props> {
-  state = {
-    left: 0,
-    top: 0,
-    offset: 0,
-  };
-
-  componentDidUpdate() {
-    const newState = calculatePosition(this.props);
-
-    if (!isEqual(newState, this.state)) {
-      this.setState(newState);
-    }
-  }
-
-  componentDidMount() {
-    this.setState(calculatePosition(this.props));
-  }
-
   render() {
     const { view } = this.props;
     const { state } = view;
@@ -148,13 +129,7 @@ export default class FloatingToolbar extends React.Component<Props> {
 
     return (
       <Portal>
-        <Wrapper
-          active={isActive}
-          ref={menuRef}
-          top={this.state.top}
-          left={this.state.left}
-          offset={this.state.offset}
-        >
+        <SelectionToolbar view={view} isActive={isActive}>
           {link && range ? (
             <LinkEditor
               mark={range.mark}
@@ -165,7 +140,7 @@ export default class FloatingToolbar extends React.Component<Props> {
           ) : (
             <Menu items={items} {...this.props} />
           )}
-        </Wrapper>
+        </SelectionToolbar>
       </Portal>
     );
   }

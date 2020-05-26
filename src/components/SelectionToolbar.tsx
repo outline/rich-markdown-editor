@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Portal } from "react-portal";
+import { isEqual } from "lodash";
 import { EditorView } from "prosemirror-view";
 import styled from "styled-components";
 
@@ -19,31 +20,115 @@ export default class SelectionToolbar extends React.Component<Props> {
     top: undefined,
   };
 
-  componentDidUpdate(prevProps) {
-    if (!prevProps.isActive && this.props.isActive) {
-      const position = this.calculatePosition(this.props);
-      this.setState(position);
+  componentDidMount() {
+    this.setState(this.calculatePosition(this.props));
+  }
+
+  componentDidUpdate() {
+    const newState = this.calculatePosition(this.props);
+
+    if (!isEqual(newState, this.state)) {
+      this.setState(newState);
     }
   }
+
+  // componentDidUpdate(prevProps) {
+  //   if (!prevProps.isActive && this.props.isActive) {
+  //     const position = this.calculatePosition(this.props);
+  //     this.setState(position);
+  //   }
+  // }
+
+  // TODO: fold this into the main calculate position
+  // calculatePosition(props) {
+  //   const { view } = props;
+  //   const { selection } = view.state;
+  //   const { offsetHeight } = this.menuRef.current;
+  //   const paragraph = view.domAtPos(selection.$from.pos);
+
+  //   if (!props.isActive || !paragraph.node || SSR) {
+  //     return {
+  //       left: -1000,
+  //       top: 0,
+  //     };
+  //   }
+
+  //   const { top, left } = paragraph.node.getBoundingClientRect();
+
+  //   return {
+  //     left: left + window.scrollX,
+  //     top: top + window.scrollY - offsetHeight,
+  //   };
+  // }
 
   calculatePosition(props) {
     const { view } = props;
     const { selection } = view.state;
-    const { offsetHeight } = this.menuRef.current;
-    const paragraph = view.domAtPos(selection.$from.pos);
 
-    if (!props.isActive || !paragraph.node || SSR) {
+    // If there is no selection, the selection is empty or the selection is a
+    // NodeSelection instead of a TextSelection then hide the formatting
+    // toolbar offscreen
+    if (
+      !selection ||
+      !this.menuRef.current ||
+      selection.empty ||
+      selection.node ||
+      SSR
+    ) {
       return {
         left: -1000,
         top: 0,
+        offset: 0,
       };
     }
 
-    const { top, left } = paragraph.node.getBoundingClientRect();
+    console.log("SELECTION: ", selection);
+
+    // based on the start and end of the selection calculate the position at
+    // the center top
+    const startPos = view.coordsAtPos(selection.$from.pos);
+    const endPos = view.coordsAtPos(selection.$to.pos);
+
+    // tables are an oddity, and need their own logic
+    const isColSelection =
+      selection.isColSelection && selection.isColSelection();
+    const isRowSelection =
+      selection.isRowSelection && selection.isRowSelection();
+
+    if (isRowSelection) {
+      endPos.left = startPos.left + 12;
+    } else if (isColSelection) {
+      const { node: element } = view.domAtPos(selection.$from.pos);
+      const { width } = element.getBoundingClientRect();
+      endPos.left = startPos.left + width;
+    }
+
+    const halfSelection = Math.abs(endPos.left - startPos.left) / 2;
+    const centerOfSelection = startPos.left + halfSelection;
+
+    // position the menu so that it is centered over the selection except in
+    // the cases where it would extend off the edge of the screen. In these
+    // instances leave a margin
+    const { offsetWidth, offsetHeight } = this.menuRef.current;
+    const margin = 12;
+    const left = Math.min(
+      window.innerWidth - offsetWidth - margin,
+      Math.max(margin, centerOfSelection - offsetWidth / 2)
+    );
+    const top = Math.min(
+      window.innerHeight - offsetHeight - margin,
+      Math.max(margin, startPos.top - offsetHeight)
+    );
+
+    // if the menu has been offset to not extend offscreen then we should adjust
+    // the position of the triangle underneath to correctly point to the center
+    // of the selection still
+    const offset = left - (centerOfSelection - offsetWidth / 2);
 
     return {
       left: left + window.scrollX,
-      top: top + window.scrollY - offsetHeight,
+      top: top + window.scrollY,
+      offset,
     };
   }
 
