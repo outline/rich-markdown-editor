@@ -1,17 +1,19 @@
 import * as React from "react";
 import { Portal } from "react-portal";
 import { EditorView } from "prosemirror-view";
-import LinkEditor from "./LinkEditor";
+import LinkEditor, { SearchResult } from "./LinkEditor";
 import styled from "styled-components";
 
 const SSR = typeof window === "undefined";
 
 type Props = {
   isActive: boolean;
-  commands: Record<string, any>;
+  // commands: Record<string, any>;
   view: EditorView;
   tooltip: typeof React.Component;
   onCreateLink?: (title: string) => Promise<string>;
+  onSearchLink?: (term: string) => Promise<SearchResult[]>;
+  onClickLink: (url: string) => void;
   onClose: () => void;
 };
 
@@ -52,9 +54,8 @@ export default class LinkMenu extends React.Component<Props> {
   }
 
   handleOnCreateLink = async (title: string) => {
-    console.log("handleOnCreateLink");
     if (!this.props.onCreateLink) {
-      return;
+      return "";
     }
 
     this.props.onClose();
@@ -90,7 +91,6 @@ export default class LinkMenu extends React.Component<Props> {
           left={this.state.left}
         >
           <LinkEditor
-            href=""
             from={selection.from}
             to={selection.to}
             onCreateLink={onCreateLink ? this.handleOnCreateLink : undefined}
@@ -102,6 +102,7 @@ export default class LinkMenu extends React.Component<Props> {
   }
 }
 
+// TODO: this is a lot of copy-pasta, will need to consolidate into single display component
 const Wrapper = styled.div<{
   active: boolean;
   top: number;

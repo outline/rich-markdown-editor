@@ -531,7 +531,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                 />
                 <LinkMenu
                   view={this.view}
-                  commands={this.commands}
+                  // commands={this.commands}
                   isActive={this.state.linkMenuOpen}
                   onCreateLink={this.props.onCreateLink}
                   onSearchLink={this.props.onSearchLink}

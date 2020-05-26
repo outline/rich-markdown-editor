@@ -1,6 +1,7 @@
 import * as React from "react";
 import { setTextSelection } from "prosemirror-utils";
 import { EditorView } from "prosemirror-view";
+import { Mark } from "prosemirror-model";
 import {
   DocumentIcon,
   CloseIcon,
@@ -22,7 +23,7 @@ export type SearchResult = {
 };
 
 type Props = {
-  href: string;
+  mark?: Mark;
   from: number;
   to: number;
   tooltip: typeof React.Component;
@@ -35,13 +36,17 @@ type Props = {
 
 class LinkEditor extends React.Component<Props> {
   discardInputValue = false;
-  initialValue: string = this.props.href;
+  initialValue = this.href;
 
   state = {
     selectedIndex: -1,
-    value: this.props.href,
+    value: this.href,
     results: [],
   };
+
+  get href(): string {
+    return this.props.mark ? this.props.mark.attrs.href : null;
+  }
 
   componentWillUnmount = () => {
     // If we discarded the changes then nothing to do
@@ -152,10 +157,8 @@ class LinkEditor extends React.Component<Props> {
   };
 
   handleOpenLink = (event): void => {
-    const { href } = this.props;
-
     event.preventDefault();
-    this.props.onClickLink(href);
+    this.props.onClickLink(this.href);
   };
 
   handleRemoveLink = (): void => {
@@ -182,7 +185,6 @@ class LinkEditor extends React.Component<Props> {
   };
 
   render() {
-    const { href } = this.props;
     const Tooltip = this.props.tooltip;
     const showResults = !!this.state.value;
     const showCreateLink = !!this.props.onCreateLink;
@@ -194,7 +196,7 @@ class LinkEditor extends React.Component<Props> {
           placeholder="Search or paste a link…"
           onKeyDown={this.handleKeyDown}
           onChange={this.handleChange}
-          autoFocus={href === ""}
+          autoFocus={!this.href}
         />
         <ToolbarButton
           onClick={this.handleOpenLink}
