@@ -26,6 +26,7 @@ export default class LinkMenu extends React.Component<Props> {
   };
 
   componentDidUpdate(prevProps) {
+    console.log({ isactive: this.props.isActive });
     if (!prevProps.isActive && this.props.isActive) {
       const position = this.calculatePosition(this.props);
       this.setState(position);
@@ -77,7 +78,7 @@ export default class LinkMenu extends React.Component<Props> {
   };
 
   render() {
-    const { isActive, onCreateLink, ...rest } = this.props;
+    const { isActive, onCreateLink, onClose, ...rest } = this.props;
     const selection = this.props.view.state.selection;
 
     console.log(this.state);
@@ -94,6 +95,7 @@ export default class LinkMenu extends React.Component<Props> {
             from={selection.from}
             to={selection.to}
             onCreateLink={onCreateLink ? this.handleOnCreateLink : undefined}
+            onRemoveLink={onClose}
             {...rest}
           />
         </Wrapper>

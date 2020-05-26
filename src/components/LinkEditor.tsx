@@ -27,6 +27,7 @@ type Props = {
   from: number;
   to: number;
   tooltip: typeof React.Component;
+  onRemoveLink?: () => void;
   onCreateLink?: (title: string) => Promise<string>;
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
   onClickLink: (url: string) => void;
@@ -45,7 +46,7 @@ class LinkEditor extends React.Component<Props> {
   };
 
   get href(): string {
-    return this.props.mark ? this.props.mark.attrs.href : null;
+    return this.props.mark ? this.props.mark.attrs.href : "";
   }
 
   componentWillUnmount = () => {
@@ -126,6 +127,8 @@ class LinkEditor extends React.Component<Props> {
         const total = this.state.results.length;
         const nextIndex = this.state.selectedIndex + 1;
 
+        console.log({ nextIndex });
+
         this.setState({
           selectedIndex: Math.min(nextIndex, total),
         });
@@ -164,11 +167,16 @@ class LinkEditor extends React.Component<Props> {
   handleRemoveLink = (): void => {
     this.discardInputValue = true;
 
-    // TODO: restore mark prop, but optional.
-    const { from, to, mark } = this.props;
+    const { from, to, mark, onRemoveLink } = this.props;
     const { state, dispatch } = this.props.view;
 
-    dispatch(state.tr.removeMark(from, to, mark));
+    if (mark) {
+      dispatch(state.tr.removeMark(from, to, mark));
+    }
+
+    if (onRemoveLink) {
+      onRemoveLink();
+    }
   };
 
   handleSearchResultClick = (url: string) => event => {
@@ -196,7 +204,7 @@ class LinkEditor extends React.Component<Props> {
           placeholder="Search or paste a link…"
           onKeyDown={this.handleKeyDown}
           onChange={this.handleChange}
-          autoFocus={!this.href}
+          autoFocus={this.href === ""}
         />
         <ToolbarButton
           onClick={this.handleOpenLink}
