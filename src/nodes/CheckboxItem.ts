@@ -3,7 +3,6 @@ import {
   sinkListItem,
   liftListItem,
 } from "prosemirror-schema-list";
-import { Plugin } from "prosemirror-state";
 import Node from "./Node";
 
 export default class CheckboxItem extends Node {
@@ -34,64 +33,46 @@ export default class CheckboxItem extends Node {
           }),
         },
       ],
-      toDOM: node => [
-        "li",
-        {
-          "data-type": this.name,
-          class: node.attrs.checked ? "checked" : undefined,
-        },
-        [
-          "span",
+      toDOM: node => {
+        const input = document.createElement("input");
+        input.id = node.attrs.id;
+        input.type = "checkbox";
+        input.checked = node.attrs.checked ? true : undefined;
+        input.addEventListener("click", this.handleChange);
+
+        return [
+          "li",
           {
-            contentEditable: false,
+            "data-type": this.name,
+            class: node.attrs.checked ? "checked" : undefined,
           },
           [
-            "input",
+            "span",
             {
-              id: node.attrs.id,
-              type: "checkbox",
-              checked: node.attrs.checked ? true : undefined,
+              contentEditable: false,
             },
+            input,
           ],
-        ],
-        ["div", 0],
-      ],
+          ["div", 0],
+        ];
+      },
     };
   }
 
-  get plugins() {
-    return [
-      new Plugin({
-        props: {
-          handleClick: (view, pos, event) => {
-            if (!view.props.editable) return false;
-            const { tr } = view.state;
+  handleChange = event => {
+    const { view } = this.editor;
+    const { tr } = view.state;
 
-            if (
-              event.target instanceof HTMLInputElement &&
-              event.target.type === "checkbox"
-            ) {
-              event.preventDefault();
-              event.stopPropagation();
+    const result = view.posAtCoords({
+      left: event.clientX,
+      top: event.clientY,
+    });
 
-              const result = view.posAtCoords({
-                left: event.clientX,
-                top: event.clientY,
-              });
-
-              const transaction = tr.setNodeMarkup(result.inside, null, {
-                checked: !event.target.checked,
-              });
-              view.dispatch(transaction);
-              return true;
-            }
-
-            return false;
-          },
-        },
-      }),
-    ];
-  }
+    const transaction = tr.setNodeMarkup(result.inside, null, {
+      checked: event.target.checked,
+    });
+    view.dispatch(transaction);
+  };
 
   keys({ type }) {
     return {

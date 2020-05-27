@@ -165,7 +165,7 @@ class LinkEditor extends React.Component<Props> {
   handleRemoveLink = (): void => {
     this.discardInputValue = true;
 
-    const { from, to, mark, onRemoveLink } = this.props;
+    const { from, to, mark, view, onRemoveLink } = this.props;
     const { state, dispatch } = this.props.view;
 
     if (mark) {
@@ -175,6 +175,8 @@ class LinkEditor extends React.Component<Props> {
     if (onRemoveLink) {
       onRemoveLink();
     }
+
+    view.focus();
   };
 
   handleSearchResultClick = (url: string) => event => {
@@ -238,7 +240,8 @@ class LinkEditor extends React.Component<Props> {
                 title={`Create new doc "${this.state.value}"`}
                 icon={<PlusIcon />}
                 onClick={() => {
-                  this.props.onCreateLink(this.state.value);
+                  this.props.onCreateLink &&
+                    this.props.onCreateLink(this.state.value);
                 }}
                 selected={
                   this.state.results.length === this.state.selectedIndex
