@@ -43,6 +43,8 @@ export default function markdownItCheckbox(md: MarkdownIt): void {
           tokens[i + 3].type = "checkbox_list_close";
         }
 
+        // remove [ ] [x] from list item label – must use the content from the
+        // child for escaped characters to be unescaped correctly.
         const tokenChildren = tokens[i].children;
         if (tokenChildren) {
           const contentMatches = tokenChildren[0].content.match(CHECKBOX_REGEX);
@@ -50,7 +52,6 @@ export default function markdownItCheckbox(md: MarkdownIt): void {
           if (contentMatches) {
             const label = contentMatches[2];
 
-            // remove [ ] [x] from list item label
             tokens[i].content = label;
             tokenChildren[0].content = label;
           }
