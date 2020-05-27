@@ -32,7 +32,6 @@ export default function markdownItCheckbox(md: MarkdownIt): void {
       const matches = looksLikeChecklist(tokens, i);
       if (matches) {
         const value = matches[1];
-        const label = matches[2];
         const checked = value.toLowerCase() === "x";
 
         // convert surrounding list tokens
@@ -44,9 +43,18 @@ export default function markdownItCheckbox(md: MarkdownIt): void {
           tokens[i + 3].type = "checkbox_list_close";
         }
 
-        // remove [ ] [x] from list item label
-        tokens[i].content = label;
-        tokens[i].children[0].content = label;
+        const tokenChildren = tokens[i].children;
+        if (tokenChildren) {
+          const contentMatches = tokenChildren[0].content.match(CHECKBOX_REGEX);
+
+          if (contentMatches) {
+            const label = contentMatches[2];
+
+            // remove [ ] [x] from list item label
+            tokens[i].content = label;
+            tokenChildren[0].content = label;
+          }
+        }
 
         // open list item and ensure checked state is transferred
         tokens[i - 2].type = "checkbox_item_open";
