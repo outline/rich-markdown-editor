@@ -248,8 +248,9 @@ const Caption = styled.p`
   background: none;
   resize: none;
 
-  &:empty:not(:focus):before {
+  &:empty:before {
     color: ${props => props.theme.placeholder};
     content: "Write a caption";
+    pointer-events: none;
   }
 `;

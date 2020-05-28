@@ -163,10 +163,11 @@ class LinkEditor extends React.Component<Props, State> {
 
   handleRemoveLink = (): void => {
     this.discardInputValue = true;
-    const { from, to, mark } = this.props;
+    const { from, to, view, mark } = this.props;
     const { state, dispatch } = this.props.view;
 
     dispatch(state.tr.removeMark(from, to, mark));
+    view.focus();
   };
 
   handleSearchResultClick = (url: string) => event => {
