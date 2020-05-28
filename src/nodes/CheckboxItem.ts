@@ -37,8 +37,11 @@ export default class CheckboxItem extends Node {
         const input = document.createElement("input");
         input.id = node.attrs.id;
         input.type = "checkbox";
-        input.checked = node.attrs.checked ? true : undefined;
         input.addEventListener("click", this.handleChange);
+
+        if (node.attrs.checked) {
+          input.checked = true;
+        }
 
         return [
           "li",
@@ -68,10 +71,12 @@ export default class CheckboxItem extends Node {
       top: event.clientY,
     });
 
-    const transaction = tr.setNodeMarkup(result.inside, null, {
-      checked: event.target.checked,
-    });
-    view.dispatch(transaction);
+    if (result) {
+      const transaction = tr.setNodeMarkup(result.inside, undefined, {
+        checked: event.target.checked,
+      });
+      view.dispatch(transaction);
+    }
   };
 
   keys({ type }) {

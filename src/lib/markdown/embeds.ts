@@ -19,7 +19,7 @@ function isLinkClose(token: Token) {
 
 export default function(embeds) {
   function isEmbed(token: Token, link: Token) {
-    const href = link.attrs[0][1];
+    const href = link.attrs ? link.attrs[0][1] : "";
     const simpleLink = href === token.content;
 
     if (!simpleLink) return false;
@@ -44,8 +44,10 @@ export default function(embeds) {
       for (let i = 0; i < tokens.length - 1; i++) {
         // once we find an inline token look through it's children for links
         if (isInline(tokens[i]) && isParagraph(tokens[i - 1])) {
-          for (let j = 0; j < tokens[i].children.length - 1; j++) {
-            const current = tokens[i].children[j];
+          const tokenChildren = tokens[i].children || [];
+
+          for (let j = 0; j < tokenChildren.length - 1; j++) {
+            const current = tokenChildren[j];
             if (!current) continue;
 
             if (isLinkOpen(current)) {

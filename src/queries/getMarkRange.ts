@@ -1,4 +1,6 @@
-export default function getMarkRange($pos = null, type = null) {
+import { ResolvedPos, MarkType } from "prosemirror-model";
+
+export default function getMarkRange($pos?: ResolvedPos, type?: MarkType) {
   if (!$pos || !type) {
     return false;
   }

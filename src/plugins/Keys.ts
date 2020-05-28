@@ -31,6 +31,8 @@ export default class Keys extends Extension {
               this.options.onCancel();
               return true;
             }
+
+            return false;
           },
         },
       }),

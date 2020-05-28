@@ -4,14 +4,13 @@ import { Portal } from "react-portal";
 import { EditorView } from "prosemirror-view";
 import { findParentNode } from "prosemirror-utils";
 import styled from "styled-components";
-import { EmbedDescriptor } from "../types";
+import { EmbedDescriptor, MenuItem } from "../types";
 import BlockMenuItem from "./BlockMenuItem";
 import Input from "./Input";
 import VisuallyHidden from "./VisuallyHidden";
 import getDataTransferFiles from "../lib/getDataTransferFiles";
 import insertFiles from "../commands/insertFiles";
 import getMenuItems from "../menus/block";
-
 const SSR = typeof window === "undefined";
 
 type Props = {
@@ -19,19 +18,28 @@ type Props = {
   commands: Record<string, any>;
   view: EditorView;
   search: string;
-  uploadImage: (file: File) => Promise<string>;
-  onImageUploadStart: () => void;
-  onImageUploadStop: () => void;
-  onShowToast: (message: string, id: string) => void;
+  uploadImage?: (file: File) => Promise<string>;
+  onImageUploadStart?: () => void;
+  onImageUploadStop?: () => void;
+  onShowToast?: (message: string, id: string) => void;
   onClose: () => void;
   embeds: EmbedDescriptor[];
 };
 
-class BlockMenu extends React.Component<Props> {
+type State = {
+  insertItem?: EmbedDescriptor;
+  left?: number;
+  top?: number;
+  bottom?: number;
+  isAbove: boolean;
+  selectedIndex: number;
+};
+
+class BlockMenu extends React.Component<Props, State> {
   menuRef = React.createRef<HTMLDivElement>();
   inputRef = React.createRef<HTMLInputElement>();
 
-  state = {
+  state: State = {
     left: -1000,
     top: undefined,
     bottom: undefined,
@@ -146,6 +154,7 @@ class BlockMenu extends React.Component<Props> {
 
   handleLinkInputKeydown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (!this.props.isActive) return;
+    if (!this.state.insertItem) return;
 
     if (event.key === "Enter") {
       event.preventDefault();
@@ -154,7 +163,7 @@ class BlockMenu extends React.Component<Props> {
       const href = event.currentTarget.value;
       const matches = this.state.insertItem.matcher(href);
 
-      if (!matches) {
+      if (!matches && this.props.onShowToast) {
         this.props.onShowToast(
           "Sorry, that link won't work for this embed type.",
           "embed_invalid_link"
@@ -180,6 +189,7 @@ class BlockMenu extends React.Component<Props> {
 
   handleLinkInputPaste = (event: React.ClipboardEvent<HTMLInputElement>) => {
     if (!this.props.isActive) return;
+    if (!this.state.insertItem) return;
 
     const href = event.clipboardData.getData("text/plain");
     const matches = this.state.insertItem.matcher(href);
@@ -230,14 +240,15 @@ class BlockMenu extends React.Component<Props> {
           parent.pos + parent.node.textContent.length + 1
         )
       );
+
+      insertFiles(view, event, parent.pos, files, {
+        uploadImage,
+        onImageUploadStart,
+        onImageUploadStop,
+        onShowToast,
+      });
     }
 
-    insertFiles(view, event, parent.pos, files, {
-      uploadImage,
-      onImageUploadStart,
-      onImageUploadStop,
-      onShowToast,
-    });
     this.props.onClose();
   };
 
@@ -269,7 +280,8 @@ class BlockMenu extends React.Component<Props> {
     const { view } = props;
     const { selection } = view.state;
     const startPos = view.coordsAtPos(selection.$from.pos);
-    const { offsetHeight } = this.menuRef.current;
+    const ref = this.menuRef.current;
+    const offsetHeight = ref ? ref.offsetHeight : 0;
     const paragraph = view.domAtPos(selection.$from.pos);
 
     if (!props.isActive || !paragraph.node || SSR) {
@@ -277,6 +289,7 @@ class BlockMenu extends React.Component<Props> {
         left: -1000,
         top: 0,
         bottom: undefined,
+        isAbove: false,
       };
     }
 
@@ -302,8 +315,8 @@ class BlockMenu extends React.Component<Props> {
 
   get filtered() {
     const { embeds, search = "" } = this.props;
-    let items = getMenuItems();
-    const embedItems = [];
+    let items: (EmbedDescriptor | MenuItem)[] = getMenuItems();
+    const embedItems: EmbedDescriptor[] = [];
 
     for (const embed of embeds) {
       if (embed.title && embed.icon) {
@@ -326,8 +339,8 @@ class BlockMenu extends React.Component<Props> {
 
       const n = search.toLowerCase();
       return (
-        item.title.toLowerCase().includes(n) ||
-        (item.keywords && item.keywords.toLowerCase().includes(n))
+        (item.title || "").toLowerCase().includes(n) ||
+        (item.keywords || "").toLowerCase().includes(n)
       );
     });
 
@@ -390,6 +403,10 @@ class BlockMenu extends React.Component<Props> {
                   );
                 }
                 const selected = index === this.state.selectedIndex && isActive;
+
+                if (!item.title || !item.icon) {
+                  return null;
+                }
 
                 return (
                   <ListItem key={index}>
@@ -468,9 +485,9 @@ const Empty = styled.div`
 
 export const Wrapper = styled.div<{
   active: boolean;
-  top: number;
-  bottom: number;
-  left: number;
+  top?: number;
+  bottom?: number;
+  left?: number;
   isAbove: boolean;
 }>`
   color: ${props => props.theme.text};

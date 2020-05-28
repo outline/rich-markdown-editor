@@ -24,7 +24,7 @@ export default class ComponentView {
   getPos: () => number;
   decorations: Decoration<{ [key: string]: any }>[];
   isSelected = false;
-  dom: HTMLElement;
+  dom: HTMLElement | null;
 
   // See https://prosemirror.net/docs/ref/#view.NodeView
   constructor(
@@ -92,7 +92,9 @@ export default class ComponentView {
   }
 
   destroy() {
-    ReactDOM.unmountComponentAtNode(this.dom);
+    if (this.dom) {
+      ReactDOM.unmountComponentAtNode(this.dom);
+    }
     this.dom = null;
   }
 

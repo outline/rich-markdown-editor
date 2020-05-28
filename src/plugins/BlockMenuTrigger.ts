@@ -89,6 +89,10 @@ export default class BlockMenuTrigger extends Extension {
               node => node.type.name === "paragraph"
             )(state.selection);
 
+            if (!parent) {
+              return;
+            }
+
             const decorations: Decoration[] = [];
             const isEmpty = parent && parent.node.content.size === 0;
             const isSlash = parent && parent.node.textContent === "/";

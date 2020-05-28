@@ -4,7 +4,7 @@ import Mark from "./Mark";
 
 function backticksFor(node, side) {
   const ticks = /`+/g;
-  let match: RegExpMatchArray;
+  let match: RegExpMatchArray | null;
   let len = 0;
 
   if (node.isText) {

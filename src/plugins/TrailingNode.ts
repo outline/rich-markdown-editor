@@ -40,7 +40,7 @@ export default class TrailingNode extends Extension {
         state: {
           init: (_, state) => {
             const lastNode = state.tr.doc.lastChild;
-            return !disabledNodes.includes(lastNode.type);
+            return lastNode ? !disabledNodes.includes(lastNode.type) : false;
           },
           apply: (tr, value) => {
             if (!tr.docChanged) {
@@ -48,7 +48,7 @@ export default class TrailingNode extends Extension {
             }
 
             const lastNode = tr.doc.lastChild;
-            return !disabledNodes.includes(lastNode.type);
+            return lastNode ? !disabledNodes.includes(lastNode.type) : false;
           },
         },
       }),
