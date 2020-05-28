@@ -82,10 +82,17 @@ function calculatePosition(props) {
     Math.max(margin, startPos.top - offsetHeight)
   );
 
-  // if the menu has been offset to not extend offscreen then we should adjust
+  // Half the width of the triangle which points below the floating menu
+  const halfTriangle = 18;
+
+  // If the menu has been offset to not extend offscreen then we should adjust
   // the position of the triangle underneath to correctly point to the center
   // of the selection still
-  const offset = left - (centerOfSelection - offsetWidth / 2);
+  const halfWidth = offsetWidth / 2;
+  const offset = Math.max(
+    -halfWidth + halfTriangle,
+    Math.min(halfWidth - halfTriangle, left - (centerOfSelection - halfWidth))
+  );
 
   return {
     left: left + window.scrollX,
