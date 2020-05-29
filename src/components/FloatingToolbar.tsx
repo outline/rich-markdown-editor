@@ -85,6 +85,8 @@ export default class FloatingToolbar extends React.Component<Props> {
     // of the selection still
     const offset = left - (centerOfSelection - offsetWidth / 2);
 
+    console.log({ left, centerOfSelection, offsetWidth, offset });
+
     return {
       left: left + window.scrollX,
       top: top + window.scrollY,
@@ -102,6 +104,7 @@ export default class FloatingToolbar extends React.Component<Props> {
           ref={this.menuRef}
           top={this.state.top}
           left={this.state.left}
+          offset={this.state.offset}
         >
           {children}
         </Wrapper>
