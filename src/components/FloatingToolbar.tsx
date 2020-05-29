@@ -17,7 +17,8 @@ export default class FloatingToolbar extends React.Component<Props> {
 
   state = {
     left: -1000,
-    top: undefined,
+    top: 0,
+    offset: 0,
   };
 
   componentDidMount() {
@@ -112,61 +113,6 @@ export default class FloatingToolbar extends React.Component<Props> {
     );
   }
 }
-
-// const Wrapper = styled.div<{
-//   active: boolean;
-//   top: number;
-//   left: number;
-// }>`
-//   padding: 8px 16px;
-//   position: absolute;
-//   z-index: ${props => {
-//     return props.theme.zIndex + 100;
-//   }};
-//   top: ${props => props.top}px;
-//   left: ${props => props.left}px;
-//   opacity: 0;
-//   background-color: ${props => props.theme.toolbarBackground};
-//   border-radius: 4px;
-//   transform: scale(0.95);
-//   transition: opacity 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275),
-//     transform 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
-//   transition-delay: 150ms;
-//   line-height: 0;
-//   height: 40px;
-//   box-sizing: border-box;
-//   pointer-events: none;
-//   white-space: nowrap;
-
-//   &::before {
-//     content: "";
-//     display: block;
-//     width: 24px;
-//     height: 24px;
-//     transform: translateX(-50%) rotate(45deg);
-//     background: ${props => props.theme.toolbarBackground};
-//     border-radius: 3px;
-//     z-index: -1;
-//     position: absolute;
-//     bottom: -2px;
-//   }
-
-//   * {
-//     box-sizing: border-box;
-//   }
-
-//   ${({ active }) =>
-//     active &&
-//     `
-//       transform: translateY(-6px) scale(1);
-//       pointer-events: all;
-//       opacity: 1;
-//     `};
-
-//   @media print {
-//     display: none;
-//   }
-// `;
 
 const Wrapper = styled.div<{
   active: boolean;
