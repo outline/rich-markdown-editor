@@ -64,6 +64,8 @@ import MarkdownPaste from "./plugins/MarkdownPaste";
 
 export { schema, parser, serializer } from "./server";
 
+export { default as Extension } from "./lib/Extension";
+
 export const theme = lightTheme;
 
 export type Props = {
@@ -111,6 +113,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     },
     onClickLink: href => {
       window.open(href, "_blank");
+    },
+    onKeyDown: () => {
+      // no default behavior
     },
     embeds: [],
     extensions: [],
