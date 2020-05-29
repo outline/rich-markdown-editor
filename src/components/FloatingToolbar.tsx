@@ -1,146 +1,110 @@
 import * as React from "react";
 import { Portal } from "react-portal";
+import { isEqual } from "lodash";
 import { EditorView } from "prosemirror-view";
 import styled from "styled-components";
-import { isEqual } from "lodash";
-import getTableColMenuItems from "../menus/tableCol";
-import getTableRowMenuItems from "../menus/tableRow";
-import getTableMenuItems from "../menus/table";
-import getFormattingMenuItems from "../menus/formatting";
-import SelectionToolbar from "./SelectionToolbar";
-import LinkEditor, { SearchResult } from "./LinkEditor";
-import Menu from "./Menu";
-import isMarkActive from "../queries/isMarkActive";
-import getMarkRange from "../queries/getMarkRange";
-import isNodeActive from "../queries/isNodeActive";
-import getColumnIndex from "../queries/getColumnIndex";
-import getRowIndex from "../queries/getRowIndex";
 
 const SSR = typeof window === "undefined";
 
 type Props = {
-  tooltip: typeof React.Component;
-  commands: Record<string, any>;
-  onSearchLink?: (term: string) => Promise<SearchResult[]>;
-  onClickLink: (url: string) => void;
+  active: boolean;
   view: EditorView;
+  children: React.ReactNode;
 };
 
-function calculatePosition(props) {
-  const { view } = props;
-  const { selection } = view.state;
+export default class FloatingToolbar extends React.Component<Props> {
+  menuRef = React.createRef<HTMLDivElement>();
 
-  // If there is no selection, the selection is empty or the selection is a
-  // NodeSelection instead of a TextSelection then hide the formatting
-  // toolbar offscreen
-  if (
-    !selection ||
-    !menuRef.current ||
-    selection.empty ||
-    selection.node ||
-    SSR
-  ) {
+  state = {
+    left: -1000,
+    top: undefined,
+  };
+
+  componentDidMount() {
+    this.setState(this.calculatePosition(this.props));
+  }
+
+  componentDidUpdate() {
+    const newState = this.calculatePosition(this.props);
+
+    if (!isEqual(newState, this.state)) {
+      this.setState(newState);
+    }
+  }
+
+  calculatePosition(props) {
+    const { view, active } = props;
+    const { selection } = view.state;
+
+    if (!active || !this.menuRef.current || SSR) {
+      return {
+        left: -1000,
+        top: 0,
+        offset: 0,
+      };
+    }
+
+    // based on the start and end of the selection calculate the position at
+    // the center top
+    const startPos = view.coordsAtPos(selection.$from.pos);
+    const endPos = view.coordsAtPos(selection.$to.pos);
+
+    // tables are an oddity, and need their own logic
+    const isColSelection =
+      selection.isColSelection && selection.isColSelection();
+    const isRowSelection =
+      selection.isRowSelection && selection.isRowSelection();
+
+    if (isRowSelection) {
+      endPos.left = startPos.left + 12;
+    } else if (isColSelection) {
+      const { node: element } = view.domAtPos(selection.$from.pos);
+      const { width } = element.getBoundingClientRect();
+      endPos.left = startPos.left + width;
+    }
+
+    const halfSelection = Math.abs(endPos.left - startPos.left) / 2;
+    const centerOfSelection = startPos.left + halfSelection;
+
+    // position the menu so that it is centered over the selection except in
+    // the cases where it would extend off the edge of the screen. In these
+    // instances leave a margin
+    const { offsetWidth, offsetHeight } = this.menuRef.current;
+    const margin = 12;
+    const left = Math.min(
+      window.innerWidth - offsetWidth - margin,
+      Math.max(margin, centerOfSelection - offsetWidth / 2)
+    );
+    const top = Math.min(
+      window.innerHeight - offsetHeight - margin,
+      Math.max(margin, startPos.top - offsetHeight)
+    );
+
+    // if the menu has been offset to not extend offscreen then we should adjust
+    // the position of the triangle underneath to correctly point to the center
+    // of the selection still
+    const offset = left - (centerOfSelection - offsetWidth / 2);
+
     return {
-      left: -1000,
-      top: 0,
-      offset: 0,
+      left: left + window.scrollX,
+      top: top + window.scrollY,
+      offset,
     };
   }
 
-  // based on the start and end of the selection calculate the position at
-  // the center top
-  const startPos = view.coordsAtPos(selection.$from.pos);
-  const endPos = view.coordsAtPos(selection.$to.pos);
-
-  // tables are an oddity, and need their own logic
-  const isColSelection = selection.isColSelection && selection.isColSelection();
-  const isRowSelection = selection.isRowSelection && selection.isRowSelection();
-
-  if (isRowSelection) {
-    endPos.left = startPos.left + 12;
-  } else if (isColSelection) {
-    const { node: element } = view.domAtPos(selection.$from.pos);
-    const { width } = element.getBoundingClientRect();
-    endPos.left = startPos.left + width;
-  }
-
-  const halfSelection = Math.abs(endPos.left - startPos.left) / 2;
-  const centerOfSelection = startPos.left + halfSelection;
-
-  // position the menu so that it is centered over the selection except in
-  // the cases where it would extend off the edge of the screen. In these
-  // instances leave a margin
-  const { offsetWidth, offsetHeight } = menuRef.current;
-  const margin = 12;
-  const left = Math.min(
-    window.innerWidth - offsetWidth - margin,
-    Math.max(margin, centerOfSelection - offsetWidth / 2)
-  );
-  const top = Math.min(
-    window.innerHeight - offsetHeight - margin,
-    Math.max(margin, startPos.top - offsetHeight)
-  );
-
-  // if the menu has been offset to not extend offscreen then we should adjust
-  // the position of the triangle underneath to correctly point to the center
-  // of the selection still
-  const offset = left - (centerOfSelection - offsetWidth / 2);
-
-  return {
-    left: left + window.scrollX,
-    top: top + window.scrollY,
-    offset,
-  };
-}
-
-export default class FloatingToolbar extends React.Component<Props> {
   render() {
-    const { view } = this.props;
-    const { state } = view;
-    const { selection }: { selection: any } = state;
-    const isActive = !selection.empty;
-    const isCodeSelection = isNodeActive(state.schema.nodes.code_block)(state);
-
-    // toolbar is disabled in code blocks, no bold / italic etc
-    if (isCodeSelection) {
-      return null;
-    }
-
-    const colIndex = getColumnIndex(state.selection);
-    const rowIndex = getRowIndex(state.selection);
-    const isTableSelection = colIndex !== undefined && rowIndex !== undefined;
-    const link = isMarkActive(state.schema.marks.link)(state);
-    const range = getMarkRange(selection.$from, state.schema.marks.link);
-
-    let items = [];
-    if (isTableSelection) {
-      items = getTableMenuItems();
-    } else if (colIndex !== undefined) {
-      items = getTableColMenuItems(state, colIndex);
-    } else if (rowIndex !== undefined) {
-      items = getTableRowMenuItems(state, rowIndex);
-    } else {
-      items = getFormattingMenuItems(state);
-    }
-
-    if (!items.length) {
-      return null;
-    }
+    const { children, active } = this.props;
 
     return (
       <Portal>
-        <SelectionToolbar view={view} isActive={isActive}>
-          {link && range ? (
-            <LinkEditor
-              mark={range.mark}
-              from={range.from}
-              to={range.to}
-              {...this.props}
-            />
-          ) : (
-            <Menu items={items} {...this.props} />
-          )}
-        </SelectionToolbar>
+        <Wrapper
+          active={active}
+          ref={this.menuRef}
+          top={this.state.top}
+          left={this.state.left}
+        >
+          {children}
+        </Wrapper>
       </Portal>
     );
   }
@@ -150,11 +114,12 @@ const Wrapper = styled.div<{
   active: boolean;
   top: number;
   left: number;
-  offset: number;
 }>`
   padding: 8px 16px;
   position: absolute;
-  z-index: ${props => props.theme.zIndex + 100};
+  z-index: ${props => {
+    return props.theme.zIndex + 100;
+  }};
   top: ${props => props.top}px;
   left: ${props => props.left}px;
   opacity: 0;
@@ -181,7 +146,6 @@ const Wrapper = styled.div<{
     z-index: -1;
     position: absolute;
     bottom: -2px;
-    left: calc(50% - ${props => props.offset || 0}px);
   }
 
   * {
@@ -191,10 +155,10 @@ const Wrapper = styled.div<{
   ${({ active }) =>
     active &&
     `
-    transform: translateY(-6px) scale(1);
-    pointer-events: all;
-    opacity: 1;
-  `};
+      transform: translateY(-6px) scale(1);
+      pointer-events: all;
+      opacity: 1;
+    `};
 
   @media print {
     display: none;

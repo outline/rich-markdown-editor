@@ -1,7 +1,7 @@
 import * as React from "react";
 import { EditorView } from "prosemirror-view";
 import LinkEditor, { SearchResult } from "./LinkEditor";
-import SelectionToolbar from "./SelectionToolbar";
+import FloatingToolbar from "./FloatingToolbar";
 
 type Props = {
   isActive: boolean;
@@ -13,6 +13,14 @@ type Props = {
   onClickLink: (url: string) => void;
   onClose: () => void;
 };
+
+function isActive(props) {
+  const { view } = props;
+  const { selection } = view.state;
+
+  const paragraph = view.domAtPos(selection.$from.pos);
+  return props.isActive && !!paragraph.node;
+}
 
 export default class LinkMenu extends React.Component<Props> {
   menuRef = React.createRef<HTMLDivElement>();
@@ -52,7 +60,7 @@ export default class LinkMenu extends React.Component<Props> {
     console.log(this.state);
 
     return (
-      <SelectionToolbar {...rest}>
+      <FloatingToolbar active={isActive(this.props)} {...rest}>
         <LinkEditor
           from={selection.from}
           to={selection.to}
@@ -60,7 +68,7 @@ export default class LinkMenu extends React.Component<Props> {
           onRemoveLink={onClose}
           {...rest}
         />
-      </SelectionToolbar>
+      </FloatingToolbar>
     );
   }
 }

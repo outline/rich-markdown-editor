@@ -15,7 +15,7 @@ import { light as lightTheme, dark as darkTheme } from "./theme";
 import Flex from "./components/Flex";
 import { SearchResult } from "./components/LinkEditor";
 import { EmbedDescriptor } from "./types";
-import FloatingToolbar from "./components/FloatingToolbar";
+import SelectionToolbar from "./components/SelectionToolbar";
 import BlockMenu from "./components/BlockMenu";
 import LinkMenu from "./components/LinkMenu";
 import Tooltip from "./components/Tooltip";
@@ -522,7 +522,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
             />
             {!readOnly && this.view && (
               <React.Fragment>
-                <FloatingToolbar
+                <SelectionToolbar
                   view={this.view}
                   commands={this.commands}
                   onSearchLink={this.props.onSearchLink}
