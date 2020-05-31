@@ -194,8 +194,9 @@ class LinkEditor extends React.Component<Props> {
 
   render() {
     const Tooltip = this.props.tooltip;
-    const showResults = !!this.state.value;
     const showCreateLink = !!this.props.onCreateLink;
+    const showResults =
+      !!this.state.value && (showCreateLink || this.state.results.length > 0);
 
     return (
       <Wrapper>
