@@ -61,13 +61,15 @@ export default class LinkMenu extends React.Component<Props> {
 
     return (
       <FloatingToolbar active={isActive(this.props)} {...rest}>
-        <LinkEditor
-          from={selection.from}
-          to={selection.to}
-          onCreateLink={onCreateLink ? this.handleOnCreateLink : undefined}
-          onRemoveLink={onClose}
-          {...rest}
-        />
+        {isActive(this.props) && (
+          <LinkEditor
+            from={selection.from}
+            to={selection.to}
+            onCreateLink={onCreateLink ? this.handleOnCreateLink : undefined}
+            onRemoveLink={onClose}
+            {...rest}
+          />
+        )}
       </FloatingToolbar>
     );
   }
