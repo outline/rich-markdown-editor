@@ -88,7 +88,7 @@ export type Props = {
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
   onClickLink: (href: string) => void;
   onClickHashtag?: (tag: string) => void;
-  onKeyDown: (event: React.KeyboardEvent<HTMLDivElement>) => void;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLDivElement>) => void;
   embeds: EmbedDescriptor[];
   onShowToast?: (message: string) => void;
   tooltip: typeof React.Component;
@@ -113,9 +113,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     },
     onClickLink: href => {
       window.open(href, "_blank");
-    },
-    onKeyDown: () => {
-      // no default behavior
     },
     embeds: [],
     extensions: [],
