@@ -64,6 +64,8 @@ import MarkdownPaste from "./plugins/MarkdownPaste";
 
 export { schema, parser, serializer } from "./server";
 
+export { default as Extension } from "./lib/Extension";
+
 export const theme = lightTheme;
 
 export type Props = {
@@ -86,7 +88,7 @@ export type Props = {
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
   onClickLink: (href: string) => void;
   onClickHashtag?: (tag: string) => void;
-  onKeyDown: (event: React.KeyboardEvent<HTMLDivElement>) => void;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLDivElement>) => void;
   embeds: EmbedDescriptor[];
   onShowToast?: (message: string) => void;
   tooltip: typeof React.Component;
