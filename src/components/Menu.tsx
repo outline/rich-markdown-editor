@@ -1,19 +1,10 @@
 import * as React from "react";
-import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { withTheme } from "styled-components";
 import ToolbarButton from "./ToolbarButton";
 import ToolbarSeparator from "./ToolbarSeparator";
 import theme from "../theme";
-
-type MenuItem = {
-  name: string | "separator";
-  tooltip?: string;
-  icon?: typeof React.Component;
-  attrs?: Record<string, any>;
-  active?: (state: EditorState) => boolean;
-  visible?: boolean;
-};
+import { MenuItem } from "../types";
 
 type Props = {
   tooltip: typeof React.Component;
@@ -32,19 +23,21 @@ class Menu extends React.Component<Props> {
     return (
       <div>
         {items.map((item, index) => {
-          if (item.visible === false) {
+          if (item.visible === false || !item.icon) {
             return null;
           }
           if (item.name === "separator") {
             return <ToolbarSeparator key={index} />;
           }
           const Icon = item.icon;
-          const isActive = item.active(state);
+          const isActive = item.active ? item.active(state) : false;
 
           return (
             <ToolbarButton
               key={index}
-              onClick={() => this.props.commands[item.name](item.attrs)}
+              onClick={() =>
+                item.name && this.props.commands[item.name](item.attrs)
+              }
               active={isActive}
             >
               <Tooltip tooltip={item.tooltip} placement="top">

@@ -14,8 +14,9 @@ import { EditorState } from "prosemirror-state";
 import isInList from "../queries/isInList";
 import isMarkActive from "../queries/isMarkActive";
 import isNodeActive from "../queries/isNodeActive";
+import { MenuItem } from "../types";
 
-export default function formattingMenuItems(state: EditorState) {
+export default function formattingMenuItems(state: EditorState): MenuItem[] {
   const { schema } = state;
   const isTable = isInTable(state);
   const isList = isInList(state);

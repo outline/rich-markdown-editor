@@ -112,8 +112,8 @@ export default class CodeFence extends Node {
     const { top, left } = element.getBoundingClientRect();
     const result = view.posAtCoords({ top, left });
 
-    if (result.inside) {
-      const transaction = tr.setNodeMarkup(result.inside, null, {
+    if (result) {
+      const transaction = tr.setNodeMarkup(result.inside, undefined, {
         language: element.value,
       });
       view.dispatch(transaction);

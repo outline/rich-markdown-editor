@@ -48,7 +48,6 @@ const ListItem = styled.li<{
   &:active {
     font-weight: 500;
     outline: none;
-
     i {
       visibility: visible;
     }

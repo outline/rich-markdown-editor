@@ -18,6 +18,6 @@ export default abstract class Node extends Extension {
   }
 
   parseMarkdown() {
-    return null;
+    return;
   }
 }

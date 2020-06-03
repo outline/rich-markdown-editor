@@ -88,11 +88,11 @@ class Example extends React.Component {
         <div>
           <br />
           <button type="button" onClick={this.handleToggleReadOnly}>
-            {this.state.readOnly ? "Editable" : "Read Only"}
-          </button>
+            {this.state.readOnly ? "Editable" : "Read only"}
+          </button>{" "}
           <button type="button" onClick={this.handleToggleDark}>
-            {this.state.dark ? "Light Theme" : "Dark Theme"}
-          </button>
+            {this.state.dark ? "Light theme" : "Dark theme"}
+          </button>{" "}
           <button type="button" onClick={this.handleUpdateValue}>
             Update value
           </button>

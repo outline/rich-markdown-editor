@@ -35,11 +35,17 @@ type Props = {
   theme: typeof theme;
 };
 
-class LinkEditor extends React.Component<Props> {
+type State = {
+  results: SearchResult[];
+  value: string;
+  selectedIndex: number;
+};
+
+class LinkEditor extends React.Component<Props, State> {
   discardInputValue = false;
   initialValue = this.href;
 
-  state = {
+  state: State = {
     selectedIndex: -1,
     value: this.href,
     results: [],
@@ -94,7 +100,10 @@ class LinkEditor extends React.Component<Props> {
         event.preventDefault();
 
         if (this.state.selectedIndex >= 0) {
-          this.save(this.state.results[this.state.selectedIndex].url);
+          const result = this.state.results[this.state.selectedIndex];
+          if (result) {
+            this.save(result.url);
+          }
         }
         this.moveSelectionToEnd();
 

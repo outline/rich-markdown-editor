@@ -61,7 +61,7 @@ export default class Table extends Node {
         dispatch(tr);
       },
       setColumnAttr: ({ index, alignment }) => (state, dispatch) => {
-        const cells = getCellsInColumn(index)(state.selection);
+        const cells = getCellsInColumn(index)(state.selection) || [];
         let transaction = state.tr;
         cells.forEach(({ pos }) => {
           transaction = transaction.setNodeMarkup(pos, null, {
@@ -102,7 +102,7 @@ export default class Table extends Node {
 
         // TODO: Adding row at the end for now, can we find the current cell
         // row index and add the row below that?
-        const cells = getCellsInColumn(0)(state.selection);
+        const cells = getCellsInColumn(0)(state.selection) || [];
 
         dispatch(addRowAt(cells.length, true)(state.tr));
         return true;
