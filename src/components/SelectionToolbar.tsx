@@ -13,6 +13,7 @@ import getMarkRange from "../queries/getMarkRange";
 import isNodeActive from "../queries/isNodeActive";
 import getColumnIndex from "../queries/getColumnIndex";
 import getRowIndex from "../queries/getRowIndex";
+import { MenuItem } from "../types";
 
 type Props = {
   tooltip: typeof React.Component;
@@ -47,7 +48,7 @@ export default class SelectionToolbar extends React.Component<Props> {
     const link = isMarkActive(state.schema.marks.link)(state);
     const range = getMarkRange(selection.$from, state.schema.marks.link);
 
-    let items = [];
+    let items: MenuItem[] = [];
     if (isTableSelection) {
       items = getTableMenuItems();
     } else if (colIndex !== undefined) {

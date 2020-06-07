@@ -28,7 +28,7 @@ type Props = {
   to: number;
   tooltip: typeof React.Component;
   onRemoveLink?: () => void;
-  onCreateLink?: (title: string) => Promise<string>;
+  onCreateLink?: (title: string) => Promise<void>;
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
   onClickLink: (url: string) => void;
   view: EditorView;

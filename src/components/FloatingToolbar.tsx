@@ -10,7 +10,7 @@ type Props = {
   active?: boolean;
   view: EditorView;
   children: React.ReactNode;
-  forwardedRef: React.RefObject<HTMLDivElement> | null;
+  forwardedRef?: React.RefObject<HTMLDivElement> | null;
 };
 
 class FloatingToolbar extends React.Component<Props> {

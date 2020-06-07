@@ -8,7 +8,7 @@ type Props = {
   // commands: Record<string, any>;
   view: EditorView;
   tooltip: typeof React.Component;
-  onCreateLink?: (title: string) => Promise<string>;
+  onCreateLink?: (title: string) => Promise<void>;
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
   onClickLink: (url: string) => void;
   onClose: () => void;
