@@ -17,7 +17,7 @@ import { SearchResult } from "./components/LinkEditor";
 import { EmbedDescriptor } from "./types";
 import SelectionToolbar from "./components/SelectionToolbar";
 import BlockMenu from "./components/BlockMenu";
-import LinkMenu from "./components/LinkMenu";
+import LinkToolbar from "./components/LinkToolbar";
 import Tooltip from "./components/Tooltip";
 import Extension from "./lib/Extension";
 import ExtensionManager from "./lib/ExtensionManager";
@@ -86,7 +86,7 @@ export type Props = {
   onChange: (value: () => string) => void;
   onImageUploadStart?: () => void;
   onImageUploadStop?: () => void;
-  onCreateLink?: (title: string) => Promise<string>;
+  onCreateLink?: (title: string) => Promise<void>;
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
   onClickLink: (href: string) => void;
   onClickHashtag?: (tag: string) => void;
@@ -533,10 +533,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   commands={this.commands}
                   onSearchLink={this.props.onSearchLink}
                   onClickLink={this.props.onClickLink}
-                  onCreateLink={this.props.onCreateLink}
                   tooltip={tooltip}
                 />
-                <LinkMenu
+                <LinkToolbar
                   view={this.view}
                   // commands={this.commands}
                   isActive={this.state.linkMenuOpen}

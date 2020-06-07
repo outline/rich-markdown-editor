@@ -7,13 +7,14 @@ import styled from "styled-components";
 const SSR = typeof window === "undefined";
 
 type Props = {
-  active: boolean;
+  active?: boolean;
   view: EditorView;
   children: React.ReactNode;
+  forwardedRef: React.RefObject<HTMLDivElement> | null;
 };
 
-export default class FloatingToolbar extends React.Component<Props> {
-  menuRef = React.createRef<HTMLDivElement>();
+class FloatingToolbar extends React.Component<Props> {
+  menuRef = this.props.forwardedRef || React.createRef<HTMLDivElement>();
 
   state = {
     left: -1000,
@@ -115,7 +116,7 @@ export default class FloatingToolbar extends React.Component<Props> {
 }
 
 const Wrapper = styled.div<{
-  active: boolean;
+  active?: boolean;
   top: number;
   left: number;
   offset: number;
@@ -168,3 +169,9 @@ const Wrapper = styled.div<{
     display: none;
   }
 `;
+
+export default React.forwardRef(
+  (props: Props, ref: React.RefObject<HTMLDivElement>) => (
+    <FloatingToolbar {...props} forwardedRef={ref} />
+  )
+);

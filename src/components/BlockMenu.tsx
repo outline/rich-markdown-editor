@@ -103,7 +103,7 @@ class BlockMenu extends React.Component<Props, State> {
       }
     }
 
-    if (event.key === "ArrowUp" || event.ctrlKey && event.key === "p") {
+    if (event.key === "ArrowUp" || (event.ctrlKey && event.key === "p")) {
       event.preventDefault();
       event.stopPropagation();
 
@@ -122,7 +122,11 @@ class BlockMenu extends React.Component<Props, State> {
       }
     }
 
-    if (event.key === "ArrowDown" || event.key === "Tab" || event.ctrlKey && event.key === "n") {
+    if (
+      event.key === "ArrowDown" ||
+      event.key === "Tab" ||
+      (event.ctrlKey && event.key === "n")
+    ) {
       event.preventDefault();
       event.stopPropagation();
 

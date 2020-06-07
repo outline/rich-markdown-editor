@@ -203,7 +203,8 @@ class LinkEditor extends React.Component<Props, State> {
 
   render() {
     const Tooltip = this.props.tooltip;
-    const showCreateLink = !!this.props.onCreateLink;
+    const looksLikeUrl = this.state.value.match(/^https?:\/\//i);
+    const showCreateLink = !!this.props.onCreateLink && !looksLikeUrl;
     const showResults =
       !!this.state.value && (showCreateLink || this.state.results.length > 0);
 
@@ -211,7 +212,9 @@ class LinkEditor extends React.Component<Props, State> {
       <Wrapper>
         <Input
           value={this.state.value}
-          placeholder="Search or paste a link…"
+          placeholder={
+            showCreateLink ? "Find or create a doc…" : "Search or paste a link…"
+          }
           onKeyDown={this.handleKeyDown}
           onChange={this.handleChange}
           autoFocus={this.href === ""}

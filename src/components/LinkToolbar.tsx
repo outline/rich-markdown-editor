@@ -22,7 +22,7 @@ function isActive(props) {
   return props.isActive && !!paragraph.node;
 }
 
-export default class LinkMenu extends React.Component<Props> {
+export default class LinkToolbar extends React.Component<Props> {
   menuRef = React.createRef<HTMLDivElement>();
 
   state = {
@@ -30,9 +30,29 @@ export default class LinkMenu extends React.Component<Props> {
     top: undefined,
   };
 
+  componentDidMount() {
+    window.addEventListener("mousedown", this.handleClickOutside);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("mousedown", this.handleClickOutside);
+  }
+
+  handleClickOutside = ev => {
+    if (
+      ev.target &&
+      this.menuRef.current &&
+      this.menuRef.current.contains(ev.target)
+    ) {
+      return;
+    }
+
+    this.props.onClose();
+  };
+
   handleOnCreateLink = async (title: string) => {
     if (!this.props.onCreateLink) {
-      return "";
+      return;
     }
 
     this.props.onClose();
@@ -60,7 +80,11 @@ export default class LinkMenu extends React.Component<Props> {
     console.log(this.state);
 
     return (
-      <FloatingToolbar active={isActive(this.props)} {...rest}>
+      <FloatingToolbar
+        ref={this.menuRef}
+        active={isActive(this.props)}
+        {...rest}
+      >
         {isActive(this.props) && (
           <LinkEditor
             from={selection.from}
