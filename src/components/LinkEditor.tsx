@@ -98,14 +98,18 @@ class LinkEditor extends React.Component<Props, State> {
     switch (event.key) {
       case "Enter": {
         event.preventDefault();
+        const { selectedIndex, results, value } = this.state;
+        const { onCreateLink } = this.props;
 
-        if (this.state.selectedIndex >= 0) {
-          const result = this.state.results[this.state.selectedIndex];
+        if (selectedIndex >= 0) {
+          const result = results[selectedIndex];
           if (result) {
             this.save(result.url);
+            this.moveSelectionToEnd();
+          } else if (!!onCreateLink && selectedIndex === results.length) {
+            onCreateLink(value);
           }
         }
-        this.moveSelectionToEnd();
 
         return;
       }
