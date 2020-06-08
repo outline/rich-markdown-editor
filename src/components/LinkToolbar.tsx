@@ -1,16 +1,18 @@
+import assert from "assert";
 import * as React from "react";
 import { EditorView } from "prosemirror-view";
 import LinkEditor, { SearchResult } from "./LinkEditor";
 import FloatingToolbar from "./FloatingToolbar";
+import createAndInsertLink from "../commands/createAndInsertLink";
 
 type Props = {
   isActive: boolean;
-  // commands: Record<string, any>;
   view: EditorView;
   tooltip: typeof React.Component;
-  onCreateLink?: (title: string) => Promise<void>;
+  onCreateLink?: (title: string) => Promise<string>;
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
   onClickLink: (url: string) => void;
+  onShowToast?: (msg: string, code: string) => void;
   onClose: () => void;
 };
 
@@ -51,26 +53,34 @@ export default class LinkToolbar extends React.Component<Props> {
   };
 
   handleOnCreateLink = async (title: string) => {
-    if (!this.props.onCreateLink) {
+    const { onCreateLink, view, onClose, onShowToast } = this.props;
+    if (!onCreateLink) {
       return;
     }
 
-    this.props.onClose();
-
-    // insert text node
-    const { dispatch, state } = this.props.view;
-    dispatch(
-      state.tr
-        .insertText(title, state.selection.from, state.selection.to)
-        .addMark(
-          state.selection.from,
-          state.selection.to + title.length,
-          state.schema.marks.link.create({ href: "#loading…" })
-        )
-    );
+    onClose();
     this.props.view.focus();
 
-    // const url = await this.props.onCreateLink(title);
+    const { dispatch, state } = view;
+    const { from, to } = state.selection;
+    assert(from === to);
+
+    const href = `creating#${title}…`;
+
+    dispatch(
+      view.state.tr
+        .insertText(title, from, to)
+        .addMark(
+          from,
+          to + title.length,
+          state.schema.marks.link.create({ href })
+        )
+    );
+
+    createAndInsertLink(view, title, href, {
+      onCreateLink,
+      onShowToast,
+    });
   };
 
   render() {

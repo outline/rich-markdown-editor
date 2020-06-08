@@ -109,7 +109,20 @@ class Example extends React.Component {
           onChange={this.handleChange}
           onClickLink={href => console.log("Clicked link: ", href)}
           onClickHashtag={tag => console.log("Clicked hashtag: ", tag)}
-          onCreateLink={title => console.log("Tried to create a doc: ", title)}
+          onCreateLink={title => {
+            // Delay to simulate time taken to upload
+            return new Promise((resolve, reject) => {
+              setTimeout(() => {
+                if (title !== "error") {
+                  return resolve(
+                    `https://dummyimage.com/600x400/000/fff&text=${title}`
+                  );
+                } else {
+                  reject("500 error");
+                }
+              }, 1500);
+            });
+          }}
           onShowToast={message => window.alert(message)}
           onSearchLink={async term => {
             console.log("Searched link: ", term);

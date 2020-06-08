@@ -31,6 +31,7 @@ type Props = {
   onCreateLink?: (title: string) => Promise<void>;
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
   onClickLink: (url: string) => void;
+  onShowToast?: (msg: string, code: string) => void;
   view: EditorView;
   theme: typeof theme;
 };
