@@ -15,23 +15,23 @@ const defaultValue = savedText || exampleText;
 const docSearchResults = [
   {
     title: "Hiring",
-    url: "/doc/1",
+    url: "/doc/hiring",
   },
   {
     title: "Product Roadmap",
-    url: "/doc/2",
+    url: "/doc/product-roadmap",
   },
   {
     title: "Finances",
-    url: "/doc/3",
+    url: "/doc/finances",
   },
   {
     title: "Super secret stuff",
-    url: "/doc/4",
+    url: "/doc/secret-stuff",
   },
   {
-    title: "Founder meeting notes",
-    url: "/doc/5",
+    title: "Meeting notes",
+    url: "/doc/meeting-notes",
   },
 ];
 

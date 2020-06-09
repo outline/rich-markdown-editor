@@ -85,7 +85,15 @@ export default class LinkToolbar extends React.Component<Props> {
     });
   };
 
-  handleOnSelectLink = async (href: string, title: string) => {
+  handleOnSelectLink = ({
+    href,
+    title,
+  }: {
+    href: string;
+    title: string;
+    from: number;
+    to: number;
+  }) => {
     const { view, onClose } = this.props;
 
     onClose();

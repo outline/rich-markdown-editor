@@ -30,7 +30,12 @@ type Props = {
   onRemoveLink?: () => void;
   onCreateLink?: (title: string) => Promise<void>;
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
-  onSelectLink: (url: string, title?: string) => void;
+  onSelectLink: (opts: {
+    href: string;
+    title?: string;
+    from: number;
+    to: number;
+  }) => void;
   onClickLink: (url: string) => void;
   onShowToast?: (msg: string, code: string) => void;
   view: EditorView;
@@ -70,10 +75,17 @@ class LinkEditor extends React.Component<Props, State> {
     }
 
     // If the link is totally empty or only spaces then remove the mark
-    let href = (this.state.value || "").trim();
+    const href = (this.state.value || "").trim();
     if (!href) {
       return this.handleRemoveLink();
     }
+
+    this.save(href, href);
+  };
+
+  save = (href: string, title?: string): void => {
+    this.discardInputValue = true;
+    const { from, to } = this.props;
 
     // If the input doesn't start with a protocol or relative slash, make sure
     // a protocol is added to the beginning
@@ -81,12 +93,7 @@ class LinkEditor extends React.Component<Props, State> {
       href = `https://${href}`;
     }
 
-    this.save(href);
-  };
-
-  save = (href: string, title?: string): void => {
-    this.discardInputValue = true;
-    this.props.onSelectLink(href, title);
+    this.props.onSelectLink({ href, title, from, to });
   };
 
   handleKeyDown = (event: React.KeyboardEvent): void => {
@@ -94,19 +101,22 @@ class LinkEditor extends React.Component<Props, State> {
       case "Enter": {
         event.preventDefault();
         const { selectedIndex, results, value } = this.state;
-        const { onCreateLink, onSelectLink } = this.props;
+        const { onCreateLink } = this.props;
 
         if (selectedIndex >= 0) {
           const result = results[selectedIndex];
           if (result) {
-            onSelectLink(result.url, result.title);
+            this.save(result.url, result.title);
           } else if (onCreateLink && selectedIndex === results.length) {
-            onCreateLink(value);
+            this.handleCreateLink(value);
           }
+        } else {
+          // saves the raw input as href
+          this.save(value, value);
+        }
 
-          if (this.hasInitialSelection) {
-            this.moveSelectionToEnd();
-          }
+        if (this.hasInitialSelection) {
+          this.moveSelectionToEnd();
         }
 
         return;
@@ -174,6 +184,13 @@ class LinkEditor extends React.Component<Props, State> {
   handleOpenLink = (event): void => {
     event.preventDefault();
     this.props.onClickLink(this.href);
+  };
+
+  handleCreateLink = (value: string) => {
+    this.discardInputValue = true;
+    const { onCreateLink } = this.props;
+
+    if (onCreateLink) return onCreateLink(value);
   };
 
   handleRemoveLink = (): void => {
@@ -267,7 +284,7 @@ class LinkEditor extends React.Component<Props, State> {
                 title={`Create new doc "${value}"`}
                 icon={<PlusIcon />}
                 onClick={() => {
-                  this.props.onCreateLink && this.props.onCreateLink(value);
+                  this.handleCreateLink(value);
                 }}
                 selected={results.length === selectedIndex}
               />

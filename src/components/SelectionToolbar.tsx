@@ -47,10 +47,13 @@ export default class SelectionToolbar extends React.Component<Props> {
     assert(from !== to);
 
     const href = `creating#${title}…`;
+    const markType = state.schema.marks.link;
 
     // Insert a placeholder link
     dispatch(
-      view.state.tr.addMark(from, to, state.schema.marks.link.create({ href }))
+      view.state.tr
+        .removeMark(from, to, markType)
+        .addMark(from, to, markType.create({ href }))
     );
 
     createAndInsertLink(view, title, href, {
@@ -59,17 +62,18 @@ export default class SelectionToolbar extends React.Component<Props> {
     });
   };
 
-  handleOnSelectLink = (href: string): void => {
+  handleOnSelectLink = ({
+    href,
+    from,
+    to,
+  }: {
+    href: string;
+    from: number;
+    to: number;
+  }): void => {
     const { view } = this.props;
     const { state, dispatch } = view;
 
-    const { selection } = state;
-    const range = getMarkRange(selection.$from, state.schema.marks.link);
-
-    if (!range) return;
-
-    const from = range.from;
-    const to = range.to;
     const markType = state.schema.marks.link;
 
     dispatch(
