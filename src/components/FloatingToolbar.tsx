@@ -87,8 +87,6 @@ class FloatingToolbar extends React.Component<Props> {
     // of the selection still
     const offset = left - (centerOfSelection - offsetWidth / 2);
 
-    console.log({ left, centerOfSelection, offsetWidth, offset });
-
     return {
       left: left + window.scrollX,
       top: top + window.scrollY,

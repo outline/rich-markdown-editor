@@ -110,8 +110,6 @@ export default class LinkToolbar extends React.Component<Props> {
     const { onCreateLink, onClose, ...rest } = this.props;
     const selection = this.props.view.state.selection;
 
-    console.log(this.state);
-
     return (
       <FloatingToolbar
         ref={this.menuRef}
