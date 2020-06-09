@@ -54,12 +54,13 @@ export default class LinkToolbar extends React.Component<Props> {
 
   handleOnCreateLink = async (title: string) => {
     const { onCreateLink, view, onClose, onShowToast } = this.props;
-    if (!onCreateLink) {
-      return;
-    }
 
     onClose();
     this.props.view.focus();
+
+    if (!onCreateLink) {
+      return;
+    }
 
     const { dispatch, state } = view;
     const { from, to } = state.selection;
@@ -67,6 +68,7 @@ export default class LinkToolbar extends React.Component<Props> {
 
     const href = `creating#${title}…`;
 
+    // Insert a placeholder link
     dispatch(
       view.state.tr
         .insertText(title, from, to)
@@ -81,6 +83,27 @@ export default class LinkToolbar extends React.Component<Props> {
       onCreateLink,
       onShowToast,
     });
+  };
+
+  handleOnSelectLink = async (href: string, title: string) => {
+    const { view, onClose } = this.props;
+
+    onClose();
+    this.props.view.focus();
+
+    const { dispatch, state } = view;
+    const { from, to } = state.selection;
+    assert(from === to);
+
+    dispatch(
+      view.state.tr
+        .insertText(title, from, to)
+        .addMark(
+          from,
+          to + title.length,
+          state.schema.marks.link.create({ href })
+        )
+    );
   };
 
   render() {
@@ -100,6 +123,7 @@ export default class LinkToolbar extends React.Component<Props> {
             from={selection.from}
             to={selection.to}
             onCreateLink={onCreateLink ? this.handleOnCreateLink : undefined}
+            onSelectLink={this.handleOnSelectLink}
             onRemoveLink={onClose}
             {...rest}
           />

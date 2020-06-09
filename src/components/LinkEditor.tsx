@@ -30,6 +30,7 @@ type Props = {
   onRemoveLink?: () => void;
   onCreateLink?: (title: string) => Promise<void>;
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
+  onSelectLink: (url: string, title?: string) => void;
   onClickLink: (url: string) => void;
   onShowToast?: (msg: string, code: string) => void;
   view: EditorView;
@@ -45,6 +46,7 @@ type State = {
 class LinkEditor extends React.Component<Props, State> {
   discardInputValue = false;
   initialValue = this.href;
+  hasInitialSelection = this.props.from !== this.props.to;
 
   state: State = {
     selectedIndex: -1,
@@ -82,17 +84,9 @@ class LinkEditor extends React.Component<Props, State> {
     this.save(href);
   };
 
-  save = (href: string): void => {
+  save = (href: string, title?: string): void => {
     this.discardInputValue = true;
-    const { from, to } = this.props;
-    const { state, dispatch } = this.props.view;
-    const markType = state.schema.marks.link;
-
-    dispatch(
-      state.tr
-        .removeMark(from, to, markType)
-        .addMark(from, to, markType.create({ href }))
-    );
+    this.props.onSelectLink(href, title);
   };
 
   handleKeyDown = (event: React.KeyboardEvent): void => {
@@ -100,20 +94,24 @@ class LinkEditor extends React.Component<Props, State> {
       case "Enter": {
         event.preventDefault();
         const { selectedIndex, results, value } = this.state;
-        const { onCreateLink } = this.props;
+        const { onCreateLink, onSelectLink } = this.props;
 
         if (selectedIndex >= 0) {
           const result = results[selectedIndex];
           if (result) {
-            this.save(result.url);
-            this.moveSelectionToEnd();
-          } else if (!!onCreateLink && selectedIndex === results.length) {
+            onSelectLink(result.url, result.title);
+          } else if (onCreateLink && selectedIndex === results.length) {
             onCreateLink(value);
+          }
+
+          if (this.hasInitialSelection) {
+            this.moveSelectionToEnd();
           }
         }
 
         return;
       }
+
       case "Escape": {
         event.preventDefault();
 
@@ -124,6 +122,7 @@ class LinkEditor extends React.Component<Props, State> {
         }
         return;
       }
+
       case "ArrowUp": {
         event.preventDefault();
         event.stopPropagation();
@@ -134,6 +133,7 @@ class LinkEditor extends React.Component<Props, State> {
         });
         return;
       }
+
       case "ArrowDown":
       case "Tab": {
         event.preventDefault();
@@ -193,10 +193,13 @@ class LinkEditor extends React.Component<Props, State> {
     view.focus();
   };
 
-  handleSearchResultClick = (url: string) => event => {
+  handleSelectLink = (url: string, title: string) => event => {
     event.preventDefault();
-    this.save(url);
-    this.moveSelectionToEnd();
+    this.save(url, title);
+
+    if (this.hasInitialSelection) {
+      this.moveSelectionToEnd();
+    }
   };
 
   moveSelectionToEnd = () => {
@@ -207,16 +210,22 @@ class LinkEditor extends React.Component<Props, State> {
   };
 
   render() {
+    const { value, results, selectedIndex } = this.state;
+
     const Tooltip = this.props.tooltip;
-    const looksLikeUrl = this.state.value.match(/^https?:\/\//i);
-    const showCreateLink = !!this.props.onCreateLink && !looksLikeUrl;
-    const showResults =
-      !!this.state.value && (showCreateLink || this.state.results.length > 0);
+    const looksLikeUrl = value.match(/^https?:\/\//i);
+
+    const showCreateLink =
+      !!this.props.onCreateLink &&
+      !(value === this.initialValue) &&
+      !looksLikeUrl;
+
+    const showResults = !!value && (showCreateLink || results.length > 0);
 
     return (
       <Wrapper>
         <Input
-          value={this.state.value}
+          value={value}
           placeholder={
             showCreateLink ? "Find or create a doc…" : "Search or paste a link…"
           }
@@ -224,10 +233,8 @@ class LinkEditor extends React.Component<Props, State> {
           onChange={this.handleChange}
           autoFocus={this.href === ""}
         />
-        <ToolbarButton
-          onClick={this.handleOpenLink}
-          disabled={!this.state.value}
-        >
+
+        <ToolbarButton onClick={this.handleOpenLink} disabled={!value}>
           <Tooltip tooltip="Open link" placement="top">
             <OpenIcon color={this.props.theme.toolbarItem} />
           </Tooltip>
@@ -241,29 +248,28 @@ class LinkEditor extends React.Component<Props, State> {
             )}
           </Tooltip>
         </ToolbarButton>
+
         {showResults && (
           <SearchResults>
-            {this.state.results.map((result, index) => (
+            {results.map((result, index) => (
               <LinkSearchResult
                 key={result.url}
                 title={result.title}
                 icon={<DocumentIcon />}
-                onClick={this.handleSearchResultClick(result.url)}
-                selected={index === this.state.selectedIndex}
+                onClick={this.handleSelectLink(result.url, result.title)}
+                selected={index === selectedIndex}
               />
             ))}
+
             {showCreateLink && (
               <LinkSearchResult
                 key="create"
-                title={`Create new doc "${this.state.value}"`}
+                title={`Create new doc "${value}"`}
                 icon={<PlusIcon />}
                 onClick={() => {
-                  this.props.onCreateLink &&
-                    this.props.onCreateLink(this.state.value);
+                  this.props.onCreateLink && this.props.onCreateLink(value);
                 }}
-                selected={
-                  this.state.results.length === this.state.selectedIndex
-                }
+                selected={results.length === selectedIndex}
               />
             )}
           </SearchResults>

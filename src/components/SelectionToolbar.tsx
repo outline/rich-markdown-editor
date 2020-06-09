@@ -1,3 +1,4 @@
+import assert from "assert";
 import * as React from "react";
 import { Portal } from "react-portal";
 import { EditorView } from "prosemirror-view";
@@ -13,6 +14,7 @@ import getMarkRange from "../queries/getMarkRange";
 import isNodeActive from "../queries/isNodeActive";
 import getColumnIndex from "../queries/getColumnIndex";
 import getRowIndex from "../queries/getRowIndex";
+import createAndInsertLink from "../commands/createAndInsertLink";
 import { MenuItem } from "../types";
 
 type Props = {
@@ -20,6 +22,8 @@ type Props = {
   commands: Record<string, any>;
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
   onClickLink: (url: string) => void;
+  onCreateLink?: (title: string) => Promise<string>;
+  onShowToast?: (msg: string, code: string) => void;
   view: EditorView;
 };
 
@@ -31,8 +35,53 @@ function isActive(props) {
 }
 
 export default class SelectionToolbar extends React.Component<Props> {
-  render() {
+  handleOnCreateLink = async (title: string) => {
+    const { onCreateLink, view, onShowToast } = this.props;
+
+    if (!onCreateLink) {
+      return;
+    }
+
+    const { dispatch, state } = view;
+    const { from, to } = state.selection;
+    assert(from !== to);
+
+    const href = `creating#${title}…`;
+
+    // Insert a placeholder link
+    dispatch(
+      view.state.tr.addMark(from, to, state.schema.marks.link.create({ href }))
+    );
+
+    createAndInsertLink(view, title, href, {
+      onCreateLink,
+      onShowToast,
+    });
+  };
+
+  handleOnSelectLink = (href: string): void => {
     const { view } = this.props;
+    const { state, dispatch } = view;
+
+    const { selection } = state;
+    const range = getMarkRange(selection.$from, state.schema.marks.link);
+
+    if (!range) return;
+
+    const from = range.from;
+    const to = range.to;
+    const markType = state.schema.marks.link;
+
+    dispatch(
+      state.tr
+        .removeMark(from, to, markType)
+        .addMark(from, to, markType.create({ href }))
+    );
+  };
+
+  render() {
+    const { onCreateLink, ...rest } = this.props;
+    const { view } = rest;
     const { state } = view;
     const { selection }: { selection: any } = state;
     const isCodeSelection = isNodeActive(state.schema.nodes.code_block)(state);
@@ -71,10 +120,12 @@ export default class SelectionToolbar extends React.Component<Props> {
               mark={range.mark}
               from={range.from}
               to={range.to}
-              {...this.props}
+              onCreateLink={onCreateLink ? this.handleOnCreateLink : undefined}
+              onSelectLink={this.handleOnSelectLink}
+              {...rest}
             />
           ) : (
-            <Menu items={items} {...this.props} />
+            <Menu items={items} {...rest} />
           )}
         </FloatingToolbar>
       </Portal>
