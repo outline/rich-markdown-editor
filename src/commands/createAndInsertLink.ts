@@ -36,7 +36,7 @@ const createAndInsertLink = async function(
   href: string,
   options: {
     onCreateLink: (title: string) => Promise<string>;
-    onShowToast?: (msg: string, code: string) => void;
+    onShowToast?: (message: string, code: string) => void;
   }
 ) {
   const { dispatch, state } = view;
