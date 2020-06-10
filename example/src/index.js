@@ -110,7 +110,7 @@ class Example extends React.Component {
           onClickLink={href => console.log("Clicked link: ", href)}
           onClickHashtag={tag => console.log("Clicked hashtag: ", tag)}
           onCreateLink={title => {
-            // Delay to simulate time taken to upload
+            // Delay to simulate time taken for remote API request to complete
             return new Promise((resolve, reject) => {
               setTimeout(() => {
                 if (title !== "error") {
