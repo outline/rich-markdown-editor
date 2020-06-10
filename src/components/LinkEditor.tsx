@@ -30,7 +30,7 @@ type Props = {
   onRemoveLink?: () => void;
   onCreateLink?: (title: string) => Promise<void>;
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
-  onSelectLink: (opts: {
+  onSelectLink: (options: {
     href: string;
     title?: string;
     from: number;
