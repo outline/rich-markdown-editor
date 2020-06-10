@@ -281,7 +281,7 @@ class LinkEditor extends React.Component<Props, State> {
             {showCreateLink && (
               <LinkSearchResult
                 key="create"
-                title={`Create new doc "${value}"`}
+                title={`Create new doc “${value}”`}
                 icon={<PlusIcon />}
                 onClick={() => {
                   this.handleCreateLink(value);
