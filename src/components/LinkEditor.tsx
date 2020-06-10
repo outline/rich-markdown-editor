@@ -37,7 +37,7 @@ type Props = {
     to: number;
   }) => void;
   onClickLink: (url: string) => void;
-  onShowToast?: (msg: string, code: string) => void;
+  onShowToast?: (message: string, code: string) => void;
   view: EditorView;
   theme: typeof theme;
 };
