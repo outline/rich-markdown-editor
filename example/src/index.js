@@ -114,9 +114,7 @@ class Example extends React.Component {
             return new Promise((resolve, reject) => {
               setTimeout(() => {
                 if (title !== "error") {
-                  return resolve(
-                    `https://dummyimage.com/600x400/000/fff&text=${title}`
-                  );
+                  return resolve(`/doc/${encodeURIComponent(title)}`);
                 } else {
                   reject("500 error");
                 }
