@@ -51,7 +51,7 @@ type State = {
 class LinkEditor extends React.Component<Props, State> {
   discardInputValue = false;
   initialValue = this.href;
-  hasInitialSelection = this.props.from !== this.props.to;
+  initialSelectionLength = this.props.to - this.props.from;
 
   state: State = {
     selectedIndex: -1,
@@ -115,7 +115,7 @@ class LinkEditor extends React.Component<Props, State> {
           this.save(value, value);
         }
 
-        if (this.hasInitialSelection) {
+        if (this.initialSelectionLength) {
           this.moveSelectionToEnd();
         }
 
@@ -214,7 +214,7 @@ class LinkEditor extends React.Component<Props, State> {
     event.preventDefault();
     this.save(url, title);
 
-    if (this.hasInitialSelection) {
+    if (this.initialSelectionLength) {
       this.moveSelectionToEnd();
     }
   };
