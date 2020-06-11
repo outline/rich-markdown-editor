@@ -30,14 +30,14 @@ type Props = {
   onRemoveLink?: () => void;
   onCreateLink?: (title: string) => Promise<void>;
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
-  onSelectLink: (opts: {
+  onSelectLink: (options: {
     href: string;
     title?: string;
     from: number;
     to: number;
   }) => void;
   onClickLink: (url: string) => void;
-  onShowToast?: (msg: string, code: string) => void;
+  onShowToast?: (message: string, code: string) => void;
   view: EditorView;
   theme: typeof theme;
 };
@@ -281,7 +281,7 @@ class LinkEditor extends React.Component<Props, State> {
             {showCreateLink && (
               <LinkSearchResult
                 key="create"
-                title={`Create new doc "${value}"`}
+                title={`Create new doc “${value}”`}
                 icon={<PlusIcon />}
                 onClick={() => {
                   this.handleCreateLink(value);
