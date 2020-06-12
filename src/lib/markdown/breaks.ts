@@ -16,17 +16,14 @@ export default function markdownBreakToParagraphs(md: MarkdownIt) {
 
     // work backwards through the tokens and find text that looks like a br
     for (let i = tokens.length - 1; i > 0; i--) {
-      const matches = tokens[i].children
-        ? tokens[i].children.filter(isHardbreak)
-        : [];
+      const tokenChildren = tokens[i].children || [];
+      const matches = tokenChildren.filter(isHardbreak);
 
       if (matches.length) {
         let token;
 
-        const nodes = [];
-        const children = tokens[i].children.filter(
-          child => !isHardbreak(child)
-        );
+        const nodes: Token[] = [];
+        const children = tokenChildren.filter(child => !isHardbreak(child));
 
         let count = matches.length;
         if (!!children.length) count++;

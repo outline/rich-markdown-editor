@@ -2,6 +2,7 @@
   "compilerOptions": {
     "sourceMap": true,
     "strict": false,
+    "strictNullChecks": true,
     "noImplicitAny": false,
     "esModuleInterop": true,
     "allowJs": true,

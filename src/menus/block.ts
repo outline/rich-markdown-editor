@@ -11,8 +11,9 @@ import {
   TodoListIcon,
   ImageIcon,
 } from "outline-icons";
+import { MenuItem } from "../types";
 
-export default function blockMenuItems() {
+export default function blockMenuItems(): MenuItem[] {
   return [
     {
       name: "heading",

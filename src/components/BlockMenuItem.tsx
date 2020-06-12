@@ -10,7 +10,7 @@ type Props = {
   theme: typeof theme;
   icon: typeof React.Component;
   title: string;
-  shortcut: string;
+  shortcut?: string;
 };
 
 function BlockMenuItem({
@@ -78,7 +78,10 @@ const MenuItem = styled.button<{
   &:hover,
   &:active {
     color: ${props => props.theme.black};
-    background: ${props => props.theme.blockToolbarHoverBackground};
+    background: ${props =>
+      props.selected
+        ? props.theme.blockToolbarTrigger
+        : props.theme.blockToolbarHoverBackground};
   }
 `;
 

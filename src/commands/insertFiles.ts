@@ -1,10 +1,6 @@
-import uploadPlaceholderPlugin from "../lib/uploadPlaceholder";
-
-const findPlaceholder = function(state, id) {
-  const decos = uploadPlaceholderPlugin.getState(state);
-  const found = decos.find(null, null, spec => spec.id === id);
-  return found.length ? found[0].from : null;
-};
+import uploadPlaceholderPlugin, {
+  findPlaceholder,
+} from "../lib/uploadPlaceholder";
 
 const insertFiles = function(view, event, pos, files, options) {
   // filter to only include image files

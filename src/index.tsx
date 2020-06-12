@@ -14,12 +14,15 @@ import styled, { ThemeProvider } from "styled-components";
 import { light as lightTheme, dark as darkTheme } from "./theme";
 import Flex from "./components/Flex";
 import { SearchResult } from "./components/LinkEditor";
-import FloatingToolbar from "./components/FloatingToolbar";
+import { EmbedDescriptor } from "./types";
+import SelectionToolbar from "./components/SelectionToolbar";
 import BlockMenu from "./components/BlockMenu";
+import LinkToolbar from "./components/LinkToolbar";
 import Tooltip from "./components/Tooltip";
 import Extension from "./lib/Extension";
 import ExtensionManager from "./lib/ExtensionManager";
 import ComponentView from "./lib/ComponentView";
+import headingToSlug from "./lib/headingToSlug";
 
 // nodes
 import ReactNode from "./nodes/ReactNode";
@@ -63,6 +66,8 @@ import MarkdownPaste from "./plugins/MarkdownPaste";
 
 export { schema, parser, serializer } from "./server";
 
+export { default as Extension } from "./lib/Extension";
+
 export const theme = lightTheme;
 
 export type Props = {
@@ -82,11 +87,12 @@ export type Props = {
   onChange: (value: () => string) => void;
   onImageUploadStart?: () => void;
   onImageUploadStop?: () => void;
+  onCreateLink?: (title: string) => Promise<string>;
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
   onClickLink: (href: string) => void;
   onClickHashtag?: (tag: string) => void;
-  onKeyDown: (event: React.KeyboardEvent<HTMLDivElement>) => void;
-  getLinkComponent?: (href: string) => typeof React.Component | void;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLDivElement>) => void;
+  embeds: EmbedDescriptor[];
   onShowToast?: (message: string) => void;
   tooltip: typeof React.Component;
   className?: string;
@@ -95,6 +101,7 @@ export type Props = {
 
 type State = {
   blockMenuOpen: boolean;
+  linkMenuOpen: boolean;
   blockMenuSearch: string;
 };
 
@@ -111,17 +118,19 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     onClickLink: href => {
       window.open(href, "_blank");
     },
+    embeds: [],
     extensions: [],
     tooltip: Tooltip,
   };
 
   state = {
     blockMenuOpen: false,
+    linkMenuOpen: false,
     blockMenuSearch: "",
   };
 
   extensions: ExtensionManager;
-  element?: HTMLElement;
+  element?: HTMLElement | null;
   view: EditorView;
   schema: Schema;
   serializer: MarkdownSerializer;
@@ -194,9 +203,11 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new Blockquote(),
         new BulletList(),
         new CodeBlock({
+          initialReadOnly: this.props.readOnly,
           onShowToast: this.props.onShowToast,
         }),
         new CodeFence({
+          initialReadOnly: this.props.readOnly,
           onShowToast: this.props.onShowToast,
         }),
         new CheckboxList(),
@@ -232,6 +243,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           onClickHashtag: this.props.onClickHashtag,
         }),
         new Link({
+          onKeyboardShortcut: this.handleOpenLinkMenu,
           onClickLink: this.props.onClickLink,
           onClickHashtag: this.props.onClickHashtag,
         }),
@@ -353,6 +365,10 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   }
 
   createView() {
+    if (!this.element) {
+      throw new Error("createView called before ref available");
+    }
+
     const view = new EditorView(this.element, {
       state: this.createState(),
       editable: () => !this.props.readOnly,
@@ -421,6 +437,14 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     }
   };
 
+  handleOpenLinkMenu = () => {
+    this.setState({ linkMenuOpen: true });
+  };
+
+  handleCloseLinkMenu = () => {
+    this.setState({ linkMenuOpen: false });
+  };
+
   handleOpenBlockMenu = (search: string) => {
     this.setState({ blockMenuOpen: true, blockMenuSearch: search });
   };
@@ -458,12 +482,30 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   getHeadings = () => {
-    const headings = [];
+    const headings: { title: string; level: number; id: string }[] = [];
+    const previouslySeen = {};
+
     this.view.state.doc.forEach(node => {
       if (node.type.name === "heading") {
+        // calculate the optimal slug
+        const slug = headingToSlug(node);
+        let id = slug;
+
+        // check if we've already used it, and if so how many times?
+        // Make the new id based on that number ensuring that we have
+        // unique ID's even when headings are identical
+        if (previouslySeen[slug] > 0) {
+          id = headingToSlug(node, previouslySeen[slug]);
+        }
+
+        // record that we've seen this slug for the next loop
+        previouslySeen[slug] =
+          previouslySeen[slug] !== undefined ? previouslySeen[slug] + 1 : 1;
+
         headings.push({
           title: node.textContent,
           level: node.attrs.level,
+          id,
         });
       }
     });
@@ -491,11 +533,22 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
             />
             {!readOnly && this.view && (
               <React.Fragment>
-                <FloatingToolbar
+                <SelectionToolbar
                   view={this.view}
                   commands={this.commands}
                   onSearchLink={this.props.onSearchLink}
                   onClickLink={this.props.onClickLink}
+                  onCreateLink={this.props.onCreateLink}
+                  tooltip={tooltip}
+                />
+                <LinkToolbar
+                  view={this.view}
+                  isActive={this.state.linkMenuOpen}
+                  onCreateLink={this.props.onCreateLink}
+                  onSearchLink={this.props.onSearchLink}
+                  onClickLink={this.props.onClickLink}
+                  onShowToast={this.props.onShowToast}
+                  onClose={this.handleCloseLinkMenu}
                   tooltip={tooltip}
                 />
                 <BlockMenu
@@ -508,6 +561,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   onImageUploadStart={this.props.onImageUploadStart}
                   onImageUploadStop={this.props.onImageUploadStop}
                   onShowToast={this.props.onShowToast}
+                  embeds={this.props.embeds}
                 />
               </React.Fragment>
             )}
@@ -518,7 +572,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 }
 
-const StyledEditor = styled("div")<{ readOnly: boolean }>`
+const StyledEditor = styled("div")<{ readOnly?: boolean }>`
   color: ${props => props.theme.text};
   background: ${props => props.theme.background};
   font-family: ${props => props.theme.fontFamily};
@@ -750,12 +804,11 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
     pointer-events: ${props => (props.readOnly ? "none" : "initial")};
     opacity: ${props => (props.readOnly ? 0.75 : 1)};
     margin: 0 0.5em 0 0;
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
   }
 
   li p:first-child {
-    display: inline-block;
     margin: 0;
   }
 
@@ -800,6 +853,11 @@ const StyledEditor = styled("div")<{ readOnly: boolean }>`
       button {
         display: ${props => (props.readOnly ? "inline" : "none")};
       }
+    }
+
+    select:focus,
+    select:active {
+      display: inline;
     }
   }
 

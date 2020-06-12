@@ -84,7 +84,14 @@ export default class Link extends Mark {
 
   keys({ type }) {
     return {
-      "Mod-k": toggleMark(type, { href: "" }),
+      "Mod-k": (state, dispatch) => {
+        if (state.selection.empty) {
+          this.options.onKeyboardShortcut();
+          return true;
+        }
+
+        return toggleMark(type, { href: "" })(state, dispatch);
+      },
     };
   }
 
@@ -96,7 +103,7 @@ export default class Link extends Mark {
             click: (view, event: MouseEvent) => {
               // always allow clicking link
               // allow opening links in editing mode with the meta/cmd key
-              // if (view.props.editable(view.state) && !event.metaKey) {
+              // if (view.props.editable && !event.metaKey) {
               //   return false;
               // }
 
@@ -118,6 +125,8 @@ export default class Link extends Mark {
                   return true;
                 }
               }
+
+              return false;
             },
           },
         },

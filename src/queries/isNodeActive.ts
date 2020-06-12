@@ -1,4 +1,4 @@
-const isNodeActive = (type, attrs = undefined) => state => {
+const isNodeActive = (type, attrs?: Record<string, any>) => state => {
   const { $from, to, node } = state.selection;
 
   if (node) {
