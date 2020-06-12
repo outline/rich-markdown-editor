@@ -13,7 +13,9 @@ export default class MarkdownPaste extends Extension {
       new Plugin({
         props: {
           handlePaste: (view, event: ClipboardEvent) => {
-            if (!view.props.editable) return false;
+            if (view.props.editable && !view.props.editable(view.state)) {
+              return false;
+            }
             if (!event.clipboardData) return false;
 
             const text = event.clipboardData.getData("text/plain");
