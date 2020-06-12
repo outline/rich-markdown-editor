@@ -20,6 +20,7 @@ class FloatingToolbar extends React.Component<Props> {
     left: -1000,
     top: 0,
     offset: 0,
+    visible: false,
   };
 
   componentDidMount() {
@@ -43,6 +44,7 @@ class FloatingToolbar extends React.Component<Props> {
         left: -1000,
         top: 0,
         offset: 0,
+        visible: false,
       };
     }
 
@@ -91,12 +93,15 @@ class FloatingToolbar extends React.Component<Props> {
       left: left + window.scrollX,
       top: top + window.scrollY,
       offset,
+      visible: true,
     };
   }
 
   render() {
     const { children, active } = this.props;
 
+    // only render children when state is updated to visible
+    // to prevent gaining input focus before calculatePosition runs
     return (
       <Portal>
         <Wrapper
@@ -106,7 +111,7 @@ class FloatingToolbar extends React.Component<Props> {
           left={this.state.left}
           offset={this.state.offset}
         >
-          {children}
+          {this.state.visible && children}
         </Wrapper>
       </Portal>
     );
