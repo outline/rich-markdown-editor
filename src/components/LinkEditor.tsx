@@ -295,6 +295,10 @@ class LinkEditor extends React.Component<Props, State> {
                 onMouseOver={() => this.handleFocusLink(results.length)}
                 onClick={() => {
                   this.handleCreateLink(value);
+
+                  if (this.initialSelectionLength) {
+                    this.moveSelectionToEnd();
+                  }
                 }}
                 selected={results.length === selectedIndex}
               />
