@@ -5,6 +5,7 @@ import theme from "../theme";
 
 type Props = {
   onClick: (event: React.MouseEvent) => void;
+  onMouseOver: (event: React.MouseEvent) => void;
   icon: React.ReactNode;
   selected: boolean;
   title: string;
