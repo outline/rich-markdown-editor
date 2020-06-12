@@ -17,11 +17,17 @@ function LinkSearchResult({ title, icon, theme, ...rest }: Props) {
       <i>
         <NextIcon color={theme.toolbarItem} />
       </i>
-      {icon}
+      <IconWrapper>{icon}</IconWrapper>
       {title}
     </ListItem>
   );
 }
+
+const IconWrapper = styled.span`
+  flex-shrink: 0;
+  margin-right: 4px;
+  opacity: 0.8;
+`;
 
 const ListItem = styled.li<{
   selected: boolean;
@@ -41,16 +47,6 @@ const ListItem = styled.li<{
 
   i {
     visibility: ${props => (props.selected ? "visible" : "hidden")};
-  }
-
-  &:hover,
-  &:focus,
-  &:active {
-    font-weight: 500;
-    outline: none;
-    i {
-      visibility: visible;
-    }
   }
 `;
 
