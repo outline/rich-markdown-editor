@@ -84,6 +84,8 @@ class LinkEditor extends React.Component<Props, State> {
   };
 
   save = (href: string, title?: string): void => {
+    href = href.trim();
+
     this.discardInputValue = true;
     const { from, to } = this.props;
 
@@ -160,8 +162,9 @@ class LinkEditor extends React.Component<Props, State> {
   };
 
   handleChange = async (event): Promise<void> => {
-    const value = event.target.value.trim();
+    const value = event.target.value;
     const looksLikeUrl = isUrl(value);
+
     this.setState({
       value,
       results: looksLikeUrl ? [] : this.state.results,
