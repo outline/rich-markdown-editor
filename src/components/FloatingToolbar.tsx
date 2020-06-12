@@ -1,178 +1,117 @@
 import * as React from "react";
 import { Portal } from "react-portal";
+import { isEqual } from "lodash";
 import { EditorView } from "prosemirror-view";
 import styled from "styled-components";
-import { isEqual } from "lodash";
-import getTableColMenuItems from "../menus/tableCol";
-import getTableRowMenuItems from "../menus/tableRow";
-import getTableMenuItems from "../menus/table";
-import getFormattingMenuItems from "../menus/formatting";
-import LinkEditor, { SearchResult } from "./LinkEditor";
-import Menu from "./Menu";
-import isMarkActive from "../queries/isMarkActive";
-import getMarkRange from "../queries/getMarkRange";
-import isNodeActive from "../queries/isNodeActive";
-import getColumnIndex from "../queries/getColumnIndex";
-import getRowIndex from "../queries/getRowIndex";
-import { MenuItem } from "../types";
 
 const SSR = typeof window === "undefined";
 
 type Props = {
-  tooltip: typeof React.Component;
-  commands: Record<string, any>;
-  onSearchLink?: (term: string) => Promise<SearchResult[]>;
-  onClickLink: (url: string) => void;
+  active?: boolean;
   view: EditorView;
+  children: React.ReactNode;
+  forwardedRef?: React.RefObject<HTMLDivElement> | null;
 };
 
-const menuRef = React.createRef<HTMLDivElement>();
+class FloatingToolbar extends React.Component<Props> {
+  menuRef = this.props.forwardedRef || React.createRef<HTMLDivElement>();
 
-function calculatePosition(props) {
-  const { view } = props;
-  const { selection } = view.state;
-
-  // If there is no selection, the selection is empty or the selection is a
-  // NodeSelection instead of a TextSelection then hide the formatting
-  // toolbar offscreen
-  if (
-    !selection ||
-    !menuRef.current ||
-    selection.empty ||
-    selection.node ||
-    SSR
-  ) {
-    return {
-      left: -1000,
-      top: 0,
-      offset: 0,
-    };
-  }
-
-  // based on the start and end of the selection calculate the position at
-  // the center top
-  const startPos = view.coordsAtPos(selection.$from.pos);
-  const endPos = view.coordsAtPos(selection.$to.pos);
-
-  // tables are an oddity, and need their own logic
-  const isColSelection = selection.isColSelection && selection.isColSelection();
-  const isRowSelection = selection.isRowSelection && selection.isRowSelection();
-
-  if (isRowSelection) {
-    endPos.left = startPos.left + 12;
-  } else if (isColSelection) {
-    const { node: element } = view.domAtPos(selection.$from.pos);
-    const { width } = element.getBoundingClientRect();
-    endPos.left = startPos.left + width;
-  }
-
-  const halfSelection = Math.abs(endPos.left - startPos.left) / 2;
-  const centerOfSelection = startPos.left + halfSelection;
-
-  // position the menu so that it is centered over the selection except in
-  // the cases where it would extend off the edge of the screen. In these
-  // instances leave a margin
-  const { offsetWidth, offsetHeight } = menuRef.current;
-  const margin = 12;
-  const left = Math.min(
-    window.innerWidth - offsetWidth - margin,
-    Math.max(margin, centerOfSelection - offsetWidth / 2)
-  );
-  const top = Math.min(
-    window.innerHeight - offsetHeight - margin,
-    Math.max(margin, startPos.top - offsetHeight)
-  );
-
-  // Half the width of the triangle which points below the floating menu
-  const halfTriangle = 18;
-
-  // If the menu has been offset to not extend offscreen then we should adjust
-  // the position of the triangle underneath to correctly point to the center
-  // of the selection still
-  const halfWidth = offsetWidth / 2;
-  const offset = Math.max(
-    -halfWidth + halfTriangle,
-    Math.min(halfWidth - halfTriangle, left - (centerOfSelection - halfWidth))
-  );
-
-  return {
-    left: left + window.scrollX,
-    top: top + window.scrollY,
-    offset,
-  };
-}
-
-export default class FloatingToolbar extends React.Component<Props> {
   state = {
-    left: 0,
+    left: -1000,
     top: 0,
     offset: 0,
+    visible: false,
   };
 
+  componentDidMount() {
+    this.setState(this.calculatePosition(this.props));
+  }
+
   componentDidUpdate() {
-    const newState = calculatePosition(this.props);
+    const newState = this.calculatePosition(this.props);
 
     if (!isEqual(newState, this.state)) {
       this.setState(newState);
     }
   }
 
-  componentDidMount() {
-    this.setState(calculatePosition(this.props));
+  calculatePosition(props) {
+    const { view, active } = props;
+    const { selection } = view.state;
+
+    if (!active || !this.menuRef.current || SSR) {
+      return {
+        left: -1000,
+        top: 0,
+        offset: 0,
+        visible: false,
+      };
+    }
+
+    // based on the start and end of the selection calculate the position at
+    // the center top
+    const startPos = view.coordsAtPos(selection.$from.pos);
+    const endPos = view.coordsAtPos(selection.$to.pos);
+
+    // tables are an oddity, and need their own logic
+    const isColSelection =
+      selection.isColSelection && selection.isColSelection();
+    const isRowSelection =
+      selection.isRowSelection && selection.isRowSelection();
+
+    if (isRowSelection) {
+      endPos.left = startPos.left + 12;
+    } else if (isColSelection) {
+      const { node: element } = view.domAtPos(selection.$from.pos);
+      const { width } = element.getBoundingClientRect();
+      endPos.left = startPos.left + width;
+    }
+
+    const halfSelection = Math.abs(endPos.left - startPos.left) / 2;
+    const centerOfSelection = startPos.left + halfSelection;
+
+    // position the menu so that it is centered over the selection except in
+    // the cases where it would extend off the edge of the screen. In these
+    // instances leave a margin
+    const { offsetWidth, offsetHeight } = this.menuRef.current;
+    const margin = 12;
+    const left = Math.min(
+      window.innerWidth - offsetWidth - margin,
+      Math.max(margin, centerOfSelection - offsetWidth / 2)
+    );
+    const top = Math.min(
+      window.innerHeight - offsetHeight - margin,
+      Math.max(margin, startPos.top - offsetHeight)
+    );
+
+    // if the menu has been offset to not extend offscreen then we should adjust
+    // the position of the triangle underneath to correctly point to the center
+    // of the selection still
+    const offset = left - (centerOfSelection - offsetWidth / 2);
+
+    return {
+      left: left + window.scrollX,
+      top: top + window.scrollY,
+      offset,
+      visible: true,
+    };
   }
 
   render() {
-    const { view } = this.props;
-    const { state } = view;
-    const { selection }: { selection: any } = state;
-    const isActive = !selection.empty;
-    const isCodeSelection = isNodeActive(state.schema.nodes.code_block)(state);
+    const { children, active } = this.props;
 
-    // toolbar is disabled in code blocks, no bold / italic etc
-    if (isCodeSelection) {
-      return null;
-    }
-
-    const colIndex = getColumnIndex(state.selection);
-    const rowIndex = getRowIndex(state.selection);
-    const isTableSelection = colIndex !== undefined && rowIndex !== undefined;
-    const link = isMarkActive(state.schema.marks.link)(state);
-    const range = getMarkRange(selection.$from, state.schema.marks.link);
-
-    let items: MenuItem[] = [];
-    if (isTableSelection) {
-      items = getTableMenuItems();
-    } else if (colIndex !== undefined) {
-      items = getTableColMenuItems(state, colIndex);
-    } else if (rowIndex !== undefined) {
-      items = getTableRowMenuItems(state, rowIndex);
-    } else {
-      items = getFormattingMenuItems(state);
-    }
-
-    if (!items.length) {
-      return null;
-    }
-
+    // only render children when state is updated to visible
+    // to prevent gaining input focus before calculatePosition runs
     return (
       <Portal>
         <Wrapper
-          active={isActive}
-          ref={menuRef}
+          active={active}
+          ref={this.menuRef}
           top={this.state.top}
           left={this.state.left}
           offset={this.state.offset}
         >
-          {link && range ? (
-            <LinkEditor
-              mark={range.mark}
-              from={range.from}
-              to={range.to}
-              {...this.props}
-            />
-          ) : (
-            <Menu items={items} {...this.props} />
-          )}
+          {this.state.visible && children}
         </Wrapper>
       </Portal>
     );
@@ -180,7 +119,7 @@ export default class FloatingToolbar extends React.Component<Props> {
 }
 
 const Wrapper = styled.div<{
-  active: boolean;
+  active?: boolean;
   top: number;
   left: number;
   offset: number;
@@ -233,3 +172,9 @@ const Wrapper = styled.div<{
     display: none;
   }
 `;
+
+export default React.forwardRef(
+  (props: Props, ref: React.RefObject<HTMLDivElement>) => (
+    <FloatingToolbar {...props} forwardedRef={ref} />
+  )
+);

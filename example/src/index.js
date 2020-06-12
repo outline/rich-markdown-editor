@@ -12,6 +12,29 @@ This is example content. It is persisted between reloads in localStorage.
 `;
 const defaultValue = savedText || exampleText;
 
+const docSearchResults = [
+  {
+    title: "Hiring",
+    url: "/doc/hiring",
+  },
+  {
+    title: "Product Roadmap",
+    url: "/doc/product-roadmap",
+  },
+  {
+    title: "Finances",
+    url: "/doc/finances",
+  },
+  {
+    title: "Super secret stuff",
+    url: "/doc/secret-stuff",
+  },
+  {
+    title: "Meeting notes",
+    url: "/doc/meeting-notes",
+  },
+];
+
 class YoutubeEmbed extends React.Component {
   render() {
     const { attrs } = this.props;
@@ -86,15 +109,24 @@ class Example extends React.Component {
           onChange={this.handleChange}
           onClickLink={href => console.log("Clicked link: ", href)}
           onClickHashtag={tag => console.log("Clicked hashtag: ", tag)}
+          onCreateLink={title => {
+            // Delay to simulate time taken for remote API request to complete
+            return new Promise((resolve, reject) => {
+              setTimeout(() => {
+                if (title !== "error") {
+                  return resolve(`/doc/${encodeURIComponent(title)}`);
+                } else {
+                  reject("500 error");
+                }
+              }, 1500);
+            });
+          }}
           onShowToast={message => window.alert(message)}
           onSearchLink={async term => {
             console.log("Searched link: ", term);
-            return [
-              {
-                title: term,
-                url: "localhost",
-              },
-            ];
+            return docSearchResults.filter(result =>
+              result.title.toLowerCase().includes(term.toLowerCase())
+            );
           }}
           uploadImage={file => {
             console.log("File upload triggered: ", file);

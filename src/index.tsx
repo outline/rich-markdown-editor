@@ -15,8 +15,9 @@ import { light as lightTheme, dark as darkTheme } from "./theme";
 import Flex from "./components/Flex";
 import { SearchResult } from "./components/LinkEditor";
 import { EmbedDescriptor } from "./types";
-import FloatingToolbar from "./components/FloatingToolbar";
+import SelectionToolbar from "./components/SelectionToolbar";
 import BlockMenu from "./components/BlockMenu";
+import LinkToolbar from "./components/LinkToolbar";
 import Tooltip from "./components/Tooltip";
 import Extension from "./lib/Extension";
 import ExtensionManager from "./lib/ExtensionManager";
@@ -85,6 +86,7 @@ export type Props = {
   onChange: (value: () => string) => void;
   onImageUploadStart?: () => void;
   onImageUploadStop?: () => void;
+  onCreateLink?: (title: string) => Promise<string>;
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
   onClickLink: (href: string) => void;
   onClickHashtag?: (tag: string) => void;
@@ -98,6 +100,7 @@ export type Props = {
 
 type State = {
   blockMenuOpen: boolean;
+  linkMenuOpen: boolean;
   blockMenuSearch: string;
 };
 
@@ -121,6 +124,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
   state = {
     blockMenuOpen: false,
+    linkMenuOpen: false,
     blockMenuSearch: "",
   };
 
@@ -234,6 +238,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new Highlight(),
         new Italic(),
         new Link({
+          onKeyboardShortcut: this.handleOpenLinkMenu,
           onClickLink: this.props.onClickLink,
           onClickHashtag: this.props.onClickHashtag,
         }),
@@ -427,6 +432,14 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     }
   };
 
+  handleOpenLinkMenu = () => {
+    this.setState({ linkMenuOpen: true });
+  };
+
+  handleCloseLinkMenu = () => {
+    this.setState({ linkMenuOpen: false });
+  };
+
   handleOpenBlockMenu = (search: string) => {
     this.setState({ blockMenuOpen: true, blockMenuSearch: search });
   };
@@ -515,11 +528,22 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
             />
             {!readOnly && this.view && (
               <React.Fragment>
-                <FloatingToolbar
+                <SelectionToolbar
                   view={this.view}
                   commands={this.commands}
                   onSearchLink={this.props.onSearchLink}
                   onClickLink={this.props.onClickLink}
+                  onCreateLink={this.props.onCreateLink}
+                  tooltip={tooltip}
+                />
+                <LinkToolbar
+                  view={this.view}
+                  isActive={this.state.linkMenuOpen}
+                  onCreateLink={this.props.onCreateLink}
+                  onSearchLink={this.props.onSearchLink}
+                  onClickLink={this.props.onClickLink}
+                  onShowToast={this.props.onShowToast}
+                  onClose={this.handleCloseLinkMenu}
                   tooltip={tooltip}
                 />
                 <BlockMenu

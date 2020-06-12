@@ -5,17 +5,19 @@ import theme from "../theme";
 
 type Props = {
   onClick: (event: React.MouseEvent) => void;
+  icon: React.ReactNode;
   selected: boolean;
   title: string;
   theme: typeof theme;
 };
 
-function LinkSearchResult({ title, theme, ...rest }: Props) {
+function LinkSearchResult({ title, icon, theme, ...rest }: Props) {
   return (
     <ListItem {...rest}>
       <i>
         <NextIcon color={theme.toolbarItem} />
       </i>
+      {icon}
       {title}
     </ListItem>
   );
@@ -36,9 +38,11 @@ const ListItem = styled.li<{
   white-space: nowrap;
   cursor: pointer;
   user-select: none;
+
   i {
     visibility: ${props => (props.selected ? "visible" : "hidden")};
   }
+
   &:hover,
   &:focus,
   &:active {
