@@ -52,7 +52,6 @@ import Code from "./marks/Code";
 import Highlight from "./marks/Highlight";
 import Italic from "./marks/Italic";
 import Link from "./marks/Link";
-import LinkChain from "./marks/LinkChain";
 import Strikethrough from "./marks/Strikethrough";
 
 // plugins
@@ -238,10 +237,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new Code(),
         new Highlight(),
         new Italic(),
-        new LinkChain({
-          onClickLink: this.props.onClickLink,
-          onClickHashtag: this.props.onClickHashtag,
-        }),
         new Link({
           onKeyboardShortcut: this.handleOpenLinkMenu,
           onClickLink: this.props.onClickLink,

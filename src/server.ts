@@ -28,7 +28,6 @@ import Code from "./marks/Code";
 import Highlight from "./marks/Highlight";
 import Italic from "./marks/Italic";
 import Link from "./marks/Link";
-import LinkChain from "./marks/LinkChain";
 import Strikethrough from "./marks/Strikethrough";
 
 const extensions = new ExtensionManager([
@@ -54,7 +53,6 @@ const extensions = new ExtensionManager([
   new Code(),
   new Highlight(),
   new Italic(),
-  new LinkChain(),
   new Link(),
   new Strikethrough(),
   new OrderedList(),
