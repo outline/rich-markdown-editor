@@ -275,7 +275,7 @@ class LinkEditor extends React.Component<Props, State> {
         </ToolbarButton>
 
         {showResults && (
-          <SearchResults>
+          <SearchResults id="link-search-results">
             {results.map((result, index) => (
               <LinkSearchResult
                 key={result.url}

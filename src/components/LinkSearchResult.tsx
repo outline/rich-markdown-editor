@@ -1,4 +1,5 @@
 import * as React from "react";
+import scrollIntoView from "smooth-scroll-into-view-if-needed";
 import styled, { withTheme } from "styled-components";
 import { NextIcon } from "outline-icons";
 import theme from "../theme";
@@ -12,9 +13,27 @@ type Props = {
   theme: typeof theme;
 };
 
-function LinkSearchResult({ title, icon, theme, ...rest }: Props) {
+function LinkSearchResult({ title, selected, icon, theme, ...rest }: Props) {
+  const ref = React.useCallback(
+    node => {
+      if (selected && node) {
+        scrollIntoView(node, {
+          scrollMode: "if-needed",
+          block: "center",
+          boundary: parent => {
+            // All the parent elements of your target are checked until they
+            // reach the #link-search-results. Prevents body and other parent
+            // elements from being scrolled
+            return parent.id !== "link-search-results";
+          },
+        });
+      }
+    },
+    [selected]
+  );
+
   return (
-    <ListItem {...rest}>
+    <ListItem ref={ref} selected={selected} {...rest}>
       <i>
         <NextIcon color={theme.toolbarItem} />
       </i>
