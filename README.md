@@ -142,9 +142,25 @@ The editor provides an ability to search for links to insert from the formatting
 />
 ```
 
+#### `onCreateLink(title: string): Promise<string>`
+
+The editor provides an ability to create links from the formatting toolbar for on-the-fly document createion. If this callback is provided it should accept a link "title" as the only parameter and return a promise that resolves to a url for the created link, eg:
+
+```javascript
+<Editor
+  onCreateLink={async title => {
+    const url = await MyAPI.create({
+      title
+    });
+
+    return url;
+  }}
+/>
+```
+
 #### `onShowToast(message: string, id: string): void`
 
-Triggered when the editor wishes to show a toast message to the user. Hook into your apps
+Triggered when the editor wishes to show an error message to the user. Hook into your apps
 notification system, or simplisticly use `window.alert(message)`. The second parameter
 is a stable identifier you can use to identify the message if you'd prefer to write
 your own copy.
