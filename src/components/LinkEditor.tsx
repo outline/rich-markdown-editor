@@ -40,6 +40,7 @@ type Props = {
   onShowToast?: (message: string, code: string) => void;
   view: EditorView;
   theme: typeof theme;
+  selectedText?: string;
 };
 
 type State = {
@@ -55,7 +56,7 @@ class LinkEditor extends React.Component<Props, State> {
 
   state: State = {
     selectedIndex: -1,
-    value: this.href,
+    value: this.href || this.props.selectedText,
     results: [],
   };
 
@@ -244,7 +245,7 @@ class LinkEditor extends React.Component<Props, State> {
         <Input
           value={value}
           placeholder={
-            showCreateLink ? "Find or create a doc…" : "Search or paste a link…"
+            showCreateLink ? "Find or create a card…" : "Search or paste a link…"
           }
           onKeyDown={this.handleKeyDown}
           onChange={this.handleChange}
@@ -281,7 +282,7 @@ class LinkEditor extends React.Component<Props, State> {
             {showCreateLink && (
               <LinkSearchResult
                 key="create"
-                title={`Create new doc “${value}”`}
+                title={`Create new card “${value}”`}
                 icon={<PlusIcon />}
                 onClick={() => {
                   this.handleCreateLink(value);

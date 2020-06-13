@@ -107,7 +107,7 @@ type State = {
 class RichMarkdownEditor extends React.PureComponent<Props, State> {
   static defaultProps = {
     defaultValue: "",
-    placeholder: "Write something nice…",
+    placeholder: "Write note…",
     onImageUploadStart: () => {
       // no default behavior
     },

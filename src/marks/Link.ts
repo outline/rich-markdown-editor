@@ -99,6 +99,7 @@ export default class Link extends Mark {
     return [
       new Plugin({
         props: {
+          // could add hover events here (would be one way traffic though)
           handleDOMEvents: {
             click: (view, event: MouseEvent) => {
               // always allow clicking link
