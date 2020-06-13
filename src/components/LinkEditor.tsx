@@ -40,7 +40,7 @@ type Props = {
   onShowToast?: (message: string, code: string) => void;
   view: EditorView;
   theme: typeof theme;
-  selectedText?: string;
+  selectedText: string;
 };
 
 type State = {
