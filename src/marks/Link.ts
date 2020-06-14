@@ -3,7 +3,7 @@ import { Plugin } from "prosemirror-state";
 import { InputRule } from "prosemirror-inputrules";
 import Mark from "./Mark";
 
-const LINK_INPUT_REGEX = /\[(.+|:?)]\((.+)\)/;
+const LINK_INPUT_REGEX = /\[(.+|:?)]\((\S+)\)/;
 
 function isPlainURL(link, parent, index, side) {
   if (link.attrs.title || !/^\w+:/.test(link.attrs.href)) {
