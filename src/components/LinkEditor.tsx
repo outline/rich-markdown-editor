@@ -86,6 +86,8 @@ class LinkEditor extends React.Component<Props, State> {
   save = (href: string, title?: string): void => {
     href = href.trim();
 
+    if (href.length === 0) return;
+
     this.discardInputValue = true;
     const { from, to } = this.props;
 
