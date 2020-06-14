@@ -199,6 +199,9 @@ class LinkEditor extends React.Component<Props, State> {
     this.discardInputValue = true;
     const { onCreateLink } = this.props;
 
+    value = value.trim();
+    if (value.length === 0) return;
+
     if (onCreateLink) return onCreateLink(value);
   };
 
