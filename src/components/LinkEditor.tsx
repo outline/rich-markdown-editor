@@ -248,6 +248,7 @@ class LinkEditor extends React.Component<Props, State> {
     const showCreateLink =
       !!this.props.onCreateLink &&
       !(value === this.initialValue) &&
+      value.trim().length > 0 &&
       !looksLikeUrl;
 
     const showResults = !!value && (showCreateLink || results.length > 0);
@@ -295,7 +296,7 @@ class LinkEditor extends React.Component<Props, State> {
             {showCreateLink && (
               <LinkSearchResult
                 key="create"
-                title={`Create new doc “${value}”`}
+                title={`Create new doc “${value.trim()}”`}
                 icon={<PlusIcon color={theme.toolbarItem} />}
                 onMouseOver={() => this.handleFocusLink(results.length)}
                 onClick={() => {
