@@ -56,7 +56,7 @@ class LinkEditor extends React.Component<Props, State> {
 
   state: State = {
     selectedIndex: -1,
-    value: this.href || this.props.selectedText,
+    value: this.href || encodeURI(this.props.selectedText),
     results: [],
   };
 

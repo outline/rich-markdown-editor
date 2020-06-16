@@ -118,6 +118,7 @@ export default class LinkToolbar extends React.Component<Props> {
     const { onCreateLink, onClose, ...rest } = this.props;
     const selection = this.props.view.state.selection;
 
+    // FIXME doesn't work on nested level like bullet points etc
     const selectedText = (selection.content() &&
       selection.content().content &&
       selection.content().content[0] &&
