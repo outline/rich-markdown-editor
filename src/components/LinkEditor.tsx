@@ -56,7 +56,7 @@ class LinkEditor extends React.Component<Props, State> {
 
   state: State = {
     selectedIndex: -1,
-    value: this.href || encodeURI(this.props.selectedText),
+    value: this.href || this.props.selectedText,
     results: [],
   };
 
@@ -94,7 +94,7 @@ class LinkEditor extends React.Component<Props, State> {
       href = `https://${href}`;
     }
 
-    this.props.onSelectLink({ href, title, from, to });
+    this.props.onSelectLink({ href: encodeURI(href), title, from, to });
   };
 
   handleKeyDown = (event: React.KeyboardEvent): void => {
@@ -161,7 +161,7 @@ class LinkEditor extends React.Component<Props, State> {
   };
 
   handleChange = async (event): Promise<void> => {
-    const value = event.target.value.trim();
+    const value = event.target.value;
     const looksLikeUrl = isUrl(value);
     this.setState({
       value,
