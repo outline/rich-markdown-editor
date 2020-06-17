@@ -100,14 +100,23 @@ export default class SelectionToolbar extends React.Component<Props> {
     const isTableSelection = colIndex !== undefined && rowIndex !== undefined;
     const link = isMarkActive(state.schema.marks.link)(state);
     const range = getMarkRange(selection.$from, state.schema.marks.link);
-    const selectedText = (selection.content() &&
-      selection.content().content &&
-      selection.content().content.content &&
-      selection.content().content.content[0] &&
-      selection.content().content.content[0].content &&
-      selection.content().content.content[0].content.content &&
-      selection.content().content.content[0].content.content[0] &&
-      selection.content().content.content[0].content.content[0].text) || "";
+
+    const getText = content => {
+      if (!content) {
+        return "";
+      } else if (content.text) {
+        return content.text;
+      } else if (Array.isArray(content)) {
+        console.log(`array`);
+        console.log(content);
+        return getText(content[0]);
+      } else if (typeof content === 'object' && content !== null) {
+        console.log(`content`);
+        console.log(content);
+        return getText(content.content);
+      }
+    }
+    const selectedText = getText(selection.content());
 
     let items: MenuItem[] = [];
     if (isTableSelection) {

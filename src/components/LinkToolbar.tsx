@@ -118,16 +118,6 @@ export default class LinkToolbar extends React.Component<Props> {
     const { onCreateLink, onClose, ...rest } = this.props;
     const selection = this.props.view.state.selection;
 
-    // FIXME doesn't work on nested level like bullet points etc
-    const selectedText = (selection.content() &&
-      selection.content().content &&
-      selection.content().content[0] &&
-      selection.content().content[0].content &&
-      selection.content().content[0].content.content &&
-      selection.content().content[0].content.content[0] &&
-      selection.content().content[0].content.content[0].text) || "";
-
-
     return (
       <FloatingToolbar
         ref={this.menuRef}
@@ -141,7 +131,7 @@ export default class LinkToolbar extends React.Component<Props> {
             onCreateLink={onCreateLink ? this.handleOnCreateLink : undefined}
             onSelectLink={this.handleOnSelectLink}
             onRemoveLink={onClose}
-            selectedText={selectedText}
+            selectedText=""
             {...rest}
           />
         )}
