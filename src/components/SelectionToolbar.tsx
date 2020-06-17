@@ -107,12 +107,8 @@ export default class SelectionToolbar extends React.Component<Props> {
       } else if (content.text) {
         return content.text;
       } else if (Array.isArray(content)) {
-        console.log(`array`);
-        console.log(content);
         return getText(content[0]);
       } else if (typeof content === 'object' && content !== null) {
-        console.log(`content`);
-        console.log(content);
         return getText(content.content);
       }
     }
