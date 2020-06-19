@@ -1179,6 +1179,13 @@ const StyledEditor = styled("div")<{ readOnly?: boolean }>`
   .ProseMirror-focused .ProseMirror-gapcursor {
     display: block;
   }
+
+  @media print {
+    em,
+    blockquote {
+      font-family: "SF Pro Text", ${props => props.theme.fontFamily};
+    }
+  }
 `;
 
 export default RichMarkdownEditor;
