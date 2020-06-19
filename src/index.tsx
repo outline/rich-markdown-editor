@@ -744,6 +744,12 @@ const StyledEditor = styled("div")<{ readOnly?: boolean }>`
     }
   }
 
+  @media print {
+    .placeholder {
+      display: none;
+    }
+  }
+
   blockquote {
     border-left: 3px solid ${props => props.theme.quote};
     margin: 0;
@@ -1151,6 +1157,12 @@ const StyledEditor = styled("div")<{ readOnly?: boolean }>`
       cursor: pointer;
       transform: scale(1);
       color: ${props => props.theme.text};
+    }
+  }
+
+  @media print {
+    .block-menu-trigger {
+      display: none;
     }
   }
 
