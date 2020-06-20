@@ -10,8 +10,12 @@ import {
   TableIcon,
   TodoListIcon,
   ImageIcon,
+  LinkIcon,
 } from "outline-icons";
 import { MenuItem } from "../types";
+
+const isMac = window && window.navigator.platform === "MacIntel";
+const mod = isMac ? "⌘" : "ctrl";
 
 export default function blockMenuItems(): MenuItem[] {
   return [
@@ -74,7 +78,7 @@ export default function blockMenuItems(): MenuItem[] {
       name: "blockquote",
       title: "Quote",
       icon: BlockQuoteIcon,
-      shortcut: "⌘ ]",
+      shortcut: `${mod} ]`,
       attrs: { level: 2 },
     },
     {
@@ -88,7 +92,7 @@ export default function blockMenuItems(): MenuItem[] {
       name: "hr",
       title: "Divider",
       icon: HorizontalRuleIcon,
-      shortcut: "⌘ _",
+      shortcut: `${mod} _`,
       keywords: "horizontal rule break line",
     },
     {
@@ -96,6 +100,13 @@ export default function blockMenuItems(): MenuItem[] {
       title: "Image",
       icon: ImageIcon,
       keywords: "picture photo",
+    },
+    {
+      name: "link",
+      title: "Link",
+      icon: LinkIcon,
+      shortcut: `${mod} k`,
+      keywords: "link url uri href",
     },
   ];
 }
