@@ -14,7 +14,8 @@ import {
 } from "outline-icons";
 import { MenuItem } from "../types";
 
-const isMac = window && window.navigator.platform === "MacIntel";
+const SSR = typeof window === "undefined";
+const isMac = !SSR && window.navigator.platform === "MacIntel";
 const mod = isMac ? "⌘" : "ctrl";
 
 export default function blockMenuItems(): MenuItem[] {
