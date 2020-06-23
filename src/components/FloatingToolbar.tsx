@@ -87,11 +87,11 @@ class FloatingToolbar extends React.Component<Props> {
     // if the menu has been offset to not extend offscreen then we should adjust
     // the position of the triangle underneath to correctly point to the center
     // of the selection still
-    const offset = left - (centerOfSelection - offsetWidth / 2);
+    const offset = Math.round(left - (centerOfSelection - offsetWidth / 2));
 
     return {
-      left: left + window.scrollX,
-      top: top + window.scrollY,
+      left: Math.round(left + window.scrollX),
+      top: Math.round(top + window.scrollY),
       offset,
       visible: true,
     };
@@ -107,9 +107,11 @@ class FloatingToolbar extends React.Component<Props> {
         <Wrapper
           active={active}
           ref={this.menuRef}
-          top={this.state.top}
-          left={this.state.left}
           offset={this.state.offset}
+          style={{
+            top: `${this.state.top}px`,
+            left: `${this.state.left}px`,
+          }}
         >
           {this.state.visible && children}
         </Wrapper>
@@ -120,15 +122,11 @@ class FloatingToolbar extends React.Component<Props> {
 
 const Wrapper = styled.div<{
   active?: boolean;
-  top: number;
-  left: number;
   offset: number;
 }>`
   padding: 8px 16px;
   position: absolute;
   z-index: ${props => props.theme.zIndex + 100};
-  top: ${props => props.top}px;
-  left: ${props => props.left}px;
   opacity: 0;
   background-color: ${props => props.theme.toolbarBackground};
   border-radius: 4px;
