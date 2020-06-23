@@ -130,13 +130,28 @@ export default class Link extends Mark {
               return false;
             },
             mouseover: (view, event: MouseEvent) => {
-              const { href } = event.target;
-              if (this.options.onHoverLink) {
-                event.stopPropagation();
-                event.preventDefault();
-                this.options.onHoverLink(href);
-                return true;
+              if (event.target instanceof HTMLAnchorElement) {
+                const { href } = event.target;
+                if (this.options.onHoverLink) {
+                  event.stopPropagation();
+                  event.preventDefault();
+                  this.options.onHoverLink(href);
+                  return true;
+                }
               }
+              return false;
+            },
+            mouseout: (view, event: MouseEvent) => {
+              if (event.target instanceof HTMLAnchorElement) {
+                const { href } = event.target;
+                if (this.options.onUnhoverLink) {
+                  event.stopPropagation();
+                  event.preventDefault();
+                  this.options.onUnhoverLink(href);
+                  return true;
+                }
+              }
+              return false;
             }
           },
         },

@@ -109,6 +109,7 @@ class Example extends React.Component {
           onChange={this.handleChange}
           onClickLink={href => console.log("Clicked link: ", href)}
           onHoverLink={href => console.log("Hovered link: ", href)}
+          onUnhoverLink={href => console.log("Unhovered link: ", href)}
           onClickHashtag={tag => console.log("Clicked hashtag: ", tag)}
           onCreateLink={title => {
             // Delay to simulate time taken for remote API request to complete
