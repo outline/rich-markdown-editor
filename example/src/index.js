@@ -108,6 +108,7 @@ class Example extends React.Component {
           onCancel={() => console.log("Cancel triggered")}
           onChange={this.handleChange}
           onClickLink={href => console.log("Clicked link: ", href)}
+          onHoverLink={href => console.log("Hovered link: ", href)}
           onClickHashtag={tag => console.log("Clicked hashtag: ", tag)}
           onCreateLink={title => {
             // Delay to simulate time taken for remote API request to complete

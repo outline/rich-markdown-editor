@@ -129,6 +129,15 @@ export default class Link extends Mark {
 
               return false;
             },
+            mouseover: (view, event: MouseEvent) => {
+              const { href } = event.target;
+              if (this.options.onHoverLink) {
+                event.stopPropagation();
+                event.preventDefault();
+                this.options.onHoverLink(href);
+                return true;
+              }
+            }
           },
         },
       }),
