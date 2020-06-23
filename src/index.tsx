@@ -607,8 +607,13 @@ const StyledEditor = styled("div")<{ readOnly?: boolean }>`
     }
   }
 
-  .image.placeholder img {
-    opacity: 0.5;
+  .image.placeholder {
+    position: relative;
+    background: ${props => props.theme.background};
+
+    img {
+      opacity: 0.5;
+    }
   }
 
   .ProseMirror-hideselection *::selection {
