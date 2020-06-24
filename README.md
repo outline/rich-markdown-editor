@@ -199,6 +199,21 @@ import { history } from "react-router";
 />
 ```
 
+#### `handleDOMEvents: {[name: string]: (view: EditorView, event: Event) => boolean;}`
+
+This object maps [event](https://developer.mozilla.org/en-US/docs/Web/Events) names (`focus`, `paste`, `touchstart`, etc.) to callback functions.
+
+```javascript
+<Editor
+  handleDOMEvents={{
+    focus: () => console.log("FOCUS"),
+    blur: console.log("BLUR"),
+    paste: () => console.log("PASTE"),
+    touchstart: () => console.log("TOUCH START"),
+  }}
+/>
+```
+
 ### Interface
 
 The Editor component exposes a few methods for interacting with the mounted editor.

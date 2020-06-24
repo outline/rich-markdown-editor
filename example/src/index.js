@@ -104,6 +104,12 @@ class Example extends React.Component {
           readOnly={this.state.readOnly}
           value={this.state.value}
           defaultValue={defaultValue}
+          handleDOMEvents={{
+            focus: () => console.log("FOCUS"),
+            blur: console.log("BLUR"),
+            paste: () => console.log("PASTE"),
+            touchstart: () => console.log("TOUCH START"),
+          }}
           onSave={options => console.log("Save triggered", options)}
           onCancel={() => console.log("Cancel triggered")}
           onChange={this.handleChange}
