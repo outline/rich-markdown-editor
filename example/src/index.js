@@ -116,7 +116,9 @@ class Example extends React.Component {
             return new Promise((resolve, reject) => {
               setTimeout(() => {
                 if (title !== "error") {
-                  return resolve(`/doc/${encodeURIComponent(title)}`);
+                  return resolve(
+                    `/doc/${encodeURIComponent(title.toLowerCase())}`
+                  );
                 } else {
                   reject("500 error");
                 }

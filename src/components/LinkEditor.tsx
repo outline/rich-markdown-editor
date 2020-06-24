@@ -85,6 +85,8 @@ class LinkEditor extends React.Component<Props, State> {
   };
 
   save = (href: string, title?: string): void => {
+    href = href.trim();
+
     this.discardInputValue = true;
     const { from, to } = this.props;
 
@@ -160,9 +162,14 @@ class LinkEditor extends React.Component<Props, State> {
     }
   };
 
+  handleFocusLink = (selectedIndex: number) => {
+    this.setState({ selectedIndex });
+  };
+
   handleChange = async (event): Promise<void> => {
     const value = event.target.value;
     const looksLikeUrl = isUrl(value);
+
     this.setState({
       value,
       results: looksLikeUrl ? [] : this.state.results,
@@ -233,6 +240,7 @@ class LinkEditor extends React.Component<Props, State> {
   };
 
   render() {
+    const { theme } = this.props;
     const { value, results, selectedIndex } = this.state;
 
     const Tooltip = this.props.tooltip;
@@ -259,26 +267,27 @@ class LinkEditor extends React.Component<Props, State> {
 
         <ToolbarButton onClick={this.handleOpenLink} disabled={!value}>
           <Tooltip tooltip="Open link" placement="top">
-            <OpenIcon color={this.props.theme.toolbarItem} />
+            <OpenIcon color={theme.toolbarItem} />
           </Tooltip>
         </ToolbarButton>
         <ToolbarButton onClick={this.handleRemoveLink}>
           <Tooltip tooltip="Remove link" placement="top">
             {this.initialValue ? (
-              <TrashIcon color={this.props.theme.toolbarItem} />
+              <TrashIcon color={theme.toolbarItem} />
             ) : (
-              <CloseIcon color={this.props.theme.toolbarItem} />
+              <CloseIcon color={theme.toolbarItem} />
             )}
           </Tooltip>
         </ToolbarButton>
 
         {showResults && (
-          <SearchResults>
+          <SearchResults id="link-search-results">
             {results.map((result, index) => (
               <LinkSearchResult
                 key={result.url}
                 title={result.title}
-                icon={<DocumentIcon />}
+                icon={<DocumentIcon color={theme.toolbarItem} />}
+                onMouseOver={() => this.handleFocusLink(index)}
                 onClick={this.handleSelectLink(result.url, result.title)}
                 selected={index === selectedIndex}
               />
@@ -288,9 +297,14 @@ class LinkEditor extends React.Component<Props, State> {
               <LinkSearchResult
                 key="create"
                 title={`Create new card “${value}”`}
-                icon={<PlusIcon />}
+                icon={<PlusIcon color={theme.toolbarItem} />}
+                onMouseOver={() => this.handleFocusLink(results.length)}
                 onClick={() => {
                   this.handleCreateLink(value);
+
+                  if (this.initialSelectionLength) {
+                    this.moveSelectionToEnd();
+                  }
                 }}
                 selected={results.length === selectedIndex}
               />
@@ -320,6 +334,8 @@ const SearchResults = styled.ol`
   margin-top: -3px;
   margin-bottom: 0;
   border-radius: 0 0 4px 4px;
+  overflow-y: auto;
+  max-height: 25vh;
 `;
 
 export default withTheme(LinkEditor);

@@ -3,7 +3,7 @@ import { Plugin } from "prosemirror-state";
 import { InputRule } from "prosemirror-inputrules";
 import Mark from "./Mark";
 
-const LINK_INPUT_REGEX = /\[(.+|:?)]\((\S+)\)/;
+const LINK_INPUT_REGEX = /\[(.+)]\((\S+)\)/;
 
 function isPlainURL(link, parent, index, side) {
   if (link.attrs.title || !/^\w+:/.test(link.attrs.href)) {
@@ -104,7 +104,11 @@ export default class Link extends Mark {
             click: (view, event: MouseEvent) => {
               // always allow clicking link
               // allow opening links in editing mode with the meta/cmd key
-              // if (view.props.editable && !event.metaKey) {
+              // if (
+              //   view.props.editable &&
+              //   view.props.editable(view.state) &&
+              //   !event.metaKey
+              // ) {
               //   return false;
               // }
 

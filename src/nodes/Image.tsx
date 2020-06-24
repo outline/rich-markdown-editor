@@ -23,7 +23,10 @@ const uploadPlugin = options =>
     props: {
       handleDOMEvents: {
         paste(view, event: ClipboardEvent): boolean {
-          if (!view.props.editable) return false;
+          if (view.props.editable && !view.props.editable(view.state)) {
+            return false;
+          }
+
           if (!event.clipboardData) return false;
 
           // check if we actually pasted any files
@@ -44,7 +47,9 @@ const uploadPlugin = options =>
           return true;
         },
         drop(view, event: DragEvent): boolean {
-          if (!view.props.editable) return false;
+          if (view.props.editable && !view.props.editable(view.state)) {
+            return false;
+          }
 
           // check if we actually dropped any files
           const files = getDataTransferFiles(event);
