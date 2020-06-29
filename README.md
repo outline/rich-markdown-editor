@@ -33,6 +33,10 @@ A unique id for this editor, used to persist settings such as collapsed headings
 A markdown string that represents the initial value of the editor. Use this to prop to restore
 previously saved content for the user to continue editing.
 
+#### `value`
+
+A markdown string that represents the value of the editor. Use this prop to change the value of the editor once mounted, **this will re-render the entire editor** and as such is only suitable when also in `readOnly` mode. Do not pipe the value of `onChange` back into `value`, the editor keeps it's own internal state and this will result in unexpected side effects.
+
 #### `placeholder`
 
 Allows overriding of the placeholder. The default is "Write something nice…".
