@@ -792,6 +792,14 @@ const StyledEditor = styled("div")<{ readOnly?: boolean }>`
     }
   }
 
+  ol ol {
+    list-style: lower-alpha;
+  }
+
+  ol ol ol {
+    list-style: lower-roman;
+  }
+
   ul.checkbox_list {
     list-style: none;
     padding: 0;
