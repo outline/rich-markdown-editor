@@ -80,6 +80,9 @@ export type Props = {
   dark?: boolean;
   theme?: typeof theme;
   headingsOffset?: number;
+  handleDOMEvents?: {
+    [name: string]: (view: EditorView, event: Event) => boolean;
+  };
   uploadImage?: (file: File) => Promise<string>;
   onSave?: ({ done: boolean }) => void;
   onCancel?: () => void;
@@ -368,6 +371,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       state: this.createState(),
       editable: () => !this.props.readOnly,
       nodeViews: this.nodeViews,
+      handleDOMEvents: this.props.handleDOMEvents,
       dispatchTransaction: transaction => {
         const { state, transactions } = this.view.state.applyTransaction(
           transaction

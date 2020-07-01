@@ -63,7 +63,7 @@ const createAndInsertLink = async function(
     );
   } catch (err) {
     const result = findPlaceholderLink(view.state.doc, href);
-if (!result) return;
+    if (!result) return;
 
     dispatch(
       view.state.tr.removeMark(
