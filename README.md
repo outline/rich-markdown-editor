@@ -207,7 +207,7 @@ This object maps [event](https://developer.mozilla.org/en-US/docs/Web/Events) na
 <Editor
   handleDOMEvents={{
     focus: () => console.log("FOCUS"),
-    blur: console.log("BLUR"),
+    blur: () => console.log("BLUR"),
     paste: () => console.log("PASTE"),
     touchstart: () => console.log("TOUCH START"),
   }}

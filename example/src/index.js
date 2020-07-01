@@ -106,7 +106,7 @@ class Example extends React.Component {
           defaultValue={defaultValue}
           handleDOMEvents={{
             focus: () => console.log("FOCUS"),
-            blur: console.log("BLUR"),
+            blur: () => console.log("BLUR"),
             paste: () => console.log("PASTE"),
             touchstart: () => console.log("TOUCH START"),
           }}
