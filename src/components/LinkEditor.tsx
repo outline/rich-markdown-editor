@@ -282,17 +282,6 @@ class LinkEditor extends React.Component<Props, State> {
 
         {showResults && (
           <SearchResults id="link-search-results">
-            {results.map((result, index) => (
-              <LinkSearchResult
-                key={result.url}
-                title={result.title}
-                icon={<DocumentIcon color={theme.toolbarItem} />}
-                onMouseOver={() => this.handleFocusLink(index)}
-                onClick={this.handleSelectLink(result.url, result.title)}
-                selected={index === selectedIndex}
-              />
-            ))}
-
             {showCreateLink && (
               <LinkSearchResult
                 key="create"
@@ -309,6 +298,16 @@ class LinkEditor extends React.Component<Props, State> {
                 selected={results.length === selectedIndex}
               />
             )}
+            {results.map((result, index) => (
+              <LinkSearchResult
+                key={result.url}
+                title={result.title}
+                icon={<DocumentIcon color={theme.toolbarItem} />}
+                onMouseOver={() => this.handleFocusLink(index)}
+                onClick={this.handleSelectLink(result.url, result.title)}
+                selected={index === selectedIndex}
+              />
+            ))}
           </SearchResults>
         )}
       </Wrapper>
