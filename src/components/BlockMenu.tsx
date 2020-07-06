@@ -306,7 +306,12 @@ class BlockMenu extends React.Component<Props, State> {
     const offsetHeight = ref ? ref.offsetHeight : 0;
     const paragraph = view.domAtPos(selection.$from.pos);
 
-    if (!props.isActive || !paragraph.node || SSR) {
+    if (
+      !props.isActive ||
+      !paragraph.node ||
+      !paragraph.node.getBoundingClientRect ||
+      SSR
+    ) {
       return {
         left: -1000,
         top: 0,
