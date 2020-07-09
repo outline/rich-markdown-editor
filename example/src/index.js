@@ -102,6 +102,7 @@ class Example extends React.Component {
         <Editor
           id="example"
           readOnly={this.state.readOnly}
+          readOnlyWriteCheckboxes
           value={this.state.value}
           defaultValue={defaultValue}
           handleDOMEvents={{

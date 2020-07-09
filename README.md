@@ -45,6 +45,10 @@ Allows overriding of the placeholder. The default is "Write something nice…".
 
 With `readOnly` set to `false` the editor is optimized for composition. When `true` the editor can be used to display previously written content – headings gain anchors and links become clickable.
 
+#### `readOnlyWriteCheckboxes`
+
+With `readOnlyWriteCheckboxes` set to `true` checkboxes can still be checked or unchecked as a special case while `readOnly` is set to `true` and the editor is otherwise unable to be edited.
+
 #### `autoFocus`
 
 When set `true` together with `readOnly` set to `false`, focus at the end of the

@@ -13,9 +13,6 @@ export default class CheckboxItem extends Node {
   get schema() {
     return {
       attrs: {
-        id: {
-          default: "",
-        },
         checked: {
           default: false,
         },
@@ -35,7 +32,6 @@ export default class CheckboxItem extends Node {
       ],
       toDOM: node => {
         const input = document.createElement("input");
-        input.id = node.attrs.id;
         input.type = "checkbox";
         input.addEventListener("click", this.handleChange);
 
@@ -99,7 +95,6 @@ export default class CheckboxItem extends Node {
       block: "checkbox_item",
       getAttrs: tok => ({
         checked: tok.attrGet("checked") ? true : undefined,
-        id: tok.attrGet("id"),
       }),
     };
   }
