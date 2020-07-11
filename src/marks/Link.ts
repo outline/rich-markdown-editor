@@ -100,6 +100,14 @@ export default class Link extends Mark {
       new Plugin({
         props: {
           handleDOMEvents: {
+            mouseover: (view, event: MouseEvent) => {
+              if (event.target instanceof HTMLAnchorElement) {
+                if (this.options.onHoverLink) {
+                  return this.options.onHoverLink(event);
+                }
+              }
+              return false;
+            },
             click: (view, event: MouseEvent) => {
               // allow opening links in editing mode with the meta/cmd key
               if (

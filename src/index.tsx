@@ -93,6 +93,7 @@ export type Props = {
   onCreateLink?: (title: string) => Promise<string>;
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
   onClickLink: (href: string) => void;
+  onHoverLink?: (event: MouseEvent) => boolean;
   onClickHashtag?: (tag: string) => void;
   onKeyDown?: (event: React.KeyboardEvent<HTMLDivElement>) => void;
   embeds: EmbedDescriptor[];
@@ -249,6 +250,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           onKeyboardShortcut: this.handleOpenLinkMenu,
           onClickLink: this.props.onClickLink,
           onClickHashtag: this.props.onClickHashtag,
+          onHoverLink: this.props.onHoverLink,
         }),
         new Strikethrough(),
         new OrderedList(),
