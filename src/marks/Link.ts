@@ -52,7 +52,7 @@ export default class Link extends Mark {
         "a",
         {
           ...node.attrs,
-          rel: "noopener noreferrer nofollow",
+          rel: "noopener noreferrer",
         },
         0,
       ],
