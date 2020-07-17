@@ -78,6 +78,11 @@ A React component that will be wrapped around items that have an optional toolti
 
 A number that will offset the document headings by a number of levels. For example, if you already nest the editor under a main `h1` title you might want the user to only be able to create `h2` headings and below, in this case you would set the prop to `1`.
 
+#### `scrollTo`
+
+A string representing a heading anchor – the document will smooth scroll so that the heading is visible
+in the viewport.
+
 #### `embeds`
 
 Optionally define embeds which will be inserted in place of links when the `matcher` function returns a truthy value. The matcher method's return value will be available on the component under `props.attrs.matches`. If `title` and `icon` are provided then the embed will also appear in the block menu.

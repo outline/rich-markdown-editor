@@ -81,6 +81,7 @@ export type Props = {
   dark?: boolean;
   theme?: typeof theme;
   headingsOffset?: number;
+  scrollTo?: string;
   handleDOMEvents?: {
     [name: string]: (view: EditorView, event: Event) => boolean;
   };
@@ -155,7 +156,10 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
   componentDidMount() {
     this.init();
-    this.scrollToAnchor();
+
+    if (this.props.scrollTo) {
+      this.scrollToAnchor(this.props.scrollTo);
+    }
 
     if (this.props.readOnly) return;
 
@@ -177,6 +181,10 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         ...this.view.props,
         editable: () => !this.props.readOnly,
       });
+    }
+
+    if (this.props.scrollTo && this.props.scrollTo !== prevProps.scrollTo) {
+      this.scrollToAnchor(this.props.scrollTo);
     }
 
     // Focus at the end of the document if switching from readOnly and autoFocus
@@ -416,8 +424,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     return view;
   }
 
-  scrollToAnchor() {
-    const { hash } = window.location;
+  scrollToAnchor(hash: string) {
     if (!hash) return;
 
     try {

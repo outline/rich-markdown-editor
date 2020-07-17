@@ -105,6 +105,7 @@ class Example extends React.Component {
           readOnlyWriteCheckboxes
           value={this.state.value}
           defaultValue={defaultValue}
+          scrollTo={window.location.hash}
           handleDOMEvents={{
             focus: () => console.log("FOCUS"),
             blur: () => console.log("BLUR"),
