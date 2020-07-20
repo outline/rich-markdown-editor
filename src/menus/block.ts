@@ -10,6 +10,9 @@ import {
   TableIcon,
   TodoListIcon,
   ImageIcon,
+  StarredIcon,
+  WarningIcon,
+  InfoIcon,
   LinkIcon,
 } from "outline-icons";
 import { MenuItem } from "../types";
@@ -80,7 +83,6 @@ export default function blockMenuItems(): MenuItem[] {
       title: "Quote",
       icon: BlockQuoteIcon,
       shortcut: `${mod} ]`,
-      attrs: { level: 2 },
     },
     {
       name: "code_block",
@@ -108,6 +110,30 @@ export default function blockMenuItems(): MenuItem[] {
       icon: LinkIcon,
       shortcut: `${mod} k`,
       keywords: "link url uri href",
+    },
+    {
+      name: "separator",
+    },
+    {
+      name: "container_notice",
+      title: "Info notice",
+      icon: InfoIcon,
+      keywords: "container_notice card information",
+      attrs: { style: "info" },
+    },
+    {
+      name: "container_notice",
+      title: "Warning notice",
+      icon: WarningIcon,
+      keywords: "container_notice card error",
+      attrs: { style: "warning" },
+    },
+    {
+      name: "container_notice",
+      title: "Tip notice",
+      icon: StarredIcon,
+      keywords: "container_notice card suggestion",
+      attrs: { style: "tip" },
     },
   ];
 }

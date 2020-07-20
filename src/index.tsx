@@ -39,6 +39,7 @@ import Heading from "./nodes/Heading";
 import HorizontalRule from "./nodes/HorizontalRule";
 import Image from "./nodes/Image";
 import ListItem from "./nodes/ListItem";
+import Notice from "./nodes/Notice";
 import OrderedList from "./nodes/OrderedList";
 import Paragraph from "./nodes/Paragraph";
 import Table from "./nodes/Table";
@@ -230,6 +231,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new CheckboxItem(),
         new Embed(),
         new ListItem(),
+        new Notice(),
         new Heading({
           onShowToast: this.props.onShowToast,
           offset: this.props.headingsOffset,
@@ -800,6 +802,48 @@ const StyledEditor = styled("div")<{
     }
   }
 
+  .notice-block {
+    display: flex;
+    align-items: center;
+    background: ${props => props.theme.noticeInfoBackground};
+    color: ${props => props.theme.noticeInfoText};
+    border-radius: 4px;
+    padding: 8px 16px;
+    margin: 8px 0;
+
+    a:not(.heading-name) {
+      color: ${props => props.theme.noticeInfoText};
+      text-decoration: underline;
+    }
+  }
+
+  .notice-block .icon {
+    width: 24px;
+    height: 24px;
+    align-self: flex-start;
+    margin-right: 4px;
+    position: relative;
+    top: 1px;
+  }
+
+  .notice-block.tip {
+    background: ${props => props.theme.noticeTipBackground};
+    color: ${props => props.theme.noticeTipText};
+
+    a {
+      color: ${props => props.theme.noticeTipText};
+    }
+  }
+
+  .notice-block.warning {
+    background: ${props => props.theme.noticeWarningBackground};
+    color: ${props => props.theme.noticeWarningText};
+
+    a {
+      color: ${props => props.theme.noticeWarningText};
+    }
+  }
+
   blockquote {
     border-left: 3px solid ${props => props.theme.quote};
     margin: 0;
@@ -892,7 +936,8 @@ const StyledEditor = styled("div")<{
     background: ${props => props.theme.textHighlight};
   }
 
-  .code-block {
+  .code-block,
+  .notice-block {
     position: relative;
 
     select,
@@ -900,6 +945,8 @@ const StyledEditor = styled("div")<{
       font-size: 13px;
       display: none;
       position: absolute;
+      border-radius: 4px;
+      padding: 2px;
       z-index: 1;
       top: 4px;
       right: 4px;
