@@ -1,5 +1,8 @@
 import { textblockTypeInputRule } from "prosemirror-inputrules";
 import { setBlockType } from "prosemirror-commands";
+import { WarningIcon, InfoIcon, StarredIcon } from "outline-icons";
+import * as React from "react";
+import ReactDOM from "react-dom";
 import Node from "./Node";
 
 export default class Notice extends Node {
@@ -39,9 +42,24 @@ export default class Notice extends Node {
           select.appendChild(option);
         });
 
+        let component;
+
+        if (node.attrs.style === "tip") {
+          component = <StarredIcon color="currentColor" />;
+        } else if (node.attrs.style === "warning") {
+          component = <WarningIcon color="currentColor" />;
+        } else {
+          component = <InfoIcon color="currentColor" />;
+        }
+
+        const icon = document.createElement("div");
+        icon.className = "icon";
+        ReactDOM.render(component, icon);
+
         return [
           "div",
           { class: `notice-block ${node.attrs.style}` },
+          icon,
           ["div", { contentEditable: false }, select],
           ["div", 0],
         ];

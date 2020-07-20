@@ -10,7 +10,9 @@ import {
   TableIcon,
   TodoListIcon,
   ImageIcon,
-  PinIcon,
+  StarredIcon,
+  WarningIcon,
+  InfoIcon,
   LinkIcon,
 } from "outline-icons";
 import { MenuItem } from "../types";
@@ -98,23 +100,23 @@ export default function blockMenuItems(): MenuItem[] {
     },
     {
       name: "notice",
-      title: "Info panel",
-      icon: PinIcon,
-      keywords: "notice",
+      title: "Info notice",
+      icon: InfoIcon,
+      keywords: "notice card information",
       attrs: { style: "info" },
     },
     {
       name: "notice",
-      title: "Warning panel",
-      icon: PinIcon,
-      keywords: "notice",
+      title: "Warning notice",
+      icon: WarningIcon,
+      keywords: "notice card error",
       attrs: { style: "warning" },
     },
     {
       name: "notice",
-      title: "Tip panel",
-      icon: PinIcon,
-      keywords: "tip",
+      title: "Tip notice",
+      icon: StarredIcon,
+      keywords: "notice card suggestion",
       attrs: { style: "tip" },
     },
     {

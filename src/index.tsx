@@ -803,11 +803,20 @@ const StyledEditor = styled("div")<{
   }
 
   .notice-block {
+    display: flex;
+    align-items: center;
     background: ${props => props.theme.noticeInfoBackground};
     color: ${props => props.theme.noticeInfoText};
     border-radius: 4px;
     padding: 8px 16px;
     margin: 8px 0;
+  }
+
+  .notice-block .icon {
+    width: 24px;
+    height: 24px;
+    justify-self: flex-start;
+    margin-right: 4px;
   }
 
   .notice-block.tip {
