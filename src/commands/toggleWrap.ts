@@ -1,7 +1,7 @@
 import { wrapIn, lift } from "prosemirror-commands";
 import isNodeActive from "../queries/isNodeActive";
 
-export default function toggleWrap(type) {
+export default function toggleWrap(type, attrs?: Record<string, any>) {
   return (state, dispatch) => {
     const isActive = isNodeActive(type)(state);
 
@@ -9,6 +9,6 @@ export default function toggleWrap(type) {
       return lift(state, dispatch);
     }
 
-    return wrapIn(type)(state, dispatch);
+    return wrapIn(type, attrs)(state, dispatch);
   };
 }

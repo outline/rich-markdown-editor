@@ -1,4 +1,4 @@
-import { textblockTypeInputRule } from "prosemirror-inputrules";
+import { wrappingInputRule } from "prosemirror-inputrules";
 import toggleWrap from "../commands/toggleWrap";
 import { WarningIcon, InfoIcon, StarredIcon } from "outline-icons";
 import * as React from "react";
@@ -15,7 +15,7 @@ export default class Notice extends Node {
   }
 
   get name() {
-    return "notice";
+    return "container_notice";
   }
 
   get schema() {
@@ -87,21 +87,20 @@ export default class Notice extends Node {
   };
 
   inputRules({ type }) {
-    return [textblockTypeInputRule(/^\$\$\$$/, type)];
+    return [wrappingInputRule(/^:::$/, type)];
   }
 
   toMarkdown(state, node) {
-    state.write("\n$$$" + (node.attrs.style || "info") + "\n");
+    state.write("\n:::" + (node.attrs.style || "info") + "\n");
     state.renderContent(node);
     state.ensureNewLine();
-    state.write("$$$");
+    state.write(":::");
     state.closeBlock(node);
   }
 
   parseMarkdown() {
     return {
-      block: "notice",
-      noCloseToken: true,
+      block: "container_notice",
       getAttrs: tok => ({ style: tok.info }),
     };
   }

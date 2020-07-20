@@ -3494,10 +3494,10 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
-markdown-it-fence@^0.1.3:
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/markdown-it-fence/-/markdown-it-fence-0.1.3.tgz#26e90149b7de5658cdb27096b2e2b5ec4e72d6ce"
-  integrity sha512-mdZbkwJUyZXhyDX4QzD+WnIhxWBq9oIIJU22E6jCT7MHgIp79oEOJfwXIl/HqmfIxnXEdC47sBGn4h6chM4DKw==
+markdown-it-container@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/markdown-it-container/-/markdown-it-container-3.0.0.tgz#1d19b06040a020f9a827577bb7dbf67aa5de9a5b"
+  integrity sha512-y6oKTq4BB9OQuY/KLfk/O3ysFhB3IMYoIWhGJEidXt1NQFocFK2sA2t0NYZAMyMShAGL6x5OPIbrmXPIqaN9rw==
 
 markdown-it-mark@^3.0.0:
   version "3.0.0"
@@ -4039,10 +4039,10 @@ os-tmpdir@~1.0.2:
   resolved "https://registry.yarnpkg.com/os-tmpdir/-/os-tmpdir-1.0.2.tgz#bbe67406c79aa85c5cfec766fe5734555dfa1274"
   integrity sha1-u+Z0BseaqFxc/sdm/lc0VV36EnQ=
 
-outline-icons@^1.19.0:
-  version "1.19.0"
-  resolved "https://registry.yarnpkg.com/outline-icons/-/outline-icons-1.19.0.tgz#2fc7ceef6cf7b8ac67f5facd23299c6bdae88898"
-  integrity sha512-5L4ezoMSX+cKdx3JCOSyp7VMZ11F7VaAZdETTU4YC0N1YTpUp2h7zvfoaNIIGReqgwgsPsUevOZr/yukRxcvkw==
+outline-icons@^1.19.1:
+  version "1.19.1"
+  resolved "https://registry.yarnpkg.com/outline-icons/-/outline-icons-1.19.1.tgz#5251b966ae9987b18f060b58ce469d248c2313aa"
+  integrity sha512-YeGLDG7KgBvrDy+WOQUqN8rD3qO5u524E0Wj6ejaWNQ8/1ou6kkUrx65mk8LtESfKLMWZHuQG/u6onurY9rKIw==
 
 p-defer@^1.0.0:
   version "1.0.0"
