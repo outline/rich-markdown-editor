@@ -810,23 +810,38 @@ const StyledEditor = styled("div")<{
     border-radius: 4px;
     padding: 8px 16px;
     margin: 8px 0;
+
+    a {
+      color: ${props => props.theme.noticeInfoText};
+      text-decoration: underline;
+    }
   }
 
   .notice-block .icon {
     width: 24px;
     height: 24px;
-    justify-self: flex-start;
+    align-self: flex-start;
     margin-right: 4px;
+    position: relative;
+    top: 1px;
   }
 
   .notice-block.tip {
     background: ${props => props.theme.noticeTipBackground};
     color: ${props => props.theme.noticeTipText};
+
+    a {
+      color: ${props => props.theme.noticeTipText};
+    }
   }
 
   .notice-block.warning {
     background: ${props => props.theme.noticeWarningBackground};
     color: ${props => props.theme.noticeWarningText};
+
+    a {
+      color: ${props => props.theme.noticeWarningText};
+    }
   }
 
   blockquote {

@@ -1,5 +1,5 @@
 import { textblockTypeInputRule } from "prosemirror-inputrules";
-import { setBlockType } from "prosemirror-commands";
+import toggleWrap from "../commands/toggleWrap";
 import { WarningIcon, InfoIcon, StarredIcon } from "outline-icons";
 import * as React from "react";
 import ReactDOM from "react-dom";
@@ -25,7 +25,7 @@ export default class Notice extends Node {
           default: "info",
         },
       },
-      content: "text*",
+      content: "block+",
       group: "block",
       defining: true,
       draggable: false,
@@ -68,7 +68,7 @@ export default class Notice extends Node {
   }
 
   commands({ type }) {
-    return attrs => setBlockType(type, attrs);
+    return attrs => toggleWrap(type, attrs);
   }
 
   handleStyleChange = event => {
