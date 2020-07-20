@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Plugin } from "prosemirror-state";
 import { InputRule } from "prosemirror-inputrules";
+import { setTextSelection } from "prosemirror-utils";
 import styled from "styled-components";
 import ImageZoom from "react-medium-image-zoom";
 import getDataTransferFiles from "../lib/getDataTransferFiles";
@@ -23,7 +24,11 @@ const uploadPlugin = options =>
     props: {
       handleDOMEvents: {
         paste(view, event: ClipboardEvent): boolean {
-          if (!view.props.editable) return false;
+          if (view.props.editable && !view.props.editable(view.state)) {
+            return false;
+          }
+
+          if (!event.clipboardData) return false;
 
           // check if we actually pasted any files
           const files = Array.prototype.slice
@@ -43,20 +48,26 @@ const uploadPlugin = options =>
           return true;
         },
         drop(view, event: DragEvent): boolean {
-          if (!view.props.editable) return false;
+          if (view.props.editable && !view.props.editable(view.state)) {
+            return false;
+          }
 
           // check if we actually dropped any files
           const files = getDataTransferFiles(event);
           if (files.length === 0) return false;
 
           // grab the position in the document for the cursor
-          const { pos } = view.posAtCoords({
+          const result = view.posAtCoords({
             left: event.clientX,
             top: event.clientY,
           });
 
-          insertFiles(view, event, pos, files, options);
-          return true;
+          if (result) {
+            insertFiles(view, event, result.pos, files, options);
+            return true;
+          }
+
+          return false;
         },
       },
     },
@@ -107,9 +118,14 @@ export default class Image extends Node {
     };
   }
 
-  handleKeyDown = event => {
+  handleKeyDown = ({ node, getPos }) => event => {
     if (event.key === "Enter") {
       event.preventDefault();
+
+      const { view } = this.editor;
+      const pos = getPos() + node.nodeSize;
+      view.focus();
+      view.dispatch(setTextSelection(pos)(view.state.tr));
       return;
     }
   };
@@ -124,7 +140,7 @@ export default class Image extends Node {
 
     // update meta on object
     const pos = getPos();
-    const transaction = tr.setNodeMarkup(pos, null, {
+    const transaction = tr.setNodeMarkup(pos, undefined, {
       src,
       alt,
     });
@@ -132,6 +148,7 @@ export default class Image extends Node {
   };
 
   component = options => {
+    const { theme } = options;
     const { alt, src } = options.node.attrs;
 
     return (
@@ -145,17 +162,24 @@ export default class Image extends Node {
               maxHeight: "75vh",
             },
           }}
+          defaultStyles={{
+            overlay: {
+              backgroundColor: theme.background,
+            },
+          }}
           shouldRespectMaxDimension
         />
-        <Caption
-          onKeyDown={this.handleKeyDown}
-          onBlur={this.handleBlur(options)}
-          tabIndex={-1}
-          contentEditable={options.isEditable}
-          suppressContentEditableWarning
-        >
-          {alt}
-        </Caption>
+        {(options.isEditable || alt) && (
+          <Caption
+            onKeyDown={this.handleKeyDown(options)}
+            onBlur={this.handleBlur(options)}
+            tabIndex={-1}
+            contentEditable={options.isEditable}
+            suppressContentEditableWarning
+          >
+            {alt}
+          </Caption>
+        )}
       </div>
     );
   };
@@ -235,8 +259,9 @@ const Caption = styled.p`
   background: none;
   resize: none;
 
-  &:empty:not(:focus):before {
+  &:empty:before {
     color: ${props => props.theme.placeholder};
     content: "Write a caption";
+    pointer-events: none;
   }
 `;

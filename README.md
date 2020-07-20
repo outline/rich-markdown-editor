@@ -1,4 +1,6 @@
-[![npm version](https://badge.fury.io/js/rich-markdown-editor.svg)](https://badge.fury.io/js/rich-markdown-editor) [![CircleCI](https://img.shields.io/circleci/project/github/outline/rich-markdown-editor.svg)](https://circleci.com/gh/outline/rich-markdown-editor) [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/outline) [![Formatted with Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat)](https://github.com/prettier/prettier)
+[![npm version](https://badge.fury.io/js/rich-markdown-editor.svg)](https://badge.fury.io/js/rich-markdown-editor) [![CircleCI](https://img.shields.io/circleci/project/github/outline/rich-markdown-editor.svg)](https://circleci.com/gh/outline/rich-markdown-editor) [![Formatted with Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat)](https://github.com/prettier/prettier) [![TypeScript](https://camo.githubusercontent.com/21132e0838961fbecb75077042aa9b15bc0bf6f9/68747470733a2f2f62616467656e2e6e65742f62616467652f4275696c74253230576974682f547970655363726970742f626c7565)](https://www.typescriptlang.org/)
+
+
 
 # rich-markdown-editor
 
@@ -31,6 +33,10 @@ A unique id for this editor, used to persist settings such as collapsed headings
 A markdown string that represents the initial value of the editor. Use this to prop to restore
 previously saved content for the user to continue editing.
 
+#### `value`
+
+A markdown string that represents the value of the editor. Use this prop to change the value of the editor once mounted, **this will re-render the entire editor** and as such is only suitable when also in `readOnly` mode. Do not pipe the value of `onChange` back into `value`, the editor keeps it's own internal state and this will result in unexpected side effects.
+
 #### `placeholder`
 
 Allows overriding of the placeholder. The default is "Write something nice…".
@@ -38,6 +44,10 @@ Allows overriding of the placeholder. The default is "Write something nice…".
 #### `readOnly`
 
 With `readOnly` set to `false` the editor is optimized for composition. When `true` the editor can be used to display previously written content – headings gain anchors and links become clickable.
+
+#### `readOnlyWriteCheckboxes`
+
+With `readOnlyWriteCheckboxes` set to `true` checkboxes can still be checked or unchecked as a special case while `readOnly` is set to `true` and the editor is otherwise unable to be edited.
 
 #### `autoFocus`
 
@@ -68,9 +78,32 @@ A React component that will be wrapped around items that have an optional toolti
 
 A number that will offset the document headings by a number of levels. For example, if you already nest the editor under a main `h1` title you might want the user to only be able to create `h2` headings and below, in this case you would set the prop to `1`.
 
+#### `scrollTo`
+
+A string representing a heading anchor – the document will smooth scroll so that the heading is visible
+in the viewport.
+
+#### `embeds`
+
+Optionally define embeds which will be inserted in place of links when the `matcher` function returns a truthy value. The matcher method's return value will be available on the component under `props.attrs.matches`. If `title` and `icon` are provided then the embed will also appear in the block menu.
+
+```javascript
+<Editor
+  embeds={[
+    {
+      title: "Google Doc",
+      keywords: "google docs gdocs",
+      icon: <GoogleDocIcon />,
+      matcher: href => href.matches(/docs.google.com/i),
+      component: GoogleDocEmbed
+    }
+  ]}
+/>
+```
+
 ### Callbacks
 
-#### `uploadImage`
+#### `uploadImage(file: Blob): Promise<string>`
 
 If you want the editor to support images then this callback must be provided. The callback should accept a single `File` object and return a promise the resolves to a url when the image has been uploaded to a storage location, for example S3. eg:
 
@@ -83,37 +116,31 @@ If you want the editor to support images then this callback must be provided. Th
 />
 ```
 
-#### `onSave({ done: boolean })`
+#### `onSave({ done: boolean }): void`
 
 This callback is triggered when the user explicitly requests to save using a keyboard shortcut, `Cmd+S` or `Cmd+Enter`. You can use this as a signal to save the document to a remote server.
 
-#### `onCancel`
+#### `onCancel(): void`
 
 This callback is triggered when the `Cmd+Escape` is hit within the editor. You may use it to cancel editing.
 
-#### `onChange(() => value)`
+#### `onChange(() => value): void`
 
 This callback is triggered when the contents of the editor changes, usually due to user input such as a keystroke or using formatting options. You may use this to locally persist the editors state, see the [inbuilt example](/example/src/index.js).
 
 It returns a function which when called returns the current text value of the document. This optimization is made to avoid serializing the state of the document to text on every change event, allowing the host app to choose when it needs the serialized value.
 
-#### `onImageUploadStart`
+#### `onImageUploadStart(): void`
 
 This callback is triggered before `uploadImage` and can be used to show some UI that indicates an upload is in progress.
 
-#### `onImageUploadStop`
+#### `onImageUploadStop(): void`
 
 Triggered once an image upload has succeeded or failed.
 
-#### `onSearchLink(term: string)`
+#### `onSearchLink(term: string): Promise<{ title: string, url: string }[]>`
 
 The editor provides an ability to search for links to insert from the formatting toolbar. If this callback is provided it should accept a search term as the only parameter and return a promise that resolves to an array of objects. eg:
-
-#### `onShowToast(message: string)`
-
-Triggered when the editor wishes to show a toast message to the user. Hook into your apps
-notification system, or simplisticly use `window.alert(message)`.
-
 
 ```javascript
 <Editor
@@ -128,13 +155,31 @@ notification system, or simplisticly use `window.alert(message)`.
 />
 ```
 
-#### `onShowToast(message: string)`
+#### `onCreateLink(title: string): Promise<string>`
 
-Triggered when the editor wishes to show a toast message to the user. Hook into your apps
-notification system, or simplisticly use `window.alert(message)`.
+The editor provides an ability to create links from the formatting toolbar for on-the-fly document createion. If this callback is provided it should accept a link "title" as the only parameter and return a promise that resolves to a url for the created link, eg:
+
+```javascript
+<Editor
+  onCreateLink={async title => {
+    const url = await MyAPI.create({
+      title
+    });
+
+    return url;
+  }}
+/>
+```
+
+#### `onShowToast(message: string, id: string): void`
+
+Triggered when the editor wishes to show an error message to the user. Hook into your apps
+notification system, or simplisticly use `window.alert(message)`. The second parameter
+is a stable identifier you can use to identify the message if you'd prefer to write
+your own copy.
 
 
-#### `onClickLink(href: string)`
+#### `onClickLink(href: string): void`
 
 This callback allows overriding of link handling. It's often the case that you want to have external links open a new window and have internal links use something like `react-router` to navigate. If no callback is provided then default behavior of opening a new tab will apply to all links. eg:
 
@@ -153,7 +198,20 @@ import { history } from "react-router";
 />
 ```
 
-#### `onClickHashtag(tag: string)`
+#### `onHoverLink(event: MouseEvent): boolean`
+
+This callback allows detecting when the user hovers over a link in the document.
+
+
+```javascript
+<Editor
+  onHoverLink={event => {
+    console.log(`Hovered link ${event.target.href}`);
+  }}
+/>
+```
+
+#### `onClickHashtag(tag: string): void`
 
 This callback allows handling of clicking on hashtags in the document text. If no callback is provided then hashtags will render as regular text, so you can choose if to support them or not by passing this prop.
 
@@ -167,9 +225,34 @@ import { history } from "react-router";
 />
 ```
 
-#### `getLinkComponent(Node)`
+#### `handleDOMEvents: {[name: string]: (view: EditorView, event: Event) => boolean;}`
 
-This callback allows links to "request" an alternative component to display instead of an inline link. Given a link node return `undefined` for no replacement or a valid React component to replace the standard link display. This is used to support embeds.
+This object maps [event](https://developer.mozilla.org/en-US/docs/Web/Events) names (`focus`, `paste`, `touchstart`, etc.) to callback functions.
+
+```javascript
+<Editor
+  handleDOMEvents={{
+    focus: () => console.log("FOCUS"),
+    blur: () => console.log("BLUR"),
+    paste: () => console.log("PASTE"),
+    touchstart: () => console.log("TOUCH START"),
+  }}
+/>
+```
+
+### Interface
+
+The Editor component exposes a few methods for interacting with the mounted editor.
+
+#### `focusAtStart(): void`
+Place the cursor at the start of the document and focus it.
+
+#### `focusAtEnd(): void`
+Place the cursor at the end of the document and focus it.
+
+#### `getHeadings(): { title: string, level: number, id: string }[]`
+Returns an array of objects with the text content of all the headings in the document,
+their level in the hierarchy, and the anchor id. This is useful to construct your own table of contents since the `toc` option was removed in v10.
 
 
 ## Contributing

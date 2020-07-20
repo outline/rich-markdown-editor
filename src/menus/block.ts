@@ -11,9 +11,15 @@ import {
   TodoListIcon,
   ImageIcon,
   PinIcon,
+  LinkIcon,
 } from "outline-icons";
+import { MenuItem } from "../types";
 
-export default function blockMenuItems() {
+const SSR = typeof window === "undefined";
+const isMac = !SSR && window.navigator.platform === "MacIntel";
+const mod = isMac ? "⌘" : "ctrl";
+
+export default function blockMenuItems(): MenuItem[] {
   return [
     {
       name: "heading",
@@ -74,8 +80,7 @@ export default function blockMenuItems() {
       name: "blockquote",
       title: "Quote",
       icon: BlockQuoteIcon,
-      shortcut: "⌘ ]",
-      attrs: { level: 2 },
+      shortcut: `${mod} ]`,
     },
     {
       name: "code_block",
@@ -88,20 +93,42 @@ export default function blockMenuItems() {
       name: "hr",
       title: "Divider",
       icon: HorizontalRuleIcon,
-      shortcut: "⌘ _",
+      shortcut: `${mod} _`,
       keywords: "horizontal rule break line",
     },
     {
       name: "notice",
-      title: "Notice",
+      title: "Info panel",
       icon: PinIcon,
-      keywords: "notice info highlight",
+      keywords: "notice",
+      attrs: { style: "info" },
+    },
+    {
+      name: "notice",
+      title: "Warning panel",
+      icon: PinIcon,
+      keywords: "notice",
+      attrs: { style: "warning" },
+    },
+    {
+      name: "notice",
+      title: "Tip panel",
+      icon: PinIcon,
+      keywords: "tip",
+      attrs: { style: "tip" },
     },
     {
       name: "image",
       title: "Image",
       icon: ImageIcon,
       keywords: "picture photo",
+    },
+    {
+      name: "link",
+      title: "Link",
+      icon: LinkIcon,
+      shortcut: `${mod} k`,
+      keywords: "link url uri href",
     },
   ];
 }

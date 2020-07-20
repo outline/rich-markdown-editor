@@ -1,16 +1,22 @@
 {
   "compilerOptions": {
-    "outDir": "./dist/",
     "sourceMap": true,
     "strict": false,
-    "removeComments": true,
+    "strictNullChecks": true,
     "noImplicitAny": false,
     "esModuleInterop": true,
     "allowJs": true,
     "module": "commonjs",
     "target": "es2017",
     "jsx": "react",
-    "types": ["react"]
+    "types": ["react"],
+    "rootDir": "src",
+    "outDir": "dist/lib",
+    "stripInternal": true,
+    "removeComments": true,
+    "declarationMap": true,
+    "declaration": true,
+    "declarationDir": "dist/@types",
   },
   "include": [
     "src/**/*"

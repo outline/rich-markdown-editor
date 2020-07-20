@@ -1,9 +1,9 @@
-import { MarkType } from "prosemirror-model";
+import { MarkType, Mark } from "prosemirror-model";
 import { InputRule } from "prosemirror-inputrules";
 import { EditorState } from "prosemirror-state";
 
-function getMarksBetween(start, end, state) {
-  let marks = [];
+function getMarksBetween(start: number, end: number, state: EditorState) {
+  let marks: { start: number; end: number; mark: Mark }[] = [];
 
   state.doc.nodesBetween(start, end, (node, pos) => {
     marks = [
@@ -39,12 +39,9 @@ export default function(
         const textStart = matchStart + match[m - 1].lastIndexOf(match[m]);
         const textEnd = textStart + match[m].length;
 
-        const excludedMarks = getMarksBetween(start, end, state)
-          .filter(item => {
-            const { excluded } = item.mark.type;
-            return excluded.find(type => type.name === markType.name);
-          })
-          .filter(item => item.end > matchStart);
+        const excludedMarks = getMarksBetween(start, end, state).filter(
+          item => item.end > matchStart
+        );
 
         if (excludedMarks.length) {
           return tr;

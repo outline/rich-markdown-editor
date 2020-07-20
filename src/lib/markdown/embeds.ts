@@ -17,13 +17,23 @@ function isLinkClose(token: Token) {
   return token.type === "link_close";
 }
 
-export default function(getLinkComponent) {
+export default function(embeds) {
   function isEmbed(token: Token, link: Token) {
-    const href = link.attrs[0][1];
+    const href = link.attrs ? link.attrs[0][1] : "";
     const simpleLink = href === token.content;
 
     if (!simpleLink) return false;
-    return getLinkComponent(href);
+    if (!embeds) return false;
+
+    for (const embed of embeds) {
+      const matches = embed.matcher(href);
+      if (matches) {
+        return {
+          ...embed,
+          matches,
+        };
+      }
+    }
   }
 
   return function markdownEmbeds(md: MarkdownIt) {
@@ -34,8 +44,10 @@ export default function(getLinkComponent) {
       for (let i = 0; i < tokens.length - 1; i++) {
         // once we find an inline token look through it's children for links
         if (isInline(tokens[i]) && isParagraph(tokens[i - 1])) {
-          for (let j = 0; j < tokens[i].children.length - 1; j++) {
-            const current = tokens[i].children[j];
+          const tokenChildren = tokens[i].children || [];
+
+          for (let j = 0; j < tokenChildren.length - 1; j++) {
+            const current = tokenChildren[j];
             if (!current) continue;
 
             if (isLinkOpen(current)) {
@@ -51,14 +63,15 @@ export default function(getLinkComponent) {
             // of hey, we found a link – lets check to see if it should be
             // considered to be an embed
             if (insideLink) {
-              const component = isEmbed(current, insideLink);
-              if (component) {
+              const result = isEmbed(current, insideLink);
+              if (result) {
                 const { content } = current;
 
                 // convert to embed token
                 const token = new Token("embed", "iframe", 0);
                 token.attrSet("href", content);
-                token.attrSet("component", component);
+                token.attrSet("component", result.component);
+                token.attrSet("matches", result.matches);
 
                 // delete the inline link – this makes the assumption that the
                 // embed is the only thing in the para.

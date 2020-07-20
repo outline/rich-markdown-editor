@@ -20,7 +20,9 @@ export default class OrderedList extends Node {
         {
           tag: "ol",
           getAttrs: (dom: HTMLElement) => ({
-            order: dom.hasAttribute("start") ? +dom.getAttribute("start") : 1,
+            order: dom.hasAttribute("start")
+              ? parseInt(dom.getAttribute("start") || "1", 10)
+              : 1,
           }),
         },
       ],

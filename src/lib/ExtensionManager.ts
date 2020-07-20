@@ -10,7 +10,7 @@ import Mark from "../marks/Mark";
 
 export default class ExtensionManager {
   extensions: Extension[];
-  getLinkComponent: Function;
+  embeds;
 
   constructor(extensions: Extension[] = [], editor?: Editor) {
     if (editor) {
@@ -20,7 +20,7 @@ export default class ExtensionManager {
     }
 
     this.extensions = extensions;
-    this.getLinkComponent = editor ? editor.props.getLinkComponent : undefined;
+    this.embeds = editor ? editor.props.embeds : undefined;
   }
 
   get nodes() {
@@ -76,7 +76,7 @@ export default class ExtensionManager {
 
     return new MarkdownParser(
       schema,
-      makeRules({ getLinkComponent: this.getLinkComponent }),
+      makeRules({ embeds: this.embeds }),
       tokens
     );
   }

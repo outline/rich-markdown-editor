@@ -16,47 +16,28 @@ import typescript from "refractor/lang/typescript";
 import { setBlockType } from "prosemirror-commands";
 import { textblockTypeInputRule } from "prosemirror-inputrules";
 import copy from "copy-to-clipboard";
-import Prism from "../plugins/Prism";
+import Prism, { LANGUAGES } from "../plugins/Prism";
 import Node from "./Node";
 
-export default class CodeBlock extends Node {
-  constructor() {
-    super();
+[
+  bash,
+  css,
+  clike,
+  csharp,
+  java,
+  javascript,
+  json,
+  markup,
+  php,
+  python,
+  powershell,
+  ruby,
+  typescript,
+].forEach(refractor.register);
 
-    [
-      bash,
-      css,
-      clike,
-      csharp,
-      java,
-      javascript,
-      json,
-      markup,
-      php,
-      python,
-      powershell,
-      ruby,
-      typescript,
-    ].forEach(refractor.register);
-  }
-
+export default class CodeFence extends Node {
   get languageOptions() {
-    return Object.entries({
-      none: "None", // additional entry to disable highlighting
-      bash: "Bash",
-      css: "CSS",
-      clike: "C",
-      csharp: "C#",
-      markup: "HTML",
-      java: "Java",
-      javascript: "JavaScript",
-      json: "JSON",
-      php: "PHP",
-      powershell: "Powershell",
-      python: "Python",
-      ruby: "Ruby",
-      typescript: "TypeScript",
-    });
+    return Object.entries(LANGUAGES);
   }
 
   get name() {
@@ -118,6 +99,9 @@ export default class CodeBlock extends Node {
   handleCopyToClipboard(node) {
     return () => {
       copy(node.textContent);
+      if (this.options.onShowToast) {
+        this.options.onShowToast("Copied to clipboard", "code_copied");
+      }
     };
   }
 
@@ -128,14 +112,21 @@ export default class CodeBlock extends Node {
     const { top, left } = element.getBoundingClientRect();
     const result = view.posAtCoords({ top, left });
 
-    const transaction = tr.setNodeMarkup(result.inside, null, {
-      language: element.value,
-    });
-    view.dispatch(transaction);
+    if (result) {
+      const transaction = tr.setNodeMarkup(result.inside, undefined, {
+        language: element.value,
+      });
+      view.dispatch(transaction);
+    }
   };
 
   get plugins() {
-    return [Prism({ name: this.name })];
+    return [
+      Prism({
+        name: this.name,
+        deferred: !this.options.initialReadOnly,
+      }),
+    ];
   }
 
   inputRules({ type }) {

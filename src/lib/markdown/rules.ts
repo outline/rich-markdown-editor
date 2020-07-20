@@ -6,16 +6,12 @@ import breakPlugin from "./breaks";
 import tablesPlugin from "./tables";
 import noticesPlugin from "./notices";
 
-export default function rules({
-  getLinkComponent,
-}: {
-  getLinkComponent: Function;
-}) {
+export default function rules({ embeds }) {
   return markdownit("default", {
     breaks: false,
     html: false,
   })
-    .use(embedsPlugin(getLinkComponent))
+    .use(embedsPlugin(embeds))
     .use(breakPlugin)
     .use(checkboxPlugin)
     .use(markPlugin)

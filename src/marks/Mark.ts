@@ -6,9 +6,7 @@ export default abstract class Mark extends Extension {
     return "mark";
   }
 
-  get schema(): Record<string, any> {
-    return null;
-  }
+  abstract get schema();
 
   get markdownToken(): string {
     return "";

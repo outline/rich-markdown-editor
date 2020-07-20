@@ -13,7 +13,6 @@ type Component = (options: {
   isSelected: boolean;
   isEditable: boolean;
   getPos: () => number;
-  innerRef: (HTMLElement) => void;
 }) => React.ReactElement;
 
 export default class ComponentView {
@@ -25,10 +24,7 @@ export default class ComponentView {
   getPos: () => number;
   decorations: Decoration<{ [key: string]: any }>[];
   isSelected = false;
-  containerElement: HTMLElement;
-  contentElement: HTMLElement;
-  dom: HTMLElement;
-  contentDOM: HTMLElement;
+  dom: HTMLElement | null;
 
   // See https://prosemirror.net/docs/ref/#view.NodeView
   constructor(
@@ -42,17 +38,11 @@ export default class ComponentView {
     this.decorations = decorations;
     this.node = node;
     this.view = view;
-    this.containerElement = node.type.spec.inline
-      ? document.createElement("span")
-      : document.createElement("div");
-
-    this.contentElement = node.type.spec.inline
+    this.dom = node.type.spec.inline
       ? document.createElement("span")
       : document.createElement("div");
 
     this.renderElement();
-    this.dom = this.containerElement;
-    this.contentDOM = this.contentElement;
   }
 
   renderElement() {
@@ -65,17 +55,11 @@ export default class ComponentView {
       isSelected: this.isSelected,
       isEditable: this.view.editable,
       getPos: this.getPos,
-      innerRef: node => {
-        // move the contentDOM node inside the inner reference after rendering
-        if (node && this.contentDOM && !node.contains(this.contentDOM)) {
-          node.appendChild(this.contentDOM);
-        }
-      },
     });
 
     ReactDOM.render(
       <ThemeProvider theme={theme}>{children}</ThemeProvider>,
-      this.containerElement
+      this.dom
     );
   }
 
@@ -108,9 +92,10 @@ export default class ComponentView {
   }
 
   destroy() {
-    ReactDOM.unmountComponentAtNode(this.containerElement);
-    this.containerElement = null;
-    this.contentElement = null;
+    if (this.dom) {
+      ReactDOM.unmountComponentAtNode(this.dom);
+    }
+    this.dom = null;
   }
 
   ignoreMutation() {

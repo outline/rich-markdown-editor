@@ -42,6 +42,21 @@ export const base = {
   codePlaceholder: "#3d8fd1",
   codeInserted: "#202746",
   codeImportant: "#c94922",
+
+  blockToolbarBackground: colors.white,
+  blockToolbarTrigger: colors.greyMid,
+  blockToolbarTriggerIcon: colors.white,
+  blockToolbarItem: colors.almostBlack,
+  blockToolbarText: colors.almostBlack,
+  blockToolbarHoverBackground: colors.greyLight,
+  blockToolbarDivider: colors.greyMid,
+
+  noticeInfoBackground: "#F5BE31",
+  noticeInfoText: colors.almostBlack,
+  noticeTipBackground: "#9E5CF7",
+  noticeTipText: colors.white,
+  noticeWarningBackground: "#FF5C80",
+  noticeWarningText: colors.white,
 };
 
 export const light = {
@@ -55,11 +70,6 @@ export const light = {
   toolbarBackground: colors.lightBlack,
   toolbarInput: colors.white10,
   toolbarItem: colors.white,
-
-  blockToolbarBackground: colors.white,
-  blockToolbarTrigger: colors.greyMid,
-  blockToolbarTriggerIcon: colors.white,
-  blockToolbarItem: colors.almostBlack,
 
   tableDivider: colors.greyMid,
   tableSelected: colors.primary,
@@ -85,17 +95,12 @@ export const dark = {
   toolbarInput: colors.black10,
   toolbarItem: colors.lightBlack,
 
-  blockToolbarBackground: colors.almostBlack,
-  blockToolbarTrigger: colors.almostWhite,
-  blockToolbarTriggerIcon: colors.almostBlack,
-  blockToolbarItem: colors.lightBlack,
-
   tableDivider: colors.lightBlack,
   tableSelected: colors.primary,
   tableSelectedBackground: "#002333",
 
   quote: colors.greyDark,
-  codeBackground: colors.almostBlack,
+  codeBackground: colors.black,
   codeBorder: colors.lightBlack,
   codeString: "#3d8fd1",
   horizontalRule: colors.lightBlack,

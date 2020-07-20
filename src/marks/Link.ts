@@ -1,10 +1,9 @@
 import { toggleMark } from "prosemirror-commands";
 import { Plugin } from "prosemirror-state";
 import { InputRule } from "prosemirror-inputrules";
-import getMarkAttrs from "../lib/getMarkAttrs";
 import Mark from "./Mark";
 
-const LINK_INPUT_REGEX = /\[(.+|:?)]\((\S+)\)/;
+const LINK_INPUT_REGEX = /\[(.+)]\((\S+)\)/;
 
 function isPlainURL(link, parent, index, side) {
   if (link.attrs.title || !/^\w+:/.test(link.attrs.href)) {
@@ -85,7 +84,14 @@ export default class Link extends Mark {
 
   keys({ type }) {
     return {
-      "Mod-k": toggleMark(type, { href: "" }),
+      "Mod-k": (state, dispatch) => {
+        if (state.selection.empty) {
+          this.options.onKeyboardShortcut();
+          return true;
+        }
+
+        return toggleMark(type, { href: "" })(state, dispatch);
+      },
     };
   }
 
@@ -93,31 +99,46 @@ export default class Link extends Mark {
     return [
       new Plugin({
         props: {
-          handleClick: (view, pos, event) => {
-            // allow opening links in editing mode with the meta/cmd key
-            if (view.props.editable(view.state) && !event.metaKey) {
+          handleDOMEvents: {
+            mouseover: (view, event: MouseEvent) => {
+              if (event.target instanceof HTMLAnchorElement) {
+                if (this.options.onHoverLink) {
+                  return this.options.onHoverLink(event);
+                }
+              }
               return false;
-            }
-
-            const { schema } = view.state;
-            const attrs = getMarkAttrs(view.state, schema.marks.link);
-
-            if (attrs.href && event.target instanceof HTMLAnchorElement) {
-              const isHashtag = attrs.href.startsWith("#");
-              if (isHashtag && this.options.onClickHashtag) {
-                event.stopPropagation();
-                event.preventDefault();
-                this.options.onClickHashtag(attrs.href);
-                return true;
+            },
+            click: (view, event: MouseEvent) => {
+              // allow opening links in editing mode with the meta/cmd key
+              if (
+                view.props.editable &&
+                view.props.editable(view.state) &&
+                !event.metaKey
+              ) {
+                return false;
               }
 
-              if (this.options.onClickLink) {
-                event.stopPropagation();
-                event.preventDefault();
-                this.options.onClickLink(attrs.href);
-                return true;
+              if (event.target instanceof HTMLAnchorElement) {
+                const { href } = event.target;
+
+                const isHashtag = href.startsWith("#");
+                if (isHashtag && this.options.onClickHashtag) {
+                  event.stopPropagation();
+                  event.preventDefault();
+                  this.options.onClickHashtag(href);
+                  return true;
+                }
+
+                if (this.options.onClickLink) {
+                  event.stopPropagation();
+                  event.preventDefault();
+                  this.options.onClickLink(href);
+                  return true;
+                }
               }
-            }
+
+              return false;
+            },
           },
         },
       }),

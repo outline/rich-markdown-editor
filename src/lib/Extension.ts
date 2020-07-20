@@ -1,4 +1,6 @@
 /* eslint-disable no-unused-vars */
+import { InputRule } from "prosemirror-inputrules";
+import { Plugin } from "prosemirror-state";
 import Editor from "../";
 
 type Command = (attrs) => (state, dispatch) => any;
@@ -26,7 +28,7 @@ export default class Extension {
     return "";
   }
 
-  get plugins() {
+  get plugins(): Plugin[] {
     return [];
   }
 
@@ -34,7 +36,7 @@ export default class Extension {
     return {};
   }
 
-  inputRules(options) {
+  inputRules(options): InputRule[] {
     return [];
   }
 

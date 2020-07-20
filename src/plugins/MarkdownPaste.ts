@@ -13,7 +13,10 @@ export default class MarkdownPaste extends Extension {
       new Plugin({
         props: {
           handlePaste: (view, event: ClipboardEvent) => {
-            if (!view.props.editable) return;
+            if (view.props.editable && !view.props.editable(view.state)) {
+              return false;
+            }
+            if (!event.clipboardData) return false;
 
             const text = event.clipboardData.getData("text/plain");
             const html = event.clipboardData.getData("text/html");
@@ -31,13 +34,20 @@ export default class MarkdownPaste extends Extension {
               }
 
               // Is this link embedable? Create an embed!
-              const component = this.editor.props.getLinkComponent(text);
-              if (component) {
-                this.editor.commands.embed({
-                  href: text,
-                  component,
-                });
-                return true;
+              const { embeds } = this.editor.props;
+
+              if (embeds) {
+                for (const embed of embeds) {
+                  const matches = embed.matcher(text);
+                  if (matches) {
+                    this.editor.commands.embed({
+                      href: text,
+                      component: embed.component,
+                      matches,
+                    });
+                    return true;
+                  }
+                }
               }
             }
 
@@ -48,20 +58,7 @@ export default class MarkdownPaste extends Extension {
             event.preventDefault();
 
             const paste = this.editor.parser.parse(text);
-            let slice = paste.slice(0);
-
-            // because the default schema includes a forced level one heading
-            // for the title we try and slice the extra node off if we can
-            // before adding the parsed nodes to the doc
-            try {
-              if (!slice.content.firstChild.textContent) {
-                slice = slice.removeBetween(0, 2);
-              } else {
-                slice = slice.removeBetween(5, slice.size);
-              }
-            } catch (err) {
-              console.error(err);
-            }
+            const slice = paste.slice(0);
 
             const transaction = view.state.tr.replaceSelection(slice);
             view.dispatch(transaction);

@@ -3,7 +3,6 @@ import {
   sinkListItem,
   liftListItem,
 } from "prosemirror-schema-list";
-import { Plugin } from "prosemirror-state";
 import Node from "./Node";
 
 export default class CheckboxItem extends Node {
@@ -14,9 +13,6 @@ export default class CheckboxItem extends Node {
   get schema() {
     return {
       attrs: {
-        id: {
-          default: "",
-        },
         checked: {
           default: false,
         },
@@ -34,56 +30,50 @@ export default class CheckboxItem extends Node {
           }),
         },
       ],
-      toDOM: node => [
-        "li",
-        {
-          "data-type": this.name,
-          class: node.attrs.checked ? "checked" : undefined,
-        },
-        [
-          "input",
+      toDOM: node => {
+        const input = document.createElement("input");
+        input.type = "checkbox";
+        input.addEventListener("click", this.handleChange);
+
+        if (node.attrs.checked) {
+          input.checked = true;
+        }
+
+        return [
+          "li",
           {
-            id: node.attrs.id,
-            type: "checkbox",
-            contentEditable: false,
-            checked: node.attrs.checked ? true : undefined,
+            "data-type": this.name,
+            class: node.attrs.checked ? "checked" : undefined,
           },
-        ],
-        ["span", 0],
-      ],
+          [
+            "span",
+            {
+              contentEditable: false,
+            },
+            input,
+          ],
+          ["div", 0],
+        ];
+      },
     };
   }
 
-  get plugins() {
-    return [
-      new Plugin({
-        props: {
-          handleClick: (view, pos, event) => {
-            if (!view.props.editable) return false;
-            const { tr } = view.state;
+  handleChange = event => {
+    const { view } = this.editor;
+    const { tr } = view.state;
 
-            if (
-              event.target instanceof HTMLInputElement &&
-              event.target.type === "checkbox"
-            ) {
-              const result = view.posAtCoords({
-                left: event.clientX,
-                top: event.clientY,
-              });
+    const result = view.posAtCoords({
+      left: event.clientX,
+      top: event.clientY,
+    });
 
-              const transaction = tr.setNodeMarkup(result.inside, null, {
-                checked: !event.target.checked,
-              });
-              view.dispatch(transaction);
-              return true;
-            }
-
-            return false;
-          },
-        },
-      }),
-    ];
-  }
+    if (result) {
+      const transaction = tr.setNodeMarkup(result.inside, undefined, {
+        checked: event.target.checked,
+      });
+      view.dispatch(transaction);
+    }
+  };
 
   keys({ type }) {
     return {
@@ -105,7 +95,6 @@ export default class CheckboxItem extends Node {
       block: "checkbox_item",
       getAttrs: tok => ({
         checked: tok.attrGet("checked") ? true : undefined,
-        id: tok.attrGet("id"),
       }),
     };
   }
