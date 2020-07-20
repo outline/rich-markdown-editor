@@ -930,6 +930,8 @@ const StyledEditor = styled("div")<{
       font-size: 13px;
       display: none;
       position: absolute;
+      border-radius: 4px;
+      padding: 2px;
       z-index: 1;
       top: 4px;
       right: 4px;
