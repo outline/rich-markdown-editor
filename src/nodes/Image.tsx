@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Plugin } from "prosemirror-state";
 import { InputRule } from "prosemirror-inputrules";
+import { setTextSelection } from "prosemirror-utils";
 import styled from "styled-components";
 import ImageZoom from "react-medium-image-zoom";
 import getDataTransferFiles from "../lib/getDataTransferFiles";
@@ -117,9 +118,14 @@ export default class Image extends Node {
     };
   }
 
-  handleKeyDown = event => {
+  handleKeyDown = ({ node, getPos }) => event => {
     if (event.key === "Enter") {
       event.preventDefault();
+
+      const { view } = this.editor;
+      const pos = getPos() + node.nodeSize;
+      view.focus();
+      view.dispatch(setTextSelection(pos)(view.state.tr));
       return;
     }
   };
@@ -165,7 +171,7 @@ export default class Image extends Node {
         />
         {(options.isEditable || alt) && (
           <Caption
-            onKeyDown={this.handleKeyDown}
+            onKeyDown={this.handleKeyDown(options)}
             onBlur={this.handleBlur(options)}
             tabIndex={-1}
             contentEditable={options.isEditable}
