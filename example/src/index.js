@@ -51,12 +51,17 @@ class YoutubeEmbed extends React.Component {
 class Example extends React.Component {
   state = {
     readOnly: false,
+    template: false,
     dark: localStorage.getItem("dark") === "enabled",
     value: undefined,
   };
 
   handleToggleReadOnly = () => {
     this.setState({ readOnly: !this.state.readOnly });
+  };
+
+  handleToggleTemplate = () => {
+    this.setState({ template: !this.state.template });
   };
 
   handleToggleDark = () => {
@@ -93,6 +98,9 @@ class Example extends React.Component {
           <button type="button" onClick={this.handleToggleDark}>
             {this.state.dark ? "Light theme" : "Dark theme"}
           </button>{" "}
+          <button type="button" onClick={this.handleToggleTemplate}>
+            {this.state.template ? "Regular doc" : "Template doc"}
+          </button>{" "}
           <button type="button" onClick={this.handleUpdateValue}>
             Update value
           </button>
@@ -104,6 +112,7 @@ class Example extends React.Component {
           readOnly={this.state.readOnly}
           readOnlyWriteCheckboxes
           value={this.state.value}
+          template={this.state.template}
           defaultValue={defaultValue}
           scrollTo={window.location.hash}
           handleDOMEvents={{

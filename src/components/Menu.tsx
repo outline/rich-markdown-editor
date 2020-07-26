@@ -20,14 +20,16 @@ class Menu extends React.Component<Props> {
     const { state } = view;
     const Tooltip = this.props.tooltip;
 
+    console.log(this.props.commands);
+
     return (
       <div>
         {items.map((item, index) => {
+          if (item.name === "separator" && item.visible !== false) {
+            return <ToolbarSeparator key={index} />;
+          }
           if (item.visible === false || !item.icon) {
             return null;
-          }
-          if (item.name === "separator") {
-            return <ToolbarSeparator key={index} />;
           }
           const Icon = item.icon;
           const isActive = item.active ? item.active(state) : false;
