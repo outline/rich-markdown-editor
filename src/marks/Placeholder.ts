@@ -1,4 +1,3 @@
-import { toggleMark } from "prosemirror-commands";
 import markInputRule from "../lib/markInputRule";
 import Mark from "./Mark";
 
@@ -15,13 +14,13 @@ export default class Placeholder extends Mark {
   }
 
   inputRules({ type }) {
-    return [markInputRule(/(?:\<\<)([^<>]+)(?:\>\>)$/, type)];
+    return [markInputRule(/(?:\!)([^!]+)(?:\!)$/, type)];
   }
 
   get toMarkdown() {
     return {
-      open: "<<",
-      close: ">>",
+      open: "!!",
+      close: "!!",
       mixable: true,
       expelEnclosingWhitespace: true,
     };
