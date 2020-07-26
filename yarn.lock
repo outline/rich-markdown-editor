@@ -4039,10 +4039,10 @@ os-tmpdir@~1.0.2:
   resolved "https://registry.yarnpkg.com/os-tmpdir/-/os-tmpdir-1.0.2.tgz#bbe67406c79aa85c5cfec766fe5734555dfa1274"
   integrity sha1-u+Z0BseaqFxc/sdm/lc0VV36EnQ=
 
-outline-icons@^1.21.0-0:
-  version "1.21.0-0"
-  resolved "https://registry.yarnpkg.com/outline-icons/-/outline-icons-1.21.0-0.tgz#91c85fa4837200aa88f701d7b4a4be5d31a6c3a6"
-  integrity sha512-q+Wf4pUhz8YaMIfxoUOsSQYVqPXdIL4nTwUD4wbSWz3G+rKDfwPtZWvi3J1RnXODLMXvXfuvwHSc3DdW6N4FbQ==
+outline-icons@^1.21.0-1:
+  version "1.21.0-1"
+  resolved "https://registry.yarnpkg.com/outline-icons/-/outline-icons-1.21.0-1.tgz#dc9bf2bbb5b5c7f3513c245de8e77e67dcf4a136"
+  integrity sha512-M6Ptn8kfo06J8XIdk9TW9KvKkZOq4V57HdaGwx+3i0Wbur1/0CyrapBbGFHjGUBCiD8MMkcGzY7hTPqM2Y/svA==
 
 p-defer@^1.0.0:
   version "1.0.0"
