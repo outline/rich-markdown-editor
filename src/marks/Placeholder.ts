@@ -67,6 +67,9 @@ export default class Placeholder extends Mark {
             if (this.editor.props.template) {
               return false;
             }
+            if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") {
+              return false;
+            }
 
             const { state, dispatch } = view;
 
@@ -74,8 +77,6 @@ export default class Placeholder extends Mark {
               state.selection.$from,
               state.schema.marks.placeholder
             );
-            if (event.key === "ArrowDown" || event.key === "ArrowUp")
-              return false;
             if (!range) return false;
 
             if (event.key === "ArrowRight") {
