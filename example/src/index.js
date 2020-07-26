@@ -93,13 +93,13 @@ class Example extends React.Component {
         <div>
           <br />
           <button type="button" onClick={this.handleToggleReadOnly}>
-            {this.state.readOnly ? "Editable" : "Read only"}
+            {this.state.readOnly ? "Switch to Editable" : "Switch to Read-only"}
           </button>{" "}
           <button type="button" onClick={this.handleToggleDark}>
-            {this.state.dark ? "Light theme" : "Dark theme"}
+            {this.state.dark ? "Switch to Light" : "Switch to Dark"}
           </button>{" "}
           <button type="button" onClick={this.handleToggleTemplate}>
-            {this.state.template ? "Regular doc" : "Template doc"}
+            {this.state.template ? "Switch to Document" : "Switch to Template"}
           </button>{" "}
           <button type="button" onClick={this.handleUpdateValue}>
             Update value

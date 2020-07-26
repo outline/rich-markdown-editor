@@ -7,7 +7,7 @@ import {
   BlockQuoteIcon,
   LinkIcon,
   StrikethroughIcon,
-  QuestionMarkIcon,
+  InputIcon,
   HighlightIcon,
 } from "outline-icons";
 import { isInTable } from "prosemirror-tables";
@@ -30,7 +30,7 @@ export default function formattingMenuItems(
     {
       name: "placeholder",
       tooltip: "Placeholder",
-      icon: QuestionMarkIcon,
+      icon: InputIcon,
       active: isMarkActive(schema.marks.placeholder),
       visible: isTemplate,
     },

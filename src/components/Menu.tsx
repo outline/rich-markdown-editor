@@ -20,8 +20,6 @@ class Menu extends React.Component<Props> {
     const { state } = view;
     const Tooltip = this.props.tooltip;
 
-    console.log(this.props.commands);
-
     return (
       <div>
         {items.map((item, index) => {

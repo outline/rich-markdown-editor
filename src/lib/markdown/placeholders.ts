@@ -50,7 +50,6 @@ export default function placeholderPlugin(md) {
     }
 
     state.pos += scanned.length;
-    console.log({ state });
     return true;
   }
 
@@ -63,8 +62,6 @@ export default function placeholderPlugin(md) {
 
     for (i = 0; i < max; i++) {
       startDelim = delimiters[i];
-
-      console.log({ startDelim });
 
       if (startDelim.marker !== 33) {
         continue;
