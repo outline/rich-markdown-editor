@@ -867,13 +867,9 @@ const StyledEditor = styled("div")<{
     cursor: text;
 
     &:hover {
-      border-bottom: 1px dotted ${props => props.theme.textSecondary};
-    }
-
-    &:focus {
-      margin: -2px;
-      padding: 2px;
-      border: 1px solid ${props => props.theme.placeholder};
+      border-bottom: 1px dotted
+        ${props =>
+          props.readOnly ? props.theme.placeholder : props.theme.textSecondary};
     }
   }
 
