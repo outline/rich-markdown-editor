@@ -14,7 +14,7 @@ type Props = {
   onClickLink: (url: string) => void;
   onShowToast?: (msg: string, code: string) => void;
   onClose: () => void;
-  trigger: false;
+  trigger: boolean;
 };
 
 function isActive(props) {
