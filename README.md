@@ -7,7 +7,8 @@ https://stefanbauer.me/articles/how-to-keep-your-git-fork-up-to-date
 
 # traverse-markdown-editor
 
-A React and [Prosemirror](https://prosemirror.net/) based editor that powers [Outline](http://getoutline.com) and can also be used for displaying content in a read-only fashion.
+A React and [Prosemirror](https://prosemirror.net/) based editor that powers [Traverse](http://traverse.link) and can also be used for displaying content in a read-only fashion.
+Forked from <https://github.com/outline/rich-markdown-editor>.
 The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown.
 
 > Important Note: This project is **not attempting to be an all-purpose Markdown editor**. It is built for the [Outline](http://getoutline.com) knowledge base, and whilst others are welcome to fork or use this package in your own products, development decisions are centered around the needs of Outline. 
