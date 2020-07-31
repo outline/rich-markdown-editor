@@ -1249,37 +1249,6 @@ const StyledEditor = styled("div")<{
     }
   }
 
-  .block-menu-trigger {
-    display: ${props => (props.readOnly ? "none" : "block")};
-    height: 1em;
-    color: ${props => props.theme.textSecondary};
-    background: none;
-    border-radius: 100%;
-    font-size: 18px;
-    position: absolute;
-    transform: scale(0.9);
-    transition: color 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275),
-      transform 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    outline: none;
-    border: 0;
-    line-height: 1;
-    margin-top: 5px;
-    left: -15px;
-
-    &:hover,
-    &:focus {
-      cursor: pointer;
-      transform: scale(1);
-      color: ${props => props.theme.text};
-    }
-  }
-
-  @media print {
-    .block-menu-trigger {
-      display: none;
-    }
-  }
-
   .ProseMirror-gapcursor {
     display: none;
     pointer-events: none;
