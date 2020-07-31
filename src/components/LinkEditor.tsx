@@ -87,6 +87,8 @@ class LinkEditor extends React.Component<Props, State> {
   save = (href: string, title?: string): void => {
     href = href.trim();
 
+    if (href.length === 0) return;
+
     this.discardInputValue = true;
     const { from, to } = this.props;
 
@@ -198,6 +200,9 @@ class LinkEditor extends React.Component<Props, State> {
     this.discardInputValue = true;
     const { onCreateLink } = this.props;
 
+    value = value.trim();
+    if (value.length === 0) return;
+
     if (onCreateLink) {
       onCreateLink(value);
       if (this.initialSelectionLength) {
@@ -249,6 +254,7 @@ class LinkEditor extends React.Component<Props, State> {
     const showCreateLink =
       !!this.props.onCreateLink &&
       !(value === this.initialValue) &&
+      value.trim().length > 0 &&
       !looksLikeUrl;
 
     const showResults = !!value && (showCreateLink || results.length > 0);
@@ -285,7 +291,7 @@ class LinkEditor extends React.Component<Props, State> {
             {showCreateLink && (
               <LinkSearchResult
                 key="create"
-                title={`Create new card “${value}”`}
+                title={`Create new card “${value.trim()}”`}
                 icon={<PlusIcon color={theme.toolbarItem} />}
                 onMouseOver={() => this.handleFocusLink(results.length)}
                 onClick={() => {

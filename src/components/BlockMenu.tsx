@@ -11,6 +11,7 @@ import VisuallyHidden from "./VisuallyHidden";
 import getDataTransferFiles from "../lib/getDataTransferFiles";
 import insertFiles from "../commands/insertFiles";
 import getMenuItems from "../menus/block";
+
 const SSR = typeof window === "undefined";
 
 type Props = {
@@ -22,6 +23,7 @@ type Props = {
   onImageUploadStart?: () => void;
   onImageUploadStop?: () => void;
   onShowToast?: (message: string, id: string) => void;
+  onLinkToolbarOpen: () => void;
   onClose: () => void;
   embeds: EmbedDescriptor[];
 };
@@ -90,14 +92,9 @@ class BlockMenu extends React.Component<Props, State> {
       event.stopPropagation();
 
       const item = this.filtered[this.state.selectedIndex];
+
       if (item) {
-        if (item.name === "image") {
-          this.triggerImagePick();
-        } else if (item.name === "embed") {
-          this.triggerLinkInput(item);
-        } else {
-          this.insertBlock(item);
-        }
+        this.insertItem(item);
       } else {
         this.props.onClose();
       }
@@ -148,6 +145,23 @@ class BlockMenu extends React.Component<Props, State> {
 
     if (event.key === "Escape") {
       this.close();
+    }
+  };
+
+  insertItem = item => {
+    switch (item.name) {
+      case "image":
+        return this.triggerImagePick();
+      case "embed":
+        return this.triggerLinkInput(item);
+      case "link": {
+        this.clearSearch();
+        this.props.onClose();
+        this.props.onLinkToolbarOpen();
+        return;
+      }
+      default:
+        this.insertBlock(item);
     }
   };
 
@@ -256,7 +270,7 @@ class BlockMenu extends React.Component<Props, State> {
     this.props.onClose();
   };
 
-  insertBlock(item) {
+  clearSearch() {
     const { state, dispatch } = this.props.view;
     const parent = findParentNode(node => !!node)(state.selection);
 
@@ -269,6 +283,10 @@ class BlockMenu extends React.Component<Props, State> {
         )
       );
     }
+  }
+
+  insertBlock(item) {
+    this.clearSearch();
 
     const command = this.props.commands[item.name];
     if (command) {
@@ -288,7 +306,12 @@ class BlockMenu extends React.Component<Props, State> {
     const offsetHeight = ref ? ref.offsetHeight : 0;
     const paragraph = view.domAtPos(selection.$from.pos);
 
-    if (!props.isActive || !paragraph.node || SSR) {
+    if (
+      !props.isActive ||
+      !paragraph.node ||
+      !paragraph.node.getBoundingClientRect ||
+      SSR
+    ) {
       return {
         left: -1000,
         top: 0,
@@ -415,16 +438,7 @@ class BlockMenu extends React.Component<Props, State> {
                 return (
                   <ListItem key={index}>
                     <BlockMenuItem
-                      onClick={() => {
-                        switch (item.name) {
-                          case "image":
-                            return this.triggerImagePick();
-                          case "embed":
-                            return this.triggerLinkInput(item);
-                          default:
-                            this.insertBlock(item);
-                        }
-                      }}
+                      onClick={() => this.insertItem(item)}
                       selected={selected}
                       icon={item.icon}
                       title={item.title}

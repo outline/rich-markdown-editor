@@ -101,6 +101,14 @@ export default class Link extends Mark {
         props: {
           // could add hover events here (would be one way traffic though)
           handleDOMEvents: {
+            mouseover: (view, event: MouseEvent) => {
+              if (event.target instanceof HTMLAnchorElement) {
+                if (this.options.onHoverLink) {
+                  return this.options.onHoverLink(event);
+                }
+              }
+              return false;
+            },
             click: (view, event: MouseEvent) => {
               // always allow clicking link
               // allow opening links in editing mode with the meta/cmd key
@@ -131,30 +139,6 @@ export default class Link extends Mark {
                 }
               }
 
-              return false;
-            },
-            mouseover: (view, event: MouseEvent) => {
-              if (event.target instanceof HTMLAnchorElement) {
-                const { href } = event.target;
-                if (this.options.onHoverLink) {
-                  event.stopPropagation();
-                  event.preventDefault();
-                  this.options.onHoverLink(href);
-                  return true;
-                }
-              }
-              return false;
-            },
-            mouseout: (view, event: MouseEvent) => {
-              if (event.target instanceof HTMLAnchorElement) {
-                const { href } = event.target;
-                if (this.options.onUnhoverLink) {
-                  event.stopPropagation();
-                  event.preventDefault();
-                  this.options.onUnhoverLink(href);
-                  return true;
-                }
-              }
               return false;
             }
           },

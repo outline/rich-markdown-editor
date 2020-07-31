@@ -36,6 +36,10 @@ A unique id for this editor, used to persist settings such as collapsed headings
 A markdown string that represents the initial value of the editor. Use this to prop to restore
 previously saved content for the user to continue editing.
 
+#### `value`
+
+A markdown string that represents the value of the editor. Use this prop to change the value of the editor once mounted, **this will re-render the entire editor** and as such is only suitable when also in `readOnly` mode. Do not pipe the value of `onChange` back into `value`, the editor keeps it's own internal state and this will result in unexpected side effects.
+
 #### `placeholder`
 
 Allows overriding of the placeholder. The default is "Write something nice…".
@@ -43,6 +47,10 @@ Allows overriding of the placeholder. The default is "Write something nice…".
 #### `readOnly`
 
 With `readOnly` set to `false` the editor is optimized for composition. When `true` the editor can be used to display previously written content – headings gain anchors and links become clickable.
+
+#### `readOnlyWriteCheckboxes`
+
+With `readOnlyWriteCheckboxes` set to `true` checkboxes can still be checked or unchecked as a special case while `readOnly` is set to `true` and the editor is otherwise unable to be edited.
 
 #### `autoFocus`
 
@@ -72,6 +80,11 @@ A React component that will be wrapped around items that have an optional toolti
 #### `headingsOffset`
 
 A number that will offset the document headings by a number of levels. For example, if you already nest the editor under a main `h1` title you might want the user to only be able to create `h2` headings and below, in this case you would set the prop to `1`.
+
+#### `scrollTo`
+
+A string representing a heading anchor – the document will smooth scroll so that the heading is visible
+in the viewport.
 
 #### `embeds`
 
@@ -145,9 +158,25 @@ The editor provides an ability to search for links to insert from the formatting
 />
 ```
 
+#### `onCreateLink(title: string): Promise<string>`
+
+The editor provides an ability to create links from the formatting toolbar for on-the-fly document createion. If this callback is provided it should accept a link "title" as the only parameter and return a promise that resolves to a url for the created link, eg:
+
+```javascript
+<Editor
+  onCreateLink={async title => {
+    const url = await MyAPI.create({
+      title
+    });
+
+    return url;
+  }}
+/>
+```
+
 #### `onShowToast(message: string, id: string): void`
 
-Triggered when the editor wishes to show a toast message to the user. Hook into your apps
+Triggered when the editor wishes to show an error message to the user. Hook into your apps
 notification system, or simplisticly use `window.alert(message)`. The second parameter
 is a stable identifier you can use to identify the message if you'd prefer to write
 your own copy.
@@ -172,6 +201,19 @@ import { history } from "react-router";
 />
 ```
 
+#### `onHoverLink(event: MouseEvent): boolean`
+
+This callback allows detecting when the user hovers over a link in the document.
+
+
+```javascript
+<Editor
+  onHoverLink={event => {
+    console.log(`Hovered link ${event.target.href}`);
+  }}
+/>
+```
+
 #### `onClickHashtag(tag: string): void`
 
 This callback allows handling of clicking on hashtags in the document text. If no callback is provided then hashtags will render as regular text, so you can choose if to support them or not by passing this prop.
@@ -182,6 +224,21 @@ import { history } from "react-router";
 <Editor
   onClickHashtag={tag => {
     history.push(`/hashtags/${tag}`);
+  }}
+/>
+```
+
+#### `handleDOMEvents: {[name: string]: (view: EditorView, event: Event) => boolean;}`
+
+This object maps [event](https://developer.mozilla.org/en-US/docs/Web/Events) names (`focus`, `paste`, `touchstart`, etc.) to callback functions.
+
+```javascript
+<Editor
+  handleDOMEvents={{
+    focus: () => console.log("FOCUS"),
+    blur: () => console.log("BLUR"),
+    paste: () => console.log("PASTE"),
+    touchstart: () => console.log("TOUCH START"),
   }}
 />
 ```

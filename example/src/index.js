@@ -102,14 +102,24 @@ class Example extends React.Component {
         <Editor
           id="example"
           readOnly={this.state.readOnly}
+          readOnlyWriteCheckboxes
           value={this.state.value}
           defaultValue={defaultValue}
+          scrollTo={window.location.hash}
+          handleDOMEvents={{
+            focus: () => console.log("FOCUS"),
+            blur: () => console.log("BLUR"),
+            paste: () => console.log("PASTE"),
+            touchstart: () => console.log("TOUCH START"),
+          }}
           onSave={options => console.log("Save triggered", options)}
           onCancel={() => console.log("Cancel triggered")}
           onChange={this.handleChange}
           onClickLink={href => console.log("Clicked link: ", href)}
-          onHoverLink={href => console.log("Hovered link: ", href)}
-          onUnhoverLink={href => console.log("Unhovered link: ", href)}
+          onHoverLink={event => {
+            console.log("Hovered link: ", event.target.href);
+            return false;
+          }}
           onClickHashtag={tag => console.log("Clicked hashtag: ", tag)}
           onCreateLink={title => {
             // Delay to simulate time taken for remote API request to complete
