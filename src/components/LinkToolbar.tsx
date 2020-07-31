@@ -72,9 +72,9 @@ export default class LinkToolbar extends React.Component<Props> {
     // Insert a placeholder link
     dispatch(
       view.state.tr
-        .insertText(title, from, to)
+        .insertText(title, from - +this.props.trigger, to)
         .addMark(
-          from,
+          from - +this.props.trigger,
           to + title.length,
           state.schema.marks.link.create({ href })
         )
