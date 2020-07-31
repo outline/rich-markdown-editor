@@ -14,6 +14,7 @@ type Props = {
   onClickLink: (url: string) => void;
   onShowToast?: (msg: string, code: string) => void;
   onClose: () => void;
+  trigger: false;
 };
 
 function isActive(props) {
@@ -105,9 +106,9 @@ export default class LinkToolbar extends React.Component<Props> {
 
     dispatch(
       view.state.tr
-        .insertText(title, from, to)
+        .insertText(title, from - +this.props.trigger, to)
         .addMark(
-          from,
+          from - +this.props.trigger,
           to + title.length,
           state.schema.marks.link.create({ href })
         )

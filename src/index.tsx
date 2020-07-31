@@ -57,6 +57,7 @@ import Strikethrough from "./marks/Strikethrough";
 
 // plugins
 import BlockMenuTrigger from "./plugins/BlockMenuTrigger";
+import LinkMenuTrigger from "./plugins/LinkMenuTrigger";
 import History from "./plugins/History";
 import Keys from "./plugins/Keys";
 import Placeholder from "./plugins/Placeholder";
@@ -108,6 +109,7 @@ export type Props = {
 type State = {
   blockMenuOpen: boolean;
   linkMenuOpen: boolean;
+  linkMenuTrigger: boolean;
   blockMenuSearch: string;
 };
 
@@ -136,6 +138,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   state = {
     blockMenuOpen: false,
     linkMenuOpen: false,
+    linkMenuTrigger: false,
     blockMenuSearch: "",
   };
 
@@ -276,6 +279,10 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new BlockMenuTrigger({
           onOpen: this.handleOpenBlockMenu,
           onClose: this.handleCloseBlockMenu,
+        }),
+        new LinkMenuTrigger({
+          onOpen: this.handleOpenLinkMenu,
+          onClose: this.handleCloseLinkMenu,
         }),
         new Placeholder({
           placeholder: this.props.placeholder,
@@ -466,12 +473,12 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     }
   };
 
-  handleOpenLinkMenu = () => {
-    this.setState({ linkMenuOpen: true });
+  handleOpenLinkMenu = (linkMenuTrigger = false) => {
+    this.setState({ linkMenuOpen: true, linkMenuTrigger });
   };
 
   handleCloseLinkMenu = () => {
-    this.setState({ linkMenuOpen: false });
+    this.setState({ linkMenuOpen: false, linkMenuTrigger: false });
   };
 
   handleOpenBlockMenu = (search: string) => {
@@ -587,6 +594,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   onClickLink={this.props.onClickLink}
                   onShowToast={this.props.onShowToast}
                   onClose={this.handleCloseLinkMenu}
+                  trigger={this.state.linkMenuTrigger}
                   tooltip={tooltip}
                 />
                 <BlockMenu
@@ -1255,8 +1263,8 @@ const StyledEditor = styled("div")<{
     outline: none;
     border: 0;
     line-height: 1;
-    margin-top: -6px;
-    left: -34px;
+    margin-top: -3px;
+    left: -23px;
 
     &:hover,
     &:focus {
