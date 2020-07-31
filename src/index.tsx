@@ -1255,7 +1255,7 @@ const StyledEditor = styled("div")<{
     color: ${props => props.theme.textSecondary};
     background: none;
     border-radius: 100%;
-    font-size: 30px;
+    font-size: 18px;
     position: absolute;
     transform: scale(0.9);
     transition: color 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275),
@@ -1263,8 +1263,8 @@ const StyledEditor = styled("div")<{
     outline: none;
     border: 0;
     line-height: 1;
-    margin-top: -3px;
-    left: -23px;
+    margin-top: 5px;
+    left: -15px;
 
     &:hover,
     &:focus {
