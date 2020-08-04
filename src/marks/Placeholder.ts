@@ -67,25 +67,56 @@ export default class Placeholder extends Mark {
             if (this.editor.props.template) {
               return false;
             }
-            if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") {
+            if (
+              event.key !== "ArrowLeft" &&
+              event.key !== "ArrowRight" &&
+              event.key !== "Backspace"
+            ) {
               return false;
             }
 
             const { state, dispatch } = view;
 
-            const range = getMarkRange(
-              state.selection.$from,
-              state.schema.marks.placeholder
-            );
-            if (!range) return false;
+            if (event.key === "Backspace") {
+              const range = getMarkRange(
+                state.doc.resolve(state.selection.from - 1),
+                state.schema.marks.placeholder
+              );
+              if (!range) return false;
 
-            if (event.key === "ArrowRight") {
-              const endOfMark = state.doc.resolve(range.to);
-              dispatch(state.tr.setSelection(TextSelection.near(endOfMark)));
+              dispatch(
+                state.tr
+                  .removeMark(
+                    range.from,
+                    range.to,
+                    state.schema.marks.placeholder
+                  )
+                  .insertText("", range.from, range.to)
+              );
               return true;
-            } else if (event.key === "ArrowLeft") {
+            }
+
+            if (event.key === "ArrowLeft") {
+              const range = getMarkRange(
+                state.doc.resolve(state.selection.from - 1),
+                state.schema.marks.placeholder
+              );
+              if (!range) return false;
+
               const startOfMark = state.doc.resolve(range.from);
               dispatch(state.tr.setSelection(TextSelection.near(startOfMark)));
+              return true;
+            }
+
+            if (event.key === "ArrowRight") {
+              const range = getMarkRange(
+                state.selection.$from,
+                state.schema.marks.placeholder
+              );
+              if (!range) return false;
+
+              const endOfMark = state.doc.resolve(range.to);
+              dispatch(state.tr.setSelection(TextSelection.near(endOfMark)));
               return true;
             }
 
