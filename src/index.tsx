@@ -65,6 +65,10 @@ import SmartText from "./plugins/SmartText";
 import TrailingNode from "./plugins/TrailingNode";
 import MarkdownPaste from "./plugins/MarkdownPaste";
 
+import assert from "assert";
+import createAndInsertLink from "./commands/createAndInsertLink";
+import { findParentNode } from "prosemirror-utils";
+
 export { schema, parser, serializer } from "./server";
 
 export { default as Extension } from "./lib/Extension";
@@ -559,6 +563,66 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     return headings;
   };
 
+  handleOnCreateLink = async (title: string) => {
+    const { onCreateLink, onShowToast } = this.props;
+
+    this.handleCloseLinkMenu();
+    this.view.focus();
+
+    if (!onCreateLink) {
+      return;
+    }
+
+    const { dispatch, state } = this.view;
+    const { from, to } = state.selection;
+    assert(from === to);
+
+    const href = `creating#${title}…`;
+
+    // Insert a placeholder link
+    dispatch(
+      this.view.state.tr
+        .insertText(title, from, to)
+        .addMark(
+          from,
+          to + title.length,
+          state.schema.marks.link.create({ href })
+        )
+    );
+
+    createAndInsertLink(this.view, title, href, {
+      onCreateLink,
+      onShowToast,
+    });
+  };
+
+  handleOnSelectLink = ({
+    href,
+    title,
+  }: {
+    href: string;
+    title: string;
+    from: number;
+    to: number;
+  }) => {
+    this.handleCloseLinkMenu();
+    this.view.focus();
+
+    const { dispatch, state } = this.view;
+    const { from, to } = state.selection;
+    assert(from === to);
+
+    dispatch(
+      this.view.state.tr
+        .insertText(title, from, to)
+        .addMark(
+          from,
+          to + title.length,
+          state.schema.marks.link.create({ href })
+        )
+    );
+  };
+
   render = () => {
     const {
       dark,
@@ -628,6 +692,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                     search={this.state.triggerSearch}
                     isActive={this.state.searchTriggerOpen}
                     onSearchLink={this.props.onSearchLink}
+                    // FIXME cannot use clearsearch from blockmenu, deletes too much for link insertion, deletes whole line
+                    handleOnSelectLink={this.handleOnSelectLink}
+                    handleOnCreateLink={this.handleOnCreateLink}
                   />
                 )}
               </React.Fragment>

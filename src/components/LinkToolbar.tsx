@@ -3,7 +3,6 @@ import * as React from "react";
 import { EditorView } from "prosemirror-view";
 import LinkEditor, { SearchResult } from "./LinkEditor";
 import FloatingToolbar from "./FloatingToolbar";
-import createAndInsertLink from "../commands/createAndInsertLink";
 
 type Props = {
   isActive: boolean;
@@ -51,68 +50,6 @@ export default class LinkToolbar extends React.Component<Props> {
     }
 
     this.props.onClose();
-  };
-
-  handleOnCreateLink = async (title: string) => {
-    const { onCreateLink, view, onClose, onShowToast } = this.props;
-
-    onClose();
-    this.props.view.focus();
-
-    if (!onCreateLink) {
-      return;
-    }
-
-    const { dispatch, state } = view;
-    const { from, to } = state.selection;
-    assert(from === to);
-
-    const href = `creating#${title}…`;
-
-    // Insert a placeholder link
-    dispatch(
-      view.state.tr
-        .insertText(title, from - +this.props.trigger, to)
-        .addMark(
-          from - +this.props.trigger,
-          to + title.length,
-          state.schema.marks.link.create({ href })
-        )
-    );
-
-    createAndInsertLink(view, title, href, {
-      onCreateLink,
-      onShowToast,
-    });
-  };
-
-  handleOnSelectLink = ({
-    href,
-    title,
-  }: {
-    href: string;
-    title: string;
-    from: number;
-    to: number;
-  }) => {
-    const { view, onClose } = this.props;
-
-    onClose();
-    this.props.view.focus();
-
-    const { dispatch, state } = view;
-    const { from, to } = state.selection;
-    assert(from === to);
-
-    dispatch(
-      view.state.tr
-        .insertText(title, from - +this.props.trigger, to)
-        .addMark(
-          from - +this.props.trigger,
-          to + title.length,
-          state.schema.marks.link.create({ href })
-        )
-    );
   };
 
   render() {
