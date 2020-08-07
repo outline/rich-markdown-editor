@@ -57,7 +57,7 @@ import Strikethrough from "./marks/Strikethrough";
 
 // plugins
 import BlockMenuTrigger from "./plugins/BlockMenuTrigger";
-import LinkMenuTrigger from "./plugins/LinkMenuTrigger";
+import SearchTrigger from "./plugins/SearchTrigger";
 import History from "./plugins/History";
 import Keys from "./plugins/Keys";
 import Placeholder from "./plugins/Placeholder";
@@ -95,6 +95,7 @@ export type Props = {
   onImageUploadStop?: () => void;
   onCreateLink?: (title: string) => Promise<string>;
   onSearchLink?: (term: string, setter: Function) => Promise<SearchResult[]>;
+  searchResultList?: typeof React.Component;
   onClickLink: (href: string) => void;
   onHoverLink?: (event: MouseEvent) => boolean;
   onClickHashtag?: (tag: string) => void;
@@ -109,7 +110,8 @@ export type Props = {
 type State = {
   blockMenuOpen: boolean;
   linkMenuOpen: boolean;
-  linkMenuTrigger: boolean;
+  triggerSearch: string;
+  searchTriggerOpen: boolean;
   blockMenuSearch: string;
 };
 
@@ -138,7 +140,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   state = {
     blockMenuOpen: false,
     linkMenuOpen: false,
-    linkMenuTrigger: false,
+    searchTriggerOpen: false,
+    triggerSearch: "",
     blockMenuSearch: "",
   };
 
@@ -280,9 +283,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           onOpen: this.handleOpenBlockMenu,
           onClose: this.handleCloseBlockMenu,
         }),
-        new LinkMenuTrigger({
-          onOpen: this.handleOpenLinkMenu,
-          onClose: this.handleCloseLinkMenu,
+        new SearchTrigger({
+          onOpen: this.handleOpenSearchTrigger,
+          onClose: this.handleCloseSearchTrigger,
         }),
         new Placeholder({
           placeholder: this.props.placeholder,
@@ -473,12 +476,20 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     }
   };
 
-  handleOpenLinkMenu = (linkMenuTrigger = false) => {
-    this.setState({ linkMenuOpen: true, linkMenuTrigger });
+  handleOpenLinkMenu = () => {
+    this.setState({ linkMenuOpen: true });
   };
 
   handleCloseLinkMenu = () => {
-    this.setState({ linkMenuOpen: false, linkMenuTrigger: false });
+    this.setState({ linkMenuOpen: false });
+  };
+
+  handleOpenSearchTrigger = (triggerSearch) => {
+    this.setState({ searchTriggerOpen: true, triggerSearch });
+  };
+
+  handleCloseSearchTrigger = () => {
+    this.setState({ searchTriggerOpen: false, triggerSearch: "" });
   };
 
   handleOpenBlockMenu = (search: string) => {
@@ -557,9 +568,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       tooltip,
       className,
       onKeyDown,
+      searchResultList: SearchResultList
     } = this.props;
     const theme = this.props.theme || (dark ? darkTheme : lightTheme);
-
     return (
       <Flex
         onKeyDown={onKeyDown}
@@ -594,7 +605,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   onClickLink={this.props.onClickLink}
                   onShowToast={this.props.onShowToast}
                   onClose={this.handleCloseLinkMenu}
-                  trigger={this.state.linkMenuTrigger}
+                  trigger={false}
                   tooltip={tooltip}
                 />
                 <BlockMenu
@@ -610,6 +621,15 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   onShowToast={this.props.onShowToast}
                   embeds={this.props.embeds}
                 />
+                {SearchResultList && (
+                  // Need to pass this handleOnCreateLink and handleOnSelectLink from LinkToolbar
+                  // But needs to replace search text like clearSearch in BlockMenu
+                  <SearchResultList
+                    search={this.state.triggerSearch}
+                    isActive={this.state.searchTriggerOpen}
+                    onSearchLink={this.props.onSearchLink}
+                  />
+                )}
               </React.Fragment>
             )}
           </React.Fragment>

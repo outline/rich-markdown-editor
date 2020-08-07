@@ -48,6 +48,26 @@ class YoutubeEmbed extends React.Component {
   }
 }
 
+const searchResultList = ({ search, isActive, onSearchLink }) => {
+  console.log(`search ${search}`);
+  const [results, setResults] = React.useState([]);
+
+  // onSearchLink(search, setResults);
+  React.useEffect(() => {
+    console.log(`run effect`);
+    onSearchLink(search, setResults);
+  }, [search]);
+
+  return (
+    <div>
+      <div>Add card {search}</div>
+      {results.map(rs => (
+        <div>{rs.title}</div>
+      ))}
+    </div>
+  )
+};
+
 class Example extends React.Component {
   state = {
     readOnly: false,
@@ -75,7 +95,7 @@ class Example extends React.Component {
 
   handleChange = debounce(value => {
     const text = value();
-    console.log(text);
+    // console.log(text);
     localStorage.setItem("saved", text);
   }, 250);
 
@@ -174,6 +194,7 @@ class Example extends React.Component {
           ]}
           dark={this.state.dark}
           autoFocus
+          searchResultList={searchResultList}
         />
       </div>
     );
