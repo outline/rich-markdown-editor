@@ -20,7 +20,7 @@ import { MenuItem } from "../types";
 type Props = {
   tooltip: typeof React.Component;
   commands: Record<string, any>;
-  onSearchLink?: (term: string) => Promise<SearchResult[]>;
+  onSearchLink?: (term: string, setter: Function) => Promise<SearchResult[]>;
   onClickLink: (url: string) => void;
   onCreateLink?: (title: string) => Promise<string>;
   onShowToast?: (msg: string, code: string) => void;

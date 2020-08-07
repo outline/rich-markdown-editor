@@ -29,7 +29,7 @@ type Props = {
   tooltip: typeof React.Component;
   onRemoveLink?: () => void;
   onCreateLink?: (title: string) => Promise<void>;
-  onSearchLink?: (term: string) => Promise<SearchResult[]>;
+  onSearchLink?: (term: string, setter: Function) => Promise<SearchResult[]>;
   onSelectLink: (options: {
     href: string;
     title?: string;
@@ -181,8 +181,7 @@ class LinkEditor extends React.Component<Props, State> {
     // if it doesn't seem to be a url, try searching for matching documents
     if (value && !looksLikeUrl && this.props.onSearchLink) {
       try {
-        const results = await this.props.onSearchLink(value);
-        this.setState({ results });
+        this.props.onSearchLink(value, results => this.setState({ results }));
       } catch (error) {
         console.error(error);
       }

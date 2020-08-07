@@ -136,11 +136,11 @@ class Example extends React.Component {
             });
           }}
           onShowToast={message => window.alert(message)}
-          onSearchLink={async term => {
+          onSearchLink={async (term, setter) => {
             console.log("Searched link: ", term);
-            return docSearchResults.filter(result =>
+            setter(docSearchResults.filter(result =>
               result.title.toLowerCase().includes(term.toLowerCase())
-            );
+            ));
           }}
           uploadImage={file => {
             console.log("File upload triggered: ", file);

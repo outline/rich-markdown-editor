@@ -10,7 +10,7 @@ type Props = {
   view: EditorView;
   tooltip: typeof React.Component;
   onCreateLink?: (title: string) => Promise<string>;
-  onSearchLink?: (term: string) => Promise<SearchResult[]>;
+  onSearchLink?: (term: string, setter: Function) => Promise<SearchResult[]>;
   onClickLink: (url: string) => void;
   onShowToast?: (msg: string, code: string) => void;
   onClose: () => void;
