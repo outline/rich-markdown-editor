@@ -793,7 +793,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                         search={this.state.triggerSearch}
                         isActive={this.state.searchTriggerOpen}
                         onSearchLink={this.props.onSearchLink}
-                        // FIXME cannot use clearsearch from blockmenu, deletes too much for link insertion, deletes whole line
                         handleOnSelectLink={this.handleOnSelectLink}
                         handleOnCreateLink={this.handleOnCreateLink}
                         onClickLink={this.props.onClickLink}

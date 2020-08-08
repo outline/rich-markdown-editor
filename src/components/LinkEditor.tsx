@@ -181,17 +181,6 @@ class LinkEditor extends React.Component<Props, State> {
       results: this.state.results,
       selectedIndex: -1,
     });
-
-    // // if it doesn't seem to be a url, try searching for matching documents
-    // if (value && !looksLikeUrl && this.props.onSearchLink) {
-    //   try {
-    //     this.props.onSearchLink(value, results => this.setState({ results }));
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // } else {
-    //   this.setState({ results: [] });
-    // }
   };
 
   handleOpenLink = (event): void => {
@@ -260,23 +249,12 @@ class LinkEditor extends React.Component<Props, State> {
     const { value, results, selectedIndex } = this.state;
 
     const Tooltip = this.props.tooltip;
-    const looksLikeUrl = value.match(/^https?:\/\//i);
-
-    const showCreateLink =
-      !!this.props.onCreateLink &&
-      !(value === this.initialValue) &&
-      value.trim().length > 0 &&
-      !looksLikeUrl;
-
-    const showResults = !!value && (showCreateLink || results.length > 0);
 
     return (
       <Wrapper>
         <Input
           value={value}
-          placeholder={
-            showCreateLink ? "Find or create a card…" : "Search or paste a link…"
-          }
+          placeholder={"Find or create a card…"}
           onKeyDown={this.handleKeyDown}
           onChange={this.handleChange}
           autoFocus={this.href === ""}
@@ -296,37 +274,6 @@ class LinkEditor extends React.Component<Props, State> {
             )}
           </Tooltip>
         </ToolbarButton>
-
-        {false && showResults && (
-          <SearchResults id="link-search-results">
-            {showCreateLink && (
-              <LinkSearchResult
-                key="create"
-                title={`Create new card “${value.trim()}”`}
-                icon={<PlusIcon color={theme.toolbarItem} />}
-                onMouseOver={() => this.handleFocusLink(results.length)}
-                onClick={() => {
-                  this.handleCreateLink(value);
-
-                  if (this.initialSelectionLength) {
-                    this.moveSelectionToEnd();
-                  }
-                }}
-                selected={results.length === selectedIndex}
-              />
-            )}
-            {results.map((result, index) => (
-              <LinkSearchResult
-                key={result.url}
-                title={result.title}
-                icon={<DocumentIcon color={theme.toolbarItem} />}
-                onMouseOver={() => this.handleFocusLink(index)}
-                onClick={this.handleSelectLink(result.url, result.title)}
-                selected={index === selectedIndex}
-              />
-            ))}
-          </SearchResults>
-        )}
       </Wrapper>
     );
   }
@@ -336,22 +283,6 @@ const Wrapper = styled(Flex)`
   margin-left: -8px;
   margin-right: -8px;
   min-width: 336px;
-`;
-
-const SearchResults = styled.ol`
-  background: ${props => props.theme.toolbarBackground};
-  position: absolute;
-  top: 100%;
-  width: 100%;
-  height: auto;
-  left: 0;
-  padding: 8px;
-  margin: 0;
-  margin-top: -3px;
-  margin-bottom: 0;
-  border-radius: 0 0 4px 4px;
-  overflow-y: auto;
-  max-height: 25vh;
 `;
 
 export default withTheme(LinkEditor);

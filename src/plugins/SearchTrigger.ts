@@ -1,7 +1,5 @@
 import { Plugin } from "prosemirror-state";
 import { InputRule } from "prosemirror-inputrules";
-import { Decoration, DecorationSet } from "prosemirror-view";
-import { findParentNode } from "prosemirror-utils";
 import Extension from "../lib/Extension";
 
 const MAX_MATCH = 500;
