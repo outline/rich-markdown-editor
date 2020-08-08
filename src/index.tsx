@@ -785,8 +785,6 @@ const Wrapper = styled.div<{
   left?: number;
   isAbove: boolean;
 }>`
-  color: ${props => props.theme.text};
-  font-family: ${props => props.theme.fontFamily};
   position: absolute;
   z-index: ${props => {
     return props.theme.zIndex + 9999;
@@ -794,7 +792,6 @@ const Wrapper = styled.div<{
   ${props => props.top && `top: ${props.top}px`};
   ${props => props.bottom && `bottom: ${props.bottom}px`};
   left: ${props => props.left}px;
-  background-color: ${props => props.theme.blockToolbarBackground};
   border-radius: 4px;
   box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px,
     rgba(0, 0, 0, 0.08) 0px 4px 8px, rgba(0, 0, 0, 0.08) 0px 2px 4px;
@@ -805,11 +802,8 @@ const Wrapper = styled.div<{
   transition-delay: 150ms;
   box-sizing: border-box;
   pointer-events: none;
-  white-space: nowrap;
   width: 300px;
   max-height: 224px;
-  overflow: hidden;
-  overflow-y: auto;
 
   * {
     box-sizing: border-box;
