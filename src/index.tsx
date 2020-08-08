@@ -665,8 +665,14 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   calculatePosition(isActive) {
+    const hiddenPos = {
+      left: -1000,
+      top: 0,
+      bottom: undefined,
+      isAbove: false,
+    };
     if (!this.view) {
-      return null;
+      return hiddenPos;
     }
     const { selection } = this.view.state;
 
@@ -675,12 +681,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       !isActive ||
       !paragraph.node
     ) {
-      return {
-        left: -1000,
-        top: 0,
-        bottom: undefined,
-        isAbove: false,
-      };
+      return hiddenPos;
     }
     // not sure why this cast is not necessary in Blockmenu.tsx
     const node = (paragraph.node as any);
@@ -707,7 +708,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
     const position = this.calculatePosition(this.state.searchTriggerOpen);
 
-    console.log(`position`, position);
     const theme = this.props.theme || (dark ? darkTheme : lightTheme);
     return (
       <Flex
@@ -777,6 +777,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 }
 
+// FIXME should be stripped and simplified
 const Wrapper = styled.div<{
   active: boolean;
   top?: number;
