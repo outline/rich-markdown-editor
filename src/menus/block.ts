@@ -105,13 +105,6 @@ export default function blockMenuItems(): MenuItem[] {
       keywords: "picture photo",
     },
     {
-      name: "link",
-      title: "Link",
-      icon: LinkIcon,
-      shortcut: `${mod} k`,
-      keywords: "link url uri href",
-    },
-    {
       name: "separator",
     },
     {

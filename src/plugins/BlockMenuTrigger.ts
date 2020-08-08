@@ -106,7 +106,7 @@ export default class BlockMenuTrigger extends Extension {
                     parent.pos + parent.node.nodeSize,
                     {
                       class: "placeholder",
-                      "data-empty-text": "Type '/' to insert…",
+                      "data-empty-text": "Type '/' to insert block…",
                     }
                   )
                 );

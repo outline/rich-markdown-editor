@@ -1,5 +1,6 @@
 /* global window File Promise */
 import * as React from "react";
+import { Portal } from "react-portal";
 import { EditorState, Selection, Plugin } from "prosemirror-state";
 import { dropCursor } from "prosemirror-dropcursor";
 import { gapCursor } from "prosemirror-gapcursor";
@@ -15,9 +16,8 @@ import { light as lightTheme, dark as darkTheme } from "./theme";
 import Flex from "./components/Flex";
 import { SearchResult } from "./components/LinkEditor";
 import { EmbedDescriptor } from "./types";
-import SelectionToolbar from "./components/SelectionToolbar";
+import SelectionToolbar, { getText } from "./components/SelectionToolbar";
 import BlockMenu from "./components/BlockMenu";
-import LinkToolbar from "./components/LinkToolbar";
 import Tooltip from "./components/Tooltip";
 import Extension from "./lib/Extension";
 import ExtensionManager from "./lib/ExtensionManager";
@@ -57,13 +57,15 @@ import Strikethrough from "./marks/Strikethrough";
 
 // plugins
 import BlockMenuTrigger from "./plugins/BlockMenuTrigger";
-import LinkMenuTrigger from "./plugins/LinkMenuTrigger";
+import SearchTrigger from "./plugins/SearchTrigger";
 import History from "./plugins/History";
 import Keys from "./plugins/Keys";
 import Placeholder from "./plugins/Placeholder";
 import SmartText from "./plugins/SmartText";
 import TrailingNode from "./plugins/TrailingNode";
 import MarkdownPaste from "./plugins/MarkdownPaste";
+
+import createAndInsertLink from "./commands/createAndInsertLink";
 
 export { schema, parser, serializer } from "./server";
 
@@ -94,7 +96,8 @@ export type Props = {
   onImageUploadStart?: () => void;
   onImageUploadStop?: () => void;
   onCreateLink?: (title: string) => Promise<string>;
-  onSearchLink?: (term: string, setter: Function) => Promise<SearchResult[]>;
+  onSearchLink?: (term: Object) => Promise<SearchResult[]>;
+  searchResultList?: typeof React.Component;
   onClickLink: (href: string) => void;
   onHoverLink?: (event: MouseEvent) => boolean;
   onClickHashtag?: (tag: string) => void;
@@ -109,8 +112,11 @@ export type Props = {
 type State = {
   blockMenuOpen: boolean;
   linkMenuOpen: boolean;
-  linkMenuTrigger: boolean;
+  triggerSearch: string;
+  searchTriggerOpen: boolean;
   blockMenuSearch: string;
+  linkFrom: number;
+  linkTo: number;
 };
 
 type Step = {
@@ -118,6 +124,7 @@ type Step = {
 };
 
 class RichMarkdownEditor extends React.PureComponent<Props, State> {
+  searchRef = React.createRef<HTMLDivElement>();
   static defaultProps = {
     defaultValue: "",
     placeholder: "Write note…",
@@ -138,8 +145,11 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   state = {
     blockMenuOpen: false,
     linkMenuOpen: false,
-    linkMenuTrigger: false,
+    searchTriggerOpen: false,
+    triggerSearch: "",
     blockMenuSearch: "",
+    linkFrom: 0,
+    linkTo: 0
   };
 
   extensions: ExtensionManager;
@@ -172,7 +182,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     }
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: Props, prevState) {
     // Allow changes to the 'value' prop to update the editor from outside
     if (this.props.value && prevProps.value !== this.props.value) {
       const newState = this.createState(this.props.value);
@@ -195,6 +205,12 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     // is set to true
     if (prevProps.readOnly && !this.props.readOnly && this.props.autoFocus) {
       this.focusAtEnd();
+    }
+
+    if (prevState.triggerSearch === this.state.triggerSearch) {
+      const selectedText = this.view && getText(this.view.state.selection.content());
+      selectedText && selectedText !== this.state.triggerSearch && this.setState({ triggerSearch: selectedText, searchTriggerOpen: true, linkFrom: 0, linkTo: 0 });
+      console.log(`selectedText`, selectedText);
     }
   }
 
@@ -260,7 +276,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new Highlight(),
         new Italic(),
         new Link({
-          onKeyboardShortcut: this.handleOpenLinkMenu,
+          onKeyboardShortcut: () => {}, // this.handleOpenLinkMenu
           onClickLink: this.props.onClickLink,
           onHoverLink: this.props.onHoverLink,
           onClickHashtag: this.props.onClickHashtag,
@@ -280,9 +296,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           onOpen: this.handleOpenBlockMenu,
           onClose: this.handleCloseBlockMenu,
         }),
-        new LinkMenuTrigger({
-          onOpen: this.handleOpenLinkMenu,
-          onClose: this.handleCloseLinkMenu,
+        new SearchTrigger({
+          onOpen: this.handleOpenSearchTrigger,
+          onClose: this.handleCloseSearchTrigger,
         }),
         new Placeholder({
           placeholder: this.props.placeholder,
@@ -473,12 +489,21 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     }
   };
 
-  handleOpenLinkMenu = (linkMenuTrigger = false) => {
-    this.setState({ linkMenuOpen: true, linkMenuTrigger });
+  handleOpenLinkMenu = () => {
+    this.setState({ linkMenuOpen: true });
   };
 
   handleCloseLinkMenu = () => {
-    this.setState({ linkMenuOpen: false, linkMenuTrigger: false });
+    this.setState({ linkMenuOpen: false });
+  };
+
+  handleOpenSearchTrigger = (triggerSearch) => {
+    this.setState({ searchTriggerOpen: true, triggerSearch, linkFrom: 0, linkTo: 0 });
+  };
+
+  handleCloseSearchTrigger = () => {
+    console.log(`handleCloseSearchTrigger`);
+    this.setState({ searchTriggerOpen: false, triggerSearch: "" });
   };
 
   handleOpenBlockMenu = (search: string) => {
@@ -548,6 +573,127 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     return headings;
   };
 
+  handleOnCreateLink = async (title: string) => {
+    const { onCreateLink, onShowToast } = this.props;
+
+    this.handleCloseLinkMenu();
+    this.view.focus();
+
+    if (!onCreateLink) {
+      return;
+    }
+
+    const { dispatch, state } = this.view;
+    const { from, to } = state.selection;
+
+    const href = `creating#${title}…`;
+
+    if (from === to) {
+      const offset = -this.state.triggerSearch.length;
+      // Insert a placeholder link
+      dispatch(
+        this.view.state.tr
+          .insertText(title, from + offset, to)
+          .addMark(
+            from + offset,
+            to + offset + title.length,
+            state.schema.marks.link.create({ href })
+          )
+      );
+    } else {
+      dispatch(
+        this.view.state.tr
+          .addMark(from, to, state.schema.marks.link.create({ href }))
+      );
+    }
+
+    createAndInsertLink(this.view, title, href, {
+      onCreateLink,
+      onShowToast,
+    });
+  };
+
+  handleOnSelectLink = ({
+    href,
+    title,
+    // from,
+    // to
+  }: {
+    href: string;
+    title: string;
+    from: number;
+    to: number;
+  }) => {
+    this.handleCloseLinkMenu();
+    this.view.focus();
+
+    const { dispatch, state } = this.view;
+    if (this.state.linkFrom && this.state.linkTo) {
+      // inset from selection toolbar link editor
+      const markType = state.schema.marks.link;
+      const from = this.state.linkFrom;
+      const to = this.state.linkTo;
+      dispatch(
+        state.tr
+          .removeMark(from, to, markType)
+          .addMark(from, to, markType.create({ href }))
+      );
+    } else {
+      const from = state.selection.from;
+      const to = state.selection.to;
+
+      if (from === to) {
+        // insert by simple click
+        const offset = -this.state.triggerSearch.length;
+        dispatch(
+          this.view.state.tr
+            .insertText(title, from + offset, to)
+            .addMark(
+              from + offset,
+              to + offset + title.length,
+              state.schema.marks.link.create({ href })
+            )
+        );
+      } else {
+        // insert by select and click
+        dispatch(
+          this.view.state.tr
+            .addMark(from, to, state.schema.marks.link.create({ href }))
+        );
+      }
+    }
+  };
+
+  calculatePosition(isActive) {
+    const hiddenPos = {
+      left: -1000,
+      top: 0,
+      bottom: undefined,
+      isAbove: false,
+    };
+    if (!this.view) {
+      return hiddenPos;
+    }
+    const { selection } = this.view.state;
+
+    const paragraph = this.view.domAtPos(selection.$from.pos);
+    if (
+      !isActive ||
+      !paragraph.node
+    ) {
+      return hiddenPos;
+    }
+    // not sure why this cast is not necessary in Blockmenu.tsx
+    const node = (paragraph.node as any);
+    const { left, bottom } = node.getBoundingClientRect ? node.getBoundingClientRect() : node.parentNode.parentNode.getBoundingClientRect();
+    return {
+      left: left + window.scrollX,
+      top: bottom + window.scrollY,
+      bottom: undefined,
+      isAbove: true,
+    };
+  }
+
   render = () => {
     const {
       dark,
@@ -557,9 +703,12 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       tooltip,
       className,
       onKeyDown,
+      searchResultList: SearchResultList
     } = this.props;
-    const theme = this.props.theme || (dark ? darkTheme : lightTheme);
 
+    const position = this.calculatePosition(this.state.searchTriggerOpen);
+
+    const theme = this.props.theme || (dark ? darkTheme : lightTheme);
     return (
       <Flex
         onKeyDown={onKeyDown}
@@ -581,20 +730,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                 <SelectionToolbar
                   view={this.view}
                   commands={this.commands}
-                  onSearchLink={this.props.onSearchLink}
+                  onSearchLink={searchVars => this.setState(searchVars)}
                   onClickLink={this.props.onClickLink}
-                  onCreateLink={this.props.onCreateLink}
-                  tooltip={tooltip}
-                />
-                <LinkToolbar
-                  view={this.view}
-                  isActive={this.state.linkMenuOpen}
-                  onCreateLink={this.props.onCreateLink}
-                  onSearchLink={this.props.onSearchLink}
-                  onClickLink={this.props.onClickLink}
-                  onShowToast={this.props.onShowToast}
-                  onClose={this.handleCloseLinkMenu}
-                  trigger={this.state.linkMenuTrigger}
                   tooltip={tooltip}
                 />
                 <BlockMenu
@@ -610,6 +747,27 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   onShowToast={this.props.onShowToast}
                   embeds={this.props.embeds}
                 />
+                {SearchResultList && parent && (
+                  // Need to pass this handleOnCreateLink and handleOnSelectLink from LinkToolbar
+                  // But needs to replace search text like clearSearch in BlockMenu
+                  <Portal>
+                    <Wrapper
+                      id="search-menu-container"
+                      active={this.state.searchTriggerOpen}
+                      ref={this.searchRef}
+                      {...position}
+                    >
+                      <SearchResultList
+                        search={this.state.triggerSearch}
+                        isActive={this.state.searchTriggerOpen}
+                        onSearchLink={this.props.onSearchLink}
+                        handleOnSelectLink={this.handleOnSelectLink}
+                        handleOnCreateLink={this.handleOnCreateLink}
+                        onClickLink={this.props.onClickLink}
+                      />
+                    </Wrapper>
+                  </Portal>
+                )}
               </React.Fragment>
             )}
           </React.Fragment>
@@ -618,6 +776,63 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     );
   };
 }
+
+// FIXME should be stripped and simplified
+const Wrapper = styled.div<{
+  active: boolean;
+  top?: number;
+  bottom?: number;
+  left?: number;
+  isAbove: boolean;
+}>`
+  color: ${props => props.theme.text};
+  font-family: ${props => props.theme.fontFamily};
+  position: absolute;
+  z-index: ${props => {
+    return props.theme.zIndex + 9999;
+  }};
+  ${props => props.top && `top: ${props.top}px`};
+  ${props => props.bottom && `bottom: ${props.bottom}px`};
+  left: ${props => props.left}px;
+  background-color: ${props => props.theme.blockToolbarBackground};
+  border-radius: 4px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px,
+    rgba(0, 0, 0, 0.08) 0px 4px 8px, rgba(0, 0, 0, 0.08) 0px 2px 4px;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    transform 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition-delay: 150ms;
+  box-sizing: border-box;
+  pointer-events: none;
+  white-space: nowrap;
+  width: 300px;
+  max-height: 224px;
+  overflow: hidden;
+  overflow-y: auto;
+
+  * {
+    box-sizing: border-box;
+  }
+
+  hr {
+    border: 0;
+    height: 0;
+    border-top: 1px solid ${props => props.theme.blockToolbarDivider};
+  }
+
+  ${({ active, isAbove }) =>
+    active &&
+    `
+    transform: translateY(${isAbove ? "6px" : "-6px"}) scale(1);
+    pointer-events: all;
+    opacity: 1;
+  `};
+
+  @media print {
+    display: none;
+  }
+`;
 
 const StyledEditor = styled("div")<{
   readOnly?: boolean;
