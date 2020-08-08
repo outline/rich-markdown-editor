@@ -41,6 +41,10 @@ export default class SearchTrigger extends Extension {
     return [
       new Plugin({
         props: {
+          handleClick: () => {
+            this.options.onClose();
+            return false;
+          },
           handleKeyDown: (view, event) => {
             // Prosemirror input rules are not triggered on backspace, however
             // we need them to be evaluted for the filter trigger to work

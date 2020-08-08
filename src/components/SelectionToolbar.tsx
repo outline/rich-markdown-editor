@@ -101,8 +101,6 @@ export default class SelectionToolbar extends React.Component<Props> {
       return null;
     }
 
-    link && range && console.log(`range`, range);
-
     return (
       <Portal>
         <FloatingToolbar view={view} active={isActive(this.props)}>
