@@ -49,7 +49,7 @@ class YoutubeEmbed extends React.Component {
 }
 
 const searchResultList = ({ search, isActive, onSearchLink, handleOnSelectLink, handleOnCreateLink }) => {
-  console.log(`search ${search}`);
+  console.log(`search ${search} isActive ${isActive}`);
   const [results, setResults] = React.useState([]);
 
   // onSearchLink(search, setResults);
@@ -58,7 +58,7 @@ const searchResultList = ({ search, isActive, onSearchLink, handleOnSelectLink, 
     onSearchLink(search, setResults);
   }, [search]);
 
-  return (
+  return isActive ? (
     <div>
       <div onClick={() => handleOnCreateLink(search)}>Add card {search}</div>
       {results.map(rs => (
@@ -76,7 +76,7 @@ const searchResultList = ({ search, isActive, onSearchLink, handleOnSelectLink, 
         </div>
       ))}
     </div>
-  )
+  ) : null;
 };
 
 class Example extends React.Component {

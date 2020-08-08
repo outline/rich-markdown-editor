@@ -1,5 +1,6 @@
 /* global window File Promise */
 import * as React from "react";
+import { Portal } from "react-portal";
 import { EditorState, Selection, Plugin } from "prosemirror-state";
 import { dropCursor } from "prosemirror-dropcursor";
 import { gapCursor } from "prosemirror-gapcursor";
@@ -124,6 +125,7 @@ type Step = {
 };
 
 class RichMarkdownEditor extends React.PureComponent<Props, State> {
+  searchRef = React.createRef<HTMLDivElement>();
   static defaultProps = {
     defaultValue: "",
     placeholder: "Write note…",
@@ -206,7 +208,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
     if (prevState.triggerSearch === this.state.triggerSearch) {
       const selectedText = this.view && getText(this.view.state.selection.content());
-      selectedText && selectedText !== this.state.triggerSearch && this.setState({ triggerSearch: selectedText, linkFrom: null, linkTo: null });
+      selectedText && selectedText !== this.state.triggerSearch && this.setState({ triggerSearch: selectedText, searchTriggerOpen: true, linkFrom: null, linkTo: null });
       console.log(`selectedText`, selectedText);
     }
   }
@@ -499,6 +501,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   handleCloseSearchTrigger = () => {
+    console.log(`handleCloseSearchTrigger`);
     this.setState({ searchTriggerOpen: false, triggerSearch: "" });
   };
 
@@ -681,6 +684,35 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     }
   };
 
+  calculatePosition(isActive) {
+    if (!this.view) {
+      return null;
+    }
+    const { selection } = this.view.state;
+
+    const paragraph = this.view.domAtPos(selection.$from.pos);
+    if (
+      !isActive ||
+      !paragraph.node
+    ) {
+      return {
+        left: -1000,
+        top: 0,
+        bottom: undefined,
+        isAbove: false,
+      };
+    }
+
+    const { top, left, bottom } = paragraph.node.getBoundingClientRect ? paragraph.node.getBoundingClientRect() : paragraph.node.parentNode.getBoundingClientRect();
+
+    return {
+      left: left + window.scrollX,
+      top: bottom + window.scrollY,
+      bottom: undefined,
+      isAbove: true,
+    };
+  }
+
   render = () => {
     const {
       dark,
@@ -693,7 +725,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       searchResultList: SearchResultList
     } = this.props;
 
-    console.log(`linkFrom ${this.state.linkFrom}`);
+    const position = this.calculatePosition(this.state.searchTriggerOpen);
+
+    console.log(`position`, position);
     const theme = this.props.theme || (dark ? darkTheme : lightTheme);
     return (
       <Flex
@@ -745,18 +779,27 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   onShowToast={this.props.onShowToast}
                   embeds={this.props.embeds}
                 />
-                {SearchResultList && (
+                {SearchResultList && parent && (
                   // Need to pass this handleOnCreateLink and handleOnSelectLink from LinkToolbar
                   // But needs to replace search text like clearSearch in BlockMenu
-                  <SearchResultList
-                    search={this.state.triggerSearch}
-                    isActive={this.state.searchTriggerOpen}
-                    onSearchLink={this.props.onSearchLink}
-                    // FIXME cannot use clearsearch from blockmenu, deletes too much for link insertion, deletes whole line
-                    handleOnSelectLink={this.handleOnSelectLink}
-                    handleOnCreateLink={this.handleOnCreateLink}
-                    onClickLink={this.props.onClickLink}
-                  />
+                  <Portal>
+                    <Wrapper
+                      id="search-menu-container"
+                      active={this.state.searchTriggerOpen}
+                      ref={this.searchRef}
+                      {...position}
+                    >
+                      <SearchResultList
+                        search={this.state.triggerSearch}
+                        isActive={this.state.searchTriggerOpen}
+                        onSearchLink={this.props.onSearchLink}
+                        // FIXME cannot use clearsearch from blockmenu, deletes too much for link insertion, deletes whole line
+                        handleOnSelectLink={this.handleOnSelectLink}
+                        handleOnCreateLink={this.handleOnCreateLink}
+                        onClickLink={this.props.onClickLink}
+                      />
+                    </Wrapper>
+                  </Portal>
                 )}
               </React.Fragment>
             )}
@@ -766,6 +809,62 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     );
   };
 }
+
+const Wrapper = styled.div<{
+  active: boolean;
+  top?: number;
+  bottom?: number;
+  left?: number;
+  isAbove: boolean;
+}>`
+  color: ${props => props.theme.text};
+  font-family: ${props => props.theme.fontFamily};
+  position: absolute;
+  z-index: ${props => {
+    return props.theme.zIndex + 9999;
+  }};
+  ${props => props.top && `top: ${props.top}px`};
+  ${props => props.bottom && `bottom: ${props.bottom}px`};
+  left: ${props => props.left}px;
+  background-color: ${props => props.theme.blockToolbarBackground};
+  border-radius: 4px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px,
+    rgba(0, 0, 0, 0.08) 0px 4px 8px, rgba(0, 0, 0, 0.08) 0px 2px 4px;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    transform 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition-delay: 150ms;
+  box-sizing: border-box;
+  pointer-events: none;
+  white-space: nowrap;
+  width: 300px;
+  max-height: 224px;
+  overflow: hidden;
+  overflow-y: auto;
+
+  * {
+    box-sizing: border-box;
+  }
+
+  hr {
+    border: 0;
+    height: 0;
+    border-top: 1px solid ${props => props.theme.blockToolbarDivider};
+  }
+
+  ${({ active, isAbove }) =>
+    active &&
+    `
+    transform: translateY(${isAbove ? "6px" : "-6px"}) scale(1);
+    pointer-events: all;
+    opacity: 1;
+  `};
+
+  @media print {
+    display: none;
+  }
+`;
 
 const StyledEditor = styled("div")<{
   readOnly?: boolean;

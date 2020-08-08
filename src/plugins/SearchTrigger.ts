@@ -4,9 +4,10 @@ import { Decoration, DecorationSet } from "prosemirror-view";
 import { findParentNode } from "prosemirror-utils";
 import Extension from "../lib/Extension";
 
+// FIXME should always be below line currently edited like blockmenu trigger
 const MAX_MATCH = 500;
 const OPEN_REGEX = /(\S+)$/; // /(\S+)(?: (\S+))?(?: (\S+))?$/
-
+const CLOSE_REGEX = /(\s)$/;
 // This should simply determine whether searchMenu should be open (mostly yes) and what to search for
 
 // based on the input rules code in Prosemirror, here:
@@ -44,7 +45,7 @@ export default class SearchTrigger extends Extension {
       new Plugin({
         props: {
           handleClick: () => {
-            this.options.onClose();
+            // this.options.onClose();
             return false;
           },
           handleKeyDown: (view, event) => {
@@ -87,52 +88,6 @@ export default class SearchTrigger extends Extension {
 
             return false;
           },
-          decorations: state => {
-            const parent = findParentNode(
-              node => node.type.name === "paragraph"
-            )(state.selection);
-
-            if (!parent) {
-              return;
-            }
-
-            const decorations: Decoration[] = [];
-            const isEmpty = parent && parent.node.content.size === 0;
-            const isSlash = parent && parent.node.textContent === "/";
-            const isTopLevel = state.selection.$from.depth === 1;
-
-            if (isTopLevel) {
-              if (isEmpty) {
-                decorations.push(
-                  Decoration.node(
-                    parent.pos,
-                    parent.pos + parent.node.nodeSize,
-                    {
-                      class: "placeholder",
-                      "data-empty-text": "Type '/' to insert…",
-                    }
-                  )
-                );
-              }
-
-              if (isSlash) {
-                decorations.push(
-                  Decoration.node(
-                    parent.pos,
-                    parent.pos + parent.node.nodeSize,
-                    {
-                      class: "placeholder",
-                      "data-empty-text": "  Keep typing to filter…",
-                    }
-                  )
-                );
-              }
-
-              return DecorationSet.create(state.doc, decorations);
-            }
-
-            return;
-          },
         },
       }),
     ];
@@ -154,12 +109,13 @@ export default class SearchTrigger extends Extension {
       // /<space>word
       // /<space>
       // /word<space>
-      // new InputRule(CLOSE_REGEX, (state, match) => {
-      //   if (match) {
-      //     this.options.onClose();
-      //   }
-      //   return null;
-      // }),
+      new InputRule(CLOSE_REGEX, (state, match) => {
+        if (match) {
+          console.log(`close`);
+          this.options.onClose();
+        }
+        return null;
+      }),
     ];
   }
 }
