@@ -803,8 +803,6 @@ const Wrapper = styled.div<{
   transition-delay: 150ms;
   box-sizing: border-box;
   pointer-events: none;
-  width: 300px;
-  max-height: 224px;
 
   * {
     box-sizing: border-box;
