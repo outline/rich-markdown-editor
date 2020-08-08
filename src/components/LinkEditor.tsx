@@ -85,6 +85,7 @@ class LinkEditor extends React.Component<Props, State> {
   };
 
   save = (href: string, title?: string): void => {
+    console.log(`save href ${this.href}`);
     href = href.trim();
 
     if (href.length === 0) return;
@@ -170,24 +171,27 @@ class LinkEditor extends React.Component<Props, State> {
 
   handleChange = async (event): Promise<void> => {
     const value = event.target.value;
-    const looksLikeUrl = isUrl(value);
+    console.log(`value ${value}`, this.props.onSearchLink);
+    const { from, to } = this.props;
+    this.props.onSearchLink && this.props.onSearchLink({ triggerSearch: value, linkFrom: from, linkTo: to });
+    // const looksLikeUrl = isUrl(value);
 
     this.setState({
       value,
-      results: looksLikeUrl ? [] : this.state.results,
+      results: this.state.results,
       selectedIndex: -1,
     });
 
-    // if it doesn't seem to be a url, try searching for matching documents
-    if (value && !looksLikeUrl && this.props.onSearchLink) {
-      try {
-        this.props.onSearchLink(value, results => this.setState({ results }));
-      } catch (error) {
-        console.error(error);
-      }
-    } else {
-      this.setState({ results: [] });
-    }
+    // // if it doesn't seem to be a url, try searching for matching documents
+    // if (value && !looksLikeUrl && this.props.onSearchLink) {
+    //   try {
+    //     this.props.onSearchLink(value, results => this.setState({ results }));
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // } else {
+    //   this.setState({ results: [] });
+    // }
   };
 
   handleOpenLink = (event): void => {
@@ -243,6 +247,14 @@ class LinkEditor extends React.Component<Props, State> {
     view.focus();
   };
 
+
+  componentDidUpdate() {
+    if (this.href !== this.initialValue) {
+      this.initialValue = this.href;
+      this.setState({ value: this.href });
+    }
+  }
+
   render() {
     const { theme } = this.props;
     const { value, results, selectedIndex } = this.state;
@@ -285,7 +297,7 @@ class LinkEditor extends React.Component<Props, State> {
           </Tooltip>
         </ToolbarButton>
 
-        {showResults && (
+        {false && showResults && (
           <SearchResults id="link-search-results">
             {showCreateLink && (
               <LinkSearchResult

@@ -17,6 +17,18 @@ import getRowIndex from "../queries/getRowIndex";
 import createAndInsertLink from "../commands/createAndInsertLink";
 import { MenuItem } from "../types";
 
+export const getText = content => {
+  if (!content) {
+    return "";
+  } else if (content.text) {
+    return content.text;
+  } else if (Array.isArray(content)) {
+    return getText(content[0]);
+  } else if (typeof content === 'object' && content !== null) {
+    return getText(content.content);
+  }
+}
+
 type Props = {
   tooltip: typeof React.Component;
   commands: Record<string, any>;
@@ -101,17 +113,6 @@ export default class SelectionToolbar extends React.Component<Props> {
     const link = isMarkActive(state.schema.marks.link)(state);
     const range = getMarkRange(selection.$from, state.schema.marks.link);
 
-    const getText = content => {
-      if (!content) {
-        return "";
-      } else if (content.text) {
-        return content.text;
-      } else if (Array.isArray(content)) {
-        return getText(content[0]);
-      } else if (typeof content === 'object' && content !== null) {
-        return getText(content.content);
-      }
-    }
     const selectedText = getText(selection.content());
 
     let items: MenuItem[] = [];
@@ -128,6 +129,8 @@ export default class SelectionToolbar extends React.Component<Props> {
     if (!items.length) {
       return null;
     }
+
+    link && range && console.log(`range`, range);
 
     return (
       <Portal>

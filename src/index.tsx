@@ -15,7 +15,7 @@ import { light as lightTheme, dark as darkTheme } from "./theme";
 import Flex from "./components/Flex";
 import { SearchResult } from "./components/LinkEditor";
 import { EmbedDescriptor } from "./types";
-import SelectionToolbar from "./components/SelectionToolbar";
+import SelectionToolbar, { getText } from "./components/SelectionToolbar";
 import BlockMenu from "./components/BlockMenu";
 import LinkToolbar from "./components/LinkToolbar";
 import Tooltip from "./components/Tooltip";
@@ -179,7 +179,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     }
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: Props, prevState) {
     // Allow changes to the 'value' prop to update the editor from outside
     if (this.props.value && prevProps.value !== this.props.value) {
       const newState = this.createState(this.props.value);
@@ -202,6 +202,12 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     // is set to true
     if (prevProps.readOnly && !this.props.readOnly && this.props.autoFocus) {
       this.focusAtEnd();
+    }
+
+    if (prevState.triggerSearch === this.state.triggerSearch) {
+      const selectedText = this.view && getText(this.view.state.selection.content());
+      selectedText && selectedText !== this.state.triggerSearch && this.setState({ triggerSearch: selectedText, linkFrom: null, linkTo: null });
+      console.log(`selectedText`, selectedText);
     }
   }
 
@@ -267,7 +273,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new Highlight(),
         new Italic(),
         new Link({
-          onKeyboardShortcut: this.handleOpenLinkMenu,
+          onKeyboardShortcut: () => {}, // this.handleOpenLinkMenu
           onClickLink: this.props.onClickLink,
           onHoverLink: this.props.onHoverLink,
           onClickHashtag: this.props.onClickHashtag,
@@ -489,7 +495,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   handleOpenSearchTrigger = (triggerSearch) => {
-    this.setState({ searchTriggerOpen: true, triggerSearch });
+    this.setState({ searchTriggerOpen: true, triggerSearch, linkFrom: null, linkTo: null });
   };
 
   handleCloseSearchTrigger = () => {
@@ -575,20 +581,27 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
     const { dispatch, state } = this.view;
     const { from, to } = state.selection;
-    assert(from === to);
-    const offset = -this.state.triggerSearch.length;
+
     const href = `creating#${title}…`;
 
-    // Insert a placeholder link
-    dispatch(
-      this.view.state.tr
-        .insertText(title, from + offset, to)
-        .addMark(
-          from + offset,
-          to + offset + title.length,
-          state.schema.marks.link.create({ href })
-        )
-    );
+    if (from === to) {
+      const offset = -this.state.triggerSearch.length;
+      // Insert a placeholder link
+      dispatch(
+        this.view.state.tr
+          .insertText(title, from + offset, to)
+          .addMark(
+            from + offset,
+            to + offset + title.length,
+            state.schema.marks.link.create({ href })
+          )
+      );
+    } else {
+      dispatch(
+        this.view.state.tr
+          .addMark(from, to, state.schema.marks.link.create({ href }))
+      );
+    }
 
     createAndInsertLink(this.view, title, href, {
       onCreateLink,
@@ -596,9 +609,32 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     });
   };
 
+  // handleOnSelectLink = ({
+  //   href,
+  //   from,
+  //   to,
+  // }: {
+  //   href: string;
+  //   from: number;
+  //   to: number;
+  // }): void => {
+  //   const { view } = this.props;
+  //   const { state, dispatch } = view;
+
+  //   const markType = state.schema.marks.link;
+
+  //   dispatch(
+  //     state.tr
+  //       .removeMark(from, to, markType)
+  //       .addMark(from, to, markType.create({ href }))
+  //   );
+  // };
+
   handleOnSelectLink = ({
     href,
     title,
+    // from,
+    // to
   }: {
     href: string;
     title: string;
@@ -609,18 +645,40 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     this.view.focus();
 
     const { dispatch, state } = this.view;
-    const { from, to } = state.selection;
-    assert(from === to);
-    const offset = -this.state.triggerSearch.length;
-    dispatch(
-      this.view.state.tr
-        .insertText(title, from + offset, to)
-        .addMark(
-          from + offset,
-          to + offset + title.length,
-          state.schema.marks.link.create({ href })
-        )
-    );
+    if (this.state.linkFrom && this.state.linkTo) {
+      // inset from selection toolbar link editor
+      const markType = state.schema.marks.link;
+      const from = this.state.linkFrom;
+      const to = this.state.linkTo;
+      dispatch(
+        state.tr
+          .removeMark(from, to, markType)
+          .addMark(from, to, markType.create({ href }))
+      );
+    } else {
+      const from = state.selection.from;
+      const to = state.selection.to;
+
+      if (from === to) {
+        // insert by simple click
+        const offset = -this.state.triggerSearch.length;
+        dispatch(
+          this.view.state.tr
+            .insertText(title, from + offset, to)
+            .addMark(
+              from + offset,
+              to + offset + title.length,
+              state.schema.marks.link.create({ href })
+            )
+        );
+      } else {
+        // insert by select and click
+        dispatch(
+          this.view.state.tr
+            .addMark(from, to, state.schema.marks.link.create({ href }))
+        );
+      }
+    }
   };
 
   render = () => {
@@ -634,6 +692,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       onKeyDown,
       searchResultList: SearchResultList
     } = this.props;
+
+    console.log(`linkFrom ${this.state.linkFrom}`);
     const theme = this.props.theme || (dark ? darkTheme : lightTheme);
     return (
       <Flex
@@ -656,7 +716,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                 <SelectionToolbar
                   view={this.view}
                   commands={this.commands}
-                  onSearchLink={this.props.onSearchLink}
+                  onSearchLink={searchVars => this.setState(searchVars)}
                   onClickLink={this.props.onClickLink}
                   onCreateLink={this.props.onCreateLink}
                   tooltip={tooltip}
@@ -665,7 +725,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   view={this.view}
                   isActive={this.state.linkMenuOpen}
                   onCreateLink={this.props.onCreateLink}
-                  onSearchLink={this.props.onSearchLink}
+                  onSearchLink={searchVars => this.setState(searchVars)}
                   onClickLink={this.props.onClickLink}
                   onShowToast={this.props.onShowToast}
                   onClose={this.handleCloseLinkMenu}
@@ -695,6 +755,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                     // FIXME cannot use clearsearch from blockmenu, deletes too much for link insertion, deletes whole line
                     handleOnSelectLink={this.handleOnSelectLink}
                     handleOnCreateLink={this.handleOnCreateLink}
+                    onClickLink={this.props.onClickLink}
                   />
                 )}
               </React.Fragment>

@@ -63,9 +63,13 @@ const searchResultList = ({ search, isActive, onSearchLink, handleOnSelectLink, 
       <div onClick={() => handleOnCreateLink(search)}>Add card {search}</div>
       {results.map(rs => (
         <div
+          key={rs.title}
           onClick={() => {
             // clearSearch();
-            handleOnSelectLink(rs);
+            handleOnSelectLink({
+              title: rs.title,
+              href: rs.url
+            });
           }}
         >
           {rs.title}
@@ -102,7 +106,7 @@ class Example extends React.Component {
 
   handleChange = debounce(value => {
     const text = value();
-    // console.log(text);
+    console.log(text);
     localStorage.setItem("saved", text);
   }, 250);
 
