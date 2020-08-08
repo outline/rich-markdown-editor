@@ -576,16 +576,16 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     const { dispatch, state } = this.view;
     const { from, to } = state.selection;
     assert(from === to);
-
+    const offset = -this.state.triggerSearch.length;
     const href = `creating#${title}…`;
 
     // Insert a placeholder link
     dispatch(
       this.view.state.tr
-        .insertText(title, from, to)
+        .insertText(title, from + offset, to)
         .addMark(
-          from,
-          to + title.length,
+          from + offset,
+          to + offset + title.length,
           state.schema.marks.link.create({ href })
         )
     );
@@ -611,13 +611,13 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     const { dispatch, state } = this.view;
     const { from, to } = state.selection;
     assert(from === to);
-
+    const offset = -this.state.triggerSearch.length;
     dispatch(
       this.view.state.tr
-        .insertText(title, from, to)
+        .insertText(title, from + offset, to)
         .addMark(
-          from,
-          to + title.length,
+          from + offset,
+          to + offset + title.length,
           state.schema.marks.link.create({ href })
         )
     );
