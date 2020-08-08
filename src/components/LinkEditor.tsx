@@ -28,8 +28,7 @@ type Props = {
   to: number;
   tooltip: typeof React.Component;
   onRemoveLink?: () => void;
-  onCreateLink?: (title: string) => Promise<void>;
-  onSearchLink?: (term: string, setter: Function) => Promise<SearchResult[]>;
+  onSearchLink?: (term: any) => void;
   onSelectLink: (options: {
     href: string;
     title?: string;
@@ -44,9 +43,7 @@ type Props = {
 };
 
 type State = {
-  results: SearchResult[];
   value: string;
-  selectedIndex: number;
 };
 
 class LinkEditor extends React.Component<Props, State> {
@@ -55,9 +52,7 @@ class LinkEditor extends React.Component<Props, State> {
   initialSelectionLength = this.props.to - this.props.from;
 
   state: State = {
-    selectedIndex: -1,
     value: this.href || this.props.selectedText,
-    results: [],
   };
 
   get href(): string {
@@ -85,7 +80,6 @@ class LinkEditor extends React.Component<Props, State> {
   };
 
   save = (href: string, title?: string): void => {
-    console.log(`save href ${this.href}`);
     href = href.trim();
 
     if (href.length === 0) return;
@@ -106,20 +100,10 @@ class LinkEditor extends React.Component<Props, State> {
     switch (event.key) {
       case "Enter": {
         event.preventDefault();
-        const { selectedIndex, results, value } = this.state;
-        const { onCreateLink } = this.props;
+        const { value } = this.state;
 
-        if (selectedIndex >= 0) {
-          const result = results[selectedIndex];
-          if (result) {
-            this.save(result.url, result.title);
-          } else if (onCreateLink && selectedIndex === results.length) {
-            this.handleCreateLink(value);
-          }
-        } else {
-          // saves the raw input as href
-          this.save(value, value);
-        }
+        // saves the raw input as href
+        this.save(value, value);
 
         if (this.initialSelectionLength) {
           this.moveSelectionToEnd();
@@ -138,69 +122,23 @@ class LinkEditor extends React.Component<Props, State> {
         }
         return;
       }
-
-      case "ArrowUp": {
-        event.preventDefault();
-        event.stopPropagation();
-        const prevIndex = this.state.selectedIndex - 1;
-
-        this.setState({
-          selectedIndex: Math.max(0, prevIndex),
-        });
-        return;
-      }
-
-      case "ArrowDown":
-      case "Tab": {
-        event.preventDefault();
-        event.stopPropagation();
-        const total = this.state.results.length;
-        const nextIndex = this.state.selectedIndex + 1;
-
-        this.setState({
-          selectedIndex: Math.min(nextIndex, total),
-        });
-        return;
-      }
     }
-  };
-
-  handleFocusLink = (selectedIndex: number) => {
-    this.setState({ selectedIndex });
   };
 
   handleChange = async (event): Promise<void> => {
     const value = event.target.value;
-    console.log(`value ${value}`, this.props.onSearchLink);
     const { from, to } = this.props;
     this.props.onSearchLink && this.props.onSearchLink({ triggerSearch: value, linkFrom: from, linkTo: to });
     // const looksLikeUrl = isUrl(value);
 
     this.setState({
       value,
-      results: this.state.results,
-      selectedIndex: -1,
     });
   };
 
   handleOpenLink = (event): void => {
     event.preventDefault();
     this.props.onClickLink(this.href);
-  };
-
-  handleCreateLink = (value: string) => {
-    this.discardInputValue = true;
-    const { onCreateLink } = this.props;
-
-    value = value.trim();
-    if (value.length === 0) return;
-
-    if (onCreateLink) {
-      onCreateLink(value);
-      if (this.initialSelectionLength) {
-        this.moveSelectionToEnd();
-      }
-    }
   };
 
   handleRemoveLink = (): void => {
@@ -220,15 +158,6 @@ class LinkEditor extends React.Component<Props, State> {
     view.focus();
   };
 
-  handleSelectLink = (url: string, title: string) => event => {
-    event.preventDefault();
-    this.save(url, title);
-
-    if (this.initialSelectionLength) {
-      this.moveSelectionToEnd();
-    }
-  };
-
   moveSelectionToEnd = () => {
     const { to, view } = this.props;
     const { state, dispatch } = view;
@@ -246,7 +175,7 @@ class LinkEditor extends React.Component<Props, State> {
 
   render() {
     const { theme } = this.props;
-    const { value, results, selectedIndex } = this.state;
+    const { value } = this.state;
 
     const Tooltip = this.props.tooltip;
 

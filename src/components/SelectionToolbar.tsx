@@ -14,7 +14,6 @@ import getMarkRange from "../queries/getMarkRange";
 import isNodeActive from "../queries/isNodeActive";
 import getColumnIndex from "../queries/getColumnIndex";
 import getRowIndex from "../queries/getRowIndex";
-import createAndInsertLink from "../commands/createAndInsertLink";
 import { MenuItem } from "../types";
 
 export const getText = content => {
@@ -32,9 +31,8 @@ export const getText = content => {
 type Props = {
   tooltip: typeof React.Component;
   commands: Record<string, any>;
-  onSearchLink?: (term: string, setter: Function) => Promise<SearchResult[]>;
+  onSearchLink?: (term: any) => void;
   onClickLink: (url: string) => void;
-  onCreateLink?: (title: string) => Promise<string>;
   onShowToast?: (msg: string, code: string) => void;
   view: EditorView;
 };
@@ -47,33 +45,6 @@ function isActive(props) {
 }
 
 export default class SelectionToolbar extends React.Component<Props> {
-  handleOnCreateLink = async (title: string) => {
-    const { onCreateLink, view, onShowToast } = this.props;
-
-    if (!onCreateLink) {
-      return;
-    }
-
-    const { dispatch, state } = view;
-    const { from, to } = state.selection;
-    assert(from !== to);
-
-    const href = `creating#${title}…`;
-    const markType = state.schema.marks.link;
-
-    // Insert a placeholder link
-    dispatch(
-      view.state.tr
-        .removeMark(from, to, markType)
-        .addMark(from, to, markType.create({ href }))
-    );
-
-    createAndInsertLink(view, title, href, {
-      onCreateLink,
-      onShowToast,
-    });
-  };
-
   handleOnSelectLink = ({
     href,
     from,
@@ -96,7 +67,7 @@ export default class SelectionToolbar extends React.Component<Props> {
   };
 
   render() {
-    const { onCreateLink, ...rest } = this.props;
+    const { ...rest } = this.props;
     const { view } = rest;
     const { state } = view;
     const { selection }: { selection: any } = state;
@@ -140,7 +111,6 @@ export default class SelectionToolbar extends React.Component<Props> {
               mark={range.mark}
               from={range.from}
               to={range.to}
-              onCreateLink={onCreateLink ? this.handleOnCreateLink : undefined}
               onSelectLink={this.handleOnSelectLink}
               selectedText={selectedText}
               {...rest}

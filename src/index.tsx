@@ -18,7 +18,6 @@ import { SearchResult } from "./components/LinkEditor";
 import { EmbedDescriptor } from "./types";
 import SelectionToolbar, { getText } from "./components/SelectionToolbar";
 import BlockMenu from "./components/BlockMenu";
-import LinkToolbar from "./components/LinkToolbar";
 import Tooltip from "./components/Tooltip";
 import Extension from "./lib/Extension";
 import ExtensionManager from "./lib/ExtensionManager";
@@ -66,9 +65,7 @@ import SmartText from "./plugins/SmartText";
 import TrailingNode from "./plugins/TrailingNode";
 import MarkdownPaste from "./plugins/MarkdownPaste";
 
-import assert from "assert";
 import createAndInsertLink from "./commands/createAndInsertLink";
-import { findParentNode } from "prosemirror-utils";
 
 export { schema, parser, serializer } from "./server";
 
@@ -99,7 +96,7 @@ export type Props = {
   onImageUploadStart?: () => void;
   onImageUploadStop?: () => void;
   onCreateLink?: (title: string) => Promise<string>;
-  onSearchLink?: (term: string, setter: Function) => Promise<SearchResult[]>;
+  onSearchLink?: (term: Object) => Promise<SearchResult[]>;
   searchResultList?: typeof React.Component;
   onClickLink: (href: string) => void;
   onHoverLink?: (event: MouseEvent) => boolean;
@@ -118,6 +115,8 @@ type State = {
   triggerSearch: string;
   searchTriggerOpen: boolean;
   blockMenuSearch: string;
+  linkFrom: number;
+  linkTo: number;
 };
 
 type Step = {
@@ -149,6 +148,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     searchTriggerOpen: false,
     triggerSearch: "",
     blockMenuSearch: "",
+    linkFrom: 0,
+    linkTo: 0
   };
 
   extensions: ExtensionManager;
@@ -208,7 +209,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
     if (prevState.triggerSearch === this.state.triggerSearch) {
       const selectedText = this.view && getText(this.view.state.selection.content());
-      selectedText && selectedText !== this.state.triggerSearch && this.setState({ triggerSearch: selectedText, searchTriggerOpen: true, linkFrom: null, linkTo: null });
+      selectedText && selectedText !== this.state.triggerSearch && this.setState({ triggerSearch: selectedText, searchTriggerOpen: true, linkFrom: 0, linkTo: 0 });
       console.log(`selectedText`, selectedText);
     }
   }
@@ -497,7 +498,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   handleOpenSearchTrigger = (triggerSearch) => {
-    this.setState({ searchTriggerOpen: true, triggerSearch, linkFrom: null, linkTo: null });
+    this.setState({ searchTriggerOpen: true, triggerSearch, linkFrom: 0, linkTo: 0 });
   };
 
   handleCloseSearchTrigger = () => {
@@ -612,27 +613,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     });
   };
 
-  // handleOnSelectLink = ({
-  //   href,
-  //   from,
-  //   to,
-  // }: {
-  //   href: string;
-  //   from: number;
-  //   to: number;
-  // }): void => {
-  //   const { view } = this.props;
-  //   const { state, dispatch } = view;
-
-  //   const markType = state.schema.marks.link;
-
-  //   dispatch(
-  //     state.tr
-  //       .removeMark(from, to, markType)
-  //       .addMark(from, to, markType.create({ href }))
-  //   );
-  // };
-
   handleOnSelectLink = ({
     href,
     title,
@@ -702,9 +682,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         isAbove: false,
       };
     }
-
-    const { top, left, bottom } = paragraph.node.getBoundingClientRect ? paragraph.node.getBoundingClientRect() : paragraph.node.parentNode.getBoundingClientRect();
-
+    // not sure why this cast is not necessary in Blockmenu.tsx
+    const node = (paragraph.node as any);
+    const { left, bottom } = node.getBoundingClientRect ? node.getBoundingClientRect() : node.parentNode.parentNode.getBoundingClientRect();
     return {
       left: left + window.scrollX,
       top: bottom + window.scrollY,
@@ -752,18 +732,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   commands={this.commands}
                   onSearchLink={searchVars => this.setState(searchVars)}
                   onClickLink={this.props.onClickLink}
-                  onCreateLink={this.props.onCreateLink}
-                  tooltip={tooltip}
-                />
-                <LinkToolbar
-                  view={this.view}
-                  isActive={this.state.linkMenuOpen}
-                  onCreateLink={this.props.onCreateLink}
-                  onSearchLink={searchVars => this.setState(searchVars)}
-                  onClickLink={this.props.onClickLink}
-                  onShowToast={this.props.onShowToast}
-                  onClose={this.handleCloseLinkMenu}
-                  trigger={false}
                   tooltip={tooltip}
                 />
                 <BlockMenu

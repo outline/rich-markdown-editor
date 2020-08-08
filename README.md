@@ -142,7 +142,7 @@ This callback is triggered before `uploadImage` and can be used to show some UI 
 
 Triggered once an image upload has succeeded or failed.
 
-#### `onSearchLink(term: string , setter: Function): Promise<{ title: string, url: string }[]>`
+#### `onSearchLink(term: string): Promise<{ title: string, url: string }[]>`
 
 The editor provides an ability to search for links to insert from the formatting toolbar. If this callback is provided it should accept a search term and a setter functiion. eg:
 
