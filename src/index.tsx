@@ -795,7 +795,6 @@ const Wrapper = styled.div<{
   border-radius: 4px;
   box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px,
     rgba(0, 0, 0, 0.08) 0px 4px 8px, rgba(0, 0, 0, 0.08) 0px 2px 4px;
-  opacity: 0;
   transform: scale(0.95);
   transition: opacity 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275),
     transform 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -820,7 +819,6 @@ const Wrapper = styled.div<{
     `
     transform: translateY(${isAbove ? "6px" : "-6px"}) scale(1);
     pointer-events: all;
-    opacity: 1;
   `};
 
   @media print {
