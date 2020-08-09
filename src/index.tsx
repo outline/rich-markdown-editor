@@ -685,12 +685,14 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     // not sure why this cast is not necessary in Blockmenu.tsx
     const node = (paragraph.node as any);
     const { left, bottom } = node.getBoundingClientRect ? node.getBoundingClientRect() : node.parentNode.parentNode.getBoundingClientRect();
-    return {
+    const pos = {
       left: left + window.scrollX,
       top: bottom + window.scrollY,
       bottom: undefined,
+      maxHeight: window.innerHeight - (bottom + window.scrollY),
       isAbove: true,
     };
+    return pos;
   }
 
   render = () => {
@@ -775,12 +777,12 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 }
 
-// FIXME should be stripped and simplified
 const Wrapper = styled.div<{
   active: boolean;
   top?: number;
   bottom?: number;
   left?: number;
+  maxHeight?: number;
   isAbove: boolean;
 }>`
   color: ${props => props.theme.text};
@@ -803,6 +805,8 @@ const Wrapper = styled.div<{
   transition-delay: 150ms;
   box-sizing: border-box;
   pointer-events: none;
+  ${props => props.maxHeight && `max-height: ${props.maxHeight}px`};
+  overflow-y: scroll;
 
   * {
     box-sizing: border-box;
