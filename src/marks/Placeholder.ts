@@ -79,7 +79,7 @@ export default class Placeholder extends Mark {
 
             if (event.key === "Backspace") {
               const range = getMarkRange(
-                state.doc.resolve(state.selection.from - 1),
+                state.doc.resolve(Math.max(0, state.selection.from - 1)),
                 state.schema.marks.placeholder
               );
               if (!range) return false;
@@ -98,7 +98,7 @@ export default class Placeholder extends Mark {
 
             if (event.key === "ArrowLeft") {
               const range = getMarkRange(
-                state.doc.resolve(state.selection.from - 1),
+                state.doc.resolve(Math.max(0, state.selection.from - 1)),
                 state.schema.marks.placeholder
               );
               if (!range) return false;
