@@ -54,6 +54,7 @@ import Highlight from "./marks/Highlight";
 import Italic from "./marks/Italic";
 import Link from "./marks/Link";
 import Strikethrough from "./marks/Strikethrough";
+import TemplatePlaceholder from "./marks/Placeholder";
 
 // plugins
 import BlockMenuTrigger from "./plugins/BlockMenuTrigger";
@@ -81,6 +82,7 @@ export type Props = {
   readOnlyWriteCheckboxes?: boolean;
   dark?: boolean;
   theme?: typeof theme;
+  template?: boolean;
   headingsOffset?: number;
   scrollTo?: string;
   handleDOMEvents?: {
@@ -256,6 +258,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new Code(),
         new Highlight(),
         new Italic(),
+        new TemplatePlaceholder(),
         new Link({
           onKeyboardShortcut: this.handleOpenLinkMenu,
           onClickLink: this.props.onClickLink,
@@ -574,6 +577,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                 <SelectionToolbar
                   view={this.view}
                   commands={this.commands}
+                  isTemplate={this.props.template === true}
                   onSearchLink={this.props.onSearchLink}
                   onClickLink={this.props.onClickLink}
                   onCreateLink={this.props.onCreateLink}
@@ -854,6 +858,19 @@ const StyledEditor = styled("div")<{
   b,
   strong {
     font-weight: 600;
+  }
+
+  .template-placeholder {
+    color: ${props => props.theme.placeholder};
+    border-bottom: 1px dotted ${props => props.theme.placeholder};
+    border-radius: 2px;
+    cursor: text;
+
+    &:hover {
+      border-bottom: 1px dotted
+        ${props =>
+          props.readOnly ? props.theme.placeholder : props.theme.textSecondary};
+    }
   }
 
   p {

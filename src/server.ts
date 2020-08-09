@@ -30,6 +30,7 @@ import Highlight from "./marks/Highlight";
 import Italic from "./marks/Italic";
 import Link from "./marks/Link";
 import Strikethrough from "./marks/Strikethrough";
+import TemplatePlaceholder from "./marks/Placeholder";
 
 const extensions = new ExtensionManager([
   new Doc(),
@@ -57,6 +58,7 @@ const extensions = new ExtensionManager([
   new Italic(),
   new Link(),
   new Strikethrough(),
+  new TemplatePlaceholder(),
   new OrderedList(),
 ]);
 

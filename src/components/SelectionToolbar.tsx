@@ -19,6 +19,7 @@ import { MenuItem } from "../types";
 
 type Props = {
   tooltip: typeof React.Component;
+  isTemplate: boolean;
   commands: Record<string, any>;
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
   onClickLink: (url: string) => void;
@@ -84,7 +85,7 @@ export default class SelectionToolbar extends React.Component<Props> {
   };
 
   render() {
-    const { onCreateLink, ...rest } = this.props;
+    const { onCreateLink, isTemplate, ...rest } = this.props;
     const { view } = rest;
     const { state } = view;
     const { selection }: { selection: any } = state;
@@ -109,7 +110,7 @@ export default class SelectionToolbar extends React.Component<Props> {
     } else if (rowIndex !== undefined) {
       items = getTableRowMenuItems(state, rowIndex);
     } else {
-      items = getFormattingMenuItems(state);
+      items = getFormattingMenuItems(state, isTemplate);
     }
 
     if (!items.length) {

@@ -7,6 +7,7 @@ import {
   BlockQuoteIcon,
   LinkIcon,
   StrikethroughIcon,
+  InputIcon,
   HighlightIcon,
 } from "outline-icons";
 import { isInTable } from "prosemirror-tables";
@@ -16,13 +17,27 @@ import isMarkActive from "../queries/isMarkActive";
 import isNodeActive from "../queries/isNodeActive";
 import { MenuItem } from "../types";
 
-export default function formattingMenuItems(state: EditorState): MenuItem[] {
+export default function formattingMenuItems(
+  state: EditorState,
+  isTemplate: boolean
+): MenuItem[] {
   const { schema } = state;
   const isTable = isInTable(state);
   const isList = isInList(state);
   const allowBlocks = !isTable && !isList;
 
   return [
+    {
+      name: "placeholder",
+      tooltip: "Placeholder",
+      icon: InputIcon,
+      active: isMarkActive(schema.marks.placeholder),
+      visible: isTemplate,
+    },
+    {
+      name: "separator",
+      visible: isTemplate,
+    },
     {
       name: "strong",
       tooltip: "Bold",
@@ -46,6 +61,7 @@ export default function formattingMenuItems(state: EditorState): MenuItem[] {
       tooltip: "Highlight",
       icon: HighlightIcon,
       active: isMarkActive(schema.marks.mark),
+      visible: !isTemplate,
     },
     {
       name: "code_inline",
