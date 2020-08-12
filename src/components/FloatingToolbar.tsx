@@ -21,10 +21,12 @@ class FloatingToolbar extends React.Component<Props> {
     top: 0,
     offset: 0,
     visible: false,
+    mouseIsPressed: false,
   };
 
   componentDidMount() {
-    this.setState(this.calculatePosition(this.props));
+    window.addEventListener("mousedown", this.handleMouseDown);
+    window.addEventListener("mouseup", this.handleMouseUp);
   }
 
   componentDidUpdate() {
@@ -35,16 +37,30 @@ class FloatingToolbar extends React.Component<Props> {
     }
   }
 
+  componentWillUnmount() {
+    window.removeEventListener("mousedown", this.handleMouseDown);
+    window.removeEventListener("mouseup", this.handleMouseUp);
+  }
+
+  handleMouseDown = () => {
+    this.setState(state => ({ ...state, mouseIsPressed: true }));
+  };
+
+  handleMouseUp = () => {
+    this.setState(state => ({ ...state, mouseIsPressed: false }));
+  };
+
   calculatePosition(props) {
     const { view, active } = props;
     const { selection } = view.state;
 
-    if (!active || !this.menuRef.current || SSR) {
+    if (!active || !this.menuRef.current || SSR || this.state.mouseIsPressed) {
       return {
         left: -1000,
         top: 0,
         offset: 0,
         visible: false,
+        mouseIsPressed: this.state.mouseIsPressed,
       };
     }
 
@@ -94,6 +110,7 @@ class FloatingToolbar extends React.Component<Props> {
       top: Math.round(top + window.scrollY),
       offset,
       visible: true,
+      mouseIsPressed: this.state.mouseIsPressed,
     };
   }
 
@@ -105,7 +122,7 @@ class FloatingToolbar extends React.Component<Props> {
     return (
       <Portal>
         <Wrapper
-          active={active}
+          active={active && this.state.visible}
           ref={this.menuRef}
           offset={this.state.offset}
           style={{
