@@ -9,7 +9,11 @@
     "module": "commonjs",
     "target": "es2017",
     "jsx": "react",
-    "types": ["react"],
+    "types": [
+      "node",
+      "react",
+      "jest"
+    ],
     "rootDir": "src",
     "outDir": "dist/lib",
     "stripInternal": true,
@@ -23,6 +27,7 @@
   ],
   "exclude": [
     "dist",
-    "node_modules"
+    "node_modules",
+    "**/*.test.tsx?"
   ]
 }

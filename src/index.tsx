@@ -23,6 +23,7 @@ import Extension from "./lib/Extension";
 import ExtensionManager from "./lib/ExtensionManager";
 import ComponentView from "./lib/ComponentView";
 import headingToSlug from "./lib/headingToSlug";
+import { createEditorView } from "./ssr/prosemirror-view";
 
 // nodes
 import ReactNode from "./nodes/ReactNode";
@@ -91,7 +92,7 @@ export type Props = {
   uploadImage?: (file: File) => Promise<string>;
   onSave?: ({ done: boolean }) => void;
   onCancel?: () => void;
-  onChange: (value: () => string) => void;
+  onChange?: (value: () => string) => void;
   onImageUploadStart?: () => void;
   onImageUploadStop?: () => void;
   onCreateLink?: (title: string) => Promise<string>;
@@ -157,9 +158,12 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   marks: { [name: string]: MarkSpec };
   commands: Record<string, any>;
 
-  componentDidMount() {
+  constructor(props) {
+    super(props);
     this.init();
+  }
 
+  componentDidMount() {
     if (this.props.scrollTo) {
       this.scrollToAnchor(this.props.scrollTo);
     }
@@ -383,10 +387,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   }
 
   createView() {
-    if (!this.element) {
-      throw new Error("createView called before ref available");
-    }
-
     const isEditingCheckbox = tr => {
       return tr.steps.some(
         (step: Step) =>
@@ -396,7 +396,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       );
     };
 
-    const view = new EditorView(this.element, {
+    const view = createEditorView(this.element || undefined, {
       state: this.createState(),
       editable: () => !this.props.readOnly,
       nodeViews: this.nodeViews,
