@@ -959,6 +959,9 @@ const StyledEditor = styled("div")<{
 
     select,
     button {
+      background: ${props => props.theme.blockToolbarBackground};
+      color: ${props => props.theme.blockToolbarItem};
+      border-width: 1px;
       font-size: 13px;
       display: none;
       position: absolute;
@@ -967,6 +970,10 @@ const StyledEditor = styled("div")<{
       z-index: 1;
       top: 4px;
       right: 4px;
+    }
+
+    button {
+      padding: 2px 4px;
     }
 
     &:hover {
