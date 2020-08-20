@@ -169,6 +169,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   marks: { [name: string]: MarkSpec };
   commands: Record<string, any>;
 
+  menuRef = React.createRef<HTMLDivElement>();
+
   componentDidMount() {
     this.init();
 
@@ -686,14 +688,31 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     }
     // not sure why this cast is not necessary in Blockmenu.tsx
     const node = (paragraph.node as any);
-    const { left, bottom } = node.getBoundingClientRect ? node.getBoundingClientRect() : node.parentNode.parentNode.getBoundingClientRect();
-    const pos = {
-      left: left + window.scrollX,
-      top: bottom + window.scrollY,
-      bottom: undefined,
-      maxHeight: window.innerHeight - (bottom + window.scrollY),
-      isAbove: true,
-    };
+    const { top, left, bottom } = node.getBoundingClientRect ? node.getBoundingClientRect() : node.parentNode.getBoundingClientRect();
+
+    const startPos = this.view.coordsAtPos(selection.$to.pos);
+    const ref = this.menuRef.current;
+    const offsetHeight = ref ? ref.offsetHeight : 0;
+    const margin = 24;
+    let pos;
+    if (window.innerHeight - startPos.bottom - offsetHeight > margin || this.state.searchSource !== "typing") {
+      pos = {
+        left: left + window.scrollX,
+        top: bottom + window.scrollY,
+        bottom: undefined,
+        maxHeight: window.innerHeight - (bottom + window.scrollY),
+        isAbove: true,
+      };
+    } else {
+      pos =  {
+        left: left + window.scrollX,
+        top: undefined,
+        bottom: window.innerHeight - top - window.scrollY,
+        maxHeight: bottom + window.scrollY,
+        isAbove: false,
+      };
+    }
+    
     return pos;
   }
 
@@ -757,6 +776,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                     <Wrapper
                       id="search-menu-container"
                       active={this.state.searchTriggerOpen}
+                      ref={this.menuRef}
                       {...position}
                     >
                       <SearchResultList
