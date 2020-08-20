@@ -128,7 +128,7 @@ class LinkEditor extends React.Component<Props, State> {
   handleChange = async (event): Promise<void> => {
     const value = event.target.value;
     const { from, to } = this.props;
-    this.props.onSearchLink && this.props.onSearchLink({ triggerSearch: value, linkFrom: from, linkTo: to });
+    this.props.onSearchLink && this.props.onSearchLink({ triggerSearch: value, searchSource: "linkEditor", linkFrom: from, linkTo: to });
     // const looksLikeUrl = isUrl(value);
 
     this.setState({

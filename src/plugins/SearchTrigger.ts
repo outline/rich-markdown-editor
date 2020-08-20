@@ -3,8 +3,10 @@ import { InputRule } from "prosemirror-inputrules";
 import Extension from "../lib/Extension";
 
 const MAX_MATCH = 500;
-const OPEN_REGEX = /(\S+)$/;
-const CLOSE_REGEX = /(\s|^|^\/(\w+)?)$/;
+// keep always open and match whole line. Component decides when to hide (ie render null)
+const OPEN_REGEX = /^(.+)?$/;
+// close only when block menu is open
+const CLOSE_REGEX = /^\/(\w+)?$/;
 // This should simply determine whether searchMenu should be open (mostly yes) and what to search for
 
 // based on the input rules code in Prosemirror, here:

@@ -113,6 +113,7 @@ type State = {
   blockMenuOpen: boolean;
   linkMenuOpen: boolean;
   triggerSearch: string;
+  searchSource: string;
   searchTriggerOpen: boolean;
   blockMenuSearch: string;
   linkFrom: number;
@@ -145,6 +146,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     blockMenuOpen: false,
     linkMenuOpen: false,
     searchTriggerOpen: false,
+    searchSource: "typing",
     triggerSearch: "",
     blockMenuSearch: "",
     linkFrom: 0,
@@ -208,7 +210,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
     if (prevState.triggerSearch === this.state.triggerSearch) {
       const selectedText = this.view && getText(this.view.state.selection.content());
-      selectedText && selectedText !== this.state.triggerSearch && this.setState({ triggerSearch: selectedText, searchTriggerOpen: true, linkFrom: 0, linkTo: 0 });
+      selectedText && selectedText !== this.state.triggerSearch && this.setState({ triggerSearch: selectedText, searchSource: "selection", searchTriggerOpen: true, linkFrom: 0, linkTo: 0 });
     }
   }
 
@@ -496,7 +498,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   handleOpenSearchTrigger = (triggerSearch) => {
-    this.setState({ searchTriggerOpen: true, triggerSearch, linkFrom: 0, linkTo: 0 });
+    this.setState({ searchTriggerOpen: true, triggerSearch, searchSource: "typing", linkFrom: 0, linkTo: 0 });
   };
 
   handleCloseSearchTrigger = () => {
@@ -759,6 +761,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                     >
                       <SearchResultList
                         search={this.state.triggerSearch}
+                        searchSource={this.state.searchSource}
                         isActive={this.state.searchTriggerOpen}
                         onSearchLink={this.props.onSearchLink}
                         handleOnSelectLink={this.handleOnSelectLink}
