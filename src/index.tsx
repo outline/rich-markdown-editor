@@ -16,7 +16,7 @@ import { light as lightTheme, dark as darkTheme } from "./theme";
 import Flex from "./components/Flex";
 import { SearchResult } from "./components/LinkEditor";
 import { EmbedDescriptor } from "./types";
-import SelectionToolbar, { getText } from "./components/SelectionToolbar";
+import SelectionToolbar, { getText, iOS } from "./components/SelectionToolbar";
 import BlockMenu from "./components/BlockMenu";
 import Tooltip from "./components/Tooltip";
 import Extension from "./lib/Extension";
@@ -695,7 +695,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     const offsetHeight = ref ? ref.offsetHeight : 0;
     const margin = 24;
     let pos;
-    if (window.innerHeight - startPos.bottom - offsetHeight > margin || this.state.searchSource !== "typing") {
+    if (!iOS() && (window.innerHeight - startPos.bottom - offsetHeight > margin || this.state.searchSource !== "typing")) {
       pos = {
         left: left + window.scrollX,
         top: bottom + window.scrollY,
@@ -805,6 +805,7 @@ const Wrapper = styled.div<{
   top?: number;
   bottom?: number;
   left?: number;
+  // FIXME maxHeight wrong on iphone, either way too small or too big
   maxHeight?: number;
   isAbove: boolean;
 }>`

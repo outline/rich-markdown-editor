@@ -28,6 +28,19 @@ export const getText = content => {
   }
 }
 
+export const iOS = () => {
+  return [
+    'iPad Simulator',
+    'iPhone Simulator',
+    'iPod Simulator',
+    'iPad',
+    'iPhone',
+    'iPod'
+  ].includes(navigator.platform)
+  // iPad on iOS 13 detection
+  || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+}
+
 type Props = {
   tooltip: typeof React.Component;
   commands: Record<string, any>;
@@ -77,7 +90,10 @@ export default class SelectionToolbar extends React.Component<Props> {
     if (isCodeSelection) {
       return null;
     }
-
+    // on iOS, editor conflicts with link search menu and inline edit bar
+    if (iOS()) {
+      return null;
+    }
     const colIndex = getColumnIndex(state.selection);
     const rowIndex = getRowIndex(state.selection);
     const isTableSelection = colIndex !== undefined && rowIndex !== undefined;
