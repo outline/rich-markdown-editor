@@ -4,7 +4,7 @@ import Extension from "../lib/Extension";
 
 const MAX_MATCH = 500;
 // keep always open and match whole line. Component decides when to hide (ie render null)
-const OPEN_REGEX = /^(.+)?$/;
+const OPEN_REGEX = /^(.*)?$/;
 // close only when block menu is open
 const CLOSE_REGEX = /^\/(\w+)?$/;
 // This should simply determine whether searchMenu should be open (mostly yes) and what to search for
