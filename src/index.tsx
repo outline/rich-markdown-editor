@@ -574,7 +574,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     return headings;
   };
 
-  handleOnCreateLink = async (title: string) => {
+  handleOnCreateLink = async (title: string, { fromOffset = 0, toOffset = 0 } = {}) => {
     const { onCreateLink, onShowToast } = this.props;
 
     this.handleCloseLinkMenu();
@@ -594,10 +594,10 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       // Insert a placeholder link
       dispatch(
         this.view.state.tr
-          .insertText(title, from + offset, to)
+          .insertText(title, from + offset + fromOffset, to + toOffset)
           .addMark(
-            from + offset,
-            to + offset + title.length,
+            from + offset + fromOffset,
+            to + offset + fromOffset + toOffset + title.length,
             state.schema.marks.link.create({ href })
           )
       );
@@ -618,13 +618,13 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   handleOnSelectLink = ({
     href,
     title,
-    // from,
-    // to
+    fromOffset = 0,
+    toOffset = 0
   }: {
     href: string;
     title: string;
-    from: number;
-    to: number;
+    fromOffset: number;
+    toOffset: number;
   }) => {
     this.handleCloseLinkMenu();
     this.view.focus();
@@ -649,10 +649,10 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         const offset = -this.state.triggerSearch.length;
         dispatch(
           this.view.state.tr
-            .insertText(title, from + offset, to)
+            .insertText(title, from + offset + fromOffset, to + toOffset)
             .addMark(
-              from + offset,
-              to + offset + title.length,
+              from + offset + fromOffset,
+              to + offset + fromOffset + toOffset + title.length,
               state.schema.marks.link.create({ href })
             )
         );

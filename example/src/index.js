@@ -61,7 +61,7 @@ const searchResultList = ({ search, isActive, onSearchLink, searchSource, handle
   const closeList = search === "close me";
   return isActive && !closeList ? (
     <div>
-      <div onClick={() => handleOnCreateLink(search)}>Add card {search}</div>
+      <div onClick={() => handleOnCreateLink(search, { fromOffset: 0 })}>Add card {search}</div>
       {results.map(rs => (
         <div
           key={rs.title}
@@ -69,7 +69,9 @@ const searchResultList = ({ search, isActive, onSearchLink, searchSource, handle
             // clearSearch();
             handleOnSelectLink({
               title: rs.title,
-              href: rs.url
+              href: rs.url,
+              fromOffset: 0,
+              toOffset: 0
             });
           }}
         >
