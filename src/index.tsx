@@ -714,7 +714,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         left: left + window.scrollX,
         top: isIos ? bottom + window.scrollY - offsetHeight - margin : undefined,
         bottom: isIos ? undefined : window.innerHeight - top - window.scrollY,
-        maxHeight: top + window.scrollY,
+        maxHeight: top,
         isAbove: false,
       };
     }
