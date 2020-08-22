@@ -1,14 +1,14 @@
 {
   "name": "traverse-markdown-editor",
   "description": "A rich text editor with Markdown shortcuts",
-  "version": "11.0.10",
+  "version": "11.0.13",
   "main": "dist/lib/index.js",
   "typings": "dist/@types/index.d.ts",
   "license": "BSD-3-Clause",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
-    "start": "webpack-serve --config example/webpack.config.js --content example/dist",
+    "start": "webpack-serve --config example/webpack.config.js --content example/dist --host 0.0.0.0",
     "build": "tsc",
     "prepublish": "yarn build"
   },

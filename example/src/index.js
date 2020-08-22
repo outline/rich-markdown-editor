@@ -18,6 +18,26 @@ const docSearchResults = [
     url: "/doc/hiring",
   },
   {
+    title: "Hiring1",
+    url: "/doc/hiring",
+  },
+  {
+    title: "Hiring2",
+    url: "/doc/hiring",
+  },
+  {
+    title: "Hiring3",
+    url: "/doc/hiring",
+  },
+  {
+    title: "Hiring4",
+    url: "/doc/hiring",
+  },
+  {
+    title: "Hiring5",
+    url: "/doc/hiring",
+  },
+  {
     title: "Product Roadmap",
     url: "/doc/product-roadmap",
   },
@@ -82,6 +102,19 @@ const searchResultList = ({ search, isActive, onSearchLink, searchSource, handle
   ) : null;
 };
 
+const iOS = () => {
+  return [
+    'iPad Simulator',
+    'iPhone Simulator',
+    'iPod Simulator',
+    'iPad',
+    'iPhone',
+    'iPod'
+  ].includes(navigator.platform)
+  // iPad on iOS 13 detection
+  || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+};
+
 class Example extends React.Component {
   state = {
     readOnly: false,
@@ -125,7 +158,7 @@ class Example extends React.Component {
             {this.state.readOnly ? "Editable" : "Read only"}
           </button>{" "}
           <button type="button" onClick={this.handleToggleDark}>
-            {this.state.dark ? "Light theme" : "Dark theme"}
+            {`ios: ${iOS()}`}
           </button>{" "}
           <button type="button" onClick={this.handleUpdateValue}>
             Update value
@@ -172,7 +205,7 @@ class Example extends React.Component {
           onShowToast={message => window.alert(message)}
           onSearchLink={async (term, setter) => {
             console.log("Searched link: ", term);
-            setter(docSearchResults.filter(result =>
+            term && setter(docSearchResults.filter(result =>
               result.title.toLowerCase().includes(term.toLowerCase())
             ));
           }}

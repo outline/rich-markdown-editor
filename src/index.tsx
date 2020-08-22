@@ -118,6 +118,7 @@ type State = {
   blockMenuSearch: string;
   linkFrom: number;
   linkTo: number;
+  extraUpdate: number;
 };
 
 type Step = {
@@ -150,7 +151,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     triggerSearch: "",
     blockMenuSearch: "",
     linkFrom: 0,
-    linkTo: 0
+    linkTo: 0,
+    extraUpdate: 0
   };
 
   extensions: ExtensionManager;
@@ -689,13 +691,16 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     // not sure why this cast is not necessary in Blockmenu.tsx
     const node = (paragraph.node as any);
     const { top, left, bottom } = node.getBoundingClientRect ? node.getBoundingClientRect() : node.parentNode.getBoundingClientRect();
+  
+    const isIos = iOS();
 
     const startPos = this.view.coordsAtPos(selection.$to.pos);
     const ref = this.menuRef.current;
     const offsetHeight = ref ? ref.offsetHeight : 0;
     const margin = 24;
     let pos;
-    if (!iOS() && (window.innerHeight - startPos.bottom - offsetHeight > margin || this.state.searchSource !== "typing")) {
+
+    if (!isIos && (window.innerHeight - startPos.bottom - offsetHeight > margin || this.state.searchSource !== "typing")) {
       pos = {
         left: left + window.scrollX,
         top: bottom + window.scrollY,
@@ -704,15 +709,19 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         isAbove: true,
       };
     } else {
+      // For ios calculating bottom is extremely problematic when keyboard comes up. Instead use offsetHeight of search menu and set top (drawback is that height always lags to the result of the previously typed letter)
       pos =  {
         left: left + window.scrollX,
-        top: undefined,
-        bottom: window.innerHeight - top - window.scrollY,
-        maxHeight: bottom + window.scrollY,
+        top: isIos ? bottom + window.scrollY - offsetHeight - margin : undefined,
+        bottom: isIos ? undefined : window.innerHeight - top - window.scrollY,
+        maxHeight: top + window.scrollY,
         isAbove: false,
       };
     }
-    
+    if (isIos) {
+      // set state to do extra update to prevent search menu height lagging
+      this.setState({ extraUpdate: 0 });
+    }
     return pos;
   }
 
