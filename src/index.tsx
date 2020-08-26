@@ -146,7 +146,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   state = {
     blockMenuOpen: false,
     linkMenuOpen: false,
-    searchTriggerOpen: false,
+    searchTriggerOpen: true,
     searchSource: "typing",
     triggerSearch: "",
     blockMenuSearch: "",
@@ -738,7 +738,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     } = this.props;
 
     const position = this.calculatePosition(this.state.searchTriggerOpen);
-
+    
     const theme = this.props.theme || (dark ? darkTheme : lightTheme);
     return (
       <Flex

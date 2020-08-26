@@ -162,19 +162,6 @@ const searchResultList = ({ search, isActive, onSearchLink, searchSource, handle
   ) : null;
 };
 
-const iOS = () => {
-  return [
-    'iPad Simulator',
-    'iPhone Simulator',
-    'iPod Simulator',
-    'iPad',
-    'iPhone',
-    'iPod'
-  ].includes(navigator.platform)
-  // iPad on iOS 13 detection
-  || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
-};
-
 class Example extends React.Component {
   state = {
     readOnly: false,
@@ -218,7 +205,7 @@ class Example extends React.Component {
             {this.state.readOnly ? "Editable" : "Read only"}
           </button>{" "}
           <button type="button" onClick={this.handleToggleDark}>
-            {`ios: ${iOS()}`}
+            Toggle dark
           </button>{" "}
           <button type="button" onClick={this.handleUpdateValue}>
             Update value
