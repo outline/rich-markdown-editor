@@ -33,7 +33,7 @@ export default class HardBreak extends Node {
     };
   }
 
-  toMarkdown(state, node) {
+  toMarkdown(state) {
     state.write(" \\n ");
   }
 
