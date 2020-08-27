@@ -64,12 +64,20 @@ import Placeholder from "./plugins/Placeholder";
 import SmartText from "./plugins/SmartText";
 import TrailingNode from "./plugins/TrailingNode";
 import MarkdownPaste from "./plugins/MarkdownPaste";
+import Comments from "./plugins/Comments";
 
 export { schema, parser, serializer } from "./server";
 
 export { default as Extension } from "./lib/Extension";
 
 export const theme = lightTheme;
+
+type Comment = {
+  id: string;
+  text: string;
+  from: number;
+  to: number;
+};
 
 export type Props = {
   id?: string;
@@ -99,6 +107,7 @@ export type Props = {
   onClickLink: (href: string) => void;
   onHoverLink?: (event: MouseEvent) => boolean;
   onClickHashtag?: (tag: string) => void;
+  onSelectComment: (comment?: Comment) => void;
   onKeyDown?: (event: React.KeyboardEvent<HTMLDivElement>) => void;
   embeds: EmbedDescriptor[];
   onShowToast?: (message: string) => void;
@@ -283,6 +292,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new Placeholder({
           placeholder: this.props.placeholder,
         }),
+        new Comments({
+          onSelectComment: this.props.onSelectComment,
+        }),
         ...this.props.extensions,
       ],
       this
@@ -365,6 +377,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     return EditorState.create({
       schema: this.schema,
       doc,
+      comments: {
+        comments: [],
+      },
       plugins: [
         ...this.plugins,
         ...this.keymaps,
@@ -1288,6 +1303,11 @@ const StyledEditor = styled("div")<{
       transform: scale(1);
       color: ${props => props.theme.text};
     }
+  }
+
+  .comment {
+    color: ${props => props.theme.black};
+    background: ${props => props.theme.commentHighlight};
   }
 
   @media print {

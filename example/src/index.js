@@ -144,6 +144,9 @@ class Example extends React.Component {
               }, 1500);
             });
           }}
+          onSelectComment={comment =>
+            console.log("Selected comment: ", comment)
+          }
           onShowToast={message => window.alert(message)}
           onSearchLink={async term => {
             console.log("Searched link: ", term);

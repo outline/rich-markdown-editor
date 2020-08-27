@@ -42,6 +42,7 @@ export const base = {
   codePlaceholder: "#3d8fd1",
   codeInserted: "#202746",
   codeImportant: "#c94922",
+  commentHighlight: "#ffb3d2",
 
   blockToolbarBackground: colors.white,
   blockToolbarTrigger: colors.greyMid,
