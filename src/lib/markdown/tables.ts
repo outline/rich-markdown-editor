@@ -15,10 +15,10 @@ export default function markdownTables(md: MarkdownIt) {
       // convert break line into br tag
       if (tokens[i].type === "inline" && tokens[i].content.includes("\\n")) {
         const nodes: Token[] = [];
-        const breakParts = tokens[i].content.split(" \\n ");
+        const breakParts = tokens[i].content.split("\\n");
         breakParts.forEach((part, index) => {
           const token = new Token("text", "", 1);
-          token.content = part;
+          token.content = part.trim();
           nodes.push(token);
 
           if (index < breakParts.length - 1) {

@@ -1,4 +1,5 @@
 import Node from "./Node";
+import { isInTable } from "prosemirror-tables";
 
 export default class HardBreak extends Node {
   get name() {
@@ -27,6 +28,7 @@ export default class HardBreak extends Node {
   keys({ type }) {
     return {
       "Shift-Enter": (state, dispatch) => {
+        if (!isInTable(state)) return false;
         dispatch(state.tr.replaceSelectionWith(type.create()).scrollIntoView());
         return true;
       },
