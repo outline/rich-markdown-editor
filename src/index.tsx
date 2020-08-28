@@ -109,6 +109,7 @@ export type Props = {
   onClickHashtag?: (tag: string) => void;
   onSelectComment: (comment?: Comment) => void;
   onKeyDown?: (event: React.KeyboardEvent<HTMLDivElement>) => void;
+  comments?: Comment[];
   embeds: EmbedDescriptor[];
   onShowToast?: (message: string) => void;
   tooltip: typeof React.Component;
@@ -185,6 +186,10 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     if (this.props.value && prevProps.value !== this.props.value) {
       const newState = this.createState(this.props.value);
       this.view.updateState(newState);
+    }
+
+    if (this.props.comments !== prevProps.comments) {
+      // TODO
     }
 
     // pass readOnly changes through to underlying editor instance
@@ -293,6 +298,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           placeholder: this.props.placeholder,
         }),
         new Comments({
+          comments: this.props.comments,
           onSelectComment: this.props.onSelectComment,
         }),
         ...this.props.extensions,
@@ -377,9 +383,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     return EditorState.create({
       schema: this.schema,
       doc,
-      comments: {
-        comments: [],
-      },
       plugins: [
         ...this.plugins,
         ...this.keymaps,

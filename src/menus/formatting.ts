@@ -1,5 +1,6 @@
 import {
   BoldIcon,
+  CommentIcon,
   CodeIcon,
   Heading1Icon,
   Heading2Icon,
@@ -16,6 +17,7 @@ import isInList from "../queries/isInList";
 import isMarkActive from "../queries/isMarkActive";
 import isNodeActive from "../queries/isNodeActive";
 import { MenuItem } from "../types";
+import { isCommentActive } from "../plugins/Comments";
 
 export default function formattingMenuItems(
   state: EditorState,
@@ -106,6 +108,13 @@ export default function formattingMenuItems(
       icon: LinkIcon,
       active: isMarkActive(schema.marks.link),
       attrs: { href: "" },
+    },
+    {
+      name: "comments",
+      tooltip: "Leave a comment",
+      icon: CommentIcon,
+      active: isCommentActive,
+      visible: !isTemplate,
     },
   ];
 }

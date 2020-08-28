@@ -5,14 +5,16 @@ import Extension from "../lib/Extension";
 
 const plugin = new PluginKey("comments");
 
+function createCommentDecoration(from: number, to: number, id: string) {
+  return Decoration.inline(from, to, { class: "comment", id }, { id });
+}
+
 class CommentState {
-  version;
   decos;
   unsent;
   selectedId;
 
-  constructor(version, decos, unsent, selectedId) {
-    this.version = version;
+  constructor(decos, unsent, selectedId) {
     this.decos = decos;
     this.unsent = unsent;
     this.selectedId = selectedId;
@@ -21,7 +23,7 @@ class CommentState {
   findComment(id: string) {
     const current = this.decos.find();
     for (let i = 0; i < current.length; i++) {
-      if (current[i].spec.comment.id === id) {
+      if (current[i].spec.id === id) {
         return current[i];
       }
     }
@@ -51,23 +53,18 @@ class CommentState {
       selectedId = action.id;
     } else if (actionType === "newComment") {
       decos = decos.add(tr.doc, [
-        Decoration.inline(
-          action.from,
-          action.to,
-          { class: "comment" },
-          { comment: action.comment }
-        ),
+        createCommentDecoration(action.from, action.to, action.id),
       ]);
       unsent = unsent.concat(action);
-      selectedId = action.comment.id;
+      selectedId = action.id;
     } else if (actionType === "deleteComment") {
-      decos = decos.remove([this.findComment(action.comment.id)]);
+      decos = decos.remove([this.findComment(action.id)]);
       unsent = unsent.concat(action);
     }
-    return new CommentState(base.version, decos, unsent, selectedId);
+    return new CommentState(decos, unsent, selectedId);
   }
 
-  receive({ version, events, sent }, doc) {
+  receive({ events, sent }, doc) {
     let set = this.decos;
 
     for (let i = 0; i < events.length; i++) {
@@ -79,17 +76,12 @@ class CommentState {
         // "create"
         if (!this.findComment(event.id))
           set = set.add(doc, [
-            Decoration.inline(
-              event.from,
-              event.to,
-              { class: "comment" },
-              { comment: event }
-            ),
+            createCommentDecoration(event.from, event.to, event.id),
           ]);
       }
     }
 
-    return new CommentState(version, set, this.unsent.slice(sent), null);
+    return new CommentState(set, this.unsent.slice(sent), null);
   }
 
   unsentEvents() {
@@ -98,38 +90,31 @@ class CommentState {
     for (let i = 0; i < this.unsent.length; i++) {
       const action = this.unsent[i];
       if (action.type === "newComment") {
-        const found = this.findComment(action.comment.id);
+        const found = this.findComment(action.id);
         if (found)
           result.push({
             type: "create",
-            id: action.comment.id,
+            id: action.id,
             from: found.from,
             to: found.to,
-            text: action.comment.text,
           });
       } else {
-        result.push({ type: "delete", id: action.comment.id });
+        result.push({ type: "delete", id: action.id });
       }
     }
     return result;
   }
 
-  static init(config) {
-    const decos = config.comments.comments.map(comment =>
-      Decoration.inline(
-        comment.from,
-        comment.to,
-        { class: "comment" },
-        { comment }
-      )
+  static init(state, comments = []) {
+    const decos = comments.map(comment =>
+      createCommentDecoration(comment.from, comment.to, comment.id)
     );
-    return new CommentState(
-      config.comments.version,
-      DecorationSet.create(config.doc, decos),
-      [],
-      null
-    );
+    return new CommentState(DecorationSet.create(state.doc, decos), [], null);
   }
+}
+
+export function isCommentActive(state) {
+  return !!plugin.getState(state).commentsAt(state.selection.from).length;
 }
 
 export default class Comments extends Extension {
@@ -146,24 +131,58 @@ export default class Comments extends Extension {
         if (sel.empty) return false;
         if (!this.options.onSelectComment) return;
 
+        const decos = plugin.getState(state).commentsAt(sel.from);
+        if (decos.length) {
+          const tr = state.tr;
+          decos.forEach(decoration => {
+            tr.setMeta(plugin, {
+              type: "deleteComment",
+              id: decoration.spec.id,
+            });
+          });
+          dispatch(tr);
+          return true;
+        }
+
         // TODO: normalize
         const id = uuid.v4();
         const comment = {
           type: "newComment",
           from: sel.from,
           to: sel.to,
-          comment: { text: "", id },
+          id,
         };
 
         dispatch(state.tr.setMeta(plugin, comment));
         this.options.onSelectComment({
           from: sel.from,
           to: sel.to,
-          text: "",
           id,
         });
         return true;
       },
+    };
+  }
+
+  commands() {
+    return () => (state, dispatch) => {
+      const id = uuid.v4();
+      const sel = state.selection;
+
+      dispatch(
+        state.tr.setMeta(plugin, {
+          type: "newComment",
+          from: sel.from,
+          to: sel.to,
+          id,
+        })
+      );
+      this.options.onSelectComment({
+        from: sel.from,
+        to: sel.to,
+        id,
+      });
+      return true;
     };
   }
 
@@ -190,16 +209,16 @@ export default class Comments extends Extension {
           return false;
         }
 
-        const { comment } = decos[0].spec;
-        if (this.selectedId === comment.id) return false;
+        const { id } = decos[0].spec;
+        if (this.selectedId === id) return false;
 
         dispatch(
           state.tr.setMeta(plugin, {
             type: "select",
-            id: comment.id,
+            id,
           })
         );
-        this.options.onSelectComment(comment);
+        this.options.onSelectComment(id);
       }
       return false;
     };
@@ -208,10 +227,8 @@ export default class Comments extends Extension {
       new Plugin({
         key: plugin,
         state: {
-          init: CommentState.init,
-          apply(tr, prev) {
-            return prev.apply(tr);
-          },
+          init: state => CommentState.init(state, this.options.comments),
+          apply: (tr, prev) => prev.apply(tr),
         },
         props: {
           decorations(state) {
