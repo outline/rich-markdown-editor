@@ -35,6 +35,7 @@ import CodeFence from "./nodes/CodeFence";
 import CheckboxList from "./nodes/CheckboxList";
 import CheckboxItem from "./nodes/CheckboxItem";
 import Embed from "./nodes/Embed";
+import HardBreak from "./nodes/HardBreak";
 import Heading from "./nodes/Heading";
 import HorizontalRule from "./nodes/HorizontalRule";
 import Image from "./nodes/Image";
@@ -64,7 +65,6 @@ import Placeholder from "./plugins/Placeholder";
 import SmartText from "./plugins/SmartText";
 import TrailingNode from "./plugins/TrailingNode";
 import MarkdownPaste from "./plugins/MarkdownPaste";
-import HardBreak from "./nodes/HardBreak";
 
 export { schema, parser, serializer } from "./server";
 
