@@ -2,8 +2,8 @@
   "name": "rich-markdown-editor",
   "description": "A rich text editor with Markdown shortcuts",
   "version": "10.6.3",
-  "main": "dist/lib/index.js",
-  "typings": "dist/@types/index.d.ts",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
   "license": "BSD-3-Clause",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

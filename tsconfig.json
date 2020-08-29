@@ -9,14 +9,15 @@
     "module": "commonjs",
     "target": "es2017",
     "jsx": "react",
-    "types": ["react"],
+    "types": [
+      "react"
+    ],
     "rootDir": "src",
-    "outDir": "dist/lib",
+    "outDir": "dist",
     "stripInternal": true,
     "removeComments": true,
     "declarationMap": true,
     "declaration": true,
-    "declarationDir": "dist/@types",
   },
   "include": [
     "src/**/*"
