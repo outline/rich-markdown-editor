@@ -370,7 +370,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       plugins: [
         ...this.plugins,
         ...this.keymaps,
-        dropCursor(),
+        dropCursor({ color: this.theme().cursor }),
         gapCursor(),
         inputRules({
           rules: this.inputRules,
@@ -546,9 +546,12 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     return headings;
   };
 
+  theme = () => {
+    return this.props.theme || (this.props.dark ? darkTheme : lightTheme);
+  };
+
   render = () => {
     const {
-      dark,
       readOnly,
       readOnlyWriteCheckboxes,
       style,
@@ -556,7 +559,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       className,
       onKeyDown,
     } = this.props;
-    const theme = this.props.theme || (dark ? darkTheme : lightTheme);
 
     return (
       <Flex
@@ -567,7 +569,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         justify="center"
         column
       >
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={this.theme()}>
           <React.Fragment>
             <StyledEditor
               readOnly={readOnly}
