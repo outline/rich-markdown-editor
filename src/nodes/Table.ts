@@ -1,25 +1,25 @@
 import Node from "./Node";
-import { DecorationSet, Decoration } from "prosemirror-view";
+import { Decoration, DecorationSet } from "prosemirror-view";
 import {
-  tableEditing,
-  goToNextCell,
-  addColumnBefore,
   addColumnAfter,
+  addColumnBefore,
   deleteColumn,
   deleteRow,
   deleteTable,
+  fixTables,
+  goToNextCell,
+  isInTable,
+  setCellAttr,
+  tableEditing,
+  toggleHeaderCell,
   toggleHeaderColumn,
   toggleHeaderRow,
-  toggleHeaderCell,
-  setCellAttr,
-  fixTables,
-  isInTable,
 } from "prosemirror-tables";
 import {
-  getCellsInColumn,
-  createTable,
-  moveRow,
   addRowAt,
+  createTable,
+  getCellsInColumn,
+  moveRow,
 } from "prosemirror-utils";
 import { Plugin, TextSelection } from "prosemirror-state";
 
