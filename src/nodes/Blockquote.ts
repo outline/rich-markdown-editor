@@ -27,6 +27,7 @@ export default class Blockquote extends Node {
 
   keys({ type }) {
     return {
+      "Ctrl->": toggleWrap(type),
       "Mod-]": toggleWrap(type),
     };
   }
