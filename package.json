@@ -8,9 +8,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
-    "start": "webpack-serve --config example/webpack.config.js --content example/dist",
+    "start": "webpack-serve --config example/webpack.config.js",
     "build": "tsc",
     "prepublish": "yarn build"
+  },
+  "serve": {
+    "open": true,
+    "static": "example/dist"
   },
   "dependencies": {
     "copy-to-clipboard": "^3.0.8",
@@ -79,7 +83,7 @@
     "ts-loader": "^6.2.1",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.2.3",
-    "webpack-serve": "^2.0.3"
+    "webpack-serve": "^3.2.0"
   },
   "repository": {
     "type": "git",
