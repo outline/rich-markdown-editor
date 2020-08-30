@@ -819,8 +819,11 @@ const StyledEditor = styled("div")<{
     padding: 8px 16px;
     margin: 8px 0;
 
-    a:not(.heading-name) {
+    a {
       color: ${props => props.theme.noticeInfoText};
+    }
+
+    a:not(.heading-name) {
       text-decoration: underline;
     }
   }
