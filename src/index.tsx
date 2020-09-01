@@ -172,6 +172,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   nodes: { [name: string]: NodeSpec };
   marks: { [name: string]: MarkSpec };
   commands: Record<string, any>;
+  resizeObserver: any;
 
   menuRef = React.createRef<HTMLDivElement>();
 
@@ -186,6 +187,19 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
     if (this.props.autoFocus) {
       this.focusAtEnd();
+    }
+
+    // resizeObserver might not be enabled by default for ios safari (suggest users to enable using `Experimental webkit features`)
+    if (iOS()) {
+      try {
+        this.resizeObserver = new ResizeObserver((entries) => {
+            this.setState({ extraUpdate: 1 });
+          });
+      } catch {
+        const tip = "For the smoothest experience, enable 'ResizeObserver' in Settings > Safari > Advanced > Experimental Features";
+        this.props.onShowToast && this.props.onShowToast(tip);
+        console.warn(tip);
+      }
     }
   }
 
@@ -699,6 +713,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     const startPos = this.view.coordsAtPos(selection.$to.pos);
     const ref = this.menuRef.current;
     const offsetHeight = ref ? ref.offsetHeight : 0;
+    ref && this.resizeObserver && this.resizeObserver.observe(ref);
     const margin = 24;
     let pos;
 

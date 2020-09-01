@@ -9,7 +9,7 @@
     "module": "commonjs",
     "target": "es2017",
     "jsx": "react",
-    "types": ["react"],
+    "types": ["react", "resize-observer-browser"],
     "rootDir": "src",
     "outDir": "dist/lib",
     "stripInternal": true,
