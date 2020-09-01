@@ -12,6 +12,24 @@ export default function markdownTables(md: MarkdownIt) {
         tokens[i].level--;
       }
 
+      // convert break line into br tag
+      if (tokens[i].type === "inline" && tokens[i].content.includes("\\n")) {
+        const nodes: Token[] = [];
+        const breakParts = tokens[i].content.split("\\n");
+        breakParts.forEach((part, index) => {
+          const token = new Token("text", "", 1);
+          token.content = part.trim();
+          nodes.push(token);
+
+          if (index < breakParts.length - 1) {
+            const brToken = new Token("br", "br", 1);
+            nodes.push(brToken);
+          }
+        });
+
+        tokens.splice(i, 1, ...nodes);
+      }
+
       // filter out incompatible tokens from markdown-it that we don't need
       // in prosemirror. thead/tbody do nothing.
       if (

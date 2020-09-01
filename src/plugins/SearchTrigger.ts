@@ -58,7 +58,7 @@ export default class SearchTrigger extends Extension {
                 const { pos } = view.state.selection.$from;
                 return run(view, pos, pos, OPEN_REGEX, (state, match) => {
                   if (match) {
-                    this.options.onOpen(match[1]);
+                    this.options.onOpen(match[1] || "");
                   } else {
                     this.options.onClose();
                   }
@@ -84,7 +84,7 @@ export default class SearchTrigger extends Extension {
     return [
       new InputRule(OPEN_REGEX, (state, match) => {
         if (match) {
-          this.options.onOpen(match[1]);
+          this.options.onOpen(match[1] || "");
         }
         return null;
       }),

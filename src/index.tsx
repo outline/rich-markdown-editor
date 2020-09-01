@@ -35,6 +35,7 @@ import CodeFence from "./nodes/CodeFence";
 import CheckboxList from "./nodes/CheckboxList";
 import CheckboxItem from "./nodes/CheckboxItem";
 import Embed from "./nodes/Embed";
+import HardBreak from "./nodes/HardBreak";
 import Heading from "./nodes/Heading";
 import HorizontalRule from "./nodes/HorizontalRule";
 import Image from "./nodes/Image";
@@ -54,6 +55,7 @@ import Highlight from "./marks/Highlight";
 import Italic from "./marks/Italic";
 import Link from "./marks/Link";
 import Strikethrough from "./marks/Strikethrough";
+import TemplatePlaceholder from "./marks/Placeholder";
 
 // plugins
 import BlockMenuTrigger from "./plugins/BlockMenuTrigger";
@@ -84,6 +86,7 @@ export type Props = {
   readOnlyWriteCheckboxes?: boolean;
   dark?: boolean;
   theme?: typeof theme;
+  template?: boolean;
   headingsOffset?: number;
   scrollTo?: string;
   handleDOMEvents?: {
@@ -255,6 +258,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       [
         new Doc(),
         new Text(),
+        new HardBreak(),
         new Paragraph(),
         new Blockquote(),
         new BulletList(),
@@ -295,6 +299,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new Code(),
         new Highlight(),
         new Italic(),
+        new TemplatePlaceholder(),
         new Link({
           onKeyboardShortcut: () => {}, // this.handleOpenLinkMenu
           onClickLink: this.props.onClickLink,
@@ -408,7 +413,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       plugins: [
         ...this.plugins,
         ...this.keymaps,
-        dropCursor(),
+        dropCursor({ color: this.props.theme?.cursor || "black" }),
         gapCursor(),
         inputRules({
           rules: this.inputRules,
@@ -518,6 +523,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   handleOpenSearchTrigger = (triggerSearch) => {
+    console.log(`triggerSearch`, triggerSearch);
     this.setState({ searchTriggerOpen: true, triggerSearch, searchSource: "typing", linkFrom: 0, linkTo: 0 });
   };
 
@@ -744,7 +750,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
   render = () => {
     const {
-      dark,
       readOnly,
       readOnlyWriteCheckboxes,
       style,
@@ -756,7 +761,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
     const position = this.calculatePosition(this.state.searchTriggerOpen);
     
-    const theme = this.props.theme || (dark ? darkTheme : lightTheme);
+    const theme = this.props.theme || lightTheme;
     return (
       <Flex
         onKeyDown={onKeyDown}
@@ -779,6 +784,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   view={this.view}
                   commands={this.commands}
                   onSearchLink={searchVars => this.setState(searchVars)}
+                  isTemplate={this.props.template === true}
                   onClickLink={this.props.onClickLink}
                   tooltip={tooltip}
                 />
@@ -1081,8 +1087,11 @@ const StyledEditor = styled("div")<{
     padding: 8px 16px;
     margin: 8px 0;
 
-    a:not(.heading-name) {
+    a {
       color: ${props => props.theme.noticeInfoText};
+    }
+
+    a:not(.heading-name) {
       text-decoration: underline;
     }
   }
@@ -1124,6 +1133,19 @@ const StyledEditor = styled("div")<{
   b,
   strong {
     font-weight: 600;
+  }
+
+  .template-placeholder {
+    color: ${props => props.theme.placeholder};
+    border-bottom: 1px dotted ${props => props.theme.placeholder};
+    border-radius: 2px;
+    cursor: text;
+
+    &:hover {
+      border-bottom: 1px dotted
+        ${props =>
+          props.readOnly ? props.theme.placeholder : props.theme.textSecondary};
+    }
   }
 
   p {
@@ -1176,7 +1198,8 @@ const StyledEditor = styled("div")<{
   ul.checkbox_list li input {
     pointer-events: ${props =>
       props.readOnly && !props.readOnlyWriteCheckboxes ? "none" : "initial"};
-    opacity: ${props => (props.readOnly ? 0.75 : 1)};
+    opacity: ${props =>
+      props.readOnly && !props.readOnlyWriteCheckboxes ? 0.75 : 1};
     margin: 0 0.5em 0 0;
     width: 14px;
     height: 14px;
@@ -1212,6 +1235,9 @@ const StyledEditor = styled("div")<{
 
     select,
     button {
+      background: ${props => props.theme.blockToolbarBackground};
+      color: ${props => props.theme.blockToolbarItem};
+      border-width: 1px;
       font-size: 13px;
       display: none;
       position: absolute;
@@ -1220,6 +1246,10 @@ const StyledEditor = styled("div")<{
       z-index: 1;
       top: 4px;
       right: 4px;
+    }
+
+    button {
+      padding: 2px 4px;
     }
 
     &:hover {

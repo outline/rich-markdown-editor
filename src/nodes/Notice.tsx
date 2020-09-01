@@ -28,7 +28,7 @@ export default class Notice extends Node {
       content: "block+",
       group: "block",
       defining: true,
-      draggable: false,
+      draggable: true,
       parseDOM: [{ tag: "div.notice-block", preserveWhitespace: "full" }],
       toDOM: node => {
         const select = document.createElement("select");

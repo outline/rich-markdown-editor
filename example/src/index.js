@@ -165,12 +165,17 @@ const searchResultList = ({ search, isActive, onSearchLink, searchSource, handle
 class Example extends React.Component {
   state = {
     readOnly: false,
+    template: false,
     dark: localStorage.getItem("dark") === "enabled",
     value: undefined,
   };
 
   handleToggleReadOnly = () => {
     this.setState({ readOnly: !this.state.readOnly });
+  };
+
+  handleToggleTemplate = () => {
+    this.setState({ template: !this.state.template });
   };
 
   handleToggleDark = () => {
@@ -202,10 +207,13 @@ class Example extends React.Component {
         <div>
           <br />
           <button type="button" onClick={this.handleToggleReadOnly}>
-            {this.state.readOnly ? "Editable" : "Read only"}
+            {this.state.readOnly ? "Switch to Editable" : "Switch to Read-only"}
           </button>{" "}
           <button type="button" onClick={this.handleToggleDark}>
-            Toggle dark
+            {this.state.dark ? "Switch to Light" : "Switch to Dark"}
+          </button>{" "}
+          <button type="button" onClick={this.handleToggleTemplate}>
+            {this.state.template ? "Switch to Document" : "Switch to Template"}
           </button>{" "}
           <button type="button" onClick={this.handleUpdateValue}>
             Update value
@@ -218,6 +226,7 @@ class Example extends React.Component {
           readOnly={this.state.readOnly}
           readOnlyWriteCheckboxes
           value={this.state.value}
+          template={this.state.template}
           defaultValue={defaultValue}
           scrollTo={window.location.hash}
           handleDOMEvents={{

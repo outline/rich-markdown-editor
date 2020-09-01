@@ -43,6 +43,7 @@ export const iOS = () => {
 
 type Props = {
   tooltip: typeof React.Component;
+  isTemplate: boolean;
   commands: Record<string, any>;
   onSearchLink?: (term: any) => void;
   onClickLink: (url: string) => void;
@@ -80,7 +81,7 @@ export default class SelectionToolbar extends React.Component<Props> {
   };
 
   render() {
-    const { ...rest } = this.props;
+    const { isTemplate, ...rest } = this.props;
     const { view } = rest;
     const { state } = view;
     const { selection }: { selection: any } = state;
@@ -112,7 +113,7 @@ export default class SelectionToolbar extends React.Component<Props> {
     } else if (rowIndex !== undefined) {
       items = getTableRowMenuItems(state, rowIndex);
     } else {
-      items = getFormattingMenuItems(state);
+      items = getFormattingMenuItems(state, isTemplate);
     }
 
     if (!items.length) {

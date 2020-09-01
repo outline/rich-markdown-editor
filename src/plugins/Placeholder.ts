@@ -4,7 +4,7 @@ import Extension from "../lib/Extension";
 
 export default class Placeholder extends Extension {
   get name() {
-    return "placeholder";
+    return "empty-placeholder";
   }
 
   get defaultOptions() {
