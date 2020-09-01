@@ -2,6 +2,7 @@ import { toggleMark } from "prosemirror-commands";
 import { Plugin } from "prosemirror-state";
 import { InputRule } from "prosemirror-inputrules";
 import Mark from "./Mark";
+import { iOS } from "../components/SelectionToolbar";
 
 const LINK_INPUT_REGEX = /\[(.+)]\((\S+)\)/;
 
@@ -110,15 +111,16 @@ export default class Link extends Mark {
               return false;
             },
             click: (view, event: MouseEvent) => {
-              // always allow clicking link
-              // allow opening links in editing mode with the meta/cmd key
-              // if (
-              //   view.props.editable &&
-              //   view.props.editable(view.state) &&
-              //   !event.metaKey
-              // ) {
-              //   return false;
-              // }
+              // don't make links on ios in editing mode clickable
+              // FIXME should do for all touch
+              // FIXME maybe this prevents links in searchresults from working as well?
+              if (
+                view.props.editable &&
+                view.props.editable(view.state) &&
+                iOS()
+              ) {
+                return false;
+              }
 
               if (event.target instanceof HTMLAnchorElement) {
                 const { href } = event.target;

@@ -90,14 +90,16 @@ export default class SelectionToolbar extends React.Component<Props> {
     if (isCodeSelection) {
       return null;
     }
-    // on iOS, editor conflicts with link search menu and inline edit bar
-    if (iOS()) {
-      return null;
-    }
+
     const colIndex = getColumnIndex(state.selection);
     const rowIndex = getRowIndex(state.selection);
     const isTableSelection = colIndex !== undefined && rowIndex !== undefined;
     const link = isMarkActive(state.schema.marks.link)(state);
+    // on iOS, native editor conflicts with link search menu and inline edit bar
+    // we do need to keep link editing bar however
+    if (iOS() && !link) {
+      return null;
+    }
     const range = getMarkRange(selection.$from, state.schema.marks.link);
 
     const selectedText = getText(selection.content());
