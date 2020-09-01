@@ -98,6 +98,7 @@ export type Props = {
   onCreateLink?: (title: string) => Promise<string>;
   onSearchLink?: (term: Object) => Promise<SearchResult[]>;
   searchResultList?: typeof React.Component;
+  searchResultsOpen?: boolean;
   onClickLink: (href: string) => void;
   onHoverLink?: (event: MouseEvent) => boolean;
   onClickHashtag?: (tag: string) => void;
@@ -141,12 +142,13 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     embeds: [],
     extensions: [],
     tooltip: Tooltip,
+    searchResultsOpen: false
   };
 
   state = {
     blockMenuOpen: false,
     linkMenuOpen: false,
-    searchTriggerOpen: true,
+    searchTriggerOpen: !!this.props.searchResultsOpen,
     searchSource: "typing",
     triggerSearch: "",
     blockMenuSearch: "",
