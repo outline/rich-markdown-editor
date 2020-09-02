@@ -1,4 +1,4 @@
-import { Plugin } from "prosemirror-state";
+import { Plugin, Selection, AllSelection } from "prosemirror-state";
 import Extension from "../lib/Extension";
 
 export default class Keys extends Extension {
@@ -13,6 +13,19 @@ export default class Keys extends Extension {
           // we can't use the keys bindings for this as we want to preventDefault
           // on the original keyboard event when handled
           handleKeyDown: (view, event) => {
+            if (view.state.selection instanceof AllSelection) {
+              if (event.key === "ArrowUp") {
+                const selection = Selection.atStart(view.state.doc);
+                view.dispatch(view.state.tr.setSelection(selection));
+                return true;
+              }
+              if (event.key === "ArrowDown") {
+                const selection = Selection.atEnd(view.state.doc);
+                view.dispatch(view.state.tr.setSelection(selection));
+                return true;
+              }
+            }
+
             if (!event.metaKey) return false;
             if (event.key === "s") {
               event.preventDefault();
