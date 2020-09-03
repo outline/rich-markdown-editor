@@ -159,7 +159,7 @@ export default class ExtensionManager {
         });
 
         const apply = (callback, attrs) => {
-          if (!view.editable) {
+          if (!view.editable && (!attrs || !attrs.force)) {
             return false;
           }
           view.focus();

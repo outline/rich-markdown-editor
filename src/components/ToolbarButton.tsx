@@ -3,9 +3,10 @@ import styled from "styled-components";
 type Props = { active?: boolean; disabled?: boolean };
 
 export default styled.button<Props>`
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   flex: 0;
-  width: 24px;
+  min-width: 24px;
   height: 24px;
   cursor: pointer;
   margin-left: 10px;

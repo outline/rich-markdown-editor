@@ -17,6 +17,7 @@ import { SearchResult } from "./components/LinkEditor";
 import { EmbedDescriptor } from "./types";
 import SelectionToolbar from "./components/SelectionToolbar";
 import BlockMenu from "./components/BlockMenu";
+import CommentToolbar from "./components/CommentToolbar";
 import LinkToolbar from "./components/LinkToolbar";
 import Tooltip from "./components/Tooltip";
 import Extension from "./lib/Extension";
@@ -594,8 +595,16 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
               readOnlyWriteCheckboxes={readOnlyWriteCheckboxes}
               ref={ref => (this.element = ref)}
             />
+            {readOnly && this.view && (
+              <CommentToolbar
+                view={this.view}
+                commands={this.commands}
+                isTemplate={this.props.template === true}
+                tooltip={tooltip}
+              />
+            )}
             {!readOnly && this.view && (
-              <React.Fragment>
+              <>
                 <SelectionToolbar
                   view={this.view}
                   commands={this.commands}
@@ -628,7 +637,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   onShowToast={this.props.onShowToast}
                   embeds={this.props.embeds}
                 />
-              </React.Fragment>
+              </>
             )}
           </React.Fragment>
         </ThemeProvider>
