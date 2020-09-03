@@ -18,7 +18,7 @@ export default class MarkdownPaste extends Extension {
             }
             if (!event.clipboardData) return false;
 
-            const text = event.clipboardData.getData("text/plain");
+            let text = event.clipboardData.getData("text/plain");
             const html = event.clipboardData.getData("text/html");
             const { state, dispatch } = view;
 
@@ -57,8 +57,13 @@ export default class MarkdownPaste extends Extension {
 
             event.preventDefault();
 
+            if (isUrl(text)) {
+              // turn plaintext url into clickable
+              text = `<${text}>`;
+            }
+
             const paste = this.editor.parser.parse(text);
-            const slice = paste.slice(0);
+            let slice = paste.slice(0);
 
             const transaction = view.state.tr.replaceSelection(slice);
             view.dispatch(transaction);

@@ -523,7 +523,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   handleOpenSearchTrigger = (triggerSearch) => {
-    console.log(`triggerSearch`, triggerSearch);
     this.setState({ searchTriggerOpen: true, triggerSearch, searchSource: "typing", linkFrom: 0, linkTo: 0 });
   };
 
