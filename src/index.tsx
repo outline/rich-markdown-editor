@@ -35,6 +35,7 @@ import CodeFence from "./nodes/CodeFence";
 import CheckboxList from "./nodes/CheckboxList";
 import CheckboxItem from "./nodes/CheckboxItem";
 import Embed from "./nodes/Embed";
+import HardBreak from "./nodes/HardBreak";
 import Heading from "./nodes/Heading";
 import HorizontalRule from "./nodes/HorizontalRule";
 import Image from "./nodes/Image";
@@ -232,6 +233,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       [
         new Doc(),
         new Text(),
+        new HardBreak(),
         new Paragraph(),
         new Blockquote(),
         new BulletList(),
@@ -386,7 +388,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       plugins: [
         ...this.plugins,
         ...this.keymaps,
-        dropCursor(),
+        dropCursor({ color: this.theme().cursor }),
         gapCursor(),
         inputRules({
           rules: this.inputRules,
@@ -562,9 +564,12 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     return headings;
   };
 
+  theme = () => {
+    return this.props.theme || (this.props.dark ? darkTheme : lightTheme);
+  };
+
   render = () => {
     const {
-      dark,
       readOnly,
       readOnlyWriteCheckboxes,
       style,
@@ -572,7 +577,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       className,
       onKeyDown,
     } = this.props;
-    const theme = this.props.theme || (dark ? darkTheme : lightTheme);
 
     return (
       <Flex
@@ -583,7 +587,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         justify="center"
         column
       >
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={this.theme()}>
           <React.Fragment>
             <StyledEditor
               readOnly={readOnly}
@@ -833,8 +837,11 @@ const StyledEditor = styled("div")<{
     padding: 8px 16px;
     margin: 8px 0;
 
-    a:not(.heading-name) {
+    a {
       color: ${props => props.theme.noticeInfoText};
+    }
+
+    a:not(.heading-name) {
       text-decoration: underline;
     }
   }
@@ -941,7 +948,8 @@ const StyledEditor = styled("div")<{
   ul.checkbox_list li input {
     pointer-events: ${props =>
       props.readOnly && !props.readOnlyWriteCheckboxes ? "none" : "initial"};
-    opacity: ${props => (props.readOnly ? 0.75 : 1)};
+    opacity: ${props =>
+      props.readOnly && !props.readOnlyWriteCheckboxes ? 0.75 : 1};
     margin: 0 0.5em 0 0;
     width: 14px;
     height: 14px;

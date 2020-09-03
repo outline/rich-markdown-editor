@@ -11,6 +11,7 @@ import CodeFence from "./nodes/CodeFence";
 import CheckboxList from "./nodes/CheckboxList";
 import CheckboxItem from "./nodes/CheckboxItem";
 import Embed from "./nodes/Embed";
+import HardBreak from "./nodes/HardBreak";
 import Heading from "./nodes/Heading";
 import HorizontalRule from "./nodes/HorizontalRule";
 import Image from "./nodes/Image";
@@ -35,6 +36,7 @@ import TemplatePlaceholder from "./marks/Placeholder";
 const extensions = new ExtensionManager([
   new Doc(),
   new Text(),
+  new HardBreak(),
   new Paragraph(),
   new Blockquote(),
   new BulletList(),

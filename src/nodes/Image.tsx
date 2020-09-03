@@ -52,9 +52,13 @@ const uploadPlugin = options =>
             return false;
           }
 
-          // check if we actually dropped any files
-          const files = getDataTransferFiles(event);
-          if (files.length === 0) return false;
+          // filter to only include image files
+          const files = getDataTransferFiles(event).filter(file =>
+            /image/i.test(file.type)
+          );
+          if (files.length === 0) {
+            return false;
+          }
 
           // grab the position in the document for the cursor
           const result = view.posAtCoords({

@@ -1,16 +1,20 @@
 {
   "name": "rich-markdown-editor",
   "description": "A rich text editor with Markdown shortcuts",
-  "version": "10.6.2",
-  "main": "dist/lib/index.js",
-  "typings": "dist/@types/index.d.ts",
+  "version": "10.6.6-0",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
   "license": "BSD-3-Clause",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
-    "start": "webpack-serve --config example/webpack.config.js --content example/dist",
+    "start": "webpack-serve --config example/webpack.config.js",
     "build": "tsc",
     "prepublish": "yarn build"
+  },
+  "serve": {
+    "open": true,
+    "static": "example/dist"
   },
   "dependencies": {
     "copy-to-clipboard": "^3.0.8",
@@ -35,7 +39,7 @@
     "prosemirror-view": "^1.14.11",
     "react-medium-image-zoom": "^3.0.16",
     "react-portal": "^4.2.1",
-    "refractor": "^2.10.1",
+    "refractor": "^3.1.0",
     "slugify": "^1.4.0",
     "smooth-scroll-into-view-if-needed": "^1.1.27",
     "styled-components": "^5.1.0",
@@ -79,7 +83,7 @@
     "ts-loader": "^6.2.1",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.2.3",
-    "webpack-serve": "^2.0.3"
+    "webpack-serve": "^3.2.0"
   },
   "repository": {
     "type": "git",

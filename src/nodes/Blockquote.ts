@@ -11,6 +11,7 @@ export default class Blockquote extends Node {
     return {
       content: "block+",
       group: "block",
+      defining: true,
       parseDOM: [{ tag: "blockquote" }],
       toDOM: () => ["blockquote", 0],
     };
@@ -26,6 +27,7 @@ export default class Blockquote extends Node {
 
   keys({ type }) {
     return {
+      "Ctrl->": toggleWrap(type),
       "Mod-]": toggleWrap(type),
     };
   }

@@ -14,7 +14,7 @@ export default class ListItem extends Node {
     return {
       content: "paragraph block*",
       defining: true,
-      draggable: false,
+      draggable: true,
       parseDOM: [{ tag: "li" }],
       toDOM: () => ["li", 0],
     };
