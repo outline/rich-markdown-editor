@@ -232,7 +232,7 @@ class Example extends React.Component {
           handleDOMEvents={{
             focus: () => console.log("FOCUS"),
             blur: () => console.log("BLUR"),
-            paste: () => console.log("PASTE"),
+            paste: (view, event) => console.log("PASTE", view, event),
             touchstart: () => console.log("TOUCH START"),
           }}
           onSave={options => console.log("Save triggered", options)}

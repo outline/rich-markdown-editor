@@ -311,7 +311,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new History(),
         new SmartText(),
         new TrailingNode(),
-        new MarkdownPaste(),
+        new MarkdownPaste({onPaste: this.handlePasteSearchTrigger}),
         new Keys({
           onSave: this.handleSave,
           onSaveAndExit: this.handleSaveAndExit,
@@ -524,6 +524,10 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
   handleOpenSearchTrigger = (triggerSearch) => {
     this.setState({ searchTriggerOpen: true, triggerSearch, searchSource: "typing", linkFrom: 0, linkTo: 0 });
+  };
+
+  handlePasteSearchTrigger = (triggerSearch) => {
+    this.setState({ searchTriggerOpen: true, triggerSearch, searchSource: "paste", linkFrom: 0, linkTo: 0 });
   };
 
   handleCloseSearchTrigger = () => {

@@ -22,6 +22,8 @@ export default class MarkdownPaste extends Extension {
             const html = event.clipboardData.getData("text/html");
             const { state, dispatch } = view;
 
+            this.options.onPaste(text);
+
             // first check if the clipboard contents can be parsed as a url
             if (isUrl(text)) {
               // just paste the link mark directly onto the selected text
