@@ -20,7 +20,6 @@
     "copy-to-clipboard": "^3.0.8",
     "lodash": "^4.17.11",
     "markdown-it-container": "^3.0.0",
-    "markdown-it-mark": "^3.0.0",
     "outline-icons": "^1.21.0-3",
     "prismjs": "^1.19.0",
     "prosemirror-commands": "^1.1.4",
