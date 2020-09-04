@@ -174,7 +174,7 @@ class LinkEditor extends React.Component<Props, State> {
   }
 
   render() {
-    const { theme } = this.props;
+    const { theme, from, to } = this.props;
     const { value } = this.state;
 
     const Tooltip = this.props.tooltip;
@@ -187,6 +187,9 @@ class LinkEditor extends React.Component<Props, State> {
           onKeyDown={this.handleKeyDown}
           onChange={this.handleChange}
           autoFocus={this.href === ""}
+          onFocus={() => {
+            this.props.onSearchLink && this.props.onSearchLink({ triggerSearch: value, searchSource: "linkEditor", linkFrom: from, linkTo: to });
+          }}
         />
 
         <ToolbarButton onClick={this.handleOpenLink} disabled={!value}>
