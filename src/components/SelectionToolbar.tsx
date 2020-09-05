@@ -16,8 +16,10 @@ import getColumnIndex from "../queries/getColumnIndex";
 import getRowIndex from "../queries/getRowIndex";
 import createAndInsertLink from "../commands/createAndInsertLink";
 import { MenuItem } from "../types";
+import baseDictionary from "../dictionary";
 
 type Props = {
+  dictionary: typeof baseDictionary;
   tooltip: typeof React.Component;
   isTemplate: boolean;
   commands: Record<string, any>;
@@ -37,7 +39,7 @@ function isActive(props) {
 
 export default class SelectionToolbar extends React.Component<Props> {
   handleOnCreateLink = async (title: string) => {
-    const { onCreateLink, view, onShowToast } = this.props;
+    const { dictionary, onCreateLink, view, onShowToast } = this.props;
 
     if (!onCreateLink) {
       return;
@@ -60,6 +62,7 @@ export default class SelectionToolbar extends React.Component<Props> {
     createAndInsertLink(view, title, href, {
       onCreateLink,
       onShowToast,
+      dictionary,
     });
   };
 
@@ -85,7 +88,7 @@ export default class SelectionToolbar extends React.Component<Props> {
   };
 
   render() {
-    const { onCreateLink, isTemplate, ...rest } = this.props;
+    const { dictionary, onCreateLink, isTemplate, ...rest } = this.props;
     const { view } = rest;
     const { state } = view;
     const { selection }: { selection: any } = state;
@@ -104,13 +107,13 @@ export default class SelectionToolbar extends React.Component<Props> {
 
     let items: MenuItem[] = [];
     if (isTableSelection) {
-      items = getTableMenuItems();
+      items = getTableMenuItems(dictionary);
     } else if (colIndex !== undefined) {
-      items = getTableColMenuItems(state, colIndex);
+      items = getTableColMenuItems(state, colIndex, dictionary);
     } else if (rowIndex !== undefined) {
-      items = getTableRowMenuItems(state, rowIndex);
+      items = getTableRowMenuItems(state, rowIndex, dictionary);
     } else {
-      items = getFormattingMenuItems(state, isTemplate);
+      items = getFormattingMenuItems(state, isTemplate, dictionary);
     }
 
     if (!items.length) {
@@ -122,6 +125,7 @@ export default class SelectionToolbar extends React.Component<Props> {
         <FloatingToolbar view={view} active={isActive(this.props)}>
           {link && range ? (
             <LinkEditor
+              dictionary={dictionary}
               mark={range.mark}
               from={range.from}
               to={range.to}

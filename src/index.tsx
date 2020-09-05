@@ -12,6 +12,7 @@ import { baseKeymap } from "prosemirror-commands";
 import { selectColumn, selectRow, selectTable } from "prosemirror-utils";
 import styled, { ThemeProvider } from "styled-components";
 import { light as lightTheme, dark as darkTheme } from "./theme";
+import baseDictionary from "./dictionary";
 import Flex from "./components/Flex";
 import { SearchResult } from "./components/LinkEditor";
 import { EmbedDescriptor } from "./types";
@@ -82,6 +83,7 @@ export type Props = {
   autoFocus?: boolean;
   readOnly?: boolean;
   readOnlyWriteCheckboxes?: boolean;
+  dictionary?: Partial<typeof baseDictionary>;
   dark?: boolean;
   theme?: typeof theme;
   template?: boolean;
@@ -229,6 +231,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           onShowToast: this.props.onShowToast,
         }),
         new CodeFence({
+          dictionary: this.dictionary(),
           initialReadOnly: this.props.readOnly,
           onShowToast: this.props.onShowToast,
         }),
@@ -238,11 +241,13 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new ListItem(),
         new Notice(),
         new Heading({
+          dictionary: this.dictionary(),
           onShowToast: this.props.onShowToast,
           offset: this.props.headingsOffset,
         }),
         new HorizontalRule(),
         new Image({
+          dictionary: this.dictionary(),
           uploadImage: this.props.uploadImage,
           onImageUploadStart: this.props.onImageUploadStart,
           onImageUploadStop: this.props.onImageUploadStop,
@@ -281,6 +286,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           onCancel: this.props.onCancel,
         }),
         new BlockMenuTrigger({
+          dictionary: this.dictionary(),
           onOpen: this.handleOpenBlockMenu,
           onClose: this.handleCloseBlockMenu,
         }),
@@ -552,6 +558,10 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     return this.props.theme || (this.props.dark ? darkTheme : lightTheme);
   };
 
+  dictionary = () => {
+    return { ...baseDictionary, ...this.props.dictionary };
+  };
+
   render = () => {
     const {
       readOnly,
@@ -582,6 +592,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
               <React.Fragment>
                 <SelectionToolbar
                   view={this.view}
+                  dictionary={this.dictionary()}
                   commands={this.commands}
                   isTemplate={this.props.template === true}
                   onSearchLink={this.props.onSearchLink}
@@ -591,6 +602,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                 />
                 <LinkToolbar
                   view={this.view}
+                  dictionary={this.dictionary()}
                   isActive={this.state.linkMenuOpen}
                   onCreateLink={this.props.onCreateLink}
                   onSearchLink={this.props.onSearchLink}
@@ -602,6 +614,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                 <BlockMenu
                   view={this.view}
                   commands={this.commands}
+                  dictionary={this.dictionary()}
                   isActive={this.state.blockMenuOpen}
                   search={this.state.blockMenuSearch}
                   onClose={this.handleCloseBlockMenu}

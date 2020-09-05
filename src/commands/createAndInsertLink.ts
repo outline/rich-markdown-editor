@@ -1,4 +1,5 @@
 import { EditorView } from "prosemirror-view";
+import baseDictionary from "../dictionary";
 
 function findPlaceholderLink(doc, href) {
   let result;
@@ -35,6 +36,7 @@ const createAndInsertLink = async function(
   title: string,
   href: string,
   options: {
+    dictionary: typeof baseDictionary;
     onCreateLink: (title: string) => Promise<string>;
     onShowToast?: (message: string, code: string) => void;
   }
@@ -75,10 +77,7 @@ const createAndInsertLink = async function(
 
     // let the user know
     if (onShowToast) {
-      onShowToast(
-        "Sorry, an error occurred creating the link",
-        "link_create_error"
-      );
+      onShowToast(options.dictionary.createLinkError, "link_create_error");
     }
   }
 };

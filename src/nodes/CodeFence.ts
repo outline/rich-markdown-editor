@@ -100,7 +100,10 @@ export default class CodeFence extends Node {
     return () => {
       copy(node.textContent);
       if (this.options.onShowToast) {
-        this.options.onShowToast("Copied to clipboard", "code_copied");
+        this.options.onShowToast(
+          this.options.dictionary.codeCopied,
+          "code_copied"
+        );
       }
     };
   }

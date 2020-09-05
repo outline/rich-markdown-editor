@@ -11,12 +11,14 @@ import VisuallyHidden from "./VisuallyHidden";
 import getDataTransferFiles from "../lib/getDataTransferFiles";
 import insertFiles from "../commands/insertFiles";
 import getMenuItems from "../menus/block";
+import baseDictionary from "../dictionary";
 
 const SSR = typeof window === "undefined";
 
 type Props = {
   isActive: boolean;
   commands: Record<string, any>;
+  dictionary: typeof baseDictionary;
   view: EditorView;
   search: string;
   uploadImage?: (file: File) => Promise<string>;
@@ -183,7 +185,7 @@ class BlockMenu extends React.Component<Props, State> {
 
       if (!matches && this.props.onShowToast) {
         this.props.onShowToast(
-          "Sorry, that link won't work for this embed type.",
+          this.props.dictionary.embedInvalidLink,
           "embed_invalid_link"
         );
         return;
@@ -264,6 +266,7 @@ class BlockMenu extends React.Component<Props, State> {
         onImageUploadStart,
         onImageUploadStop,
         onShowToast,
+        dictionary: this.props.dictionary,
       });
     }
 
@@ -341,8 +344,8 @@ class BlockMenu extends React.Component<Props, State> {
   }
 
   get filtered() {
-    const { embeds, search = "" } = this.props;
-    let items: (EmbedDescriptor | MenuItem)[] = getMenuItems();
+    const { dictionary, embeds, search = "" } = this.props;
+    let items: (EmbedDescriptor | MenuItem)[] = getMenuItems(dictionary);
     const embedItems: EmbedDescriptor[] = [];
 
     for (const embed of embeds) {
