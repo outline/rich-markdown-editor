@@ -1,5 +1,6 @@
 /* global window File Promise */
 import * as React from "react";
+import { memoize } from "lodash";
 import { EditorState, Selection, Plugin } from "prosemirror-state";
 import { dropCursor } from "prosemirror-dropcursor";
 import { gapCursor } from "prosemirror-gapcursor";
@@ -231,7 +232,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           onShowToast: this.props.onShowToast,
         }),
         new CodeFence({
-          dictionary: this.dictionary(),
+          dictionary: this.dictionary(this.props.dictionary),
           initialReadOnly: this.props.readOnly,
           onShowToast: this.props.onShowToast,
         }),
@@ -241,13 +242,13 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new ListItem(),
         new Notice(),
         new Heading({
-          dictionary: this.dictionary(),
+          dictionary: this.dictionary(this.props.dictionary),
           onShowToast: this.props.onShowToast,
           offset: this.props.headingsOffset,
         }),
         new HorizontalRule(),
         new Image({
-          dictionary: this.dictionary(),
+          dictionary: this.dictionary(this.props.dictionary),
           uploadImage: this.props.uploadImage,
           onImageUploadStart: this.props.onImageUploadStart,
           onImageUploadStop: this.props.onImageUploadStop,
@@ -286,7 +287,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           onCancel: this.props.onCancel,
         }),
         new BlockMenuTrigger({
-          dictionary: this.dictionary(),
+          dictionary: this.dictionary(this.props.dictionary),
           onOpen: this.handleOpenBlockMenu,
           onClose: this.handleCloseBlockMenu,
         }),
@@ -558,12 +559,13 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     return this.props.theme || (this.props.dark ? darkTheme : lightTheme);
   };
 
-  dictionary = () => {
-    return { ...baseDictionary, ...this.props.dictionary };
-  };
+  dictionary = memoize((providedDictionary?: Partial<typeof baseDictionary>) => {
+    return { ...baseDictionary, ...providedDictionary };
+  });
 
   render = () => {
     const {
+      dictionary,
       readOnly,
       readOnlyWriteCheckboxes,
       style,
@@ -592,7 +594,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
               <React.Fragment>
                 <SelectionToolbar
                   view={this.view}
-                  dictionary={this.dictionary()}
+                  dictionary={this.dictionary(dictionary)}
                   commands={this.commands}
                   isTemplate={this.props.template === true}
                   onSearchLink={this.props.onSearchLink}
@@ -602,7 +604,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                 />
                 <LinkToolbar
                   view={this.view}
-                  dictionary={this.dictionary()}
+                  dictionary={this.dictionary(dictionary)}
                   isActive={this.state.linkMenuOpen}
                   onCreateLink={this.props.onCreateLink}
                   onSearchLink={this.props.onSearchLink}
@@ -614,7 +616,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                 <BlockMenu
                   view={this.view}
                   commands={this.commands}
-                  dictionary={this.dictionary()}
+                  dictionary={this.dictionary(dictionary)}
                   isActive={this.state.blockMenuOpen}
                   search={this.state.blockMenuSearch}
                   onClose={this.handleCloseBlockMenu}
