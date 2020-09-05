@@ -41,6 +41,11 @@ export const iOS = () => {
   || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
 }
 
+export const android = () => {
+  const ua = navigator.userAgent.toLowerCase();
+  return ua.indexOf("android") > -1;
+}
+
 type Props = {
   tooltip: typeof React.Component;
   isTemplate: boolean;
@@ -98,7 +103,7 @@ export default class SelectionToolbar extends React.Component<Props> {
     const link = isMarkActive(state.schema.marks.link)(state);
     // on iOS, native editor conflicts with link search menu and inline edit bar
     // we do need to keep link editing bar however
-    if (iOS() && !link) {
+    if (!link && (iOS() || android())) {
       return null;
     }
     const range = getMarkRange(selection.$from, state.schema.marks.link);

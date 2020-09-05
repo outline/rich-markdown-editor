@@ -16,7 +16,7 @@ import { light as lightTheme, dark as darkTheme } from "./theme";
 import Flex from "./components/Flex";
 import { SearchResult } from "./components/LinkEditor";
 import { EmbedDescriptor } from "./types";
-import SelectionToolbar, { getText, iOS } from "./components/SelectionToolbar";
+import SelectionToolbar, { getText, iOS, android } from "./components/SelectionToolbar";
 import BlockMenu from "./components/BlockMenu";
 import Tooltip from "./components/Tooltip";
 import Extension from "./lib/Extension";
@@ -145,7 +145,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     embeds: [],
     extensions: [],
     tooltip: Tooltip,
-    searchResultsOpen: false
+    searchResultsOpen: false,
   };
 
   state = {
@@ -233,7 +233,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
     if (prevState.triggerSearch === this.state.triggerSearch) {
       const selectedText = this.view && getText(this.view.state.selection.content());
-      selectedText && selectedText !== this.state.triggerSearch && this.setState({ triggerSearch: selectedText, searchSource: "selection", searchTriggerOpen: true, linkFrom: 0, linkTo: 0 });
+      // problem prevents searching from linkeditor on ios
+      const linkEditorSearchOverridden = this.state.triggerSearch && this.state.searchSource === "linkEditor";
+      selectedText && selectedText !== this.state.triggerSearch && (!linkEditorSearchOverridden) && this.setState({ triggerSearch: selectedText, searchSource: "selection", searchTriggerOpen: true, linkFrom: 0, linkTo: 0 });
     }
   }
 
@@ -718,6 +720,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     const { top, left, bottom } = node.getBoundingClientRect ? node.getBoundingClientRect() : node.parentNode.getBoundingClientRect();
   
     const isIos = iOS();
+    const isAndroid = android();
 
     const startPos = this.view.coordsAtPos(selection.$to.pos);
     const ref = this.menuRef.current;
@@ -726,7 +729,12 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     const margin = 24;
     let pos;
 
-    if (!isIos && (window.innerHeight - startPos.bottom - offsetHeight > margin || this.state.searchSource !== "typing")) {
+    const editBarOnTop = this.state.searchSource === "linkEditor" || (this.state.searchSource === "selection" && !isIos && !isAndroid);
+    // ios native bar adjust automatically top or bottom depending on other bars
+    const nativeBarOnTop = isAndroid;
+    const canCalculateBottomMargin = !isIos;
+    const enoughSpaceAtBottom = canCalculateBottomMargin && window.innerHeight - startPos.bottom - offsetHeight > margin;
+    if ((editBarOnTop || nativeBarOnTop || enoughSpaceAtBottom)) {
       pos = {
         left: left + window.scrollX,
         top: bottom + window.scrollY,
