@@ -8,9 +8,9 @@ import Node from "./Node";
 export default class Notice extends Node {
   get styleOptions() {
     return Object.entries({
-      info: "Info",
-      warning: "Warning",
-      tip: "Tip",
+      info: this.options.dictionary.info,
+      warning: this.options.dictionary.warning,
+      tip: this.options.dictionary.tip,
     });
   }
 

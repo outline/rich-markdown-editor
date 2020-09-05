@@ -240,7 +240,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new CheckboxItem(),
         new Embed(),
         new ListItem(),
-        new Notice(),
+        new Notice({
+          dictionary: this.dictionary(this.props.dictionary),
+        }),
         new Heading({
           dictionary: this.dictionary(this.props.dictionary),
           onShowToast: this.props.onShowToast,
