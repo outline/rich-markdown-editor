@@ -218,6 +218,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   }
 
   createExtensions() {
+    const dictionary = this.dictionary(this.props.dictionary);
+
     // adding nodes here? Update schema.ts for serialization on the server
     return new ExtensionManager(
       [
@@ -232,7 +234,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           onShowToast: this.props.onShowToast,
         }),
         new CodeFence({
-          dictionary: this.dictionary(this.props.dictionary),
+          dictionary,
           initialReadOnly: this.props.readOnly,
           onShowToast: this.props.onShowToast,
         }),
@@ -241,16 +243,16 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new Embed(),
         new ListItem(),
         new Notice({
-          dictionary: this.dictionary(this.props.dictionary),
+          dictionary,
         }),
         new Heading({
-          dictionary: this.dictionary(this.props.dictionary),
+          dictionary,
           onShowToast: this.props.onShowToast,
           offset: this.props.headingsOffset,
         }),
         new HorizontalRule(),
         new Image({
-          dictionary: this.dictionary(this.props.dictionary),
+          dictionary,
           uploadImage: this.props.uploadImage,
           onImageUploadStart: this.props.onImageUploadStart,
           onImageUploadStop: this.props.onImageUploadStop,
@@ -289,7 +291,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           onCancel: this.props.onCancel,
         }),
         new BlockMenuTrigger({
-          dictionary: this.dictionary(this.props.dictionary),
+          dictionary,
           onOpen: this.handleOpenBlockMenu,
           onClose: this.handleCloseBlockMenu,
         }),
@@ -567,7 +569,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
   render = () => {
     const {
-      dictionary,
       readOnly,
       readOnlyWriteCheckboxes,
       style,
@@ -575,6 +576,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       className,
       onKeyDown,
     } = this.props;
+    const dictionary = this.dictionary(this.props.dictionary);
 
     return (
       <Flex
@@ -596,7 +598,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
               <React.Fragment>
                 <SelectionToolbar
                   view={this.view}
-                  dictionary={this.dictionary(dictionary)}
+                  dictionary={dictionary}
                   commands={this.commands}
                   isTemplate={this.props.template === true}
                   onSearchLink={this.props.onSearchLink}
@@ -606,7 +608,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                 />
                 <LinkToolbar
                   view={this.view}
-                  dictionary={this.dictionary(dictionary)}
+                  dictionary={dictionary}
                   isActive={this.state.linkMenuOpen}
                   onCreateLink={this.props.onCreateLink}
                   onSearchLink={this.props.onSearchLink}
@@ -618,7 +620,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                 <BlockMenu
                   view={this.view}
                   commands={this.commands}
-                  dictionary={this.dictionary(dictionary)}
+                  dictionary={dictionary}
                   isActive={this.state.blockMenuOpen}
                   search={this.state.blockMenuSearch}
                   onClose={this.handleCloseBlockMenu}
