@@ -812,7 +812,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   onShowToast={this.props.onShowToast}
                   embeds={this.props.embeds}
                 />
-                {SearchResultList && parent && (
+                {SearchResultList && (
                   // Need to pass this handleOnCreateLink and handleOnSelectLink from LinkToolbar
                   // But needs to replace search text like clearSearch in BlockMenu
                   <Portal>
