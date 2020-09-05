@@ -325,7 +325,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         }),
         new SearchTrigger({
           onOpen: this.handleOpenSearchTrigger,
-          onClose: this.handleCloseSearchTrigger,
+          onClose: this.handleCloseSearchTriggerForTyping,
         }),
         new Placeholder({
           placeholder: this.props.placeholder,
@@ -534,6 +534,13 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
   handleCloseSearchTrigger = () => {
     this.setState({ searchTriggerOpen: false, triggerSearch: "" });
+  };
+
+  handleCloseSearchTriggerForTyping = () => {
+    const { from, to } = this.view.state.selection;
+    if (this.state.searchSource === "typing" || from === to) {
+      this.setState({ searchTriggerOpen: false, triggerSearch: "" });
+    }
   };
 
   handleOpenBlockMenu = (search: string) => {
