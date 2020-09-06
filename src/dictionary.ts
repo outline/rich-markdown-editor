@@ -18,7 +18,7 @@ export const base = {
   deleteRow: "Delete row",
   deleteTable: "Delete table",
   em: "Italic",
-  embedInvalidLink: "Sorry, that link won't work for this embed type.",
+  embedInvalidLink: "Sorry, that link won’t work for this embed type",
   findOrCreateDoc: "Find or create a doc…",
   h1: "Big heading",
   h2: "Medium heading",
