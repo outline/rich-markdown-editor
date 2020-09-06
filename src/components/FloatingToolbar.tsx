@@ -157,6 +157,7 @@ const Wrapper = styled.div<{
   active?: boolean;
   offset: number;
 }>`
+  will-change: opacity, transform;
   padding: 8px 16px;
   position: absolute;
   z-index: ${props => props.theme.zIndex + 100};
