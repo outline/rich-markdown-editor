@@ -60,24 +60,29 @@ function usePosition({ menuRef, isSelectingText, props }) {
   const toPos = view.coordsAtPos(selection.$to.pos);
 
   // ensure that start < end for the menu to be positioned correctly
-  const startPos = fromPos.left < toPos.left ? fromPos : toPos;
-  const endPos = fromPos.left < toPos.left ? toPos : fromPos;
+  const selectionBounds = {
+    top: Math.min(fromPos.top, toPos.top),
+    bottom: Math.max(fromPos.bottom, toPos.bottom),
+    left: Math.min(fromPos.left, toPos.left),
+    right: Math.max(fromPos.right, toPos.right),
+  };
 
   // tables are an oddity, and need their own logic
   const isColSelection = selection.isColSelection && selection.isColSelection();
   const isRowSelection = selection.isRowSelection && selection.isRowSelection();
 
   if (isRowSelection) {
-    endPos.left = startPos.left + 12;
+    selectionBounds.right = selectionBounds.left + 12;
   } else if (isColSelection) {
     const { node: element } = view.domAtPos(selection.$from.pos);
     const { width } = element.getBoundingClientRect();
-    endPos.left = startPos.left + width;
+    selectionBounds.right = selectionBounds.left + width;
   }
 
   // calcluate the horizontal center of the selection
-  const halfSelection = Math.abs(endPos.left - startPos.left) / 2;
-  const centerOfSelection = startPos.left + halfSelection;
+  const halfSelection =
+    Math.abs(selectionBounds.right - selectionBounds.left) / 2;
+  const centerOfSelection = selectionBounds.left + halfSelection;
 
   // position the menu so that it is centered over the selection except in
   // the cases where it would extend off the edge of the screen. In these
@@ -89,7 +94,7 @@ function usePosition({ menuRef, isSelectingText, props }) {
   );
   const top = Math.min(
     window.innerHeight - menuHeight - margin,
-    Math.max(margin, Math.min(startPos.top, fromPos.top) - menuHeight)
+    Math.max(margin, selectionBounds.top - menuHeight)
   );
 
   // if the menu has been offset to not extend offscreen then we should adjust
