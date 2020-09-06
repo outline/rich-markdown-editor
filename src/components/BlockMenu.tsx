@@ -396,7 +396,7 @@ class BlockMenu extends React.Component<Props, State> {
   }
 
   render() {
-    const { isActive } = this.props;
+    const { dictionary, isActive } = this.props;
     const items = this.filtered;
     const { insertItem, ...positioning } = this.state;
 
@@ -414,8 +414,8 @@ class BlockMenu extends React.Component<Props, State> {
                 type="text"
                 placeholder={
                   insertItem.title
-                    ? `Paste a ${insertItem.title} link…`
-                    : "Paste a link…"
+                    ? dictionary.pasteLinkWithTitle(insertItem.title)
+                    : dictionary.pasteLink
                 }
                 onKeyDown={this.handleLinkInputKeydown}
                 onPaste={this.handleLinkInputPaste}
@@ -452,7 +452,7 @@ class BlockMenu extends React.Component<Props, State> {
               })}
               {items.length === 0 && (
                 <ListItem>
-                  <Empty>No results</Empty>
+                  <Empty>{dictionary.noResults}</Empty>
                 </ListItem>
               )}
             </List>
