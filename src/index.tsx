@@ -735,8 +735,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     const startPos = this.view.coordsAtPos(selection.$to.pos);
     const ref = this.menuRef.current;
     const canCalculateBottomMargin = !isIos;
-    if (!canCalculateBottomMargin && !ref) {
-      // on iphone, if offsetHeight cannot be calculated correctly, might show over current line, avoid
+    if (!ref) {
+      // if offsetHeight cannot be calculated correctly, might show over current line on ios or jump around elsewhere, avoid
       return hiddenPos;
     }
     const offsetHeight = ref ? ref.offsetHeight : 0;
@@ -1182,10 +1182,11 @@ const StyledEditor = styled("div")<{
 
   a {
     color: ${props => props.theme.link};
+    text-decoration: none;
   }
 
   a:hover {
-    text-decoration: ${props => (props.readOnly ? "underline" : "none")};
+    text-decoration: underline;
   }
 
   ul,
