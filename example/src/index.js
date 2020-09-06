@@ -299,6 +299,11 @@ class Example extends React.Component {
           dark={this.state.dark}
           autoFocus
           searchResultList={searchResultList}
+          blockPlaceholders={[
+            "Type '/' to insert block…",
+            "Paste a link to add cards",
+          ]}
+          placeholders={["Link stuff", "Write stuff"]}
         />
       </div>
     );

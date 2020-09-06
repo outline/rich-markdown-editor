@@ -79,7 +79,7 @@ export type Props = {
   id?: string;
   value?: string;
   defaultValue: string;
-  placeholder: string;
+  placeholders: Array<string>;
   extensions: Extension[];
   autoFocus?: boolean;
   readOnly?: boolean;
@@ -102,6 +102,7 @@ export type Props = {
   onSearchLink?: (term: Object) => Promise<SearchResult[]>;
   searchResultList?: typeof React.Component;
   searchResultsOpen?: boolean;
+  blockPlaceholders?: Array<string>;
   onClickLink: (href: string) => void;
   onHoverLink?: (event: MouseEvent) => boolean;
   onClickHashtag?: (tag: string) => void;
@@ -132,7 +133,7 @@ type Step = {
 class RichMarkdownEditor extends React.PureComponent<Props, State> {
   static defaultProps = {
     defaultValue: "",
-    placeholder: "Write note…",
+    placeholders: ["Write note…"],
     onImageUploadStart: () => {
       // no default behavior
     },
@@ -146,6 +147,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     extensions: [],
     tooltip: Tooltip,
     searchResultsOpen: false,
+    blockPlaceholders: ["Type '/' to insert block…"]
   };
 
   state = {
@@ -322,13 +324,14 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new BlockMenuTrigger({
           onOpen: this.handleOpenBlockMenu,
           onClose: this.handleCloseBlockMenu,
+          placeholders: this.props.blockPlaceholders
         }),
         new SearchTrigger({
           onOpen: this.handleOpenSearchTrigger,
           onClose: this.handleCloseSearchTriggerForTyping,
         }),
         new Placeholder({
-          placeholder: this.props.placeholder,
+          placeholders: this.props.placeholders,
         }),
         ...this.props.extensions,
       ],

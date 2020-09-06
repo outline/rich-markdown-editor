@@ -10,7 +10,7 @@ export default class Placeholder extends Extension {
   get defaultOptions() {
     return {
       emptyNodeClass: "placeholder",
-      placeholder: "",
+      placeholders: [""],
     };
   }
 
@@ -36,7 +36,7 @@ export default class Placeholder extends Extension {
 
               const decoration = Decoration.node(pos, pos + node.nodeSize, {
                 class: this.options.emptyNodeClass,
-                "data-empty-text": this.options.placeholder,
+                "data-empty-text": this.options.placeholders[Math.floor(Math.random() * this.options.placeholders.length)],
               });
               decorations.push(decoration);
             });
