@@ -64,6 +64,7 @@ import Underline from "./marks/Underline";
 import BlockMenuTrigger from "./plugins/BlockMenuTrigger";
 import History from "./plugins/History";
 import Keys from "./plugins/Keys";
+import PersistentSelection from "./plugins/PersistentSelection";
 import Placeholder from "./plugins/Placeholder";
 import SmartText from "./plugins/SmartText";
 import TrailingNode from "./plugins/TrailingNode";
@@ -298,6 +299,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new Placeholder({
           placeholder: this.props.placeholder,
         }),
+        new PersistentSelection(),
         ...this.props.extensions,
       ],
       this
@@ -691,6 +693,24 @@ const StyledEditor = styled("div")<{
 
     img {
       opacity: 0.5;
+    }
+  }
+
+  .ProseMirror *::selection,
+  .ProseMirror *::-moz-selection {
+    background-color: ${props => props.theme.selection};
+  }
+
+  .ProseMirror:not(.ProseMirror-focused):not(.ProseMirror-hideselection) {
+    .persistent-selection {
+      display: inline;
+      pointer-events: none;
+      position: relative;
+      background-color: ${props => props.theme.selection};
+    }
+    .persistent-selection::selection,
+    .persistent-selection::-moz-selection {
+      background: transparent;
     }
   }
 

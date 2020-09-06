@@ -77,7 +77,7 @@ function getDecorations({ doc, name }) {
       })
       .forEach(node => {
         const decoration = Decoration.inline(node.from, node.to, {
-          class: (node.classes || []).join(" "),
+          class: (node.classes || []).join(" ").trim(),
         });
         decorations.push(decoration);
       });
