@@ -563,9 +563,11 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     return this.props.theme || (this.props.dark ? darkTheme : lightTheme);
   };
 
-  dictionary = memoize((providedDictionary?: Partial<typeof baseDictionary>) => {
-    return { ...baseDictionary, ...providedDictionary };
-  });
+  dictionary = memoize(
+    (providedDictionary?: Partial<typeof baseDictionary>) => {
+      return { ...baseDictionary, ...providedDictionary };
+    }
+  );
 
   render = () => {
     const {

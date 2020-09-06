@@ -14,7 +14,7 @@ import baseDictionary from "../dictionary";
 export default function tableColMenuItems(
   state: EditorState,
   index: number,
-  dictionary: typeof baseDictionary,
+  dictionary: typeof baseDictionary
 ): MenuItem[] {
   const { schema } = state;
 

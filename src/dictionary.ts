@@ -33,7 +33,7 @@ export const base = {
   linkCopied: "Link copied to clipboard",
   mark: "Highlight",
   newLineEmpty: "Type '/' to insert…",
-  newLineWithSlash: "  Keep typing to filter…",
+  newLineWithSlash: "Keep typing to filter…",
   openLink: "Open link",
   orderedList: "Ordered list",
   placeholder: "Placeholder",

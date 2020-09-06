@@ -22,7 +22,9 @@ const SSR = typeof window === "undefined";
 const isMac = !SSR && window.navigator.platform === "MacIntel";
 const mod = isMac ? "⌘" : "ctrl";
 
-export default function blockMenuItems(dictionary: typeof baseDictionary): MenuItem[] {
+export default function blockMenuItems(
+  dictionary: typeof baseDictionary
+): MenuItem[] {
   return [
     {
       name: "heading",
