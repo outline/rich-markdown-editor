@@ -734,7 +734,13 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
     const startPos = this.view.coordsAtPos(selection.$to.pos);
     const ref = this.menuRef.current;
+    const canCalculateBottomMargin = !isIos;
+    if (!canCalculateBottomMargin && !ref) {
+      // on iphone, if offsetHeight cannot be calculated correctly, might show over current line, avoid
+      return hiddenPos;
+    }
     const offsetHeight = ref ? ref.offsetHeight : 0;
+
     ref && this.resizeObserver && this.resizeObserver.observe(ref);
     const margin = 24;
     let pos;
@@ -742,7 +748,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     const editBarOnTop = this.state.searchSource === "linkEditor" || (this.state.searchSource === "selection" && !isIos && !isAndroid);
     // ios native bar adjust automatically top or bottom depending on other bars
     const nativeBarOnTop = isAndroid;
-    const canCalculateBottomMargin = !isIos;
     const enoughSpaceAtBottom = canCalculateBottomMargin && window.innerHeight - startPos.bottom - offsetHeight > margin;
     if ((editBarOnTop || nativeBarOnTop || enoughSpaceAtBottom)) {
       pos = {
@@ -753,6 +758,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         isAbove: true,
       };
     } else {
+      // on ios initially searchmenu may show facing downwards over current line, probably offsetHeight = 0?
       // For ios calculating bottom is extremely problematic when keyboard comes up. Instead use offsetHeight of search menu and set top (drawback is that height always lags to the result of the previously typed letter)
       pos =  {
         left: left + window.scrollX,
