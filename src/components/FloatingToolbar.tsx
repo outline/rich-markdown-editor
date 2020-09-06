@@ -20,7 +20,7 @@ const defaultPosition = {
   visible: false,
 };
 
-const useComponentSize = comRef => {
+const useComponentSize = ref => {
   const [size, setSize] = React.useState({
     width: 0,
     height: 0,
@@ -37,17 +37,18 @@ const useComponentSize = comRef => {
         }
       });
     });
-    sizeObserver.observe(comRef.current);
+    sizeObserver.observe(ref.current);
 
     return () => sizeObserver.disconnect();
-  }, [comRef]);
+  }, [ref]);
 
   return size;
 };
 
-function usePosition({ menuWidth, menuHeight, isSelectingText, props }) {
+function usePosition({ menuRef, isSelectingText, props }) {
   const { view, active } = props;
   const { selection } = view.state;
+  const { width: menuWidth, height: menuHeight } = useComponentSize(menuRef);
 
   if (!active || !menuWidth || !menuHeight || SSR || isSelectingText) {
     return defaultPosition;
@@ -58,7 +59,7 @@ function usePosition({ menuWidth, menuHeight, isSelectingText, props }) {
   const fromPos = view.coordsAtPos(selection.$from.pos);
   const toPos = view.coordsAtPos(selection.$to.pos);
 
-  // ensure that start < end
+  // ensure that start < end for the menu to be positioned correctly
   const startPos = fromPos.left < toPos.left ? fromPos : toPos;
   const endPos = fromPos.left < toPos.left ? toPos : fromPos;
 
@@ -74,6 +75,7 @@ function usePosition({ menuWidth, menuHeight, isSelectingText, props }) {
     endPos.left = startPos.left + width;
   }
 
+  // calcluate the horizontal center of the selection
   const halfSelection = Math.abs(endPos.left - startPos.left) / 2;
   const centerOfSelection = startPos.left + halfSelection;
 
@@ -106,10 +108,8 @@ function usePosition({ menuWidth, menuHeight, isSelectingText, props }) {
 function FloatingToolbar(props) {
   const menuRef = props.forwardedRef || React.createRef<HTMLDivElement>();
   const [isSelectingText, setSelectingText] = React.useState(false);
-  const size = useComponentSize(menuRef);
   const position = usePosition({
-    menuWidth: size.width,
-    menuHeight: size.height,
+    menuRef,
     isSelectingText,
     props,
   });
