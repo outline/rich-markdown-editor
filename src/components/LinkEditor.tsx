@@ -16,6 +16,7 @@ import Flex from "./Flex";
 import Input from "./Input";
 import ToolbarButton from "./ToolbarButton";
 import LinkSearchResult from "./LinkSearchResult";
+import baseDictionary from "../dictionary";
 
 export type SearchResult = {
   title: string;
@@ -27,6 +28,7 @@ type Props = {
   from: number;
   to: number;
   tooltip: typeof React.Component;
+  dictionary: typeof baseDictionary;
   onRemoveLink?: () => void;
   onCreateLink?: (title: string) => Promise<void>;
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
@@ -239,7 +241,7 @@ class LinkEditor extends React.Component<Props, State> {
   };
 
   render() {
-    const { theme } = this.props;
+    const { dictionary, theme } = this.props;
     const { value, results, selectedIndex } = this.state;
 
     const Tooltip = this.props.tooltip;
@@ -258,7 +260,9 @@ class LinkEditor extends React.Component<Props, State> {
         <Input
           value={value}
           placeholder={
-            showCreateLink ? "Find or create a doc…" : "Search or paste a link…"
+            showCreateLink
+              ? dictionary.findOrCreateDoc
+              : dictionary.searchOrPasteLink
           }
           onKeyDown={this.handleKeyDown}
           onChange={this.handleChange}
@@ -266,12 +270,12 @@ class LinkEditor extends React.Component<Props, State> {
         />
 
         <ToolbarButton onClick={this.handleOpenLink} disabled={!value}>
-          <Tooltip tooltip="Open link" placement="top">
+          <Tooltip tooltip={dictionary.openLink} placement="top">
             <OpenIcon color={theme.toolbarItem} />
           </Tooltip>
         </ToolbarButton>
         <ToolbarButton onClick={this.handleRemoveLink}>
-          <Tooltip tooltip="Remove link" placement="top">
+          <Tooltip tooltip={dictionary.removeLink} placement="top">
             {this.initialValue ? (
               <TrashIcon color={theme.toolbarItem} />
             ) : (
@@ -296,7 +300,7 @@ class LinkEditor extends React.Component<Props, State> {
             {showCreateLink && (
               <LinkSearchResult
                 key="create"
-                title={`Create new doc “${value.trim()}”`}
+                title={dictionary.createNewDoc(value.trim())}
                 icon={<PlusIcon color={theme.toolbarItem} />}
                 onMouseOver={() => this.handleFocusLink(results.length)}
                 onClick={() => {

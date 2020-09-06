@@ -85,7 +85,10 @@ export default class Heading extends Node {
       copy(urlWithoutHash + hash);
 
       if (this.options.onShowToast) {
-        this.options.onShowToast("Link copied to clipboard", "heading_copied");
+        this.options.onShowToast(
+          this.options.dictionary.linkCopied,
+          "heading_copied"
+        );
       }
     };
   };

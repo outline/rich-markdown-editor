@@ -9,17 +9,19 @@ import {
 import { EditorState } from "prosemirror-state";
 import isNodeActive from "../queries/isNodeActive";
 import { MenuItem } from "../types";
+import baseDictionary from "../dictionary";
 
 export default function tableColMenuItems(
   state: EditorState,
-  index: number
+  index: number,
+  dictionary: typeof baseDictionary
 ): MenuItem[] {
   const { schema } = state;
 
   return [
     {
       name: "setColumnAttr",
-      tooltip: "Align left",
+      tooltip: dictionary.alignLeft,
       icon: AlignLeftIcon,
       attrs: { index, alignment: "left" },
       active: isNodeActive(schema.nodes.th, {
@@ -30,7 +32,7 @@ export default function tableColMenuItems(
     },
     {
       name: "setColumnAttr",
-      tooltip: "Align center",
+      tooltip: dictionary.alignCenter,
       icon: AlignCenterIcon,
       attrs: { index, alignment: "center" },
       active: isNodeActive(schema.nodes.th, {
@@ -41,7 +43,7 @@ export default function tableColMenuItems(
     },
     {
       name: "setColumnAttr",
-      tooltip: "Align right",
+      tooltip: dictionary.alignRight,
       icon: AlignRightIcon,
       attrs: { index, alignment: "right" },
       active: isNodeActive(schema.nodes.th, {
@@ -55,13 +57,13 @@ export default function tableColMenuItems(
     },
     {
       name: "addColumnBefore",
-      tooltip: "Insert column before",
+      tooltip: dictionary.addColumnBefore,
       icon: InsertLeftIcon,
       active: () => false,
     },
     {
       name: "addColumnAfter",
-      tooltip: "Insert column after",
+      tooltip: dictionary.addColumnAfter,
       icon: InsertRightIcon,
       active: () => false,
     },
@@ -70,7 +72,7 @@ export default function tableColMenuItems(
     },
     {
       name: "deleteColumn",
-      tooltip: "Delete column",
+      tooltip: dictionary.deleteColumn,
       icon: TrashIcon,
       active: () => false,
     },

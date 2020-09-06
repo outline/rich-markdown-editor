@@ -8,6 +8,7 @@ const insertFiles = function(view, event, pos, files, options) {
   if (images.length === 0) return;
 
   const {
+    dictionary,
     uploadImage,
     onImageUploadStart,
     onImageUploadStop,
@@ -76,10 +77,7 @@ const insertFiles = function(view, event, pos, files, options) {
 
         // let the user know
         if (onShowToast) {
-          onShowToast(
-            "Sorry, an error occurred uploading the image",
-            "image_upload_error"
-          );
+          onShowToast(dictionary.imageUploadError, "image_upload_error");
         }
       })
       // eslint-disable-next-line no-loop-func
