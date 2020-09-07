@@ -344,7 +344,7 @@ class BlockMenu extends React.Component<Props, State> {
   }
 
   get filtered() {
-    const { dictionary, embeds, search = "" } = this.props;
+    const { dictionary, embeds, search = "", uploadImage } = this.props;
     let items: (EmbedDescriptor | MenuItem)[] = getMenuItems(dictionary);
     const embedItems: EmbedDescriptor[] = [];
 
@@ -366,6 +366,9 @@ class BlockMenu extends React.Component<Props, State> {
 
     const filtered = items.filter(item => {
       if (item.name === "separator") return true;
+
+      // If no image upload callback has been passed, filter the image block out
+      if (!uploadImage && item.name === "image") return false;
 
       const n = search.toLowerCase();
       return (
@@ -396,7 +399,7 @@ class BlockMenu extends React.Component<Props, State> {
   }
 
   render() {
-    const { isActive } = this.props;
+    const { dictionary, isActive, uploadImage } = this.props;
     const items = this.filtered;
     const { insertItem, ...positioning } = this.state;
 
@@ -414,8 +417,8 @@ class BlockMenu extends React.Component<Props, State> {
                 type="text"
                 placeholder={
                   insertItem.title
-                    ? `Paste a ${insertItem.title} link…`
-                    : "Paste a link…"
+                    ? dictionary.pasteLinkWithTitle(insertItem.title)
+                    : dictionary.pasteLink
                 }
                 onKeyDown={this.handleLinkInputKeydown}
                 onPaste={this.handleLinkInputPaste}
@@ -452,19 +455,21 @@ class BlockMenu extends React.Component<Props, State> {
               })}
               {items.length === 0 && (
                 <ListItem>
-                  <Empty>No results</Empty>
+                  <Empty>{dictionary.noResults}</Empty>
                 </ListItem>
               )}
             </List>
           )}
-          <VisuallyHidden>
-            <input
-              type="file"
-              ref={this.inputRef}
-              onChange={this.handleImagePicked}
-              accept="image/*"
-            />
-          </VisuallyHidden>
+          {uploadImage && (
+            <VisuallyHidden>
+              <input
+                type="file"
+                ref={this.inputRef}
+                onChange={this.handleImagePicked}
+                accept="image/*"
+              />
+            </VisuallyHidden>
+          )}
         </Wrapper>
       </Portal>
     );
