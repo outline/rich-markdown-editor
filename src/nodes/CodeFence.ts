@@ -18,6 +18,7 @@ import { textblockTypeInputRule } from "prosemirror-inputrules";
 import copy from "copy-to-clipboard";
 import Prism, { LANGUAGES } from "../plugins/Prism";
 import Node from "./Node";
+import { ToastType } from "../types";
 
 [
   bash,
@@ -102,7 +103,7 @@ export default class CodeFence extends Node {
       if (this.options.onShowToast) {
         this.options.onShowToast(
           this.options.dictionary.codeCopied,
-          "code_copied"
+          ToastType.Info
         );
       }
     };

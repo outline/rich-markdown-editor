@@ -1,6 +1,7 @@
 import uploadPlaceholderPlugin, {
   findPlaceholder,
 } from "../lib/uploadPlaceholder";
+import { ToastType } from "../types";
 
 const insertFiles = function(view, event, pos, files, options) {
   // filter to only include image files
@@ -77,7 +78,7 @@ const insertFiles = function(view, event, pos, files, options) {
 
         // let the user know
         if (onShowToast) {
-          onShowToast(dictionary.imageUploadError, "image_upload_error");
+          onShowToast(dictionary.imageUploadError, ToastType.Error);
         }
       })
       // eslint-disable-next-line no-loop-func

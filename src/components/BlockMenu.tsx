@@ -4,7 +4,7 @@ import { Portal } from "react-portal";
 import { EditorView } from "prosemirror-view";
 import { findParentNode } from "prosemirror-utils";
 import styled from "styled-components";
-import { EmbedDescriptor, MenuItem } from "../types";
+import { EmbedDescriptor, MenuItem, ToastType } from "../types";
 import BlockMenuItem from "./BlockMenuItem";
 import Input from "./Input";
 import VisuallyHidden from "./VisuallyHidden";
@@ -186,7 +186,7 @@ class BlockMenu extends React.Component<Props, State> {
       if (!matches && this.props.onShowToast) {
         this.props.onShowToast(
           this.props.dictionary.embedInvalidLink,
-          "embed_invalid_link"
+          ToastType.Error
         );
         return;
       }

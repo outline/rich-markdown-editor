@@ -9,6 +9,7 @@ import backspaceToParagraph from "../commands/backspaceToParagraph";
 import toggleBlockType from "../commands/toggleBlockType";
 import headingToSlug from "../lib/headingToSlug";
 import Node from "./Node";
+import { ToastType } from "../types";
 
 export default class Heading extends Node {
   get name() {
@@ -87,7 +88,7 @@ export default class Heading extends Node {
       if (this.options.onShowToast) {
         this.options.onShowToast(
           this.options.dictionary.linkCopied,
-          "heading_copied"
+          ToastType.Info
         );
       }
     };

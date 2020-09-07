@@ -16,7 +16,7 @@ import { light as lightTheme, dark as darkTheme } from "./theme";
 import baseDictionary from "./dictionary";
 import Flex from "./components/Flex";
 import { SearchResult } from "./components/LinkEditor";
-import { EmbedDescriptor, ToastId } from "./types";
+import { EmbedDescriptor, ToastType } from "./types";
 import SelectionToolbar from "./components/SelectionToolbar";
 import BlockMenu from "./components/BlockMenu";
 import LinkToolbar from "./components/LinkToolbar";
@@ -106,7 +106,7 @@ export type Props = {
   onClickHashtag?: (tag: string) => void;
   onKeyDown?: (event: React.KeyboardEvent<HTMLDivElement>) => void;
   embeds: EmbedDescriptor[];
-  onShowToast?: (message: string, code: ToastId) => void;
+  onShowToast?: (message: string, code: ToastType) => void;
   tooltip: typeof React.Component | React.FC<any>;
   className?: string;
   style?: Record<string, string>;
