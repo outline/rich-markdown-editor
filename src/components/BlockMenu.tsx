@@ -344,7 +344,7 @@ class BlockMenu extends React.Component<Props, State> {
   }
 
   get filtered() {
-    const { dictionary, embeds, search = "" } = this.props;
+    const { dictionary, embeds, search = "", uploadImage } = this.props;
     let items: (EmbedDescriptor | MenuItem)[] = getMenuItems(dictionary);
     const embedItems: EmbedDescriptor[] = [];
 
@@ -366,6 +366,9 @@ class BlockMenu extends React.Component<Props, State> {
 
     const filtered = items.filter(item => {
       if (item.name === "separator") return true;
+
+      // If no image upload callback has been passed, filter the image block out
+      if (!uploadImage && item.name === "image") return false;
 
       const n = search.toLowerCase();
       return (
@@ -396,7 +399,7 @@ class BlockMenu extends React.Component<Props, State> {
   }
 
   render() {
-    const { dictionary, isActive } = this.props;
+    const { dictionary, isActive, uploadImage } = this.props;
     const items = this.filtered;
     const { insertItem, ...positioning } = this.state;
 
@@ -457,14 +460,16 @@ class BlockMenu extends React.Component<Props, State> {
               )}
             </List>
           )}
-          <VisuallyHidden>
-            <input
-              type="file"
-              ref={this.inputRef}
-              onChange={this.handleImagePicked}
-              accept="image/*"
-            />
-          </VisuallyHidden>
+          {uploadImage && (
+            <VisuallyHidden>
+              <input
+                type="file"
+                ref={this.inputRef}
+                onChange={this.handleImagePicked}
+                accept="image/*"
+              />
+            </VisuallyHidden>
+          )}
         </Wrapper>
       </Portal>
     );
