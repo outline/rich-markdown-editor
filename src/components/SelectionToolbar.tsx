@@ -36,7 +36,7 @@ function isActive(props) {
   const { selection } = view.state;
 
   if (!selection) return false;
-  if (selection.emtpy) return false;
+  if (selection.empty) return false;
   if (selection.node) return false;
 
   const slice = selection.content();
