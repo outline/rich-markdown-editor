@@ -717,8 +717,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       return hiddenPos;
     }
     const { selection } = this.view.state;
-    const viewDom = (this.view.dom as any);
-    const left = viewDom.offsetLeft;
+    const startDocPos = this.view.coordsAtPos(0);
+    const left = startDocPos.left;
     if (
       !isActive ||
       !left
@@ -748,7 +748,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     const enoughSpaceAtBottom = canCalculateBottomMargin && window.innerHeight - startPos.bottom - offsetHeight > margin;
     if ((editBarOnTop || nativeBarOnTop || enoughSpaceAtBottom)) {
       pos = {
-        left,
+        left: left + window.scrollX,
         top: startPos.bottom + window.scrollY,
         bottom: undefined,
         maxHeight: window.innerHeight - (startPos.bottom + window.scrollY),
@@ -758,7 +758,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       // on ios initially searchmenu may show facing downwards over current line, probably offsetHeight = 0?
       // For ios calculating bottom is extremely problematic when keyboard comes up. Instead use offsetHeight of search menu and set top (drawback is that height always lags to the result of the previously typed letter)
       pos =  {
-        left,
+        left: left + window.scrollX,
         top: isIos ? startPos.bottom + window.scrollY - offsetHeight - margin : undefined,
         bottom: isIos ? undefined : window.innerHeight - startPos.top - window.scrollY,
         maxHeight: top,
