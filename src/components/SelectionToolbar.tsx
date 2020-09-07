@@ -1,6 +1,7 @@
 import assert from "assert";
 import * as React from "react";
 import { Portal } from "react-portal";
+import { some } from "lodash";
 import { EditorView } from "prosemirror-view";
 import getTableColMenuItems from "../menus/tableCol";
 import getTableRowMenuItems from "../menus/tableRow";
@@ -34,7 +35,15 @@ function isActive(props) {
   const { view } = props;
   const { selection } = view.state;
 
-  return selection && !selection.empty && !selection.node;
+  if (!selection) return false;
+  if (selection.emtpy) return false;
+  if (selection.node) return false;
+
+  const slice = selection.content();
+  const fragment = slice.content;
+  const nodes = fragment.content;
+
+  return some(nodes, n => n.content.size);
 }
 
 export default class SelectionToolbar extends React.Component<Props> {
