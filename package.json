@@ -42,12 +42,12 @@
     "resize-observer-polyfill": "^1.5.1",
     "slugify": "^1.4.0",
     "smooth-scroll-into-view-if-needed": "^1.1.27",
-    "styled-components": "^5.1.0",
     "typescript": "3.7.5"
   },
   "peerDependencies": {
     "react": "^16.8.6",
-    "react-dom": "^16.8.6"
+    "react-dom": "^16.8.6",
+    "styled-components": "^5.1.0"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.149",
@@ -80,6 +80,7 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "source-map-loader": "^0.2.4",
+    "styled-components": "^5.1.0",
     "ts-loader": "^6.2.1",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.2.3",
