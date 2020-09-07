@@ -8,7 +8,7 @@ type Props = {
   disabled?: boolean;
   onClick: () => void;
   theme: typeof theme;
-  icon: typeof React.Component;
+  icon: typeof React.Component | React.FC<any>;
   title: string;
   shortcut?: string;
 };
