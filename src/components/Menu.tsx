@@ -7,7 +7,7 @@ import theme from "../theme";
 import { MenuItem } from "../types";
 
 type Props = {
-  tooltip: typeof React.Component;
+  tooltip: typeof React.Component | React.FC<any>;
   commands: Record<string, any>;
   view: EditorView;
   theme: typeof theme;

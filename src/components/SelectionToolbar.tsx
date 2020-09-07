@@ -20,7 +20,7 @@ import baseDictionary from "../dictionary";
 
 type Props = {
   dictionary: typeof baseDictionary;
-  tooltip: typeof React.Component;
+  tooltip: typeof React.Component | React.FC<any>;
   isTemplate: boolean;
   commands: Record<string, any>;
   onSearchLink?: (term: string) => Promise<SearchResult[]>;

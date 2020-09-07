@@ -2,7 +2,7 @@ import * as React from "react";
 import { EditorState } from "prosemirror-state";
 
 export type MenuItem = {
-  icon?: typeof React.Component;
+  icon?: typeof React.Component | React.FC<any>;
   name?: string;
   title?: string;
   shortcut?: string;
@@ -15,5 +15,5 @@ export type MenuItem = {
 
 export type EmbedDescriptor = MenuItem & {
   matcher: (url: string) => boolean | [];
-  component: typeof React.Component;
+  component: typeof React.Component | React.FC<any>;
 };
