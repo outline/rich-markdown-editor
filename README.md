@@ -11,6 +11,22 @@ The editor is WYSIWYG and includes formatting tools whilst retaining the ability
 
 ## Usage
 
+### Install
+
+```bash
+yarn add rich-markdown-editor
+```
+
+or
+
+```bash
+npm install rich-markdown-editor
+```
+
+Note that `react`, `react-dom`, and `styled-components` are _required_ peer dependencies.
+
+### Import
+
 ```javascript
 import Editor from "rich-markdown-editor";
 
@@ -19,7 +35,7 @@ import Editor from "rich-markdown-editor";
 />
 ```
 
-See a working example in the [example directory](/example).
+See a working example in the [example directory](/example) with many example props.
 
 
 ### Props
