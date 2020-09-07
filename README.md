@@ -191,7 +191,7 @@ The editor provides an ability to create links from the formatting toolbar for o
 />
 ```
 
-#### `onShowToast(message: string, id: string): void`
+#### `onShowToast(message: string, id: ToastId): void`
 
 Triggered when the editor wishes to show an error message to the user. Hook into your apps
 notification system, or simplisticly use `window.alert(message)`. The second parameter
