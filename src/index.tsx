@@ -717,18 +717,15 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       return hiddenPos;
     }
     const { selection } = this.view.state;
-
-    const paragraph = this.view.domAtPos(selection.$from.pos);
+    const viewDom = (this.view.dom as any);
+    const left = viewDom.offsetLeft;
     if (
       !isActive ||
-      !paragraph.node
+      !left
     ) {
       return hiddenPos;
     }
-    // not sure why this cast is not necessary in Blockmenu.tsx
-    const node = (paragraph.node as any);
-    const { top, left, bottom } = node.getBoundingClientRect ? node.getBoundingClientRect() : node.parentNode.getBoundingClientRect();
-  
+
     const isIos = iOS();
     const isAndroid = android();
 
@@ -751,19 +748,19 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     const enoughSpaceAtBottom = canCalculateBottomMargin && window.innerHeight - startPos.bottom - offsetHeight > margin;
     if ((editBarOnTop || nativeBarOnTop || enoughSpaceAtBottom)) {
       pos = {
-        left: left + window.scrollX,
-        top: bottom + window.scrollY,
+        left,
+        top: startPos.bottom + window.scrollY,
         bottom: undefined,
-        maxHeight: window.innerHeight - (bottom + window.scrollY),
+        maxHeight: window.innerHeight - (startPos.bottom + window.scrollY),
         isAbove: true,
       };
     } else {
       // on ios initially searchmenu may show facing downwards over current line, probably offsetHeight = 0?
       // For ios calculating bottom is extremely problematic when keyboard comes up. Instead use offsetHeight of search menu and set top (drawback is that height always lags to the result of the previously typed letter)
       pos =  {
-        left: left + window.scrollX,
-        top: isIos ? bottom + window.scrollY - offsetHeight - margin : undefined,
-        bottom: isIos ? undefined : window.innerHeight - top - window.scrollY,
+        left,
+        top: isIos ? startPos.bottom + window.scrollY - offsetHeight - margin : undefined,
+        bottom: isIos ? undefined : window.innerHeight - startPos.top - window.scrollY,
         maxHeight: top,
         isAbove: false,
       };
