@@ -144,7 +144,7 @@ class Example extends React.Component {
               }, 1500);
             });
           }}
-          onShowToast={message => window.alert(message)}
+          onShowToast={(message, type) => window.alert(`${type}: ${message}`)}
           onSearchLink={async term => {
             console.log("Searched link: ", term);
             return docSearchResults.filter(result =>
