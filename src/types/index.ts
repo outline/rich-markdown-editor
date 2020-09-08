@@ -1,6 +1,11 @@
 import * as React from "react";
 import { EditorState } from "prosemirror-state";
 
+export enum ToastType {
+  Error = "error",
+  Info = "info",
+}
+
 export type MenuItem = {
   icon?: typeof React.Component | React.FC<any>;
   name?: string;
