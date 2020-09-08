@@ -230,6 +230,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new Blockquote(),
         new BulletList(),
         new CodeBlock({
+          dictionary,
           initialReadOnly: this.props.readOnly,
           onShowToast: this.props.onShowToast,
         }),
