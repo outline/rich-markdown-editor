@@ -2,7 +2,7 @@ import { toggleMark } from "prosemirror-commands";
 import { Plugin } from "prosemirror-state";
 import { InputRule } from "prosemirror-inputrules";
 import Mark from "./Mark";
-import { iOS } from "../components/SelectionToolbar";
+import { iOS, android } from "../components/SelectionToolbar";
 
 const LINK_INPUT_REGEX = /\[(.+)]\((\S+)\)/;
 
@@ -113,11 +113,10 @@ export default class Link extends Mark {
             click: (view, event: MouseEvent) => {
               // don't make links on ios in editing mode clickable
               // FIXME should do for all touch
-              // FIXME maybe this prevents links in searchresults from working as well?
               if (
                 view.props.editable &&
                 view.props.editable(view.state) &&
-                iOS()
+                (iOS() || android())
               ) {
                 return false;
               }
@@ -136,7 +135,7 @@ export default class Link extends Mark {
                 if (this.options.onClickLink) {
                   event.stopPropagation();
                   event.preventDefault();
-                  this.options.onClickLink(href);
+                  this.options.onClickLink(href, event);
                   return true;
                 }
               }
