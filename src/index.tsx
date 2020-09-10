@@ -123,7 +123,6 @@ type State = {
   blockMenuSearch: string;
   linkFrom: number;
   linkTo: number;
-  extraUpdate: number;
 };
 
 type Step = {
@@ -159,7 +158,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     blockMenuSearch: "",
     linkFrom: 0,
     linkTo: 0,
-    extraUpdate: 0
   };
 
   extensions: ExtensionManager;
@@ -177,9 +175,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   nodes: { [name: string]: NodeSpec };
   marks: { [name: string]: MarkSpec };
   commands: Record<string, any>;
-  resizeObserver: any;
-
-  menuRef = React.createRef<HTMLDivElement>();
 
   componentDidMount() {
     this.init();
@@ -192,19 +187,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
     if (this.props.autoFocus) {
       this.focusAtEnd();
-    }
-
-    // resizeObserver might not be enabled by default for ios safari (suggest users to enable using `Experimental webkit features`)
-    if (iOS()) {
-      try {
-        this.resizeObserver = new ResizeObserver((entries) => {
-            this.setState({ extraUpdate: 1 });
-          });
-      } catch {
-        const tip = "For the smoothest experience, enable 'ResizeObserver' in Settings > Safari > Advanced > Experimental Features";
-        this.props.onShowToast && this.props.onShowToast(tip);
-        console.warn(tip);
-      }
     }
   }
 
@@ -710,8 +692,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     const hiddenPos = {
       left: -1000,
       top: 0,
-      bottom: undefined,
-      isAbove: false,
+      bottom: undefined
     };
     if (!this.view) {
       return hiddenPos;
@@ -729,45 +710,36 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     const isIos = iOS();
     const isAndroid = android();
 
-    const startPos = this.view.coordsAtPos(selection.$to.pos);
-    const ref = this.menuRef.current;
-    const canCalculateBottomMargin = !isIos;
-    if (!ref) {
-      // if offsetHeight cannot be calculated correctly, might show over current line on ios or jump around elsewhere, avoid
-      return hiddenPos;
-    }
-    const offsetHeight = ref ? ref.offsetHeight : 0;
+    const endPos = this.view.coordsAtPos(selection.$to.pos);
+    const startPos = this.view.coordsAtPos(selection.$from.pos);
 
-    ref && this.resizeObserver && this.resizeObserver.observe(ref);
     const margin = 24;
     let pos;
 
     const editBarOnTop = this.state.searchSource === "linkEditor" || (this.state.searchSource === "selection" && !isIos && !isAndroid);
     // ios native bar adjust automatically top or bottom depending on other bars
     const nativeBarOnTop = isAndroid;
-    const enoughSpaceAtBottom = canCalculateBottomMargin && window.innerHeight - startPos.bottom - offsetHeight > margin;
+    const windowHeight = (window as any).visualViewport?.height || window.innerHeight;
+    const maxHeightBelow = windowHeight - endPos.bottom - margin;
+    const maxHeightAbove = startPos.top - margin;
+    const enoughSpaceAtBottom = maxHeightBelow > maxHeightAbove;
+
     if ((editBarOnTop || nativeBarOnTop || enoughSpaceAtBottom)) {
       pos = {
         left: left + window.scrollX,
-        top: startPos.bottom + window.scrollY,
+        top: endPos.bottom + window.scrollY,
         bottom: undefined,
-        maxHeight: window.innerHeight - (startPos.bottom + window.scrollY),
-        isAbove: true,
+        maxHeight: maxHeightBelow,
       };
     } else {
       // on ios initially searchmenu may show facing downwards over current line, probably offsetHeight = 0?
       // For ios calculating bottom is extremely problematic when keyboard comes up. Instead use offsetHeight of search menu and set top (drawback is that height always lags to the result of the previously typed letter)
       pos =  {
         left: left + window.scrollX,
-        top: isIos ? startPos.bottom + window.scrollY - offsetHeight - margin : undefined,
-        bottom: isIos ? undefined : window.innerHeight - startPos.top - window.scrollY,
-        maxHeight: top,
-        isAbove: false,
+        top: undefined,
+        bottom: isIos ? `calc(100% - ${startPos.top + window.scrollY}px)` : `${window.innerHeight - startPos.top - window.scrollY}px`,
+        maxHeight: maxHeightAbove,
       };
-    }
-    if (isIos) {
-      // set state to do extra update to prevent search menu height lagging
-      this.setState({ extraUpdate: 0 });
     }
     return pos;
   }
@@ -784,7 +756,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     } = this.props;
 
     const position = this.calculatePosition(this.state.searchTriggerOpen);
-    
     const theme = this.props.theme || lightTheme;
     return (
       <Flex
@@ -831,8 +802,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   <Portal>
                     <Wrapper
                       id="search-menu-container"
+                      tabIndex="0"
                       active={this.state.searchTriggerOpen}
-                      ref={this.menuRef}
                       {...position}
                     >
                       <SearchResultList
@@ -861,9 +832,7 @@ const Wrapper = styled.div<{
   top?: number;
   bottom?: number;
   left?: number;
-  // FIXME maxHeight wrong on iphone, either way too small or too big
   maxHeight?: number;
-  isAbove: boolean;
 }>`
   color: ${props => props.theme.text};
   font-family: ${props => props.theme.fontFamily};
@@ -872,7 +841,7 @@ const Wrapper = styled.div<{
     return props.theme.zIndex + 9999;
   }};
   ${props => props.top && `top: ${props.top}px`};
-  ${props => props.bottom && `bottom: ${props.bottom}px`};
+  ${props => props.bottom && `bottom: ${props.bottom}`};
   left: ${props => props.left}px;
   background-color: ${props => props.theme.blockToolbarBackground};
   border-radius: 4px;
@@ -898,10 +867,9 @@ const Wrapper = styled.div<{
     border-top: 1px solid ${props => props.theme.blockToolbarDivider};
   }
 
-  ${({ active, isAbove }) =>
+  ${({ active }) =>
     active &&
     `
-    transform: translateY(${isAbove ? "6px" : "-6px"}) scale(1);
     pointer-events: all;
     opacity: 1;
   `};
@@ -1180,6 +1148,10 @@ const StyledEditor = styled("div")<{
   a {
     color: ${props => props.theme.link};
     text-decoration: none;
+  }
+
+  a[href*="//"]:not([href*="traverse.link"]) {
+    color: ${props => props.theme.linkExternal};
   }
 
   a:hover {
