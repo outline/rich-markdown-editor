@@ -171,16 +171,13 @@ class LinkEditor extends React.Component<Props, State> {
 
   handleChange = async (event): Promise<void> => {
     const value = event.target.value;
-    const looksLikeUrl = isUrl(value);
 
     this.setState({
       value,
-      results: looksLikeUrl ? [] : this.state.results,
       selectedIndex: -1,
     });
 
-    // if it doesn't seem to be a url, try searching for matching documents
-    if (value && !looksLikeUrl && this.props.onSearchLink) {
+    if (value && this.props.onSearchLink) {
       try {
         const results = await this.props.onSearchLink(value);
         this.setState({ results });
