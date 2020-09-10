@@ -716,7 +716,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     const margin = 24;
     let pos;
 
-    const editBarOnTop = this.state.searchSource === "linkEditor" || (this.state.searchSource === "selection" && !isIos && !isAndroid);
+    const editBarOnTop = this.state.searchSource === "linkEditor" || (this.state.searchSource === "selection" && !isIos);
     // ios native bar adjust automatically top or bottom depending on other bars
     const nativeBarOnTop = isAndroid;
     const windowHeight = (window as any).visualViewport?.height || window.innerHeight;
@@ -724,7 +724,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     const maxHeightAbove = startPos.top - margin;
     const enoughSpaceAtBottom = maxHeightBelow > maxHeightAbove;
 
-    if ((editBarOnTop || nativeBarOnTop || enoughSpaceAtBottom)) {
+    if (editBarOnTop || nativeBarOnTop || enoughSpaceAtBottom) {
       pos = {
         left: left + window.scrollX,
         top: endPos.bottom + window.scrollY,
@@ -732,12 +732,13 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         maxHeight: maxHeightBelow,
       };
     } else {
+      // using CSS calc works for all platforms
       // on ios initially searchmenu may show facing downwards over current line, probably offsetHeight = 0?
       // For ios calculating bottom is extremely problematic when keyboard comes up. Instead use offsetHeight of search menu and set top (drawback is that height always lags to the result of the previously typed letter)
       pos =  {
         left: left + window.scrollX,
         top: undefined,
-        bottom: isIos ? `calc(100% - ${startPos.top + window.scrollY}px)` : `${window.innerHeight - startPos.top - window.scrollY}px`,
+        bottom: `calc(100% - ${startPos.top + window.scrollY}px)`,
         maxHeight: maxHeightAbove,
       };
     }
