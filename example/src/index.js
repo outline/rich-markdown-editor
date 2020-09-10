@@ -80,7 +80,6 @@ class Example extends React.Component {
 
   handleChange = debounce(value => {
     const text = value();
-    console.log(text);
     localStorage.setItem("saved", text);
   }, 250);
 

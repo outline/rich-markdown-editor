@@ -154,6 +154,8 @@ class BlockMenu extends React.Component<Props, State> {
     switch (item.name) {
       case "image":
         return this.triggerImagePick();
+      case "file":
+        return this.triggerImagePick();
       case "embed":
         return this.triggerLinkInput(item);
       case "link": {
@@ -241,6 +243,7 @@ class BlockMenu extends React.Component<Props, State> {
 
   handleImagePicked = event => {
     const files = getDataTransferFiles(event);
+    console.log(files);
 
     const {
       view,
@@ -466,7 +469,7 @@ class BlockMenu extends React.Component<Props, State> {
                 type="file"
                 ref={this.inputRef}
                 onChange={this.handleImagePicked}
-                accept="image/*"
+                accept="*"
               />
             </VisuallyHidden>
           )}

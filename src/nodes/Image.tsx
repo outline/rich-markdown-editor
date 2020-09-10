@@ -163,7 +163,7 @@ export default class Image extends Node {
 
     return (
       <div className="image" contentEditable={false}>
-        <ImageZoom
+        {/* <ImageZoom
           image={{
             src,
             alt,
@@ -189,7 +189,8 @@ export default class Image extends Node {
           >
             {alt}
           </Caption>
-        )}
+        )} */}
+        <a href={src}>My Doc</a>
       </div>
     );
   };
