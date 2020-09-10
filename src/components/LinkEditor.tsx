@@ -140,17 +140,19 @@ class LinkEditor extends React.Component<Props, State> {
       }
 
       case "ArrowUp": {
+        if (event.shiftKey) return;
         event.preventDefault();
         event.stopPropagation();
         const prevIndex = this.state.selectedIndex - 1;
 
         this.setState({
-          selectedIndex: Math.max(0, prevIndex),
+          selectedIndex: Math.max(-1, prevIndex),
         });
         return;
       }
 
       case "ArrowDown":
+        if (event.shiftKey) return;
       case "Tab": {
         event.preventDefault();
         event.stopPropagation();
