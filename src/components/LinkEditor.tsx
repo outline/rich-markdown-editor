@@ -38,7 +38,7 @@ type Props = {
     from: number;
     to: number;
   }) => void;
-  onClickLink: (url: string) => void;
+  onClickLink: (href: string, event: MouseEvent) => void;
   onShowToast?: (message: string, code: string) => void;
   view: EditorView;
   theme: typeof theme;
@@ -191,9 +191,9 @@ class LinkEditor extends React.Component<Props, State> {
     }
   };
 
-  handleOpenLink = (event): void => {
+  handleOpenLink = (event: MouseEvent): void => {
     event.preventDefault();
-    this.props.onClickLink(this.href);
+    this.props.onClickLink(this.href, event);
   };
 
   handleCreateLink = (value: string) => {

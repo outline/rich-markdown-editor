@@ -198,7 +198,7 @@ notification system, or simplisticly use `window.alert(message)`. The second par
 is the type of toast: 'error' or 'info'.
 
 
-#### `onClickLink(href: string): void`
+#### `onClickLink(href: string, event: MouseEvent): void`
 
 This callback allows overriding of link handling. It's often the case that you want to have external links open a new window and have internal links use something like `react-router` to navigate. If no callback is provided then default behavior of opening a new tab will apply to all links. eg:
 
@@ -207,7 +207,7 @@ This callback allows overriding of link handling. It's often the case that you w
 import { history } from "react-router";
 
 <Editor
-  onClickLink={href => {
+  onClickLink={(href, event) => {
     if (isInternalLink(href)) {
       history.push(href);
     } else {

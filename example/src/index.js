@@ -124,7 +124,9 @@ class Example extends React.Component {
           onSave={options => console.log("Save triggered", options)}
           onCancel={() => console.log("Cancel triggered")}
           onChange={this.handleChange}
-          onClickLink={href => console.log("Clicked link: ", href)}
+          onClickLink={(href, event) =>
+            console.log("Clicked link: ", href, event)
+          }
           onHoverLink={event => {
             console.log("Hovered link: ", event.target.href);
             return false;
