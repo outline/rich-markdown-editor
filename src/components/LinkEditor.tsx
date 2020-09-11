@@ -240,19 +240,28 @@ class LinkEditor extends React.Component<Props, State> {
   };
 
   render() {
-    const { dictionary, theme } = this.props;
+    const { dictionary, theme, view } = this.props;
     const { value, results, selectedIndex } = this.state;
 
     const Tooltip = this.props.tooltip;
     const looksLikeUrl = value.match(/^https?:\/\//i);
 
+    const { state } = view;
+    const selectionText = state.doc.cut(
+      state.selection.from,
+      state.selection.to
+    ).textContent;
+
+    const suggestedDocTitle = value.trim() || selectionText.trim();
+
     const showCreateLink =
       !!this.props.onCreateLink &&
-      !(value === this.initialValue) &&
-      value.trim().length > 0 &&
+      !(suggestedDocTitle === this.initialValue) &&
+      suggestedDocTitle.length > 0 &&
       !looksLikeUrl;
 
-    const showResults = !!value && (showCreateLink || results.length > 0);
+    const showResults =
+      !!suggestedDocTitle && (showCreateLink || results.length > 0);
 
     return (
       <Wrapper>
@@ -299,11 +308,11 @@ class LinkEditor extends React.Component<Props, State> {
             {showCreateLink && (
               <LinkSearchResult
                 key="create"
-                title={dictionary.createNewDoc(value.trim())}
+                title={dictionary.createNewDoc(suggestedDocTitle)}
                 icon={<PlusIcon color={theme.toolbarItem} />}
                 onMouseOver={() => this.handleFocusLink(results.length)}
                 onClick={() => {
-                  this.handleCreateLink(value);
+                  this.handleCreateLink(suggestedDocTitle);
 
                   if (this.initialSelectionLength) {
                     this.moveSelectionToEnd();
