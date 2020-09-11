@@ -65,6 +65,17 @@ class LinkEditor extends React.Component<Props, State> {
     return this.props.mark ? this.props.mark.attrs.href : "";
   }
 
+  get suggestedLinkTitle(): string {
+    const { state } = this.props.view;
+    const { value } = this.state;
+    const selectionText = state.doc.cut(
+      state.selection.from,
+      state.selection.to
+    ).textContent;
+
+    return value.trim() || selectionText.trim();
+  }
+
   componentWillUnmount = () => {
     // If we discarded the changes then nothing to do
     if (this.discardInputValue) {
@@ -114,7 +125,7 @@ class LinkEditor extends React.Component<Props, State> {
           if (result) {
             this.save(result.url, result.title);
           } else if (onCreateLink && selectedIndex === results.length) {
-            this.handleCreateLink(value);
+            this.handleCreateLink(this.suggestedLinkTitle);
           }
         } else {
           // saves the raw input as href
@@ -240,28 +251,22 @@ class LinkEditor extends React.Component<Props, State> {
   };
 
   render() {
-    const { dictionary, theme, view } = this.props;
+    const { dictionary, theme } = this.props;
     const { value, results, selectedIndex } = this.state;
 
     const Tooltip = this.props.tooltip;
     const looksLikeUrl = value.match(/^https?:\/\//i);
 
-    const { state } = view;
-    const selectionText = state.doc.cut(
-      state.selection.from,
-      state.selection.to
-    ).textContent;
-
-    const suggestedDocTitle = value.trim() || selectionText.trim();
+    const suggestedLinkTitle = this.suggestedLinkTitle;
 
     const showCreateLink =
       !!this.props.onCreateLink &&
-      !(suggestedDocTitle === this.initialValue) &&
-      suggestedDocTitle.length > 0 &&
+      !(suggestedLinkTitle === this.initialValue) &&
+      suggestedLinkTitle.length > 0 &&
       !looksLikeUrl;
 
     const showResults =
-      !!suggestedDocTitle && (showCreateLink || results.length > 0);
+      !!suggestedLinkTitle && (showCreateLink || results.length > 0);
 
     return (
       <Wrapper>
@@ -308,11 +313,11 @@ class LinkEditor extends React.Component<Props, State> {
             {showCreateLink && (
               <LinkSearchResult
                 key="create"
-                title={dictionary.createNewDoc(suggestedDocTitle)}
+                title={dictionary.createNewDoc(suggestedLinkTitle)}
                 icon={<PlusIcon color={theme.toolbarItem} />}
                 onMouseOver={() => this.handleFocusLink(results.length)}
                 onClick={() => {
-                  this.handleCreateLink(suggestedDocTitle);
+                  this.handleCreateLink(suggestedLinkTitle);
 
                   if (this.initialSelectionLength) {
                     this.moveSelectionToEnd();
