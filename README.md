@@ -230,7 +230,7 @@ This callback allows detecting when the user hovers over a link in the document.
 />
 ```
 
-#### `onClickHashtag(tag: string): void`
+#### `onClickHashtag(tag: string, event: MouseEvent): void`
 
 This callback allows handling of clicking on hashtags in the document text. If no callback is provided then hashtags will render as regular text, so you can choose if to support them or not by passing this prop.
 
