@@ -65,7 +65,7 @@ class LinkEditor extends React.Component<Props, State> {
     return this.props.mark ? this.props.mark.attrs.href : "";
   }
 
-  get suggestedDocTitle(): string {
+  get suggestedLinkTitle(): string {
     const { state } = this.props.view;
     const { value } = this.state;
     const selectionText = state.doc.cut(
@@ -125,7 +125,7 @@ class LinkEditor extends React.Component<Props, State> {
           if (result) {
             this.save(result.url, result.title);
           } else if (onCreateLink && selectedIndex === results.length) {
-            this.handleCreateLink(this.suggestedDocTitle);
+            this.handleCreateLink(this.suggestedLinkTitle);
           }
         } else {
           // saves the raw input as href
@@ -257,14 +257,16 @@ class LinkEditor extends React.Component<Props, State> {
     const Tooltip = this.props.tooltip;
     const looksLikeUrl = value.match(/^https?:\/\//i);
 
+    const suggestedLinkTitle = this.suggestedLinkTitle;
+
     const showCreateLink =
       !!this.props.onCreateLink &&
-      !(this.suggestedDocTitle === this.initialValue) &&
-      this.suggestedDocTitle.length > 0 &&
+      !(suggestedLinkTitle === this.initialValue) &&
+      suggestedLinkTitle.length > 0 &&
       !looksLikeUrl;
 
     const showResults =
-      !!this.suggestedDocTitle && (showCreateLink || results.length > 0);
+      !!suggestedLinkTitle && (showCreateLink || results.length > 0);
 
     return (
       <Wrapper>
@@ -311,11 +313,11 @@ class LinkEditor extends React.Component<Props, State> {
             {showCreateLink && (
               <LinkSearchResult
                 key="create"
-                title={dictionary.createNewDoc(this.suggestedDocTitle)}
+                title={dictionary.createNewDoc(suggestedLinkTitle)}
                 icon={<PlusIcon color={theme.toolbarItem} />}
                 onMouseOver={() => this.handleFocusLink(results.length)}
                 onClick={() => {
-                  this.handleCreateLink(this.suggestedDocTitle);
+                  this.handleCreateLink(suggestedLinkTitle);
 
                   if (this.initialSelectionLength) {
                     this.moveSelectionToEnd();
