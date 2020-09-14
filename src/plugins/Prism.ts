@@ -1,5 +1,5 @@
 import refractor from "refractor/core";
-import { flattenDeep } from "lodash";
+import flattenDeep from "lodash/flattenDeep";
 import { Plugin, PluginKey } from "prosemirror-state";
 import { Decoration, DecorationSet } from "prosemirror-view";
 import { findBlockNodes } from "prosemirror-utils";
