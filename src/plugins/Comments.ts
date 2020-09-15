@@ -1,9 +1,10 @@
 import { Plugin, PluginKey } from "prosemirror-state";
 import uuid from "uuid";
 import { Decoration, DecorationSet } from "prosemirror-view";
+import { Comment } from "../types";
 import Extension from "../lib/Extension";
 
-const plugin = new PluginKey("comments");
+export const plugin = new PluginKey("comments");
 
 function createCommentDecoration(from: number, to: number, id: string) {
   return Decoration.inline(from, to, { class: "comment", id }, { id });
@@ -11,12 +12,10 @@ function createCommentDecoration(from: number, to: number, id: string) {
 
 class CommentState {
   decos;
-  unsent;
   selectedId;
 
-  constructor(decos, unsent, selectedId) {
+  constructor(decos, selectedId) {
     this.decos = decos;
-    this.unsent = unsent;
     this.selectedId = selectedId;
   }
 
@@ -34,19 +33,25 @@ class CommentState {
   }
 
   apply(tr) {
-    const action = tr.getMeta(plugin),
-      actionType = action && action.type;
+    const action = tr.getMeta(plugin);
+    const actionType = action && action.type;
+
     if (!action && !tr.docChanged) {
       return this;
     }
 
-    let base = this;
     if (actionType === "receive") {
-      base = base.receive(action, tr.doc);
+      const decos = action.comments.map(comment =>
+        createCommentDecoration(comment.from, comment.to, comment.id)
+      );
+      return new CommentState(
+        DecorationSet.create(tr.doc, decos),
+        this.selectedId
+      );
     }
-    let decos = base.decos,
-      unsent = base.unsent,
-      selectedId = base.selectedId;
+
+    let decos = this.decos;
+    let selectedId = this.selectedId;
     decos = decos.map(tr.mapping, tr.doc);
 
     if (actionType === "select") {
@@ -55,61 +60,18 @@ class CommentState {
       decos = decos.add(tr.doc, [
         createCommentDecoration(action.from, action.to, action.id),
       ]);
-      unsent = unsent.concat(action);
       selectedId = action.id;
     } else if (actionType === "deleteComment") {
       decos = decos.remove([this.findComment(action.id)]);
-      unsent = unsent.concat(action);
     }
-    return new CommentState(decos, unsent, selectedId);
+    return new CommentState(decos, selectedId);
   }
 
-  receive({ events, sent }, doc) {
-    let set = this.decos;
-
-    for (let i = 0; i < events.length; i++) {
-      const event = events[i];
-      if (event.type === "delete") {
-        const found = this.findComment(event.id);
-        if (found) set = set.remove([found]);
-      } else {
-        // "create"
-        if (!this.findComment(event.id))
-          set = set.add(doc, [
-            createCommentDecoration(event.from, event.to, event.id),
-          ]);
-      }
-    }
-
-    return new CommentState(set, this.unsent.slice(sent), null);
-  }
-
-  unsentEvents() {
-    const result = [];
-
-    for (let i = 0; i < this.unsent.length; i++) {
-      const action = this.unsent[i];
-      if (action.type === "newComment") {
-        const found = this.findComment(action.id);
-        if (found)
-          result.push({
-            type: "create",
-            id: action.id,
-            from: found.from,
-            to: found.to,
-          });
-      } else {
-        result.push({ type: "delete", id: action.id });
-      }
-    }
-    return result;
-  }
-
-  static init(state, comments = []) {
+  static init(state, comments: Comment[] = []) {
     const decos = comments.map(comment =>
       createCommentDecoration(comment.from, comment.to, comment.id)
     );
-    return new CommentState(DecorationSet.create(state.doc, decos), [], null);
+    return new CommentState(DecorationSet.create(state.doc, decos), null);
   }
 }
 
@@ -133,18 +95,9 @@ export default class Comments extends Extension {
 
         const decos = plugin.getState(state).commentsAt(sel.from);
         if (decos.length) {
-          const tr = state.tr;
-          decos.forEach(decoration => {
-            tr.setMeta(plugin, {
-              type: "deleteComment",
-              id: decoration.spec.id,
-            });
-          });
-          dispatch(tr);
           return true;
         }
 
-        // TODO: normalize
         const id = uuid.v4();
         const comment = {
           type: "newComment",
@@ -177,11 +130,6 @@ export default class Comments extends Extension {
           id,
         })
       );
-      this.options.onSelectComment({
-        from: sel.from,
-        to: sel.to,
-        id,
-      });
       return true;
     };
   }
@@ -210,7 +158,7 @@ export default class Comments extends Extension {
         }
 
         const { id } = decos[0].spec;
-        if (this.selectedId === id) return false;
+        if (selectedId === id) return false;
 
         dispatch(
           state.tr.setMeta(plugin, {
@@ -218,7 +166,11 @@ export default class Comments extends Extension {
             id,
           })
         );
-        this.options.onSelectComment(id);
+        this.options.onSelectComment({
+          from: decos[0].from,
+          to: decos[0].to,
+          id,
+        });
       }
       return false;
     };

@@ -12,6 +12,8 @@ This is example content. It is persisted between reloads in localStorage.
 `;
 const defaultValue = savedText || exampleText;
 
+const comments = {};
+
 const docSearchResults = [
   {
     title: "Hiring",
@@ -148,9 +150,13 @@ class Example extends React.Component {
               }, 1500);
             });
           }}
-          onSelectComment={comment =>
-            console.log("Selected comment: ", comment)
-          }
+          onSelectComment={comment => {
+            console.log("Selected comment: ", comment);
+
+            if (comment) {
+              comments[comment.id] = comment;
+            }
+          }}
           onShowToast={(message, type) => window.alert(`${type}: ${message}`)}
           onSearchLink={async term => {
             console.log("Searched link: ", term);

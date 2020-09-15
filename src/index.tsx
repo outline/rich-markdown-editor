@@ -69,7 +69,7 @@ import Placeholder from "./plugins/Placeholder";
 import SmartText from "./plugins/SmartText";
 import TrailingNode from "./plugins/TrailingNode";
 import MarkdownPaste from "./plugins/MarkdownPaste";
-import Comments from "./plugins/Comments";
+import Comments, { plugin as commentsPluginKey } from "./plugins/Comments";
 
 export { schema, parser, serializer } from "./server";
 
@@ -188,7 +188,12 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     }
 
     if (this.props.comments !== prevProps.comments) {
-      // TODO
+      this.view.dispatch(
+        this.view.state.tr.setMeta(commentsPluginKey, {
+          type: "receive",
+          comments: this.props.comments,
+        })
+      );
     }
 
     // pass readOnly changes through to underlying editor instance
