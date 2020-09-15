@@ -16,6 +16,7 @@ import Flex from "./Flex";
 import Input from "./Input";
 import ToolbarButton from "./ToolbarButton";
 import LinkSearchResult from "./LinkSearchResult";
+import baseDictionary from "../dictionary";
 
 export type SearchResult = {
   title: string;
@@ -26,7 +27,8 @@ type Props = {
   mark?: Mark;
   from: number;
   to: number;
-  tooltip: typeof React.Component;
+  tooltip: typeof React.Component | React.FC<any>;
+  dictionary: typeof baseDictionary;
   onRemoveLink?: () => void;
   onCreateLink?: (title: string) => Promise<void>;
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
@@ -36,7 +38,7 @@ type Props = {
     from: number;
     to: number;
   }) => void;
-  onClickLink: (url: string) => void;
+  onClickLink: (href: string, event: MouseEvent) => void;
   onShowToast?: (message: string, code: string) => void;
   view: EditorView;
   theme: typeof theme;
@@ -61,6 +63,17 @@ class LinkEditor extends React.Component<Props, State> {
 
   get href(): string {
     return this.props.mark ? this.props.mark.attrs.href : "";
+  }
+
+  get suggestedLinkTitle(): string {
+    const { state } = this.props.view;
+    const { value } = this.state;
+    const selectionText = state.doc.cut(
+      state.selection.from,
+      state.selection.to
+    ).textContent;
+
+    return value.trim() || selectionText.trim();
   }
 
   componentWillUnmount = () => {
@@ -112,7 +125,7 @@ class LinkEditor extends React.Component<Props, State> {
           if (result) {
             this.save(result.url, result.title);
           } else if (onCreateLink && selectedIndex === results.length) {
-            this.handleCreateLink(value);
+            this.handleCreateLink(this.suggestedLinkTitle);
           }
         } else {
           // saves the raw input as href
@@ -138,17 +151,19 @@ class LinkEditor extends React.Component<Props, State> {
       }
 
       case "ArrowUp": {
+        if (event.shiftKey) return;
         event.preventDefault();
         event.stopPropagation();
         const prevIndex = this.state.selectedIndex - 1;
 
         this.setState({
-          selectedIndex: Math.max(0, prevIndex),
+          selectedIndex: Math.max(-1, prevIndex),
         });
         return;
       }
 
       case "ArrowDown":
+        if (event.shiftKey) return;
       case "Tab": {
         event.preventDefault();
         event.stopPropagation();
@@ -169,16 +184,13 @@ class LinkEditor extends React.Component<Props, State> {
 
   handleChange = async (event): Promise<void> => {
     const value = event.target.value;
-    const looksLikeUrl = isUrl(value);
 
     this.setState({
       value,
-      results: looksLikeUrl ? [] : this.state.results,
       selectedIndex: -1,
     });
 
-    // if it doesn't seem to be a url, try searching for matching documents
-    if (value && !looksLikeUrl && this.props.onSearchLink) {
+    if (value && this.props.onSearchLink) {
       try {
         const results = await this.props.onSearchLink(value);
         this.setState({ results });
@@ -192,7 +204,7 @@ class LinkEditor extends React.Component<Props, State> {
 
   handleOpenLink = (event): void => {
     event.preventDefault();
-    this.props.onClickLink(this.href);
+    this.props.onClickLink(this.href, event);
   };
 
   handleCreateLink = (value: string) => {
@@ -239,26 +251,31 @@ class LinkEditor extends React.Component<Props, State> {
   };
 
   render() {
-    const { theme } = this.props;
+    const { dictionary, theme } = this.props;
     const { value, results, selectedIndex } = this.state;
 
     const Tooltip = this.props.tooltip;
     const looksLikeUrl = value.match(/^https?:\/\//i);
 
+    const suggestedLinkTitle = this.suggestedLinkTitle;
+
     const showCreateLink =
       !!this.props.onCreateLink &&
-      !(value === this.initialValue) &&
-      value.trim().length > 0 &&
+      !(suggestedLinkTitle === this.initialValue) &&
+      suggestedLinkTitle.length > 0 &&
       !looksLikeUrl;
 
-    const showResults = !!value && (showCreateLink || results.length > 0);
+    const showResults =
+      !!suggestedLinkTitle && (showCreateLink || results.length > 0);
 
     return (
       <Wrapper>
         <Input
           value={value}
           placeholder={
-            showCreateLink ? "Find or create a doc…" : "Search or paste a link…"
+            showCreateLink
+              ? dictionary.findOrCreateDoc
+              : dictionary.searchOrPasteLink
           }
           onKeyDown={this.handleKeyDown}
           onChange={this.handleChange}
@@ -266,12 +283,12 @@ class LinkEditor extends React.Component<Props, State> {
         />
 
         <ToolbarButton onClick={this.handleOpenLink} disabled={!value}>
-          <Tooltip tooltip="Open link" placement="top">
+          <Tooltip tooltip={dictionary.openLink} placement="top">
             <OpenIcon color={theme.toolbarItem} />
           </Tooltip>
         </ToolbarButton>
         <ToolbarButton onClick={this.handleRemoveLink}>
-          <Tooltip tooltip="Remove link" placement="top">
+          <Tooltip tooltip={dictionary.removeLink} placement="top">
             {this.initialValue ? (
               <TrashIcon color={theme.toolbarItem} />
             ) : (
@@ -296,11 +313,11 @@ class LinkEditor extends React.Component<Props, State> {
             {showCreateLink && (
               <LinkSearchResult
                 key="create"
-                title={`Create new doc “${value.trim()}”`}
+                title={dictionary.createNewDoc(suggestedLinkTitle)}
                 icon={<PlusIcon color={theme.toolbarItem} />}
                 onMouseOver={() => this.handleFocusLink(results.length)}
                 onClick={() => {
-                  this.handleCreateLink(value);
+                  this.handleCreateLink(suggestedLinkTitle);
 
                   if (this.initialSelectionLength) {
                     this.moveSelectionToEnd();

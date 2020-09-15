@@ -1,7 +1,7 @@
 {
   "name": "rich-markdown-editor",
   "description": "A rich text editor with Markdown shortcuts",
-  "version": "10.6.6-0",
+  "version": "11.0.0-4",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "license": "BSD-3-Clause",
@@ -20,7 +20,6 @@
     "copy-to-clipboard": "^3.0.8",
     "lodash": "^4.17.11",
     "markdown-it-container": "^3.0.0",
-    "markdown-it-mark": "^3.0.0",
     "outline-icons": "^1.21.0-3",
     "prismjs": "^1.19.0",
     "prosemirror-commands": "^1.1.4",
@@ -40,14 +39,15 @@
     "react-medium-image-zoom": "^3.0.16",
     "react-portal": "^4.2.1",
     "refractor": "^3.1.0",
+    "resize-observer-polyfill": "^1.5.1",
     "slugify": "^1.4.0",
     "smooth-scroll-into-view-if-needed": "^1.1.27",
-    "styled-components": "^5.1.0",
     "typescript": "3.7.5"
   },
   "peerDependencies": {
     "react": "^16.8.6",
-    "react-dom": "^16.8.6"
+    "react-dom": "^16.8.6",
+    "styled-components": "^5.1.0"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.149",
@@ -80,6 +80,7 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "source-map-loader": "^0.2.4",
+    "styled-components": "^5.1.0",
     "ts-loader": "^6.2.1",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.2.3",

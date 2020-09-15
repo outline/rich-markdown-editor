@@ -1,15 +1,17 @@
 import { EditorState } from "prosemirror-state";
 import { TrashIcon, InsertAboveIcon, InsertBelowIcon } from "outline-icons";
 import { MenuItem } from "../types";
+import baseDictionary from "../dictionary";
 
 export default function tableRowMenuItems(
   state: EditorState,
-  index: number
+  index: number,
+  dictionary: typeof baseDictionary
 ): MenuItem[] {
   return [
     {
       name: "addRowAfter",
-      tooltip: "Insert row before",
+      tooltip: dictionary.addRowBefore,
       icon: InsertAboveIcon,
       attrs: { index: index - 1 },
       active: () => false,
@@ -17,7 +19,7 @@ export default function tableRowMenuItems(
     },
     {
       name: "addRowAfter",
-      tooltip: "Insert row after",
+      tooltip: dictionary.addRowAfter,
       icon: InsertBelowIcon,
       attrs: { index },
       active: () => false,
@@ -27,7 +29,7 @@ export default function tableRowMenuItems(
     },
     {
       name: "deleteRow",
-      tooltip: "Delete row",
+      tooltip: dictionary.deleteRow,
       icon: TrashIcon,
       active: () => false,
     },

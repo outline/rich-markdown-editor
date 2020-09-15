@@ -4,14 +4,16 @@ import { EditorView } from "prosemirror-view";
 import LinkEditor, { SearchResult } from "./LinkEditor";
 import FloatingToolbar from "./FloatingToolbar";
 import createAndInsertLink from "../commands/createAndInsertLink";
+import baseDictionary from "../dictionary";
 
 type Props = {
   isActive: boolean;
   view: EditorView;
-  tooltip: typeof React.Component;
+  tooltip: typeof React.Component | React.FC<any>;
+  dictionary: typeof baseDictionary;
   onCreateLink?: (title: string) => Promise<string>;
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
-  onClickLink: (url: string) => void;
+  onClickLink: (href: string, event: MouseEvent) => void;
   onShowToast?: (msg: string, code: string) => void;
   onClose: () => void;
 };
@@ -53,7 +55,7 @@ export default class LinkToolbar extends React.Component<Props> {
   };
 
   handleOnCreateLink = async (title: string) => {
-    const { onCreateLink, view, onClose, onShowToast } = this.props;
+    const { dictionary, onCreateLink, view, onClose, onShowToast } = this.props;
 
     onClose();
     this.props.view.focus();
@@ -82,6 +84,7 @@ export default class LinkToolbar extends React.Component<Props> {
     createAndInsertLink(view, title, href, {
       onCreateLink,
       onShowToast,
+      dictionary,
     });
   };
 

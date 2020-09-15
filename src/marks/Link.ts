@@ -125,14 +125,14 @@ export default class Link extends Mark {
                 if (isHashtag && this.options.onClickHashtag) {
                   event.stopPropagation();
                   event.preventDefault();
-                  this.options.onClickHashtag(href);
+                  this.options.onClickHashtag(href, event);
                   return true;
                 }
 
                 if (this.options.onClickLink) {
                   event.stopPropagation();
                   event.preventDefault();
-                  this.options.onClickLink(href);
+                  this.options.onClickLink(href, event);
                   return true;
                 }
               }

@@ -18,11 +18,19 @@ import isMarkActive from "../queries/isMarkActive";
 import isNodeActive from "../queries/isNodeActive";
 import { MenuItem } from "../types";
 import { isCommentActive } from "../plugins/Comments";
+import baseDictionary from "../dictionary";
 
-export default function formattingMenuItems(
-  state: EditorState,
-  isTemplate: boolean
-): MenuItem[] {
+export default function formattingMenuItems({
+  state,
+  isTemplate,
+  isCommentable,
+  dictionary,
+}: {
+  state: EditorState;
+  isTemplate: boolean;
+  isCommentable: boolean;
+  dictionary: typeof baseDictionary;
+}): MenuItem[] {
   const { schema } = state;
   const isTable = isInTable(state);
   const isList = isInList(state);
@@ -31,7 +39,7 @@ export default function formattingMenuItems(
   return [
     {
       name: "placeholder",
-      tooltip: "Placeholder",
+      tooltip: dictionary.placeholder,
       icon: InputIcon,
       active: isMarkActive(schema.marks.placeholder),
       visible: isTemplate,
@@ -42,32 +50,32 @@ export default function formattingMenuItems(
     },
     {
       name: "strong",
-      tooltip: "Bold",
+      tooltip: dictionary.strong,
       icon: BoldIcon,
       active: isMarkActive(schema.marks.strong),
     },
     {
       name: "em",
-      tooltip: "Italic",
+      tooltip: dictionary.em,
       icon: ItalicIcon,
       active: isMarkActive(schema.marks.em),
     },
     {
       name: "strikethrough",
-      tooltip: "Strikethrough",
+      tooltip: dictionary.strikethrough,
       icon: StrikethroughIcon,
       active: isMarkActive(schema.marks.strikethrough),
     },
     {
       name: "mark",
-      tooltip: "Highlight",
+      tooltip: dictionary.mark,
       icon: HighlightIcon,
       active: isMarkActive(schema.marks.mark),
       visible: !isTemplate,
     },
     {
       name: "code_inline",
-      tooltip: "Code",
+      tooltip: dictionary.codeInline,
       icon: CodeIcon,
       active: isMarkActive(schema.marks.code_inline),
     },
@@ -77,7 +85,7 @@ export default function formattingMenuItems(
     },
     {
       name: "heading",
-      tooltip: "Heading",
+      tooltip: dictionary.heading,
       icon: Heading1Icon,
       active: isNodeActive(schema.nodes.heading, { level: 1 }),
       attrs: { level: 1 },
@@ -85,7 +93,7 @@ export default function formattingMenuItems(
     },
     {
       name: "heading",
-      tooltip: "Subheading",
+      tooltip: dictionary.subheading,
       icon: Heading2Icon,
       active: isNodeActive(schema.nodes.heading, { level: 2 }),
       attrs: { level: 2 },
@@ -93,7 +101,7 @@ export default function formattingMenuItems(
     },
     {
       name: "blockquote",
-      tooltip: "Quote",
+      tooltip: dictionary.quote,
       icon: BlockQuoteIcon,
       active: isNodeActive(schema.nodes.blockquote),
       attrs: { level: 2 },
@@ -104,17 +112,17 @@ export default function formattingMenuItems(
     },
     {
       name: "link",
-      tooltip: "Create link",
+      tooltip: dictionary.createLink,
       icon: LinkIcon,
       active: isMarkActive(schema.marks.link),
       attrs: { href: "" },
     },
     {
       name: "comments",
-      tooltip: "Leave a comment",
+      tooltip: dictionary.leaveAComment,
       icon: CommentIcon,
       active: isCommentActive,
-      visible: !isTemplate,
+      visible: !isTemplate && isCommentable,
     },
   ];
 }

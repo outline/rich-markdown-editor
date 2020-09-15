@@ -124,12 +124,16 @@ class Example extends React.Component {
           onSave={options => console.log("Save triggered", options)}
           onCancel={() => console.log("Cancel triggered")}
           onChange={this.handleChange}
-          onClickLink={href => console.log("Clicked link: ", href)}
+          onClickLink={(href, event) =>
+            console.log("Clicked link: ", href, event)
+          }
           onHoverLink={event => {
             console.log("Hovered link: ", event.target.href);
             return false;
           }}
-          onClickHashtag={tag => console.log("Clicked hashtag: ", tag)}
+          onClickHashtag={(tag, event) =>
+            console.log("Clicked hashtag: ", tag, event)
+          }
           onCreateLink={title => {
             // Delay to simulate time taken for remote API request to complete
             return new Promise((resolve, reject) => {
@@ -147,7 +151,7 @@ class Example extends React.Component {
           onSelectComment={comment =>
             console.log("Selected comment: ", comment)
           }
-          onShowToast={message => window.alert(message)}
+          onShowToast={(message, type) => window.alert(`${type}: ${message}`)}
           onSearchLink={async term => {
             console.log("Searched link: ", term);
             return docSearchResults.filter(result =>

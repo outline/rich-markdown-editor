@@ -1,4 +1,4 @@
-[![npm version](https://badge.fury.io/js/rich-markdown-editor.svg)](https://badge.fury.io/js/rich-markdown-editor) [![CircleCI](https://img.shields.io/circleci/project/github/outline/rich-markdown-editor.svg)](https://circleci.com/gh/outline/rich-markdown-editor) [![Formatted with Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat)](https://github.com/prettier/prettier) [![TypeScript](https://camo.githubusercontent.com/21132e0838961fbecb75077042aa9b15bc0bf6f9/68747470733a2f2f62616467656e2e6e65742f62616467652f4275696c74253230576974682f547970655363726970742f626c7565)](https://www.typescriptlang.org/)
+[![npm version](https://badge.fury.io/js/rich-markdown-editor.svg)](https://badge.fury.io/js/rich-markdown-editor) [![CircleCI](https://img.shields.io/circleci/project/github/outline/rich-markdown-editor.svg)](https://circleci.com/gh/outline/rich-markdown-editor) [![Formatted with Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat)](https://github.com/prettier/prettier) [![TypeScript](https://camo.githubusercontent.com/21132e0838961fbecb75077042aa9b15bc0bf6f9/68747470733a2f2f62616467656e2e6e65742f62616467652f4275696c74253230576974682f547970655363726970742f626c7565)](https://www.typescriptlang.org/) [![Sponsor](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub)](https://github.com/sponsors/outline)
 
 
 
@@ -11,6 +11,22 @@ The editor is WYSIWYG and includes formatting tools whilst retaining the ability
 
 ## Usage
 
+### Install
+
+```bash
+yarn add rich-markdown-editor
+```
+
+or
+
+```bash
+npm install rich-markdown-editor
+```
+
+Note that `react`, `react-dom`, and `styled-components` are _required_ peer dependencies.
+
+### Import
+
 ```javascript
 import Editor from "rich-markdown-editor";
 
@@ -19,7 +35,7 @@ import Editor from "rich-markdown-editor";
 />
 ```
 
-See a working example in the [example directory](/example).
+See a working example in the [example directory](/example) with many example props.
 
 
 ### Props
@@ -61,6 +77,10 @@ Allows additional [Prosemirror plugins](https://prosemirror.net/docs/ref/#state.
 #### `theme`
 
 Allows overriding the inbuilt theme to brand the editor, for example use your own font face and brand colors to have the editor fit within your application. See the [inbuilt theme](/src/theme.ts) for an example of the keys that should be provided.
+
+#### `dictionary`
+
+Allows overriding the inbuilt copy dictionary, for example to internationalize the editor. See the [inbuilt dictionary](/src/dictionary.ts) for an example of the keys that should be provided.
 
 #### `dark`
 
@@ -171,15 +191,14 @@ The editor provides an ability to create links from the formatting toolbar for o
 />
 ```
 
-#### `onShowToast(message: string, id: string): void`
+#### `onShowToast(message: string, type: ToastType): void`
 
-Triggered when the editor wishes to show an error message to the user. Hook into your apps
+Triggered when the editor wishes to show a message to the user. Hook into your app's
 notification system, or simplisticly use `window.alert(message)`. The second parameter
-is a stable identifier you can use to identify the message if you'd prefer to write
-your own copy.
+is the type of toast: 'error' or 'info'.
 
 
-#### `onClickLink(href: string): void`
+#### `onClickLink(href: string, event: MouseEvent): void`
 
 This callback allows overriding of link handling. It's often the case that you want to have external links open a new window and have internal links use something like `react-router` to navigate. If no callback is provided then default behavior of opening a new tab will apply to all links. eg:
 
@@ -188,7 +207,7 @@ This callback allows overriding of link handling. It's often the case that you w
 import { history } from "react-router";
 
 <Editor
-  onClickLink={href => {
+  onClickLink={(href, event) => {
     if (isInternalLink(href)) {
       history.push(href);
     } else {
@@ -211,7 +230,7 @@ This callback allows detecting when the user hovers over a link in the document.
 />
 ```
 
-#### `onClickHashtag(tag: string): void`
+#### `onClickHashtag(tag: string, event: MouseEvent): void`
 
 This callback allows handling of clicking on hashtags in the document text. If no callback is provided then hashtags will render as regular text, so you can choose if to support them or not by passing this prop.
 

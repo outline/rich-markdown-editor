@@ -10,7 +10,7 @@ import styled, { withTheme } from "styled-components";
 import theme from "../theme";
 
 type Props = {
-  tooltip: typeof React.Component;
+  tooltip: typeof React.Component | React.FC<any>;
   isTemplate: boolean;
   commands: Record<string, any>;
   theme: typeof theme;

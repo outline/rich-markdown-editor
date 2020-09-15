@@ -1,5 +1,6 @@
 /* global window File Promise */
 import * as React from "react";
+import { memoize } from "lodash";
 import { EditorState, Selection, Plugin } from "prosemirror-state";
 import { dropCursor } from "prosemirror-dropcursor";
 import { gapCursor } from "prosemirror-gapcursor";
@@ -12,9 +13,10 @@ import { baseKeymap } from "prosemirror-commands";
 import { selectColumn, selectRow, selectTable } from "prosemirror-utils";
 import styled, { ThemeProvider } from "styled-components";
 import { light as lightTheme, dark as darkTheme } from "./theme";
+import baseDictionary from "./dictionary";
 import Flex from "./components/Flex";
 import { SearchResult } from "./components/LinkEditor";
-import { EmbedDescriptor } from "./types";
+import { EmbedDescriptor, ToastType, Comment } from "./types";
 import SelectionToolbar from "./components/SelectionToolbar";
 import BlockMenu from "./components/BlockMenu";
 import CommentToolbar from "./components/CommentToolbar";
@@ -57,6 +59,7 @@ import Italic from "./marks/Italic";
 import Link from "./marks/Link";
 import Strikethrough from "./marks/Strikethrough";
 import TemplatePlaceholder from "./marks/Placeholder";
+import Underline from "./marks/Underline";
 
 // plugins
 import BlockMenuTrigger from "./plugins/BlockMenuTrigger";
@@ -74,13 +77,6 @@ export { default as Extension } from "./lib/Extension";
 
 export const theme = lightTheme;
 
-type Comment = {
-  id: string;
-  text: string;
-  from: number;
-  to: number;
-};
-
 export type Props = {
   id?: string;
   value?: string;
@@ -90,6 +86,7 @@ export type Props = {
   autoFocus?: boolean;
   readOnly?: boolean;
   readOnlyWriteCheckboxes?: boolean;
+  dictionary?: Partial<typeof baseDictionary>;
   dark?: boolean;
   theme?: typeof theme;
   template?: boolean;
@@ -106,15 +103,15 @@ export type Props = {
   onImageUploadStop?: () => void;
   onCreateLink?: (title: string) => Promise<string>;
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
-  onClickLink: (href: string) => void;
+  onClickLink: (href: string, event: MouseEvent) => void;
   onHoverLink?: (event: MouseEvent) => boolean;
-  onClickHashtag?: (tag: string) => void;
-  onSelectComment: (comment?: Comment) => void;
+  onClickHashtag?: (tag: string, event: MouseEvent) => void;
+  onSelectComment?: (comment?: Comment) => void;
   onKeyDown?: (event: React.KeyboardEvent<HTMLDivElement>) => void;
   comments?: Comment[];
   embeds: EmbedDescriptor[];
-  onShowToast?: (message: string) => void;
-  tooltip: typeof React.Component;
+  onShowToast?: (message: string, code: ToastType) => void;
+  tooltip: typeof React.Component | React.FC<any>;
   className?: string;
   style?: Record<string, string>;
 };
@@ -229,6 +226,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   }
 
   createExtensions() {
+    const dictionary = this.dictionary(this.props.dictionary);
+
     // adding nodes here? Update schema.ts for serialization on the server
     return new ExtensionManager(
       [
@@ -239,10 +238,12 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new Blockquote(),
         new BulletList(),
         new CodeBlock({
+          dictionary,
           initialReadOnly: this.props.readOnly,
           onShowToast: this.props.onShowToast,
         }),
         new CodeFence({
+          dictionary,
           initialReadOnly: this.props.readOnly,
           onShowToast: this.props.onShowToast,
         }),
@@ -250,13 +251,17 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new CheckboxItem(),
         new Embed(),
         new ListItem(),
-        new Notice(),
+        new Notice({
+          dictionary,
+        }),
         new Heading({
+          dictionary,
           onShowToast: this.props.onShowToast,
           offset: this.props.headingsOffset,
         }),
         new HorizontalRule(),
         new Image({
+          dictionary,
           uploadImage: this.props.uploadImage,
           onImageUploadStart: this.props.onImageUploadStart,
           onImageUploadStop: this.props.onImageUploadStop,
@@ -276,6 +281,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new Highlight(),
         new Italic(),
         new TemplatePlaceholder(),
+        new Underline(),
         new Link({
           onKeyboardShortcut: this.handleOpenLinkMenu,
           onClickLink: this.props.onClickLink,
@@ -294,6 +300,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           onCancel: this.props.onCancel,
         }),
         new BlockMenuTrigger({
+          dictionary,
           onOpen: this.handleOpenBlockMenu,
           onClose: this.handleCloseBlockMenu,
         }),
@@ -569,6 +576,12 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     return this.props.theme || (this.props.dark ? darkTheme : lightTheme);
   };
 
+  dictionary = memoize(
+    (providedDictionary?: Partial<typeof baseDictionary>) => {
+      return { ...baseDictionary, ...providedDictionary };
+    }
+  );
+
   render = () => {
     const {
       readOnly,
@@ -578,6 +591,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       className,
       onKeyDown,
     } = this.props;
+    const dictionary = this.dictionary(this.props.dictionary);
 
     return (
       <Flex
@@ -607,15 +621,18 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
               <>
                 <SelectionToolbar
                   view={this.view}
+                  dictionary={dictionary}
                   commands={this.commands}
                   isTemplate={this.props.template === true}
                   onSearchLink={this.props.onSearchLink}
                   onClickLink={this.props.onClickLink}
                   onCreateLink={this.props.onCreateLink}
+                  onSelectComment={this.props.onSelectComment}
                   tooltip={tooltip}
                 />
                 <LinkToolbar
                   view={this.view}
+                  dictionary={dictionary}
                   isActive={this.state.linkMenuOpen}
                   onCreateLink={this.props.onCreateLink}
                   onSearchLink={this.props.onSearchLink}
@@ -627,6 +644,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                 <BlockMenu
                   view={this.view}
                   commands={this.commands}
+                  dictionary={dictionary}
                   isActive={this.state.blockMenuOpen}
                   search={this.state.blockMenuSearch}
                   onClose={this.handleCloseBlockMenu}
