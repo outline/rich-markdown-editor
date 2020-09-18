@@ -229,6 +229,7 @@ class Example extends React.Component {
           template={this.state.template}
           defaultValue={defaultValue}
           scrollTo={window.location.hash}
+          getPlaceHolderLink={title => `/test/${title}`}
           handleDOMEvents={{
             focus: () => console.log("FOCUS"),
             blur: () => console.log("BLUR"),

@@ -99,6 +99,7 @@ export type Props = {
   onImageUploadStart?: () => void;
   onImageUploadStop?: () => void;
   onCreateLink?: (title: string) => Promise<string>;
+  getPlaceHolderLink: (title: string) => string;
   onSearchLink?: (term: Object) => Promise<SearchResult[]>;
   searchResultList?: typeof React.Component;
   searchResultsOpen?: boolean;
@@ -142,6 +143,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     onClickLink: href => {
       window.open(href, "_blank");
     },
+    getPlaceHolderLink: title => `/cards/${title}`,
     embeds: [],
     extensions: [],
     tooltip: Tooltip,
@@ -422,8 +424,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     const isEditingCheckbox = tr => {
       return tr.steps.some(
         (step: Step) =>
-          step.slice.content.firstChild &&
-          step.slice.content.firstChild.type.name ===
+          step.slice?.content?.firstChild?.type?.name ===
             this.schema.nodes.checkbox_item.name
       );
     };
@@ -596,7 +597,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   handleOnCreateLink = async (title: string, { fromOffset = 0, toOffset = 0 } = {}) => {
-    const { onCreateLink, onShowToast } = this.props;
+    const { onCreateLink, onShowToast, getPlaceHolderLink, readOnly, readOnlyWriteCheckboxes } = this.props;
 
     this.handleCloseLinkMenu();
     this.view.focus();
@@ -604,34 +605,35 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     if (!onCreateLink) {
       return;
     }
+    const href = getPlaceHolderLink(title);
 
-    const { dispatch, state } = this.view;
-    const { from, to } = state.selection;
-
-    const href = `creating#${title}…`;
-
-    if (from === to) {
-      const offset = -this.state.triggerSearch.length;
-      // Insert a placeholder link
-      dispatch(
-        this.view.state.tr
-          .insertText(title, from + offset + fromOffset, to + toOffset)
-          .addMark(
-            from + offset + fromOffset,
-            to + offset + fromOffset + toOffset + title.length,
-            state.schema.marks.link.create({ href })
-          )
-      );
-    } else {
-      dispatch(
-        this.view.state.tr
-          .addMark(from, to, state.schema.marks.link.create({ href }))
-      );
+    if (!readOnly || readOnlyWriteCheckboxes) {
+      const { dispatch, state } = this.view;
+      const { from, to } = state.selection;
+      if (from === to) {
+        const offset = -this.state.triggerSearch.length;
+        // Insert a placeholder link
+        dispatch(
+          this.view.state.tr
+            .insertText(title, from + offset + fromOffset, to + toOffset)
+            .addMark(
+              from + offset + fromOffset,
+              to + offset + fromOffset + toOffset + title.length,
+              state.schema.marks.link.create({ href })
+            )
+        );
+      } else {
+        dispatch(
+          this.view.state.tr
+            .addMark(from, to, state.schema.marks.link.create({ href }))
+        );
+      }
     }
 
     createAndInsertLink(this.view, title, href, {
       onCreateLink,
       onShowToast,
+      readOnly: readOnly && !readOnlyWriteCheckboxes
     });
     this.handleCloseSearchTrigger();
   };
@@ -649,40 +651,41 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   }) => {
     this.handleCloseLinkMenu();
     this.view.focus();
-
-    const { dispatch, state } = this.view;
-    if (this.state.linkFrom && this.state.linkTo) {
-      // inset from selection toolbar link editor
-      const markType = state.schema.marks.link;
-      const from = this.state.linkFrom;
-      const to = this.state.linkTo;
-      dispatch(
-        state.tr
-          .removeMark(from, to, markType)
-          .addMark(from, to, markType.create({ href }))
-      );
-    } else {
-      const from = state.selection.from;
-      const to = state.selection.to;
-
-      if (from === to) {
-        // insert by simple click
-        const offset = -this.state.triggerSearch.length;
+    if (!this.props.readOnly || this.props.readOnlyWriteCheckboxes) {
+      const { dispatch, state } = this.view;
+      if (this.state.linkFrom && this.state.linkTo) {
+        // inset from selection toolbar link editor
+        const markType = state.schema.marks.link;
+        const from = this.state.linkFrom;
+        const to = this.state.linkTo;
         dispatch(
-          this.view.state.tr
-            .insertText(title, from + offset + fromOffset, to + toOffset)
-            .addMark(
-              from + offset + fromOffset,
-              to + offset + fromOffset + toOffset + title.length,
-              state.schema.marks.link.create({ href })
-            )
+          state.tr
+            .removeMark(from, to, markType)
+            .addMark(from, to, markType.create({ href }))
         );
       } else {
-        // insert by select and click
-        dispatch(
-          this.view.state.tr
-            .addMark(from, to, state.schema.marks.link.create({ href }))
-        );
+        const from = state.selection.from;
+        const to = state.selection.to;
+
+        if (from === to) {
+          // insert by simple click
+          const offset = -this.state.triggerSearch.length;
+          dispatch(
+            this.view.state.tr
+              .insertText(title, from + offset + fromOffset, to + toOffset)
+              .addMark(
+                from + offset + fromOffset,
+                to + offset + fromOffset + toOffset + title.length,
+                state.schema.marks.link.create({ href })
+              )
+          );
+        } else {
+          // insert by select and click
+          dispatch(
+            this.view.state.tr
+              .addMark(from, to, state.schema.marks.link.create({ href }))
+          );
+        }
       }
     }
     this.handleCloseSearchTrigger();
@@ -797,29 +800,27 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   onShowToast={this.props.onShowToast}
                   embeds={this.props.embeds}
                 />
-                {SearchResultList && (
-                  // Need to pass this handleOnCreateLink and handleOnSelectLink from LinkToolbar
-                  // But needs to replace search text like clearSearch in BlockMenu
-                  <Portal>
-                    <Wrapper
-                      id="search-menu-container"
-                      tabIndex="0"
-                      active={this.state.searchTriggerOpen}
-                      {...position}
-                    >
-                      <SearchResultList
-                        search={this.state.triggerSearch}
-                        searchSource={this.state.searchSource}
-                        isActive={this.state.searchTriggerOpen}
-                        onSearchLink={this.props.onSearchLink}
-                        handleOnSelectLink={this.handleOnSelectLink}
-                        handleOnCreateLink={this.handleOnCreateLink}
-                        onClickLink={this.props.onClickLink}
-                      />
-                    </Wrapper>
-                  </Portal>
-                )}
               </React.Fragment>
+            )}
+            {this.view && SearchResultList && (
+              <Portal>
+                <Wrapper
+                  id="search-menu-container"
+                  tabIndex="0"
+                  active={this.state.searchTriggerOpen}
+                  {...position}
+                >
+                  <SearchResultList
+                    search={this.state.triggerSearch}
+                    searchSource={this.state.searchSource}
+                    isActive={this.state.searchTriggerOpen}
+                    onSearchLink={this.props.onSearchLink}
+                    handleOnSelectLink={this.handleOnSelectLink}
+                    handleOnCreateLink={this.handleOnCreateLink}
+                    onClickLink={this.props.onClickLink}
+                  />
+                </Wrapper>
+              </Portal>
             )}
           </React.Fragment>
         </ThemeProvider>
