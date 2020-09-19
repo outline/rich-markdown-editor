@@ -14,7 +14,7 @@ export default function markdownTables(md: MarkdownIt) {
         tokens[i].level--;
       }
 
-      // convert break line into br tag
+      // convert unescaped \n in the text into real br tag
       if (tokens[i].type === "inline" && tokens[i].content.match(BREAK_REGEX)) {
         const existing = tokens[i].children || [];
         tokens[i].children = [];
@@ -23,7 +23,7 @@ export default function markdownTables(md: MarkdownIt) {
           const breakParts = child.content.split(BREAK_REGEX);
 
           // a schema agnostic way to know if a node is inline code would be
-          // great, got now we're stuck checking the node type.
+          // great, for now we are stuck checking the node type.
           if (breakParts.length > 1 && child.type !== "code_inline") {
             breakParts.forEach((part, index) => {
               const token = new Token("text", "", 1);
