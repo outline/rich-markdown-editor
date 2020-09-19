@@ -22,7 +22,9 @@ export default function markdownTables(md: MarkdownIt) {
         existing.forEach(child => {
           const breakParts = child.content.split(BREAK_REGEX);
 
-          if (breakParts.length > 1) {
+          // a schema agnostic way to know if a node is inline code would be
+          // great, got now we're stuck checking the node type.
+          if (breakParts.length > 1 && child.type !== "code_inline") {
             breakParts.forEach((part, index) => {
               const token = new Token("text", "", 1);
               token.content = part.trim();
