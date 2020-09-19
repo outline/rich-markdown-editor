@@ -1,6 +1,8 @@
 import MarkdownIt from "markdown-it";
 import Token from "markdown-it/lib/token";
 
+const BREAK_REGEX = /(?:^|[^\\])\\n/;
+
 export default function markdownTables(md: MarkdownIt) {
   // insert a new rule after the "inline" rules are parsed
   md.core.ruler.after("inline", "tables-pm", state => {
@@ -13,13 +15,14 @@ export default function markdownTables(md: MarkdownIt) {
       }
 
       // convert break line into br tag
-      if (tokens[i].type === "inline" && tokens[i].content.includes("\\n")) {
+      if (tokens[i].type === "inline" && tokens[i].content.match(BREAK_REGEX)) {
         const existing = tokens[i].children || [];
         tokens[i].children = [];
 
         existing.forEach(child => {
-          if (child.content.includes("\\n")) {
-            const breakParts = child.content.split("\\n");
+          const breakParts = child.content.split(BREAK_REGEX);
+
+          if (breakParts.length > 1) {
             breakParts.forEach((part, index) => {
               const token = new Token("text", "", 1);
               token.content = part.trim();

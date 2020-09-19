@@ -356,10 +356,13 @@ export class MarkdownSerializerState {
   // has special meaning only at the start of the line.
   esc(str, startOfLine) {
     str = str.replace(/[`*\\~\[\]]/g, "\\$&");
-    if (startOfLine)
+    if (startOfLine) {
       str = str.replace(/^[:#\-*+]/, "\\$&").replace(/^(\d+)\./, "$1\\.");
+    }
 
-    if (this.inTable) str = str.replace(/\|/gi, "\\$&");
+    if (this.inTable) {
+      str = str.replace(/\|/gi, "\\$&");
+    }
 
     return str;
   }
