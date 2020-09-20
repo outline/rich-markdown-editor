@@ -1059,7 +1059,7 @@ const StyledEditor = styled("div")<{
   .placeholder {
     &:before {
       display: block;
-      content: ${props => (props.readOnly ? "" : "attr(data-empty-text)")};
+      content: ${props => (props.readOnly && !props.readOnlyWriteCheckboxes ? "" : "attr(data-empty-text)")};
       pointer-events: none;
       height: 0;
       color: ${props => props.theme.placeholder};
