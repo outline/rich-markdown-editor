@@ -86,6 +86,9 @@
     "webpack-cli": "^3.2.3",
     "webpack-serve": "^3.2.0"
   },
+  "resolutions": {
+    "yargs-parser": "^15.0.1"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/outline/rich-markdown-editor.git"
