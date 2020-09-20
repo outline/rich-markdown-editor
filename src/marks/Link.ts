@@ -101,7 +101,10 @@ export default class Link extends Mark {
         props: {
           handleDOMEvents: {
             mouseover: (view, event: MouseEvent) => {
-              if (event.target instanceof HTMLAnchorElement) {
+              if (
+                event.target instanceof HTMLAnchorElement &&
+                !event.target.className.includes("ProseMirror-widget")
+              ) {
                 if (this.options.onHoverLink) {
                   return this.options.onHoverLink(event);
                 }
