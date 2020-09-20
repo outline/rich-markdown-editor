@@ -1,5 +1,5 @@
 import * as React from "react";
-import { debounce } from "lodash";
+import debounce from "lodash/debounce";
 import ReactDOM from "react-dom";
 import Editor from "../../src";
 
