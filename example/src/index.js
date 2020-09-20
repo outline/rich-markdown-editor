@@ -42,6 +42,7 @@ class YoutubeEmbed extends React.Component {
 
     return (
       <iframe
+        className={this.props.isSelected ? "ProseMirror-selectednode" : ""}
         src={`https://www.youtube.com/embed/${videoId}?modestbranding=1`}
       />
     );
@@ -160,10 +161,7 @@ class Example extends React.Component {
 
             // Delay to simulate time taken to upload
             return new Promise(resolve => {
-              setTimeout(
-                () => resolve("https://loremflickr.com/1000/1000"),
-                1500
-              );
+              setTimeout(() => resolve("https://picsum.photos/600/600"), 1500);
             });
           }}
           embeds={[

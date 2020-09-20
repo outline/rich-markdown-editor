@@ -1,7 +1,7 @@
 import * as React from "react";
-import { Plugin } from "prosemirror-state";
+import { Plugin, NodeSelection } from "prosemirror-state";
 import { InputRule } from "prosemirror-inputrules";
-import { setTextSelection } from "prosemirror-utils";
+import { setTextSelection, removeParentNodeOfType } from "prosemirror-utils";
 import styled from "styled-components";
 import ImageZoom from "react-medium-image-zoom";
 import getDataTransferFiles from "../lib/getDataTransferFiles";
@@ -100,6 +100,7 @@ export default class Image extends Node {
       content: "text*",
       marks: "",
       group: "inline",
+      selectable: true,
       draggable: true,
       parseDOM: [
         {
@@ -129,6 +130,8 @@ export default class Image extends Node {
   }
 
   handleKeyDown = ({ node, getPos }) => event => {
+    // Pressing Enter in the caption field should move the cursor/selection
+    // below the image
     if (event.key === "Enter") {
       event.preventDefault();
 
@@ -136,6 +139,17 @@ export default class Image extends Node {
       const pos = getPos() + node.nodeSize;
       view.focus();
       view.dispatch(setTextSelection(pos)(view.state.tr));
+      return;
+    }
+
+    // Pressing Backspace in an an empty caption field should remove the entire
+    // image, leaving an empty paragraph
+    if (event.key === "Backspace" && event.target.innerText === "") {
+      const { view } = this.editor;
+      const $pos = view.state.doc.resolve(getPos());
+      const tr = view.state.tr.setSelection(new NodeSelection($pos));
+      view.dispatch(tr.deleteSelection());
+      view.focus();
       return;
     }
   };
