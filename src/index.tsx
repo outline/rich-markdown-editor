@@ -745,6 +745,20 @@ const StyledEditor = styled("div")<{
       font-size: 13px;
       left: -24px;
     }
+
+    &:hover {
+      .heading-anchor {
+        opacity: 1;
+      }
+    }
+  }
+
+  .heading-name {
+    color: ${props => props.theme.text};
+
+    &:hover {
+      text-decoration: none;
+    }
   }
 
   a:first-child {
@@ -779,18 +793,6 @@ const StyledEditor = styled("div")<{
   }
   h6:not(.placeholder):before {
     content: "H6";
-  }
-
-  .heading-name {
-    color: ${props => props.theme.text};
-
-    &:hover {
-      text-decoration: none;
-
-      .heading-anchor {
-        opacity: 1;
-      }
-    }
   }
 
   .with-emoji {
