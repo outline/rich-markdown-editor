@@ -10,6 +10,7 @@ export default class Embed extends Node {
     return {
       content: "inline*",
       group: "block",
+      atom: true,
       attrs: {
         href: {},
         component: {},
@@ -28,14 +29,12 @@ export default class Embed extends Node {
     const Component = node.attrs.component;
 
     return (
-      <div contentEditable={false}>
-        <Component
-          attrs={node.attrs}
-          isEditable={isEditable}
-          isSelected={isSelected}
-          theme={theme}
-        />
-      </div>
+      <Component
+        attrs={node.attrs}
+        isEditable={isEditable}
+        isSelected={isSelected}
+        theme={theme}
+      />
     );
   }
 

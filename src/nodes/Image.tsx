@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Plugin } from "prosemirror-state";
+import { Plugin, NodeSelection } from "prosemirror-state";
 import { InputRule } from "prosemirror-inputrules";
 import { setTextSelection } from "prosemirror-utils";
 import styled from "styled-components";
@@ -18,6 +18,12 @@ import Node from "./Node";
  * ![Lorem](image.jpg "Ipsum") -> [, "Lorem", "image.jpg", "Ipsum"]
  */
 const IMAGE_INPUT_REGEX = /!\[(.+|:?)]\((\S+)(?:(?:\s+)["'](\S+)["'])?\)/;
+
+const STYLE = {
+  display: "inline-block",
+  maxWidth: "100%",
+  maxHeight: "75vh",
+};
 
 const uploadPlugin = options =>
   new Plugin({
@@ -100,6 +106,7 @@ export default class Image extends Node {
       content: "text*",
       marks: "",
       group: "inline",
+      selectable: true,
       draggable: true,
       parseDOM: [
         {
@@ -129,6 +136,8 @@ export default class Image extends Node {
   }
 
   handleKeyDown = ({ node, getPos }) => event => {
+    // Pressing Enter in the caption field should move the cursor/selection
+    // below the image
     if (event.key === "Enter") {
       event.preventDefault();
 
@@ -136,6 +145,17 @@ export default class Image extends Node {
       const pos = getPos() + node.nodeSize;
       view.focus();
       view.dispatch(setTextSelection(pos)(view.state.tr));
+      return;
+    }
+
+    // Pressing Backspace in an an empty caption field should remove the entire
+    // image, leaving an empty paragraph
+    if (event.key === "Backspace" && event.target.innerText === "") {
+      const { view } = this.editor;
+      const $pos = view.state.doc.resolve(getPos());
+      const tr = view.state.tr.setSelection(new NodeSelection($pos));
+      view.dispatch(tr.deleteSelection());
+      view.focus();
       return;
     }
   };
@@ -157,34 +177,46 @@ export default class Image extends Node {
     view.dispatch(transaction);
   };
 
-  component = options => {
-    const { theme } = options;
-    const { alt, src } = options.node.attrs;
+  handleSelect = ({ getPos }) => event => {
+    event.preventDefault();
+
+    const { view } = this.editor;
+    const $pos = view.state.doc.resolve(getPos());
+    const transaction = view.state.tr.setSelection(new NodeSelection($pos));
+    view.dispatch(transaction);
+  };
+
+  component = props => {
+    const { theme, isEditable, isSelected } = props;
+    const { alt, src } = props.node.attrs;
 
     return (
-      <div className="image" contentEditable={false}>
-        <ImageZoom
-          image={{
-            src,
-            alt,
-            style: {
-              maxWidth: "100%",
-              maxHeight: "75vh",
-            },
-          }}
-          defaultStyles={{
-            overlay: {
-              backgroundColor: theme.background,
-            },
-          }}
-          shouldRespectMaxDimension
-        />
-        {(options.isEditable || alt) && (
+      <div contentEditable={false} className="image">
+        <ImageWrapper
+          className={isSelected ? "ProseMirror-selectednode" : ""}
+          onClick={isEditable ? this.handleSelect(props) : undefined}
+        >
+          <ImageZoom
+            image={{
+              src,
+              alt,
+              style: STYLE,
+            }}
+            defaultStyles={{
+              overlay: {
+                backgroundColor: theme.background,
+              },
+            }}
+            shouldRespectMaxDimension
+          />
+        </ImageWrapper>
+
+        {(isEditable || alt) && (
           <Caption
-            onKeyDown={this.handleKeyDown(options)}
-            onBlur={this.handleBlur(options)}
+            onKeyDown={this.handleKeyDown(props)}
+            onBlur={this.handleBlur(props)}
             tabIndex={-1}
-            contentEditable={options.isEditable}
+            contentEditable={isEditable}
             suppressContentEditableWarning
           >
             {alt}
@@ -253,6 +285,11 @@ export default class Image extends Node {
     return [uploadPlaceholderPlugin, uploadPlugin(this.options)];
   }
 }
+
+const ImageWrapper = styled.span`
+  line-height: 0;
+  display: inline-block;
+`;
 
 const Caption = styled.p`
   border: 0;
