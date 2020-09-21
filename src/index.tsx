@@ -706,7 +706,8 @@ const StyledEditor = styled("div")<{
   }
 
   .ProseMirror-selectednode {
-    outline: 2px solid ${props => props.theme.selected};
+    outline: 2px solid
+      ${props => (props.readOnly ? "transparent" : props.theme.selected)};
   }
 
   /* Make sure li selections wrap around markers */
