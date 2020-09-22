@@ -36,7 +36,7 @@ export default class Link extends Mark {
     return {
       attrs: {
         href: {
-          default: null,
+          default: "",
         },
       },
       inclusive: false,
