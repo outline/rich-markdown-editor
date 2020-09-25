@@ -20,6 +20,7 @@ import baseDictionary from "../dictionary";
 
 export type SearchResult = {
   title: string;
+  subtitle?: string;
   url: string;
 };
 
@@ -45,7 +46,9 @@ type Props = {
 };
 
 type State = {
-  results: SearchResult[];
+  results: {
+    [keyword: string]: SearchResult[];
+  };
   value: string;
   selectedIndex: number;
 };
@@ -58,7 +61,7 @@ class LinkEditor extends React.Component<Props, State> {
   state: State = {
     selectedIndex: -1,
     value: this.href,
-    results: [],
+    results: {},
   };
 
   get href(): string {
@@ -117,7 +120,8 @@ class LinkEditor extends React.Component<Props, State> {
     switch (event.key) {
       case "Enter": {
         event.preventDefault();
-        const { selectedIndex, results, value } = this.state;
+        const { selectedIndex, value } = this.state;
+        const results = this.state.results[value] || [];
         const { onCreateLink } = this.props;
 
         if (selectedIndex >= 0) {
@@ -167,8 +171,10 @@ class LinkEditor extends React.Component<Props, State> {
       case "Tab": {
         event.preventDefault();
         event.stopPropagation();
-        const total = this.state.results.length;
-        const nextIndex = this.state.selectedIndex + 1;
+        const { selectedIndex, value } = this.state;
+        const results = this.state.results[value] || [];
+        const total = results.length;
+        const nextIndex = selectedIndex + 1;
 
         this.setState({
           selectedIndex: Math.min(nextIndex, total),
@@ -193,12 +199,15 @@ class LinkEditor extends React.Component<Props, State> {
     if (value && this.props.onSearchLink) {
       try {
         const results = await this.props.onSearchLink(value);
-        this.setState({ results });
+        this.setState(state => ({
+          results: {
+            ...state.results,
+            [value]: results,
+          },
+        }));
       } catch (error) {
         console.error(error);
       }
-    } else {
-      this.setState({ results: [] });
     }
   };
 
@@ -252,7 +261,8 @@ class LinkEditor extends React.Component<Props, State> {
 
   render() {
     const { dictionary, theme } = this.props;
-    const { value, results, selectedIndex } = this.state;
+    const { value, selectedIndex } = this.state;
+    const results = this.state.results[value] || [];
 
     const Tooltip = this.props.tooltip;
     const looksLikeUrl = value.match(/^https?:\/\//i);
@@ -303,6 +313,7 @@ class LinkEditor extends React.Component<Props, State> {
               <LinkSearchResult
                 key={result.url}
                 title={result.title}
+                subtitle={result.subtitle}
                 icon={<DocumentIcon color={theme.toolbarItem} />}
                 onMouseOver={() => this.handleFocusLink(index)}
                 onClick={this.handleSelectLink(result.url, result.title)}
@@ -313,7 +324,8 @@ class LinkEditor extends React.Component<Props, State> {
             {showCreateLink && (
               <LinkSearchResult
                 key="create"
-                title={dictionary.createNewDoc(suggestedLinkTitle)}
+                title={suggestedLinkTitle}
+                subtitle={dictionary.createNewDoc}
                 icon={<PlusIcon color={theme.toolbarItem} />}
                 onMouseOver={() => this.handleFocusLink(results.length)}
                 onClick={() => {
@@ -346,7 +358,7 @@ const SearchResults = styled.ol`
   width: 100%;
   height: auto;
   left: 0;
-  padding: 8px;
+  padding: 4px 8px 8px;
   margin: 0;
   margin-top: -3px;
   margin-bottom: 0;

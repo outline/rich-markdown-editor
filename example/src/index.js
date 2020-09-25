@@ -15,22 +15,37 @@ const defaultValue = savedText || exampleText;
 const docSearchResults = [
   {
     title: "Hiring",
+    subtitle: "Created by Jane",
     url: "/doc/hiring",
   },
   {
     title: "Product Roadmap",
+    subtitle: "Created by Tom",
     url: "/doc/product-roadmap",
   },
   {
     title: "Finances",
+    subtitle: "Created by Coley",
     url: "/doc/finances",
   },
   {
+    title: "Security",
+    subtitle: "Created by Coley",
+    url: "/doc/security",
+  },
+  {
     title: "Super secret stuff",
+    subtitle: "Created by Coley",
     url: "/doc/secret-stuff",
   },
   {
+    title: "Supero notes",
+    subtitle: "Created by Vanessa",
+    url: "/doc/supero-notes",
+  },
+  {
     title: "Meeting notes",
+    subtitle: "Created by Rob",
     url: "/doc/meeting-notes",
   },
 ];
@@ -152,9 +167,17 @@ class Example extends React.Component {
           onShowToast={(message, type) => window.alert(`${type}: ${message}`)}
           onSearchLink={async term => {
             console.log("Searched link: ", term);
-            return docSearchResults.filter(result =>
-              result.title.toLowerCase().includes(term.toLowerCase())
-            );
+
+            // Delay to simulate time taken for remote API request to complete
+            return new Promise(resolve => {
+              setTimeout(() => {
+                resolve(
+                  docSearchResults.filter(result =>
+                    result.title.toLowerCase().includes(term.toLowerCase())
+                  )
+                );
+              }, Math.random() * 500);
+            });
           }}
           uploadImage={file => {
             console.log("File upload triggered: ", file);

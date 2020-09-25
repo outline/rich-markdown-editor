@@ -158,7 +158,7 @@ This callback is triggered before `uploadImage` and can be used to show some UI 
 
 Triggered once an image upload has succeeded or failed.
 
-#### `onSearchLink(term: string): Promise<{ title: string, url: string }[]>`
+#### `onSearchLink(term: string): Promise<{ title: string, subtitle?: string, url: string }[]>`
 
 The editor provides an ability to search for links to insert from the formatting toolbar. If this callback is provided it should accept a search term as the only parameter and return a promise that resolves to an array of objects. eg:
 
@@ -169,6 +169,7 @@ The editor provides an ability to search for links to insert from the formatting
 
     return results.map(result => {
       title: result.name,
+      subtitle: `Created ${result.createdAt}`,
       url: result.url
     })
   }}

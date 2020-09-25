@@ -13,7 +13,7 @@ export const base = {
   codeInline: "Code",
   createLink: "Create link",
   createLinkError: "Sorry, an error occurred creating the link",
-  createNewDoc: (value: string) => `Create new doc “${value}”`,
+  createNewDoc: "Create a new doc",
   deleteColumn: "Delete column",
   deleteRow: "Delete row",
   deleteTable: "Delete table",
