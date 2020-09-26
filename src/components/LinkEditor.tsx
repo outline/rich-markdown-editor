@@ -50,6 +50,7 @@ type State = {
     [keyword: string]: SearchResult[];
   };
   value: string;
+  previousValue: string;
   selectedIndex: number;
 };
 
@@ -61,6 +62,7 @@ class LinkEditor extends React.Component<Props, State> {
   state: State = {
     selectedIndex: -1,
     value: this.href,
+    previousValue: "",
     results: {},
   };
 
@@ -196,14 +198,17 @@ class LinkEditor extends React.Component<Props, State> {
       selectedIndex: -1,
     });
 
-    if (value && this.props.onSearchLink) {
+    const trimmedValue = value.trim();
+
+    if (trimmedValue && this.props.onSearchLink) {
       try {
-        const results = await this.props.onSearchLink(value);
+        const results = await this.props.onSearchLink(trimmedValue);
         this.setState(state => ({
           results: {
             ...state.results,
-            [value]: results,
+            [trimmedValue]: results,
           },
+          previousValue: trimmedValue,
         }));
       } catch (error) {
         console.error(error);
@@ -262,7 +267,10 @@ class LinkEditor extends React.Component<Props, State> {
   render() {
     const { dictionary, theme } = this.props;
     const { value, selectedIndex } = this.state;
-    const results = this.state.results[value] || [];
+    const results =
+      this.state.results[value.trim()] ||
+      this.state.results[this.state.previousValue] ||
+      [];
 
     const Tooltip = this.props.tooltip;
     const looksLikeUrl = value.match(/^https?:\/\//i);
