@@ -2,6 +2,7 @@ import { Plugin } from "prosemirror-state";
 import { toggleMark } from "prosemirror-commands";
 import Extension from "../lib/Extension";
 import isUrl from "../lib/isUrl";
+import isInCode from "../queries/isInCode";
 
 export default class MarkdownPaste extends Extension {
   get name() {
@@ -68,6 +69,11 @@ export default class MarkdownPaste extends Extension {
             if (text.length === 0 || html) return false;
 
             event.preventDefault();
+
+            if (isInCode(view.state)) {
+              view.dispatch(view.state.tr.insertText(text));
+              return true;
+            }
 
             const paste = this.editor.parser.parse(text);
             const slice = paste.slice(0);
