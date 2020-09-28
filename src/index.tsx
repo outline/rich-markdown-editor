@@ -723,8 +723,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     // ios native bar adjust automatically top or bottom depending on other bars
     const nativeBarOnTop = isAndroid;
     const windowHeight = (window as any).visualViewport?.height || window.innerHeight;
-    const maxHeightBelow = windowHeight - endPos.bottom - margin;
-    const maxHeightAbove = startPos.top - margin;
+    const maxHeightBelow = Math.min(windowHeight - endPos.bottom - margin, 0.5 * windowHeight);
+    const maxHeightAbove = Math.min(startPos.top - margin, 0.5 * windowHeight);
     const enoughSpaceAtBottom = maxHeightBelow > maxHeightAbove;
 
     if (editBarOnTop || nativeBarOnTop || enoughSpaceAtBottom) {
