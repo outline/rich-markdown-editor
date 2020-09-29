@@ -13,7 +13,6 @@ import powershell from "refractor/lang/powershell";
 import ruby from "refractor/lang/ruby";
 import typescript from "refractor/lang/typescript";
 
-import { Fragment } from "prosemirror-model";
 import { setBlockType } from "prosemirror-commands";
 import { textblockTypeInputRule } from "prosemirror-inputrules";
 import copy from "copy-to-clipboard";
