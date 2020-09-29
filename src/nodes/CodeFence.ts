@@ -13,6 +13,7 @@ import powershell from "refractor/lang/powershell";
 import ruby from "refractor/lang/ruby";
 import typescript from "refractor/lang/typescript";
 
+import { Fragment } from "prosemirror-model";
 import { setBlockType } from "prosemirror-commands";
 import { textblockTypeInputRule } from "prosemirror-inputrules";
 import copy from "copy-to-clipboard";
@@ -58,7 +59,19 @@ export default class CodeFence extends Node {
       code: true,
       defining: true,
       draggable: false,
-      parseDOM: [{ tag: "pre", preserveWhitespace: "full" }],
+      parseDOM: [
+        { tag: "pre", preserveWhitespace: "full" },
+        {
+          tag: ".code-block",
+          preserveWhitespace: "full",
+          contentElement: "code",
+          getAttrs: node => {
+            return {
+              language: node.dataset.language,
+            };
+          },
+        },
+      ],
       toDOM: node => {
         const button = document.createElement("button");
         button.innerText = "Copy";
@@ -79,7 +92,7 @@ export default class CodeFence extends Node {
 
         return [
           "div",
-          { class: "code-block" },
+          { class: "code-block", "data-language": node.attrs.language },
           ["div", { contentEditable: false }, select, button],
           ["pre", ["code", { spellCheck: false }, 0]],
         ];
