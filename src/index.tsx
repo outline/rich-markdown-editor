@@ -218,10 +218,16 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     }
 
     if (prevState.triggerSearch === this.state.triggerSearch) {
-      const selectedText = this.view && getText(this.view.state.selection.content());
-      // problem prevents searching from linkeditor on ios
-      const linkEditorSearchOverridden = this.state.triggerSearch && this.state.searchSource === "linkEditor";
-      selectedText && selectedText !== this.state.triggerSearch && (!linkEditorSearchOverridden) && this.setState({ triggerSearch: selectedText, searchSource: "selection", searchTriggerOpen: true, linkFrom: 0, linkTo: 0 });
+      const selectionContent = this.view.state.selection.content();
+      const selectedText = this.view && getText(selectionContent);
+      const multiLineSelect = (selectionContent?.content as any)?.content?.length > 1;
+      if (multiLineSelect) {
+        this.handleCloseSearchTrigger();
+      } else {
+        // problem prevents searching from linkeditor on ios
+        const linkEditorSearchOverridden = this.state.triggerSearch && this.state.searchSource === "linkEditor";
+        selectedText && selectedText !== this.state.triggerSearch && (!linkEditorSearchOverridden) && this.setState({ triggerSearch: selectedText, searchSource: "selection", searchTriggerOpen: true, linkFrom: 0, linkTo: 0 });
+      }
     }
   }
 
@@ -818,6 +824,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                     handleOnSelectLink={this.handleOnSelectLink}
                     handleOnCreateLink={this.handleOnCreateLink}
                     onClickLink={this.props.onClickLink}
+                    handleCloseSearchTrigger={this.handleCloseSearchTrigger}
                   />
                 </Wrapper>
               </Portal>
