@@ -122,7 +122,11 @@ export default class Link extends Mark {
               }
 
               if (event.target instanceof HTMLAnchorElement) {
-                const { href } = event.target;
+                const href =
+                  event.target.href ||
+                  (event.target.parentNode instanceof HTMLAnchorElement
+                    ? event.target.parentNode.href
+                    : "");
 
                 const isHashtag = href.startsWith("#");
                 if (isHashtag && this.options.onClickHashtag) {
