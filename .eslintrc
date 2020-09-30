@@ -22,7 +22,8 @@
 		"dot-notation": 1,
 		"quotes": ["error", "single"],
 		"no-tabs": 0,
-		"comma-dangle": 0
+		"comma-dangle": 0,
+		"@typescript-eslint/no-use-before-define": 0
 	},
 	"settings": {
 		"react": {
