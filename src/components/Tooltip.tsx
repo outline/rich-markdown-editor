@@ -1,10 +1,10 @@
-import * as React from "react";
+import * as React from 'react';
 
 type Props = {
-  tooltip: string;
-  children: React.ReactNode;
+	tooltip: string;
+	children: React.ReactNode;
 };
 
 export default function Tooltip({ tooltip, children }: Props) {
-  return <span title={tooltip}>{children}</span>;
+	return <span title={tooltip}>{children}</span>;
 }

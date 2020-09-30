@@ -1,8 +1,8 @@
-import customFence from "markdown-it-container";
+import customFence from 'markdown-it-container';
 
 export default function notice(md): void {
-  return customFence(md, "notice", {
-    marker: ":",
-    validate: () => true,
-  });
+	return customFence(md, 'notice', {
+		marker: ':',
+		validate: () => true
+	});
 }

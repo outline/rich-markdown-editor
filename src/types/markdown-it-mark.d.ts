@@ -1,5 +1,5 @@
-declare module "markdown-it-mark" {
-  function plugin(md: any): void;
+declare module 'markdown-it-mark' {
+	function plugin(md: any): void;
 
-  export = plugin;
+	export = plugin;
 }

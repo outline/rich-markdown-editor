@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 type Props = { active?: boolean; disabled?: boolean };
 
@@ -29,5 +29,5 @@ export default styled.button<Props>`
     cursor: default;
   }
 
-  ${props => props.active && "opacity: 1;"};
+  ${props => props.active && 'opacity: 1;'};
 `;

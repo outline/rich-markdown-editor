@@ -1,61 +1,61 @@
-import * as React from "react";
-import scrollIntoView from "smooth-scroll-into-view-if-needed";
-import styled, { withTheme } from "styled-components";
-import theme from "../theme";
+import * as React from 'react';
+import scrollIntoView from 'smooth-scroll-into-view-if-needed';
+import styled, { withTheme } from 'styled-components';
+import theme from '../theme';
 
 type Props = {
-  selected: boolean;
-  disabled?: boolean;
-  onClick: () => void;
-  theme: typeof theme;
-  icon: typeof React.Component | React.FC<any>;
-  title: string;
-  shortcut?: string;
+	selected: boolean;
+	disabled?: boolean;
+	onClick: () => void;
+	theme: typeof theme;
+	icon: typeof React.Component | React.FC<any>;
+	title: string;
+	shortcut?: string;
 };
 
 function BlockMenuItem({
-  selected,
-  disabled,
-  onClick,
-  title,
-  shortcut,
-  icon,
+	selected,
+	disabled,
+	onClick,
+	title,
+	shortcut,
+	icon
 }: Props) {
-  const Icon = icon;
+	const Icon = icon;
 
-  const ref = React.useCallback(
-    node => {
-      if (selected && node) {
-        scrollIntoView(node, {
-          scrollMode: "if-needed",
-          block: "center",
-          boundary: parent => {
-            // All the parent elements of your target are checked until they
-            // reach the #block-menu-container. Prevents body and other parent
-            // elements from being scrolled
-            return parent.id !== "block-menu-container";
-          },
-        });
-      }
-    },
-    [selected]
-  );
+	const ref = React.useCallback(
+		node => {
+			if (selected && node) {
+				scrollIntoView(node, {
+					scrollMode: 'if-needed',
+					block: 'center',
+					boundary: parent => {
+						// All the parent elements of your target are checked until they
+						// reach the #block-menu-container. Prevents body and other parent
+						// elements from being scrolled
+						return parent.id !== 'block-menu-container';
+					}
+				});
+			}
+		},
+		[selected]
+	);
 
-  return (
-    <MenuItem
-      selected={selected}
-      onClick={disabled ? undefined : onClick}
-      ref={ref}
-    >
-      <Icon color={selected ? theme.black : undefined} />
+	return (
+		<MenuItem
+			selected={selected}
+			onClick={disabled ? undefined : onClick}
+			ref={ref}
+		>
+			<Icon color={selected ? theme.black : undefined} />
       &nbsp;&nbsp;{title}
-      <Shortcut>{shortcut}</Shortcut>
-    </MenuItem>
-  );
+			<Shortcut>{shortcut}</Shortcut>
+		</MenuItem>
+	);
 }
 
 const MenuItem = styled.button<{
-  selected: boolean;
+	selected: boolean;
 }>`
   display: flex;
   align-items: center;
@@ -67,11 +67,11 @@ const MenuItem = styled.button<{
   height: 36px;
   cursor: pointer;
   border: none;
-  opacity: ${props => (props.disabled ? ".5" : "1")};
+  opacity: ${props => (props.disabled ? '.5' : '1')};
   color: ${props =>
-    props.selected ? props.theme.black : props.theme.blockToolbarText};
+		props.selected ? props.theme.black : props.theme.blockToolbarText};
   background: ${props =>
-    props.selected ? props.theme.blockToolbarTrigger : "none"};
+		props.selected ? props.theme.blockToolbarTrigger : 'none'};
   padding: 0 16px;
   outline: none;
 
@@ -79,9 +79,9 @@ const MenuItem = styled.button<{
   &:active {
     color: ${props => props.theme.black};
     background: ${props =>
-      props.selected
-        ? props.theme.blockToolbarTrigger
-        : props.theme.blockToolbarHoverBackground};
+		props.selected
+			? props.theme.blockToolbarTrigger
+			: props.theme.blockToolbarHoverBackground};
   }
 `;
 

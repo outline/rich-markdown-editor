@@ -1,7 +1,7 @@
 export default function getRowIndex(selection) {
-  const isRowSelection = selection.isRowSelection && selection.isRowSelection();
-  if (!isRowSelection) return undefined;
+	const isRowSelection = selection.isRowSelection && selection.isRowSelection();
+	if (!isRowSelection) return undefined;
 
-  const path = selection.$from.path;
-  return path[path.length - 8];
+	const path = selection.$from.path;
+	return path[path.length - 8];
 }
