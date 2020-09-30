@@ -1,7 +1,7 @@
 {
-  "name": "rich-markdown-editor",
+  "name": "@pinpt/rich-markdown-editor",
   "description": "A rich text editor with Markdown shortcuts",
-  "version": "11.0.1",
+  "version": "11.0.2",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "license": "BSD-3-Clause",
@@ -10,7 +10,7 @@
     "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
     "start": "webpack-serve --config example/webpack.config.js",
     "build": "tsc",
-    "prepublish": "yarn build"
+    "prepublish": "npm run build"
   },
   "serve": {
     "open": true,
@@ -68,14 +68,17 @@
     "@types/refractor": "^2.8.0",
     "@types/styled-components": "^4.4.2",
     "@typescript-eslint/eslint-plugin": "^2.17.0",
-    "@typescript-eslint/parser": "^2.17.0",
-    "eslint": "^6.8.0",
+    "@typescript-eslint/parser": "^4.3.0",
+    "eslint": "^7.10.0",
+    "eslint-config": "^0.3.0",
+    "eslint-config-airbnb-typescript": "^11.0.0",
     "eslint-config-prettier": "^6.9.0",
     "eslint-config-react-app": "^2.1.0",
     "eslint-plugin-import": "^2.9.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.7.0",
+    "eslint-plugin-react-hooks": "^4.1.2",
     "prettier": "^1.19.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
@@ -91,7 +94,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/outline/rich-markdown-editor.git"
+    "url": "git+https://github.com/pinpt/rich-markdown-editor.git"
   },
   "keywords": [
     "editor",
@@ -99,9 +102,9 @@
     "text",
     "wysiwyg"
   ],
-  "author": "Tom Moor <tom.moor@gmail.com>",
+  "author": "Original: Tom Moor <tom.moor@gmail.com>",
   "bugs": {
-    "url": "https://github.com/outline/rich-markdown-editor/issues"
+    "url": "https://github.com/pinpt/rich-markdown-editor/issues"
   },
-  "homepage": "https://github.com/outline/rich-markdown-editor#readme"
+  "homepage": "https://github.com/pinpt/rich-markdown-editor"
 }
