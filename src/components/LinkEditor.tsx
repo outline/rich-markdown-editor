@@ -3,11 +3,10 @@ import { setTextSelection } from "prosemirror-utils";
 import { EditorView } from "prosemirror-view";
 import { Mark } from "prosemirror-model";
 import {
-  DocumentIcon,
   CloseIcon,
-  PlusIcon,
   TrashIcon,
   OpenIcon,
+  Icon,
 } from "outline-icons";
 import styled, { withTheme } from "styled-components";
 import isUrl from "../lib/isUrl";
@@ -15,7 +14,14 @@ import theme from "../theme";
 import Flex from "./Flex";
 import Input from "./Input";
 import ToolbarButton from "./ToolbarButton";
-import LinkSearchResult from "./LinkSearchResult";
+
+function LineWeightIcon(props: any) {
+  return (
+    <Icon {...props}>
+      <path d="M3 17h18v-2H3v2zm0 3h18v-1H3v1zm0-7h18v-3H3v3zm0-9v4h18V4H3z" />
+    </Icon>
+  );
+}
 
 export type SearchResult = {
   title: string;
@@ -173,11 +179,25 @@ class LinkEditor extends React.Component<Props, State> {
     }
   }
 
+  toggleLinkWeight = () => {
+    const { value } = this.state;
+    if (value.includes("weight=0")) {
+      this.setState({ value: value.replace("weight=0", "weight=-10") });
+    } else if (value.includes("weight=-10")) {
+      this.setState({ value: value.replace("weight=-10", "weight=10") });
+    } else if (value.includes("weight=10")) {
+      this.setState({ value: value.replace("weight=10", "weight=0") });
+    } else if (!(value.includes("weight="))) {
+      this.setState({ value: `${value}/?weight=0` });
+    }
+  }
+
   render() {
     const { theme, from, to } = this.props;
     const { value } = this.state;
 
     const Tooltip = this.props.tooltip;
+    const internalLink = !value.includes("//");
 
     return (
       <Wrapper>
@@ -206,6 +226,13 @@ class LinkEditor extends React.Component<Props, State> {
             )}
           </Tooltip>
         </ToolbarButton>
+        {internalLink && (
+          <ToolbarButton onClick={this.toggleLinkWeight}>
+            <Tooltip tooltip="Link weight determines where linked card will appear in your graph: positive is to the right of this card (default), negative to the left of this card, or 0 for no positional relation" placement="top">
+              <LineWeightIcon color={theme.toolbarItem} />
+            </Tooltip>
+          </ToolbarButton>
+        )}
       </Wrapper>
     );
   }
