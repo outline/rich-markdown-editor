@@ -664,11 +664,16 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         const markType = state.schema.marks.link;
         const from = this.state.linkFrom;
         const to = this.state.linkTo;
-        dispatch(
-          state.tr
-            .removeMark(from, to, markType)
-            .addMark(from, to, markType.create({ href }))
-        );
+        try {
+          dispatch(
+            state.tr
+              .removeMark(from, to, markType)
+              .addMark(from, to, markType.create({ href }))
+          );
+        } catch (e) {
+          // Catch Rangeerror when inserting link
+          console.warn(`Error inserting link ${href}`, e);
+        }
       } else {
         const from = state.selection.from;
         const to = state.selection.to;
@@ -676,21 +681,29 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         if (from === to) {
           // insert by simple click
           const offset = -this.state.triggerSearch.length;
-          dispatch(
-            this.view.state.tr
-              .insertText(title, from + offset + fromOffset, to + toOffset)
-              .addMark(
-                from + offset + fromOffset,
-                to + offset + fromOffset + toOffset + title.length,
-                state.schema.marks.link.create({ href })
-              )
-          );
+          try {
+            dispatch(
+              this.view.state.tr
+                .insertText(title, from + offset + fromOffset, to + toOffset)
+                .addMark(
+                  from + offset + fromOffset,
+                  to + offset + fromOffset + toOffset + title.length,
+                  state.schema.marks.link.create({ href })
+                )
+            );
+          } catch (e) {
+            console.warn(`Error inserting link ${href}`, e);
+          }
         } else {
           // insert by select and click
-          dispatch(
-            this.view.state.tr
-              .addMark(from, to, state.schema.marks.link.create({ href }))
-          );
+          try {
+            dispatch(
+              this.view.state.tr
+                .addMark(from, to, state.schema.marks.link.create({ href }))
+            );
+          } catch (e) {
+            console.warn(`Error inserting link ${href}`, e);
+          }
         }
       }
     }
