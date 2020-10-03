@@ -1170,6 +1170,7 @@ const StyledEditor = styled("div")<{
   a {
     color: ${props => props.theme.link};
     text-decoration: none;
+    user-select: text;
   }
 
   a[href*="//"]:not([href*="traverse.link"]) {

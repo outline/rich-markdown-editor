@@ -2,7 +2,7 @@ import { toggleMark } from "prosemirror-commands";
 import { Plugin } from "prosemirror-state";
 import { InputRule } from "prosemirror-inputrules";
 import Mark from "./Mark";
-import { iOS, android } from "../components/SelectionToolbar";
+import { getText } from "../components/SelectionToolbar";
 
 const LINK_INPUT_REGEX = /\[(.+)]\((\S+)\)/;
 
@@ -97,11 +97,53 @@ export default class Link extends Mark {
   }
 
   get plugins() {
+    const onStart = (view, event: MouseEvent) => {
+      if (event.target instanceof HTMLAnchorElement) {
+        (window as any).TOUCHLINKMOVED = false;
+        return true;
+      }
+      return false;
+    };
+    const onMove = (view, event: MouseEvent) => {
+      if (event.target instanceof HTMLAnchorElement && !(window as any).TOUCHLINKMOVED) {
+        (window as any).TOUCHLINKMOVED = true;
+        return true;
+      }
+      return false;
+    };
+    const onEnd = (view, event: MouseEvent) => {
+      if (event.target instanceof HTMLAnchorElement && !(window as any).TOUCHLINKMOVED) {
+        const { href } = event.target;
+
+        // check text selection, if text selected don't do anything
+        const selectionContent = view?.state?.selection?.content();
+        const selectedText = selectionContent && getText(selectionContent);
+        if (!selectedText) {
+          const isHashtag = href.startsWith("#");
+          if (isHashtag && this.options.onClickHashtag) {
+            this.options.onClickHashtag(href, event);
+            return true;
+          }
+
+          if (this.options.onClickLink) {
+            this.options.onClickLink(href, event);
+            return true;
+          }
+        }
+      }
+      return false;
+    }
     return [
       new Plugin({
         props: {
           // could add hover events here (would be one way traffic though)
           handleDOMEvents: {
+            touchstart: onStart,
+            mousedown: onStart,
+            touchmove: onMove,
+            mousemove: onMove,
+            touchend: (view, event: MouseEvent) => onEnd(view, event),
+            mouseup: (view, event: MouseEvent) => onEnd(view, event),
             mouseover: (view, event: MouseEvent) => {
               if (event.target instanceof HTMLAnchorElement) {
                 if (this.options.onHoverLink) {
@@ -111,35 +153,15 @@ export default class Link extends Mark {
               return false;
             },
             click: (view, event: MouseEvent) => {
-              // don't make links on ios in editing mode clickable
-              // FIXME should do for all touch
-              if (
-                view.props.editable &&
-                view.props.editable(view.state) &&
-                (iOS() || android())
-              ) {
-                return false;
-              }
-
               if (event.target instanceof HTMLAnchorElement) {
-                const { href } = event.target;
-
-                const isHashtag = href.startsWith("#");
-                if (isHashtag && this.options.onClickHashtag) {
-                  event.stopPropagation();
-                  event.preventDefault();
-                  this.options.onClickHashtag(href);
-                  return true;
-                }
-
                 if (this.options.onClickLink) {
                   event.stopPropagation();
                   event.preventDefault();
-                  this.options.onClickLink(href, event);
-                  return true;
+                  // this is now handled by onend, but we still need to preventDefault to prevent sending link to server
+                  // this.options.onClickLink(href, event);
                 }
+                return true;
               }
-
               return false;
             }
           },
