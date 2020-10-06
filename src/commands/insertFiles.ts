@@ -5,7 +5,7 @@ import { ToastType } from "../types";
 
 const insertFiles = function(view, event, pos, files, options) {
   // filter to only include image files
-  const images = files;
+  const images = files.filter(file => /image/i.test(file.type));
   if (images.length === 0) return;
 
   const {

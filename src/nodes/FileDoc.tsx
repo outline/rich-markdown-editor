@@ -4,7 +4,7 @@ import { InputRule } from "prosemirror-inputrules";
 import { setTextSelection } from "prosemirror-utils";
 import styled from "styled-components";
 import getDataTransferFiles from "../lib/getDataTransferFiles";
-import uploadPlaceholderPlugin from "../lib/uploadPlaceholder";
+import uploadFilePlaceholderPlugin from "../lib/uploadFilePlaceholder";
 import insertAllFiles from "../commands/insertAllFiles";
 import Node from "./Node";
 
@@ -155,7 +155,7 @@ export default class File extends Node {
 
   component = options => {
     const { alt, src } = options.node.attrs;
-
+    console.log("in file", options);
     return (
       <div className="file" contentEditable={false}>
         <a href={src}>My File</a>
@@ -230,7 +230,7 @@ export default class File extends Node {
   }
 
   get plugins() {
-    return [uploadPlaceholderPlugin, uploadPlugin(this.options)];
+    return [uploadFilePlaceholderPlugin, uploadPlugin(this.options)];
   }
 }
 

@@ -165,6 +165,17 @@ class Example extends React.Component {
               );
             });
           }}
+          uploadFile={file => {
+            console.log("File upload triggered: ", file);
+
+            // Delay to simulate time taken to upload
+            return new Promise(resolve => {
+              setTimeout(
+                () => resolve("https://loremflickr.com/1000/1000"),
+                1500
+              );
+            });
+          }}
           embeds={[
             {
               title: "YouTube",

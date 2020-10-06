@@ -716,8 +716,6 @@ const StyledEditor = styled("div")<{
   }
 
   .file {
-    text-align: center;
-
     a {
       pointer-events: ${props => (props.readOnly ? "initial" : "none")};
     }

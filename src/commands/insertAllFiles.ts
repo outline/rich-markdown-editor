@@ -1,6 +1,6 @@
-import uploadPlaceholderPlugin, {
+import uploadFilePlaceholderPlugin, {
   findPlaceholder,
-} from "../lib/uploadPlaceholder";
+} from "../lib/uploadFilePlaceholder";
 import { ToastType } from "../types";
 
 const insertFiles = function(view, event, pos, files, options) {
@@ -39,7 +39,7 @@ const insertFiles = function(view, event, pos, files, options) {
     const { tr } = view.state;
 
     // insert a placeholder at this position
-    tr.setMeta(uploadPlaceholderPlugin, {
+    tr.setMeta(uploadFilePlaceholderPlugin, {
       add: { id, file, pos },
     });
     view.dispatch(tr);
@@ -59,7 +59,7 @@ const insertFiles = function(view, event, pos, files, options) {
         // the placeholder itself
         const transaction = view.state.tr
           .replaceWith(pos, pos, schema.nodes.file.create({ src }))
-          .setMeta(uploadPlaceholderPlugin, { remove: { id } });
+          .setMeta(uploadFilePlaceholderPlugin, { remove: { id } });
 
         view.dispatch(transaction);
       })
@@ -67,7 +67,7 @@ const insertFiles = function(view, event, pos, files, options) {
         console.error(error);
 
         // cleanup the placeholder if there is a failure
-        const transaction = view.state.tr.setMeta(uploadPlaceholderPlugin, {
+        const transaction = view.state.tr.setMeta(uploadFilePlaceholderPlugin, {
           remove: { id },
         });
         view.dispatch(transaction);
