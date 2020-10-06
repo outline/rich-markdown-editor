@@ -10,6 +10,7 @@ import Input from "./Input";
 import VisuallyHidden from "./VisuallyHidden";
 import getDataTransferFiles from "../lib/getDataTransferFiles";
 import insertFiles from "../commands/insertFiles";
+import insertAllFiles from "../commands/insertAllFiles";
 import getMenuItems from "../menus/block";
 import baseDictionary from "../dictionary";
 
@@ -22,8 +23,11 @@ type Props = {
   view: EditorView;
   search: string;
   uploadImage?: (file: File) => Promise<string>;
+  uploadFile?: (file: File) => Promise<string>;
   onImageUploadStart?: () => void;
   onImageUploadStop?: () => void;
+  onFileUploadStart?: () => void;
+  onFileUploadStop?: () => void;
   onShowToast?: (message: string, id: string) => void;
   onLinkToolbarOpen: () => void;
   onClose: () => void;
@@ -42,6 +46,7 @@ type State = {
 class BlockMenu extends React.Component<Props, State> {
   menuRef = React.createRef<HTMLDivElement>();
   inputRef = React.createRef<HTMLInputElement>();
+  fileInputRef = React.createRef<HTMLInputElement>();
 
   state: State = {
     left: -1000,
@@ -155,7 +160,7 @@ class BlockMenu extends React.Component<Props, State> {
       case "image":
         return this.triggerImagePick();
       case "file":
-        return this.triggerImagePick();
+        return this.triggerFilePick();
       case "embed":
         return this.triggerLinkInput(item);
       case "link": {
@@ -237,13 +242,18 @@ class BlockMenu extends React.Component<Props, State> {
     }
   };
 
+  triggerFilePick = () => {
+    if (this.fileInputRef.current) {
+      this.fileInputRef.current.click();
+    }
+  };
+
   triggerLinkInput = item => {
     this.setState({ insertItem: item });
   };
 
   handleImagePicked = event => {
     const files = getDataTransferFiles(event);
-    console.log(files);
 
     const {
       view,
@@ -268,6 +278,40 @@ class BlockMenu extends React.Component<Props, State> {
         uploadImage,
         onImageUploadStart,
         onImageUploadStop,
+        onShowToast,
+        dictionary: this.props.dictionary,
+      });
+    }
+
+    this.props.onClose();
+  };
+
+  handleFilePicked = event => {
+    const files = getDataTransferFiles(event);
+
+    const {
+      view,
+      uploadFile,
+      onFileUploadStart,
+      onFileUploadStop,
+      onShowToast,
+    } = this.props;
+    const { state, dispatch } = view;
+    const parent = findParentNode(node => !!node)(state.selection);
+
+    if (parent) {
+      dispatch(
+        state.tr.insertText(
+          "",
+          parent.pos,
+          parent.pos + parent.node.textContent.length + 1
+        )
+      );
+
+      insertAllFiles(view, event, parent.pos, files, {
+        uploadFile,
+        onFileUploadStart,
+        onFileUploadStop,
         onShowToast,
         dictionary: this.props.dictionary,
       });
@@ -347,7 +391,13 @@ class BlockMenu extends React.Component<Props, State> {
   }
 
   get filtered() {
-    const { dictionary, embeds, search = "", uploadImage } = this.props;
+    const {
+      dictionary,
+      embeds,
+      search = "",
+      uploadImage,
+      uploadFile,
+    } = this.props;
     let items: (EmbedDescriptor | MenuItem)[] = getMenuItems(dictionary);
     const embedItems: EmbedDescriptor[] = [];
 
@@ -372,6 +422,9 @@ class BlockMenu extends React.Component<Props, State> {
 
       // If no image upload callback has been passed, filter the image block out
       if (!uploadImage && item.name === "image") return false;
+
+      // If no file upload callback has been passed, filter the file block out
+      if (!uploadFile && item.name === "file") return false;
 
       const n = search.toLowerCase();
       return (
@@ -402,7 +455,7 @@ class BlockMenu extends React.Component<Props, State> {
   }
 
   render() {
-    const { dictionary, isActive, uploadImage } = this.props;
+    const { dictionary, isActive, uploadImage, uploadFile } = this.props;
     const items = this.filtered;
     const { insertItem, ...positioning } = this.state;
 
@@ -469,6 +522,16 @@ class BlockMenu extends React.Component<Props, State> {
                 type="file"
                 ref={this.inputRef}
                 onChange={this.handleImagePicked}
+                accept="image/*"
+              />
+            </VisuallyHidden>
+          )}
+          {uploadFile && (
+            <VisuallyHidden>
+              <input
+                type="file"
+                ref={this.fileInputRef}
+                onChange={this.handleFilePicked}
                 accept="*"
               />
             </VisuallyHidden>

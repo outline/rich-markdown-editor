@@ -3,21 +3,20 @@ import { Plugin } from "prosemirror-state";
 import { InputRule } from "prosemirror-inputrules";
 import { setTextSelection } from "prosemirror-utils";
 import styled from "styled-components";
-import ImageZoom from "react-medium-image-zoom";
 import getDataTransferFiles from "../lib/getDataTransferFiles";
-import uploadPlaceholderPlugin from "../lib/uploadPlaceholder";
-import insertFiles from "../commands/insertFiles";
+import uploadFilePlaceholderPlugin from "../lib/uploadFilePlaceholder";
+import insertAllFiles from "../commands/insertAllFiles";
 import Node from "./Node";
 
 /**
- * Matches following attributes in Markdown-typed image: [, alt, src, title]
+ * Matches following attributes in Markdown-typed file: [, alt, src, title]
  *
  * Example:
- * ![Lorem](image.jpg) -> [, "Lorem", "image.jpg"]
- * ![](image.jpg "Ipsum") -> [, "", "image.jpg", "Ipsum"]
- * ![Lorem](image.jpg "Ipsum") -> [, "Lorem", "image.jpg", "Ipsum"]
+ * ![Lorem](file.pdf) -> [, "Lorem", "file.pdf"]
+ * ![](file.pdf "Ipsum") -> [, "", "file.pdf", "Ipsum"]
+ * ![Lorem](file.pdf "Ipsum") -> [, "Lorem", "file.pdf", "Ipsum"]
  */
-const IMAGE_INPUT_REGEX = /!\[(.+|:?)]\((\S+)(?:(?:\s+)["'](\S+)["'])?\)/;
+const FILE_INPUT_REGEX = /!\[(.+|:?)]\((\S+)(?:(?:\s+)["'](\S+)["'])?\)/;
 
 const uploadPlugin = options =>
   new Plugin({
@@ -26,7 +25,7 @@ const uploadPlugin = options =>
         paste(view, event: ClipboardEvent): boolean {
           if (
             (view.props.editable && !view.props.editable(view.state)) ||
-            !options.uploadImage
+            !options.uploadFile
           ) {
             return false;
           }
@@ -47,7 +46,7 @@ const uploadPlugin = options =>
           }
           const pos = tr.selection.from;
 
-          insertFiles(view, event, pos, files, options);
+          insertAllFiles(view, event, pos, files, options);
           return true;
         },
         drop(view, event: DragEvent): boolean {
@@ -58,10 +57,7 @@ const uploadPlugin = options =>
             return false;
           }
 
-          // filter to only include image files
-          const files = getDataTransferFiles(event).filter(file =>
-            /image/i.test(file.type)
-          );
+          const files = getDataTransferFiles(event);
           if (files.length === 0) {
             return false;
           }
@@ -73,7 +69,7 @@ const uploadPlugin = options =>
           });
 
           if (result) {
-            insertFiles(view, event, result.pos, files, options);
+            insertAllFiles(view, event, result.pos, files, options);
             return true;
           }
 
@@ -83,9 +79,9 @@ const uploadPlugin = options =>
     },
   });
 
-export default class Image extends Node {
+export default class File extends Node {
   get name() {
-    return "image";
+    return "file";
   }
 
   get schema() {
@@ -103,13 +99,13 @@ export default class Image extends Node {
       draggable: true,
       parseDOM: [
         {
-          tag: "div[class=image]",
+          tag: "div[class=file]",
           getAttrs: (dom: HTMLElement) => {
-            const img = dom.getElementsByTagName("img")[0];
+            const a = dom.getElementsByTagName("a")[0];
             const caption = dom.getElementsByTagName("p")[0];
 
             return {
-              src: img.getAttribute("src"),
+              src: a.getAttribute("href"),
               alt: caption.innerText,
             };
           },
@@ -119,9 +115,9 @@ export default class Image extends Node {
         return [
           "div",
           {
-            class: "image",
+            class: "file",
           },
-          ["img", { ...node.attrs, contentEditable: false }],
+          ["a", { ...node.attrs, contentEditable: false }],
           ["p", { class: "caption" }, 0],
         ];
       },
@@ -158,27 +154,11 @@ export default class Image extends Node {
   };
 
   component = options => {
-    const { theme } = options;
     const { alt, src } = options.node.attrs;
-
+    console.log("in file", options);
     return (
-      <div className="image" contentEditable={false}>
-        <ImageZoom
-          image={{
-            src,
-            alt,
-            style: {
-              maxWidth: "100%",
-              maxHeight: "75vh",
-            },
-          }}
-          defaultStyles={{
-            overlay: {
-              backgroundColor: theme.background,
-            },
-          }}
-          shouldRespectMaxDimension
-        />
+      <div className="file" contentEditable={false}>
+        <a href={src}>My File</a>
         {(options.isEditable || alt) && (
           <Caption
             onKeyDown={this.handleKeyDown(options)}
@@ -206,7 +186,7 @@ export default class Image extends Node {
 
   parseMarkdown() {
     return {
-      node: "image",
+      node: "file",
       getAttrs: token => ({
         src: token.attrGet("src"),
         alt: (token.children[0] && token.children[0].content) || null,
@@ -229,7 +209,7 @@ export default class Image extends Node {
 
   inputRules({ type }) {
     return [
-      new InputRule(IMAGE_INPUT_REGEX, (state, match, start, end) => {
+      new InputRule(FILE_INPUT_REGEX, (state, match, start, end) => {
         const [okay, alt, src] = match;
         const { tr } = state;
 
@@ -250,7 +230,7 @@ export default class Image extends Node {
   }
 
   get plugins() {
-    return [uploadPlaceholderPlugin, uploadPlugin(this.options)];
+    return [uploadFilePlaceholderPlugin, uploadPlugin(this.options)];
   }
 }
 
