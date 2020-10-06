@@ -21,7 +21,7 @@ class Menu extends React.Component<Props> {
     const Tooltip = this.props.tooltip;
 
     return (
-      <div>
+      <div style={{ display: 'flex' }}>
         {items.map((item, index) => {
           if (item.name === "separator" && item.visible !== false) {
             return <ToolbarSeparator key={index} />;
