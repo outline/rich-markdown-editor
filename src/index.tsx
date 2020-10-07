@@ -41,7 +41,6 @@ import HardBreak from "./nodes/HardBreak";
 import Heading from "./nodes/Heading";
 import HorizontalRule from "./nodes/HorizontalRule";
 import Image from "./nodes/Image";
-import FileDoc from "./nodes/FileDoc";
 import ListItem from "./nodes/ListItem";
 import Notice from "./nodes/Notice";
 import OrderedList from "./nodes/OrderedList";
@@ -267,13 +266,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           uploadImage: this.props.uploadImage,
           onImageUploadStart: this.props.onImageUploadStart,
           onImageUploadStop: this.props.onImageUploadStop,
-          onShowToast: this.props.onShowToast,
-        }),
-        new FileDoc({
-          dictionary,
-          uploadFile: this.props.uploadFile,
-          onFileUploadStart: this.props.onFileUploadStart,
-          onFileUploadStop: this.props.onFileUploadStop,
           onShowToast: this.props.onShowToast,
         }),
         new Table(),
@@ -646,6 +638,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   onClose={this.handleCloseBlockMenu}
                   uploadImage={this.props.uploadImage}
                   uploadFile={this.props.uploadFile}
+                  onCreateLink={this.props.onCreateLink}
                   onLinkToolbarOpen={this.handleOpenLinkMenu}
                   onImageUploadStart={this.props.onImageUploadStart}
                   onImageUploadStop={this.props.onImageUploadStop}

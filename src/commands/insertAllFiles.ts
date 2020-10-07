@@ -1,9 +1,7 @@
-import uploadFilePlaceholderPlugin, {
-  findPlaceholder,
-} from "../lib/uploadFilePlaceholder";
 import { ToastType } from "../types";
+import createAndInsertLink from "../commands/createAndInsertLink";
 
-const insertFiles = function(view, event, pos, files, options) {
+const insertAllFiles = function(view, event, files, options) {
   if (files.length === 0) return;
 
   const {
@@ -12,6 +10,7 @@ const insertFiles = function(view, event, pos, files, options) {
     onFileUploadStart,
     onFileUploadStop,
     onShowToast,
+    onCreateLink,
   } = options;
 
   if (!uploadFile) {
@@ -26,53 +25,40 @@ const insertFiles = function(view, event, pos, files, options) {
   // let the user know we're starting to process the files
   if (onFileUploadStart) onFileUploadStart();
 
-  const { schema } = view.state;
-
   // we'll use this to track of how many files have succeeded or failed
   let complete = 0;
 
+  const { state } = view;
+  const { from, to } = state.selection;
+
   // the user might have dropped multiple files at once, we need to loop
   for (const file of files) {
-    // Use an object to act as the ID for this upload, clever.
-    const id = {};
-
-    const { tr } = view.state;
-
-    // insert a placeholder at this position
-    tr.setMeta(uploadFilePlaceholderPlugin, {
-      add: { id, file, pos },
-    });
-    view.dispatch(tr);
-
     // start uploading the file file to the server. Using "then" syntax
     // to allow all placeholders to be entered at once with the uploads
     // happening in the background in parallel.
     uploadFile(file)
       .then(src => {
-        const pos = findPlaceholder(view.state, id);
+        const title = file.name;
+        const href = `creating#${src}…`;
 
-        // if the content around the placeholder has been deleted
-        // then forget about inserting this file
-        if (pos === null) return;
+        view.dispatch(
+          view.state.tr
+            .insertText(title, from, to)
+            .addMark(
+              from,
+              to + title.length,
+              state.schema.marks.link.create({ href })
+            )
+        );
 
-        // otherwise, insert it at the placeholder's position, and remove
-        // the placeholder itself
-        const transaction = view.state.tr
-          .replaceWith(pos, pos, schema.nodes.file.create({ src }))
-          .setMeta(uploadFilePlaceholderPlugin, { remove: { id } });
-
-        view.dispatch(transaction);
+        createAndInsertLink(view, src, href, {
+          onCreateLink,
+          onShowToast,
+          dictionary,
+        });
       })
       .catch(error => {
         console.error(error);
-
-        // cleanup the placeholder if there is a failure
-        const transaction = view.state.tr.setMeta(uploadFilePlaceholderPlugin, {
-          remove: { id },
-        });
-        view.dispatch(transaction);
-
-        // let the user know
         if (onShowToast) {
           onShowToast(dictionary.fileUploadError, ToastType.Error);
         }
@@ -89,4 +75,4 @@ const insertFiles = function(view, event, pos, files, options) {
   }
 };
 
-export default insertFiles;
+export default insertAllFiles;
