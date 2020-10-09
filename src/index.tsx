@@ -720,51 +720,58 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       return hiddenPos;
     }
     const { selection } = this.view.state;
-    const startDocPos = this.view.coordsAtPos(0);
-    const left = startDocPos.left;
-    if (
-      !isActive ||
-      !left
-    ) {
+    try {
+      const startDocPos = this.view.coordsAtPos(0);
+      const left = startDocPos.left;
+      if (
+        !isActive ||
+        !left
+      ) {
+        return hiddenPos;
+      }
+
+      const isIos = iOS();
+      const isAndroid = android();
+
+    
+      const endPos = this.view.coordsAtPos(selection.$to.pos);
+      const startPos = this.view.coordsAtPos(selection.$from.pos);
+    
+      const margin = 24;
+      let pos;
+
+      const editBarOnTop = this.state.searchSource === "linkEditor" || (this.state.searchSource === "selection" && !isIos);
+      // ios native bar adjust automatically top or bottom depending on other bars
+      const nativeBarOnTop = isAndroid;
+      const windowHeight = (window as any).visualViewport?.height || window.innerHeight;
+      const maxHeightBelow = Math.min(windowHeight - endPos.bottom - margin, 0.5 * windowHeight);
+      const maxHeightAbove = Math.min(startPos.top - margin, 0.5 * windowHeight);
+      const enoughSpaceAtBottom = maxHeightBelow > maxHeightAbove;
+
+      if (editBarOnTop || nativeBarOnTop || enoughSpaceAtBottom) {
+        pos = {
+          left: left + window.scrollX,
+          top: endPos.bottom + window.scrollY,
+          bottom: undefined,
+          maxHeight: maxHeightBelow,
+        };
+      } else {
+        // using CSS calc works for all platforms
+        // on ios initially searchmenu may show facing downwards over current line, probably offsetHeight = 0?
+        // For ios calculating bottom is extremely problematic when keyboard comes up. Instead use offsetHeight of search menu and set top (drawback is that height always lags to the result of the previously typed letter)
+        pos =  {
+          left: left + window.scrollX,
+          top: undefined,
+          bottom: `calc(100% - ${startPos.top + window.scrollY}px)`,
+          maxHeight: maxHeightAbove,
+        };
+      }
+      return pos;
+    } catch (e) {
+      // can happen when selecting word, then start typing to replace it
+      console.log(`Error calculating position, probably in coordsAtPos`, e);
       return hiddenPos;
     }
-
-    const isIos = iOS();
-    const isAndroid = android();
-
-    const endPos = this.view.coordsAtPos(selection.$to.pos);
-    const startPos = this.view.coordsAtPos(selection.$from.pos);
-
-    const margin = 24;
-    let pos;
-
-    const editBarOnTop = this.state.searchSource === "linkEditor" || (this.state.searchSource === "selection" && !isIos);
-    // ios native bar adjust automatically top or bottom depending on other bars
-    const nativeBarOnTop = isAndroid;
-    const windowHeight = (window as any).visualViewport?.height || window.innerHeight;
-    const maxHeightBelow = Math.min(windowHeight - endPos.bottom - margin, 0.5 * windowHeight);
-    const maxHeightAbove = Math.min(startPos.top - margin, 0.5 * windowHeight);
-    const enoughSpaceAtBottom = maxHeightBelow > maxHeightAbove;
-
-    if (editBarOnTop || nativeBarOnTop || enoughSpaceAtBottom) {
-      pos = {
-        left: left + window.scrollX,
-        top: endPos.bottom + window.scrollY,
-        bottom: undefined,
-        maxHeight: maxHeightBelow,
-      };
-    } else {
-      // using CSS calc works for all platforms
-      // on ios initially searchmenu may show facing downwards over current line, probably offsetHeight = 0?
-      // For ios calculating bottom is extremely problematic when keyboard comes up. Instead use offsetHeight of search menu and set top (drawback is that height always lags to the result of the previously typed letter)
-      pos =  {
-        left: left + window.scrollX,
-        top: undefined,
-        bottom: `calc(100% - ${startPos.top + window.scrollY}px)`,
-        maxHeight: maxHeightAbove,
-      };
-    }
-    return pos;
   }
 
   render = () => {
