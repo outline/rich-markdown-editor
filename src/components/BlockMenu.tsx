@@ -270,6 +270,10 @@ class BlockMenu extends React.Component<Props, State> {
       });
     }
 
+    if (this.inputRef.current) {
+      this.inputRef.current.value = "";
+    }
+
     this.props.onClose();
   };
 
