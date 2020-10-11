@@ -36,7 +36,7 @@ export default class Link extends Mark {
     return {
       attrs: {
         href: {
-          default: null,
+          default: "",
         },
       },
       inclusive: false,
@@ -101,7 +101,10 @@ export default class Link extends Mark {
         props: {
           handleDOMEvents: {
             mouseover: (view, event: MouseEvent) => {
-              if (event.target instanceof HTMLAnchorElement) {
+              if (
+                event.target instanceof HTMLAnchorElement &&
+                !event.target.className.includes("ProseMirror-widget")
+              ) {
                 if (this.options.onHoverLink) {
                   return this.options.onHoverLink(event);
                 }
@@ -119,20 +122,24 @@ export default class Link extends Mark {
               }
 
               if (event.target instanceof HTMLAnchorElement) {
-                const { href } = event.target;
+                const href =
+                  event.target.href ||
+                  (event.target.parentNode instanceof HTMLAnchorElement
+                    ? event.target.parentNode.href
+                    : "");
 
                 const isHashtag = href.startsWith("#");
                 if (isHashtag && this.options.onClickHashtag) {
                   event.stopPropagation();
                   event.preventDefault();
-                  this.options.onClickHashtag(href);
+                  this.options.onClickHashtag(href, event);
                   return true;
                 }
 
                 if (this.options.onClickLink) {
                   event.stopPropagation();
                   event.preventDefault();
-                  this.options.onClickLink(href);
+                  this.options.onClickLink(href, event);
                   return true;
                 }
               }

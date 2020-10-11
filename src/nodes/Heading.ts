@@ -9,8 +9,11 @@ import backspaceToParagraph from "../commands/backspaceToParagraph";
 import toggleBlockType from "../commands/toggleBlockType";
 import headingToSlug from "../lib/headingToSlug";
 import Node from "./Node";
+import { ToastType } from "../types";
 
 export default class Heading extends Node {
+  className = "heading-name";
+
   get name() {
     return "heading";
   }
@@ -77,7 +80,10 @@ export default class Heading extends Node {
     return event => {
       // this is unfortunate but appears to be the best way to grab the anchor
       // as it's added directly to the dom by a decoration.
-      const hash = `#${event.target.parentElement.parentElement.id}`;
+      const anchor = event.currentTarget.nextSibling.getElementsByClassName(
+        this.className
+      )[0];
+      const hash = `#${anchor.id}`;
 
       // the existing url might contain a hash already, lets make sure to remove
       // that rather than appending another one.
@@ -87,7 +93,7 @@ export default class Heading extends Node {
       if (this.options.onShowToast) {
         this.options.onShowToast(
           this.options.dictionary.linkCopied,
-          "heading_copied"
+          ToastType.Info
         );
       }
     };
@@ -140,9 +146,9 @@ export default class Heading extends Node {
                   : 1;
 
               decorations.push(
-                Decoration.node(pos, pos + node.nodeSize, {
+                Decoration.inline(pos, pos + node.nodeSize, {
                   id,
-                  class: "heading-name",
+                  class: this.className,
                   nodeName: "a",
                 })
               );

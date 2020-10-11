@@ -18,6 +18,7 @@ import { textblockTypeInputRule } from "prosemirror-inputrules";
 import copy from "copy-to-clipboard";
 import Prism, { LANGUAGES } from "../plugins/Prism";
 import Node from "./Node";
+import { ToastType } from "../types";
 
 [
   bash,
@@ -57,7 +58,19 @@ export default class CodeFence extends Node {
       code: true,
       defining: true,
       draggable: false,
-      parseDOM: [{ tag: "pre", preserveWhitespace: "full" }],
+      parseDOM: [
+        { tag: "pre", preserveWhitespace: "full" },
+        {
+          tag: ".code-block",
+          preserveWhitespace: "full",
+          contentElement: "code",
+          getAttrs: node => {
+            return {
+              language: node.dataset.language,
+            };
+          },
+        },
+      ],
       toDOM: node => {
         const button = document.createElement("button");
         button.innerText = "Copy";
@@ -78,7 +91,7 @@ export default class CodeFence extends Node {
 
         return [
           "div",
-          { class: "code-block" },
+          { class: "code-block", "data-language": node.attrs.language },
           ["div", { contentEditable: false }, select, button],
           ["pre", ["code", { spellCheck: false }, 0]],
         ];
@@ -102,7 +115,7 @@ export default class CodeFence extends Node {
       if (this.options.onShowToast) {
         this.options.onShowToast(
           this.options.dictionary.codeCopied,
-          "code_copied"
+          ToastType.Info
         );
       }
     };

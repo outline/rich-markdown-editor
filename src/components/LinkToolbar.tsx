@@ -9,11 +9,11 @@ import baseDictionary from "../dictionary";
 type Props = {
   isActive: boolean;
   view: EditorView;
-  tooltip: typeof React.Component;
+  tooltip: typeof React.Component | React.FC<any>;
   dictionary: typeof baseDictionary;
   onCreateLink?: (title: string) => Promise<string>;
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
-  onClickLink: (url: string) => void;
+  onClickLink: (href: string, event: MouseEvent) => void;
   onShowToast?: (msg: string, code: string) => void;
   onClose: () => void;
 };

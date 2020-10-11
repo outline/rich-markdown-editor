@@ -1,5 +1,5 @@
 import * as React from "react";
-import { debounce } from "lodash";
+import debounce from "lodash/debounce";
 import ReactDOM from "react-dom";
 import Editor from "../../src";
 
@@ -15,22 +15,37 @@ const defaultValue = savedText || exampleText;
 const docSearchResults = [
   {
     title: "Hiring",
+    subtitle: "Created by Jane",
     url: "/doc/hiring",
   },
   {
     title: "Product Roadmap",
+    subtitle: "Created by Tom",
     url: "/doc/product-roadmap",
   },
   {
     title: "Finances",
+    subtitle: "Created by Coley",
     url: "/doc/finances",
   },
   {
+    title: "Security",
+    subtitle: "Created by Coley",
+    url: "/doc/security",
+  },
+  {
     title: "Super secret stuff",
+    subtitle: "Created by Coley",
     url: "/doc/secret-stuff",
   },
   {
+    title: "Supero notes",
+    subtitle: "Created by Vanessa",
+    url: "/doc/supero-notes",
+  },
+  {
     title: "Meeting notes",
+    subtitle: "Created by Rob",
     url: "/doc/meeting-notes",
   },
 ];
@@ -42,6 +57,7 @@ class YoutubeEmbed extends React.Component {
 
     return (
       <iframe
+        className={this.props.isSelected ? "ProseMirror-selectednode" : ""}
         src={`https://www.youtube.com/embed/${videoId}?modestbranding=1`}
       />
     );
@@ -124,12 +140,16 @@ class Example extends React.Component {
           onSave={options => console.log("Save triggered", options)}
           onCancel={() => console.log("Cancel triggered")}
           onChange={this.handleChange}
-          onClickLink={href => console.log("Clicked link: ", href)}
+          onClickLink={(href, event) =>
+            console.log("Clicked link: ", href, event)
+          }
           onHoverLink={event => {
             console.log("Hovered link: ", event.target.href);
             return false;
           }}
-          onClickHashtag={tag => console.log("Clicked hashtag: ", tag)}
+          onClickHashtag={(tag, event) =>
+            console.log("Clicked hashtag: ", tag, event)
+          }
           onCreateLink={title => {
             // Delay to simulate time taken for remote API request to complete
             return new Promise((resolve, reject) => {
@@ -144,22 +164,27 @@ class Example extends React.Component {
               }, 1500);
             });
           }}
-          onShowToast={message => window.alert(message)}
+          onShowToast={(message, type) => window.alert(`${type}: ${message}`)}
           onSearchLink={async term => {
             console.log("Searched link: ", term);
-            return docSearchResults.filter(result =>
-              result.title.toLowerCase().includes(term.toLowerCase())
-            );
+
+            // Delay to simulate time taken for remote API request to complete
+            return new Promise(resolve => {
+              setTimeout(() => {
+                resolve(
+                  docSearchResults.filter(result =>
+                    result.title.toLowerCase().includes(term.toLowerCase())
+                  )
+                );
+              }, Math.random() * 500);
+            });
           }}
           uploadImage={file => {
             console.log("File upload triggered: ", file);
 
             // Delay to simulate time taken to upload
             return new Promise(resolve => {
-              setTimeout(
-                () => resolve("https://loremflickr.com/1000/1000"),
-                1500
-              );
+              setTimeout(() => resolve("https://picsum.photos/600/600"), 1500);
             });
           }}
           embeds={[

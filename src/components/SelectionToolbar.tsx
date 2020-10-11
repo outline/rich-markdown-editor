@@ -21,11 +21,11 @@ import baseDictionary from "../dictionary";
 
 type Props = {
   dictionary: typeof baseDictionary;
-  tooltip: typeof React.Component;
+  tooltip: typeof React.Component | React.FC<any>;
   isTemplate: boolean;
   commands: Record<string, any>;
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
-  onClickLink: (url: string) => void;
+  onClickLink: (href: string, event: MouseEvent) => void;
   onCreateLink?: (title: string) => Promise<string>;
   onShowToast?: (msg: string, code: string) => void;
   view: EditorView;

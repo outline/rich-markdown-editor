@@ -1,6 +1,6 @@
 /* global window File Promise */
 import * as React from "react";
-import { memoize } from "lodash";
+import memoize from "lodash/memoize";
 import { EditorState, Selection, Plugin } from "prosemirror-state";
 import { dropCursor } from "prosemirror-dropcursor";
 import { gapCursor } from "prosemirror-gapcursor";
@@ -16,7 +16,7 @@ import { light as lightTheme, dark as darkTheme } from "./theme";
 import baseDictionary from "./dictionary";
 import Flex from "./components/Flex";
 import { SearchResult } from "./components/LinkEditor";
-import { EmbedDescriptor } from "./types";
+import { EmbedDescriptor, ToastType } from "./types";
 import SelectionToolbar from "./components/SelectionToolbar";
 import BlockMenu from "./components/BlockMenu";
 import LinkToolbar from "./components/LinkToolbar";
@@ -101,13 +101,13 @@ export type Props = {
   onImageUploadStop?: () => void;
   onCreateLink?: (title: string) => Promise<string>;
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
-  onClickLink: (href: string) => void;
+  onClickLink: (href: string, event: MouseEvent) => void;
   onHoverLink?: (event: MouseEvent) => boolean;
-  onClickHashtag?: (tag: string) => void;
+  onClickHashtag?: (tag: string, event: MouseEvent) => void;
   onKeyDown?: (event: React.KeyboardEvent<HTMLDivElement>) => void;
   embeds: EmbedDescriptor[];
-  onShowToast?: (message: string) => void;
-  tooltip: typeof React.Component;
+  onShowToast?: (message: string, code: ToastType) => void;
+  tooltip: typeof React.Component | React.FC<any>;
   className?: string;
   style?: Record<string, string>;
 };
@@ -230,6 +230,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new Blockquote(),
         new BulletList(),
         new CodeBlock({
+          dictionary,
           initialReadOnly: this.props.readOnly,
           onShowToast: this.props.onShowToast,
         }),
@@ -705,7 +706,8 @@ const StyledEditor = styled("div")<{
   }
 
   .ProseMirror-selectednode {
-    outline: 2px solid ${props => props.theme.selected};
+    outline: 2px solid
+      ${props => (props.readOnly ? "transparent" : props.theme.selected)};
   }
 
   /* Make sure li selections wrap around markers */
@@ -743,6 +745,20 @@ const StyledEditor = styled("div")<{
       font-size: 13px;
       left: -24px;
     }
+
+    &:hover {
+      .heading-anchor {
+        opacity: 1;
+      }
+    }
+  }
+
+  .heading-name {
+    color: ${props => props.theme.text};
+
+    &:hover {
+      text-decoration: none;
+    }
   }
 
   a:first-child {
@@ -777,18 +793,6 @@ const StyledEditor = styled("div")<{
   }
   h6:not(.placeholder):before {
     content: "H6";
-  }
-
-  .heading-name {
-    color: ${props => props.theme.text};
-
-    &:hover {
-      text-decoration: none;
-
-      .heading-anchor {
-        opacity: 1;
-      }
-    }
   }
 
   .with-emoji {

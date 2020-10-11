@@ -68,6 +68,7 @@ export const light = {
   divider: colors.greyMid,
 
   toolbarBackground: colors.lightBlack,
+  toolbarHoverBackground: colors.black,
   toolbarInput: colors.white10,
   toolbarItem: colors.white,
 
@@ -92,6 +93,7 @@ export const dark = {
   placeholder: "#52657A",
 
   toolbarBackground: colors.white,
+  toolbarHoverBackground: colors.greyMid,
   toolbarInput: colors.black10,
   toolbarItem: colors.lightBlack,
 
