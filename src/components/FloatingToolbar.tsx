@@ -55,21 +55,26 @@ class FloatingToolbar extends React.Component<Props> {
   calculatePosition(props) {
     const { view, active } = props;
     const { selection } = view.state;
-
+    const hiddenPos = {
+      left: -1000,
+      top: 0,
+      offset: 0,
+      visible: false,
+      isSelectingText: this.state.isSelectingText,
+    };
     if (!active || !this.menuRef.current || SSR || this.state.isSelectingText) {
-      return {
-        left: -1000,
-        top: 0,
-        offset: 0,
-        visible: false,
-        isSelectingText: this.state.isSelectingText,
-      };
+      return hiddenPos;
     }
 
     // based on the start and end of the selection calculate the position at
     // the center top
-    const startPos = view.coordsAtPos(selection.$from.pos);
-    const endPos = view.coordsAtPos(selection.$to.pos);
+    try {
+      var startPos = view.coordsAtPos(selection.$from.pos);
+      var endPos = view.coordsAtPos(selection.$to.pos);
+    } catch (e) {
+      console.log(`Error calculating position`, e);
+      return hiddenPos;
+    }
 
     // tables are an oddity, and need their own logic
     const isColSelection =
