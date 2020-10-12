@@ -102,7 +102,6 @@ export type Props = {
   getPlaceHolderLink: (title: string) => string;
   onSearchLink?: (term: Object) => Promise<SearchResult[]>;
   searchResultList?: typeof React.Component;
-  searchResultsOpen?: boolean;
   blockPlaceholders?: Array<string>;
   onClickLink: (href: string) => void;
   onHoverLink?: (event: MouseEvent) => boolean;
@@ -147,14 +146,13 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     embeds: [],
     extensions: [],
     tooltip: Tooltip,
-    searchResultsOpen: false,
     blockPlaceholders: ["Type '/' to insert block…"]
   };
 
   state = {
     blockMenuOpen: false,
     linkMenuOpen: false,
-    searchTriggerOpen: !!this.props.searchResultsOpen,
+    searchTriggerOpen: false,
     searchSource: "typing",
     triggerSearch: "",
     blockMenuSearch: "",

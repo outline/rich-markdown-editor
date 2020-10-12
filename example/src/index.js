@@ -244,7 +244,6 @@ class Example extends React.Component {
             console.log("Hovered link: ", event.target.href);
             return false;
           }}
-          searchResultsOpen={false}
           onClickHashtag={tag => console.log("Clicked hashtag: ", tag)}
           onCreateLink={title => {
             // Delay to simulate time taken for remote API request to complete
