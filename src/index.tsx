@@ -707,21 +707,6 @@ const StyledEditor = styled("div")<{
     }
   }
 
-  .file {
-    a {
-      pointer-events: ${props => (props.readOnly ? "initial" : "none")};
-    }
-  }
-
-  .file.placeholder {
-    position: relative;
-    background: ${props => props.theme.background};
-
-    a {
-      opacity: 0.5;
-    }
-  }
-
   .ProseMirror-hideselection *::selection {
     background: transparent;
   }
