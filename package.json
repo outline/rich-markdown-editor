@@ -1,10 +1,11 @@
 {
-  "name": "rich-markdown-editor",
+  "name": "@gogovapps/rich-markdown-editor",
   "description": "A rich text editor with Markdown shortcuts",
   "version": "11.0.2",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "license": "BSD-3-Clause",
+  "publishConfig": { "registry": "https://npm.pkg.github.com/" },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
@@ -91,7 +92,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/outline/rich-markdown-editor.git"
+    "url": "git+https://github.com/gogovapps/rich-markdown-editor.git"
   },
   "keywords": [
     "editor",
@@ -101,7 +102,7 @@
   ],
   "author": "Tom Moor <tom.moor@gmail.com>",
   "bugs": {
-    "url": "https://github.com/outline/rich-markdown-editor/issues"
+    "url": "https://github.com/gogovapps/rich-markdown-editor/issues"
   },
-  "homepage": "https://github.com/outline/rich-markdown-editor#readme"
+  "homepage": "https://github.com/gogovapps/rich-markdown-editor#readme"
 }
