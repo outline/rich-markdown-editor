@@ -29,6 +29,7 @@ type Props = {
   onCreateLink?: (title: string) => Promise<string>;
   onShowToast?: (msg: string, code: string) => void;
   view: EditorView;
+  disabledItems?: Array<string>;
 };
 
 function isActive(props) {
@@ -125,7 +126,20 @@ export default class SelectionToolbar extends React.Component<Props> {
       items = getFormattingMenuItems(state, isTemplate, dictionary);
     }
 
-    if (!items.length) {
+    const filtered = items.filter(item => {
+      // If this is on the disabled list, hide
+      if (this.props.disabledItems?.includes(item.name as string)) return false;
+      return true;
+    })
+    const reduced = filtered.reduce((acc, item, index) => {
+      // trim separators from start / end
+      if (item.name === "separator" && index === 0) return acc;
+      if (item.name === "separator" && index === filtered.length - 1)
+        return acc;
+      return [...acc, item];
+    }, []);
+  
+    if (!reduced.length) {
       return null;
     }
 
@@ -143,7 +157,7 @@ export default class SelectionToolbar extends React.Component<Props> {
               {...rest}
             />
           ) : (
-            <Menu items={items} {...rest} />
+            <Menu items={reduced} {...rest} />
           )}
         </FloatingToolbar>
       </Portal>

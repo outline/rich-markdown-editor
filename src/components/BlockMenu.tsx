@@ -28,6 +28,7 @@ type Props = {
   onLinkToolbarOpen: () => void;
   onClose: () => void;
   embeds: EmbedDescriptor[];
+  disabledItems?: Array<string> | undefined;
 };
 
 type State = {
@@ -373,6 +374,9 @@ class BlockMenu extends React.Component<Props, State> {
 
       // If no image upload callback has been passed, filter the image block out
       if (!uploadImage && item.name === "image") return false;
+
+      // If this is on the disabled list, hide
+      if (this.props.disabledItems?.includes(item.name as string)) return false;
 
       const n = search.toLowerCase();
       return (

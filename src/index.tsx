@@ -93,6 +93,8 @@ export type Props = {
   handleDOMEvents?: {
     [name: string]: (view: EditorView, event: Event) => boolean;
   };
+  disabledToolbarItems?: Array<string> | undefined;
+  disabledBlockMenuItems?: Array<string> | undefined;
   uploadImage?: (file: File) => Promise<string>;
   onSave?: ({ done: boolean }) => void;
   onCancel?: () => void;
@@ -607,6 +609,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   onSearchLink={this.props.onSearchLink}
                   onClickLink={this.props.onClickLink}
                   onCreateLink={this.props.onCreateLink}
+                  disabledItems={this.props.disabledToolbarItems}
                   tooltip={tooltip}
                 />
                 <LinkToolbar
@@ -624,6 +627,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   view={this.view}
                   commands={this.commands}
                   dictionary={dictionary}
+                  disabledItems={this.props.disabledBlockMenuItems}
                   isActive={this.state.blockMenuOpen}
                   search={this.state.blockMenuSearch}
                   onClose={this.handleCloseBlockMenu}
