@@ -129,12 +129,10 @@ class YoutubeEmbed extends React.Component {
 }
 
 const searchResultList = ({ search, isActive, onSearchLink, searchSource, handleOnSelectLink, handleOnCreateLink }) => {
-  console.log(`search ${search} isActive ${isActive} searchSource ${searchSource}`);
   const [results, setResults] = React.useState([]);
 
   // onSearchLink(search, setResults);
   React.useEffect(() => {
-    console.log(`run effect`);
     onSearchLink(search, setResults);
   }, [search]);
 
@@ -188,13 +186,11 @@ class Example extends React.Component {
     const existing = localStorage.getItem("saved") || "";
     const value = `${existing}\n\nedit!`;
     localStorage.setItem("saved", value);
-
     this.setState({ value });
   };
 
   handleChange = debounce(value => {
     const text = value();
-    console.log(text);
     localStorage.setItem("saved", text);
   }, 250);
 
@@ -261,7 +257,6 @@ class Example extends React.Component {
           }}
           onShowToast={message => window.alert(message)}
           onSearchLink={async (term, setter) => {
-            console.log("Searched link: ", term);
             term && setter(docSearchResults.filter(result =>
               result.title.toLowerCase().includes(term.toLowerCase())
             ));

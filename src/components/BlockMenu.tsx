@@ -43,8 +43,7 @@ class BlockMenu extends React.Component<Props, State> {
 
   state: State = {
     left: -1000,
-    top: undefined,
-    bottom: undefined,
+    top: 1,
     isAbove: false,
     selectedIndex: 0,
     insertItem: undefined,
@@ -397,6 +396,7 @@ class BlockMenu extends React.Component<Props, State> {
     const items = this.filtered;
     const { insertItem, ...positioning } = this.state;
 
+    // FIXME this appears on bottom of page in firefox and causes scrollbar to appear
     return (
       <Portal>
         <Wrapper

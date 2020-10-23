@@ -55,7 +55,7 @@ export default class MarkdownPaste extends Extension {
 
             // otherwise, if we have html then fallback to the default HTML
             // parser behavior that comes with Prosemirror.
-            if (text.length === 0 || html) return false;
+            if (text.length === 0) return false;
 
             event.preventDefault();
 
