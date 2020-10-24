@@ -417,6 +417,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   }
 
   createDocument(content: string) {
+    // FIXME when pasting html this sometimes unnecessarily escapes resulting markdown 
     return this.parser.parse(content);
   }
 
