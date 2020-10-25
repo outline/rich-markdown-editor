@@ -111,8 +111,9 @@ export default class Link extends Mark {
       }
       return false;
     };
-    const onEnd = (view, event: MouseEvent) => {
+    const onEnd = (view, event: MouseEvent, preventDefault = false) => {
       if (event.target instanceof HTMLAnchorElement && !(window as any).TOUCHLINKMOVED) {
+        preventDefault && event.preventDefault();
         const { href } = event.target;
 
         // check text selection, if text selected don't do anything
@@ -142,7 +143,7 @@ export default class Link extends Mark {
             mousedown: onStart,
             touchmove: onMove,
             mousemove: onMove,
-            touchend: (view, event: MouseEvent) => onEnd(view, event),
+            touchend: (view, event: MouseEvent) => onEnd(view, event, true),
             mouseup: (view, event: MouseEvent) => onEnd(view, event),
             mouseover: (view, event: MouseEvent) => {
               if (event.target instanceof HTMLAnchorElement) {
