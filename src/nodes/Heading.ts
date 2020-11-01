@@ -80,9 +80,10 @@ export default class Heading extends Node {
     return event => {
       // this is unfortunate but appears to be the best way to grab the anchor
       // as it's added directly to the dom by a decoration.
-      const anchor = event.currentTarget.nextSibling.getElementsByClassName(
-        this.className
-      )[0];
+      const anchor = event.currentTarget.parentNode.previousSibling;
+      if (!anchor.className.includes(this.className)) {
+        throw new Error("Did not find anchor as previous sibling of heading");
+      }
       const hash = `#${anchor.id}`;
 
       // the existing url might contain a hash already, lets make sure to remove
@@ -146,10 +147,11 @@ export default class Heading extends Node {
                   : 1;
 
               decorations.push(
-                Decoration.inline(pos, pos + node.nodeSize, {
-                  id,
-                  class: this.className,
-                  nodeName: "a",
+                Decoration.widget(pos, () => {
+                  const anchor = document.createElement("a");
+                  anchor.id = id;
+                  anchor.className = this.className;
+                  return anchor;
                 })
               );
             });
