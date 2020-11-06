@@ -1269,7 +1269,7 @@ const StyledEditor = styled("div")<{
 
   .scrollable {
     overflow-y: hidden;
-    overflow-x: scroll;
+    overflow-x: auto;
     padding-left: 1em;
     margin-left: -1em;
     border-left: 1px solid transparent;
