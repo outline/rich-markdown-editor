@@ -1265,6 +1265,18 @@ const StyledEditor = styled("div")<{
   .scrollable-wrapper {
     position: relative;
     margin: 0.5em 0px;
+    scrollbar-width: thin;
+
+    & ::-webkit-scrollbar {
+        height: 14px;
+        background-color: ${props => props.theme.codeBackground};
+    }
+
+    & ::-webkit-scrollbar-thumb {
+        background-color: ${props => props.theme.tableDivider};
+        border: 3px solid ${props => props.theme.codeBackground};
+        border-radius: 7px;
+    }
   }
 
   .scrollable {
