@@ -1266,16 +1266,30 @@ const StyledEditor = styled("div")<{
     position: relative;
     margin: 0.5em 0px;
     scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+
+    &:hover {
+        scrollbar-color: ${props => props.theme.tableDivider} ${props => props.theme.codeBackground};
+    }
 
     & ::-webkit-scrollbar {
         height: 14px;
+        background-color: transparent;
+    }
+
+    &:hover ::-webkit-scrollbar {
         background-color: ${props => props.theme.codeBackground};
     }
 
     & ::-webkit-scrollbar-thumb {
-        background-color: ${props => props.theme.tableDivider};
-        border: 3px solid ${props => props.theme.codeBackground};
+        background-color: transparent;
+        border: 3px solid transparent;
         border-radius: 7px;
+    }
+
+    &:hover ::-webkit-scrollbar-thumb {
+        background-color: ${props => props.theme.tableDivider};
+        border-color: ${props => props.theme.codeBackground};
     }
   }
 
