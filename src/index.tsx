@@ -1265,6 +1265,32 @@ const StyledEditor = styled("div")<{
   .scrollable-wrapper {
     position: relative;
     margin: 0.5em 0px;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+
+    &:hover {
+        scrollbar-color: ${props => props.theme.scrollbarThumb} ${props => props.theme.scrollbarBackground};
+    }
+
+    & ::-webkit-scrollbar {
+        height: 14px;
+        background-color: transparent;
+    }
+
+    &:hover ::-webkit-scrollbar {
+        background-color: ${props => props.theme.scrollbarBackground};
+    }
+
+    & ::-webkit-scrollbar-thumb {
+        background-color: transparent;
+        border: 3px solid transparent;
+        border-radius: 7px;
+    }
+
+    &:hover ::-webkit-scrollbar-thumb {
+        background-color: ${props => props.theme.scrollbarThumb};
+        border-color: ${props => props.theme.scrollbarBackground};
+    }
   }
 
   .scrollable {
