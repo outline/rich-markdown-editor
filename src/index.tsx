@@ -1269,7 +1269,7 @@ const StyledEditor = styled("div")<{
     scrollbar-color: transparent transparent;
 
     &:hover {
-        scrollbar-color: ${props => props.theme.tableDivider} ${props => props.theme.codeBackground};
+        scrollbar-color: ${props => props.theme.scrollbarThumb} ${props => props.theme.scrollbarBackground};
     }
 
     & ::-webkit-scrollbar {
@@ -1278,7 +1278,7 @@ const StyledEditor = styled("div")<{
     }
 
     &:hover ::-webkit-scrollbar {
-        background-color: ${props => props.theme.codeBackground};
+        background-color: ${props => props.theme.scrollbarBackground};
     }
 
     & ::-webkit-scrollbar-thumb {
@@ -1288,8 +1288,8 @@ const StyledEditor = styled("div")<{
     }
 
     &:hover ::-webkit-scrollbar-thumb {
-        background-color: ${props => props.theme.tableDivider};
-        border-color: ${props => props.theme.codeBackground};
+        background-color: ${props => props.theme.scrollbarThumb};
+        border-color: ${props => props.theme.scrollbarBackground};
     }
   }
 
