@@ -1189,74 +1189,91 @@ const StyledEditor = styled("div")<{
     .selectedCell {
       background: ${props =>
         props.readOnly ? "inherit" : props.theme.tableSelectedBackground};
+
+      /* fixes Firefox background color painting over border:
+       * https://bugzilla.mozilla.org/show_bug.cgi?id=688556 */
+      background-clip: padding-box;
     }
 
     .grip-column {
-      cursor: pointer;
-      position: absolute;
-      top: -16px;
-      left: 0;
-      width: 100%;
-      height: 12px;
-      background: ${props => props.theme.tableDivider};
-      border-bottom: 3px solid ${props => props.theme.background};
-      display: ${props => (props.readOnly ? "none" : "block")};
+      /* usage of ::after for all of the table grips works around a bug in
+       * prosemirror-tables that causes Safari to hang when selecting a cell
+       * in an empty table:
+       * https://github.com/ProseMirror/prosemirror/issues/947 */
+      &::after {
+        content: "";
+        cursor: pointer;
+        position: absolute;
+        top: -16px;
+        left: 0;
+        width: 100%;
+        height: 12px;
+        background: ${props => props.theme.tableDivider};
+        border-bottom: 3px solid ${props => props.theme.background};
+        display: ${props => (props.readOnly ? "none" : "block")};
+      }
 
-      &:hover {
+      &:hover::after {
         background: ${props => props.theme.text};
       }
-      &.first {
+      &.first::after {
         border-top-left-radius: 3px;
       }
-      &.last {
+      &.last::after {
         border-top-right-radius: 3px;
       }
-      &.selected {
+      &.selected::after {
         background: ${props => props.theme.tableSelected};
       }
     }
 
     .grip-row {
-      cursor: pointer;
-      position: absolute;
-      left: -16px;
-      top: 0;
-      height: 100%;
-      width: 12px;
-      background: ${props => props.theme.tableDivider};
-      border-right: 3px solid ${props => props.theme.background};
-      display: ${props => (props.readOnly ? "none" : "block")};
+      &::after {
+        content: "";
+        cursor: pointer;
+        position: absolute;
+        left: -16px;
+        top: 0;
+        height: 100%;
+        width: 12px;
+        background: ${props => props.theme.tableDivider};
+        border-right: 3px solid ${props => props.theme.background};
+        display: ${props => (props.readOnly ? "none" : "block")};
+      }
 
-      &:hover {
+      &:hover::after {
         background: ${props => props.theme.text};
       }
-      &.first {
+      &.first::after {
         border-top-left-radius: 3px;
       }
-      &.last {
+      &.last::after {
         border-bottom-left-radius: 3px;
       }
-      &.selected {
+      &.selected::after {
         background: ${props => props.theme.tableSelected};
       }
     }
 
     .grip-table {
-      cursor: pointer;
-      background: ${props => props.theme.tableDivider};
-      width: 13px;
-      height: 13px;
-      border-radius: 13px;
-      border: 2px solid ${props => props.theme.background};
-      position: absolute;
-      top: -18px;
-      left: -18px;
-      display: ${props => (props.readOnly ? "none" : "block")};
+      &::after {
+        content: "";
+        cursor: pointer;
+        background: ${props => props.theme.tableDivider};
+        width: 13px;
+        height: 13px;
+        border-radius: 13px;
+        border: 2px solid ${props => props.theme.background};
+        position: absolute;
+        top: -18px;
+        left: -18px;
+        display: ${props => (props.readOnly ? "none" : "block")};
+      }
 
-      &:hover {
+      &:hover::after {
         background: ${props => props.theme.text};
       }
-      &.selected {
+      &.selected::after {
         background: ${props => props.theme.tableSelected};
       }
     }
