@@ -228,7 +228,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new HardBreak(),
         new Paragraph(),
         new Blockquote(),
-        new BulletList(),
         new CodeBlock({
           dictionary,
           initialReadOnly: this.props.readOnly,
@@ -241,6 +240,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         }),
         new CheckboxList(),
         new CheckboxItem(),
+        new BulletList(),
         new Embed(),
         new ListItem(),
         new Notice({
