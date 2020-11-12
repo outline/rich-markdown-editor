@@ -1559,7 +1559,7 @@ const StyledEditor = styled("div")<{
     border: 0;
     line-height: 1;
     margin-top: -3px;
-    left: -24px;
+    left: ${iOS() ? `-48px` : `-24px`};
     &:hover,
     &:focus {
       cursor: pointer;
