@@ -111,13 +111,12 @@ export default class Image extends Node {
       parseDOM: [
         {
           tag: "div[class=image]",
-          getAttrs: (dom: HTMLElement) => {
+          getAttrs: (dom: HTMLDivElement) => {
             const img = dom.getElementsByTagName("img")[0];
-            const caption = dom.getElementsByTagName("p")[0];
 
             return {
               src: img.getAttribute("src"),
-              alt: caption.innerText,
+              alt: img.getAttribute("alt"),
             };
           },
         },

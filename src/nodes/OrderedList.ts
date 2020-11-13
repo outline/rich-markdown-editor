@@ -19,7 +19,7 @@ export default class OrderedList extends Node {
       parseDOM: [
         {
           tag: "ol",
-          getAttrs: (dom: HTMLElement) => ({
+          getAttrs: (dom: HTMLOListElement) => ({
             order: dom.hasAttribute("start")
               ? parseInt(dom.getAttribute("start") || "1", 10)
               : 1,
