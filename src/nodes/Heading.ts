@@ -38,6 +38,7 @@ export default class Heading extends Node {
       parseDOM: this.options.levels.map(level => ({
         tag: `h${level}`,
         attrs: { level },
+        contentElement: "span",
       })),
       toDOM: node => {
         const button = document.createElement("button");
@@ -118,49 +119,63 @@ export default class Heading extends Node {
   }
 
   get plugins() {
-    return [
-      new Plugin({
-        props: {
-          decorations: state => {
-            const { doc } = state;
-            const decorations: Decoration[] = [];
-            const previouslySeen = {};
+    const getAnchors = doc => {
+      const decorations: Decoration[] = [];
+      const previouslySeen = {};
 
-            doc.descendants((node, pos) => {
-              if (node.type.name !== this.name) return;
+      doc.descendants((node, pos) => {
+        if (node.type.name !== this.name) return;
 
-              // calculate the optimal id
-              const slug = headingToSlug(node);
-              let id = slug;
+        // calculate the optimal id
+        const slug = headingToSlug(node);
+        let id = slug;
 
-              // check if we've already used it, and if so how many times?
-              // Make the new id based on that number ensuring that we have
-              // unique ID's even when headings are identical
-              if (previouslySeen[slug] > 0) {
-                id = headingToSlug(node, previouslySeen[slug]);
-              }
+        // check if we've already used it, and if so how many times?
+        // Make the new id based on that number ensuring that we have
+        // unique ID's even when headings are identical
+        if (previouslySeen[slug] > 0) {
+          id = headingToSlug(node, previouslySeen[slug]);
+        }
 
-              // record that we've seen this slug for the next loop
-              previouslySeen[slug] =
-                previouslySeen[slug] !== undefined
-                  ? previouslySeen[slug] + 1
-                  : 1;
+        // record that we've seen this slug for the next loop
+        previouslySeen[slug] =
+          previouslySeen[slug] !== undefined ? previouslySeen[slug] + 1 : 1;
 
-              decorations.push(
-                Decoration.widget(pos, () => {
-                  const anchor = document.createElement("a");
-                  anchor.id = id;
-                  anchor.className = this.className;
-                  return anchor;
-                })
-              );
-            });
+        decorations.push(
+          Decoration.widget(
+            pos,
+            () => {
+              const anchor = document.createElement("a");
+              anchor.id = id;
+              anchor.className = this.className;
+              return anchor;
+            },
+            {
+              side: -1,
+              key: id,
+            }
+          )
+        );
+      });
 
-            return DecorationSet.create(doc, decorations);
-          },
+      return DecorationSet.create(doc, decorations);
+    };
+
+    const plugin = new Plugin({
+      state: {
+        init: (config, state) => {
+          return getAnchors(state.doc);
         },
-      }),
-    ];
+        apply: (tr, oldState) => {
+          return tr.docChanged ? getAnchors(tr.doc) : oldState;
+        },
+      },
+      props: {
+        decorations: state => plugin.getState(state),
+      },
+    });
+
+    return [plugin];
   }
 
   inputRules({ type }: { type: NodeType }) {
