@@ -139,7 +139,7 @@ const searchResultList = ({ search, isActive, onSearchLink, searchSource, handle
   const closeList = search === "close me";
   return isActive && !closeList ? (
     <div>
-      <div onClick={() => handleOnCreateLink(search, { fromOffset: 0 })}>Add card {search}</div>
+      <div onClick={() => handleOnCreateLink(search, { fromOffset: 0, urlParams: "/?test=0" })}>Add card {search}</div>
       {results.map(rs => (
         <div
           key={rs.title}
@@ -241,13 +241,15 @@ class Example extends React.Component {
             return false;
           }}
           onClickHashtag={tag => console.log("Clicked hashtag: ", tag)}
-          onCreateLink={title => {
+          onCreateLink={(title, urlParams) => {
             // Delay to simulate time taken for remote API request to complete
             return new Promise((resolve, reject) => {
               setTimeout(() => {
                 if (title !== "error") {
                   return resolve(
-                    `/doc/${encodeURIComponent(title.toLowerCase())}`
+                    `/doc/${encodeURIComponent(
+                      title.toLowerCase()
+                    )}${urlParams}`
                   );
                 } else {
                   reject("500 error");

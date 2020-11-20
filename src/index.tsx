@@ -98,7 +98,7 @@ export type Props = {
   onChange: (value: () => string) => void;
   onImageUploadStart?: () => void;
   onImageUploadStop?: () => void;
-  onCreateLink?: (title: string) => Promise<string>;
+  onCreateLink?: (title: string, urlParams?: string) => Promise<string>;
   getPlaceHolderLink: (title: string) => string;
   onSearchLink?: (term: Object) => Promise<SearchResult[]>;
   searchResultList?: typeof React.Component;
@@ -601,7 +601,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     return headings;
   };
 
-  handleOnCreateLink = async (title: string, { fromOffset = 0, toOffset = 0 } = {}) => {
+  handleOnCreateLink = async (title: string, { fromOffset = 0, toOffset = 0, urlParams = "" } = {}) => {
     const { onCreateLink, onShowToast, getPlaceHolderLink, readOnly, readOnlyWriteCheckboxes } = this.props;
 
     this.handleCloseLinkMenu();
@@ -638,7 +638,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     createAndInsertLink(this.view, title, href, {
       onCreateLink,
       onShowToast,
-      readOnly: readOnly && !readOnlyWriteCheckboxes
+      readOnly: readOnly && !readOnlyWriteCheckboxes,
+      urlParams
     });
     this.handleCloseSearchTrigger();
   };
@@ -842,7 +843,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                     onSearchLink={this.props.onSearchLink}
                     handleOnSelectLink={this.handleOnSelectLink}
                     handleOnCreateLink={this.handleOnCreateLink}
-                    onClickLink={this.props.onClickLink}
                     handleCloseSearchTrigger={this.handleCloseSearchTrigger}
                   />
                 </Wrapper>
@@ -1158,6 +1158,10 @@ const StyledEditor = styled("div")<{
 
   a[href*="//"]:not([href*="traverse.link"]) {
     color: ${props => props.theme.linkExternal};
+  }
+
+  a[href$="/?weight=0"]::before {
+    content: "#";
   }
 
   a:hover {

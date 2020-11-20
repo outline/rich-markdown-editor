@@ -44,7 +44,7 @@ export default class Heading extends Node {
         button.addEventListener("click", this.handleCopyLink());
         return [
           `h${node.attrs.level + (this.options.offset || 0)}`,
-          button,
+          // button,
           ["span", 0],
         ];
       },

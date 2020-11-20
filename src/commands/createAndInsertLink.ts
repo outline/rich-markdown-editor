@@ -35,16 +35,17 @@ const createAndInsertLink = async function(
   title: string,
   href: string,
   options: {
-    onCreateLink: (title: string) => Promise<string>;
+    onCreateLink: (title: string, urlParams?: string) => Promise<string>;
     onShowToast?: (message: string, code: string) => void;
-    readOnly?: boolean
+    readOnly?: boolean,
+    urlParams: string
   }
 ) {
   const { dispatch, state } = view;
-  const { onCreateLink, onShowToast, readOnly } = options;
+  const { onCreateLink, onShowToast, readOnly, urlParams } = options;
 
   try {
-    const url = await onCreateLink(title);
+    const url = await onCreateLink(title, urlParams);
     const result = findPlaceholderLink(view.state.doc, href);
 
     if (!result || readOnly) return;
