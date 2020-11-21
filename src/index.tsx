@@ -966,6 +966,7 @@ const StyledEditor = styled("div")<{
 
   li p:first-child {
     margin: 0;
+    word-break: break-all;
   }
 
   hr {
