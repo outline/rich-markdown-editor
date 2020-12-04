@@ -18,6 +18,7 @@ export const LANGUAGES = {
   powershell: "Powershell",
   python: "Python",
   ruby: "Ruby",
+  sql: "SQL",
   typescript: "TypeScript",
 };
 

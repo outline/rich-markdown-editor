@@ -11,6 +11,7 @@ import php from "refractor/lang/php";
 import python from "refractor/lang/python";
 import powershell from "refractor/lang/powershell";
 import ruby from "refractor/lang/ruby";
+import sql from "refractor/lang/sql";
 import typescript from "refractor/lang/typescript";
 
 import { setBlockType } from "prosemirror-commands";
@@ -33,6 +34,7 @@ import { ToastType } from "../types";
   python,
   powershell,
   ruby,
+  sql,
   typescript,
 ].forEach(refractor.register);
 
