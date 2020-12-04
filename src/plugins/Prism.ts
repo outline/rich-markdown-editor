@@ -53,11 +53,7 @@ function getDecorations({ doc, name }) {
   blocks.forEach(block => {
     let startPos = block.pos + 1;
     const language = block.node.attrs.language;
-    if (
-      !language ||
-      language === "none" ||
-      !Object.keys(LANGUAGES).includes(language)
-    ) {
+    if (!language || language === "none" || !refractor.registered(language)) {
       return;
     }
 
