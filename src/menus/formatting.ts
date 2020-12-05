@@ -57,13 +57,6 @@ export default function formattingMenuItems(
       active: isMarkActive(schema.marks.strikethrough),
     },
     {
-      name: "mark",
-      tooltip: "Highlight",
-      icon: HighlightIcon,
-      active: isMarkActive(schema.marks.mark),
-      visible: !isTemplate,
-    },
-    {
       name: "code_inline",
       tooltip: "Code",
       icon: CodeIcon,
@@ -106,6 +99,13 @@ export default function formattingMenuItems(
       icon: LinkIcon,
       active: isMarkActive(schema.marks.link),
       attrs: { href: "" },
+    },
+    {
+      name: "mark",
+      tooltip: "Add prompt",
+      icon: HighlightIcon,
+      active: isMarkActive(schema.marks.mark),
+      visible: !isTemplate,
     },
   ];
 }

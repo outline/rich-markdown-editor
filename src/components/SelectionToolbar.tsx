@@ -22,7 +22,7 @@ export const getText = content => {
   } else if (content.text) {
     return content.text;
   } else if (Array.isArray(content)) {
-    return getText(content[0]);
+    return content.map(getText).join("");
   } else if (typeof content === 'object' && content !== null) {
     return getText(content.content);
   }

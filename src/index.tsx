@@ -98,6 +98,7 @@ export type Props = {
   onChange: (value: () => string) => void;
   onImageUploadStart?: () => void;
   onImageUploadStop?: () => void;
+  onHighlight?: (text: string) => void;
   onCreateLink?: (title: string, urlParams?: string) => Promise<string>;
   getPlaceHolderLink: (title: string) => string;
   onSearchLink?: (term: Object) => Promise<SearchResult[]>;
@@ -142,6 +143,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     onClickLink: href => {
       window.open(href, "_blank");
     },
+    onHighlight: text => {},
     getPlaceHolderLink: title => `/cards/${title}`,
     embeds: [],
     extensions: [],
@@ -289,7 +291,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new TableRow(),
         new Bold(),
         new Code(),
-        new Highlight(),
+        new Highlight({ onHighlight: this.props.onHighlight }),
         new Italic(),
         new TemplatePlaceholder(),
         new Link({
