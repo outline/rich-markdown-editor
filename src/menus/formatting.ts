@@ -9,6 +9,9 @@ import {
   StrikethroughIcon,
   InputIcon,
   HighlightIcon,
+  CommentIcon,
+  QuestionMarkIcon,
+  Icon
 } from "outline-icons";
 import { isInTable } from "prosemirror-tables";
 import { EditorState } from "prosemirror-state";
@@ -16,6 +19,7 @@ import isInList from "../queries/isInList";
 import isMarkActive from "../queries/isMarkActive";
 import isNodeActive from "../queries/isNodeActive";
 import { MenuItem } from "../types";
+import { AddQuestionIcon } from "../components/LinkEditor";
 
 export default function formattingMenuItems(
   state: EditorState,
@@ -102,8 +106,8 @@ export default function formattingMenuItems(
     },
     {
       name: "mark",
-      tooltip: "Add prompt",
-      icon: HighlightIcon,
+      tooltip: "Add active recall question",
+      icon: AddQuestionIcon,
       active: isMarkActive(schema.marks.mark),
       visible: !isTemplate,
     },

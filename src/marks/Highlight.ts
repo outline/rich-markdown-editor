@@ -17,9 +17,26 @@ function markApplies(doc, ranges, type) {
   return false
 }
 
+const getParent = (selection, state) => {
+  const selectionStart = selection.$from;
+  let depth = selectionStart.depth;
+  let parent;
+  do {
+    parent = selectionStart.node(depth);
+    if (parent) {
+      if (parent.type === state.schema.nodes.theNodeTypeImLookingFor) {
+        const currentContext = parent.attrs.theAttrsImLookingFor;
+        break;
+      }
+      depth--;
+    }
+  } while (depth > 0 && parent);
+  return parent;
+}
+
 export default class Highlight extends Mark {
-  onHighlight: (text: string) => void;
-  constructor({ onHighlight = text => {} } = {}) {
+  onHighlight: (text: string, surroundingText: string) => void;
+  constructor({ onHighlight = (text, surroundingText) => { console.log(`Higlight`, text, surroundingText)} } = {}) {
     super();
     this.onHighlight = onHighlight;
   }
@@ -98,8 +115,10 @@ export default class Highlight extends Mark {
                 if (!has) {
                   const selectionContent = state.selection.content();
                   const selectedText = getText(selectionContent);
-                  console.log(`prompt selection 1`, selectedText);
-                  this.onHighlight(selectedText);
+                  const parent = getParent(state.selection, state);
+                  const surroundingText = parent ? getText(parent) : selectedText;
+                  // pass whole state? so that can select surrounding sentence for question
+                  this.onHighlight(selectedText, surroundingText);
                 }
                 dispatch(tr.scrollIntoView())
               }
