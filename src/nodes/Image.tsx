@@ -304,6 +304,7 @@ const Caption = styled.p`
   outline: none;
   background: none;
   resize: none;
+  user-select: text;
 
   &:empty:before {
     color: ${props => props.theme.placeholder};
