@@ -21,13 +21,13 @@ export const base = {
   fontFamilyMono:
     "'SFMono-Regular',Consolas,'Liberation Mono', Menlo, Courier,monospace",
   fontWeight: 400,
-  zIndex: 9999,
+  zIndex: 100,
   link: colors.primary,
   linkExternal: colors.secondary,
   placeholder: "#B1BECC",
   textSecondary: "#4E5C6E",
   textLight: colors.white,
-  textHighlight: "#b3e7ff",
+  textHighlight: "#fff200",
   selected: colors.primary,
   codeComment: "#6a737d",
   codePunctuation: "#5e6687",
@@ -69,9 +69,10 @@ export const light = {
   cursor: colors.black,
   divider: colors.greyMid,
 
-  toolbarBackground: colors.lightBlack,
-  toolbarInput: colors.white10,
-  toolbarItem: colors.white,
+  toolbarBackground: colors.greyLight,
+  toolbarHoverBackground: colors.greyMid,
+  toolbarInput: colors.black10,
+  toolbarItem: colors.lightBlack,
 
   tableDivider: colors.greyMid,
   tableSelected: colors.primary,
@@ -82,6 +83,9 @@ export const light = {
   codeBorder: colors.grey,
   horizontalRule: colors.greyMid,
   imageErrorBackground: colors.greyLight,
+
+  scrollbarBackground: colors.greyLight,
+  scrollbarThumb: colors.greyMid,
 };
 
 export const dark = {
@@ -94,6 +98,7 @@ export const dark = {
   placeholder: "#52657A",
 
   toolbarBackground: colors.white,
+  toolbarHoverBackground: colors.greyMid,
   toolbarInput: colors.black10,
   toolbarItem: colors.lightBlack,
 
@@ -107,6 +112,9 @@ export const dark = {
   codeString: "#3d8fd1",
   horizontalRule: colors.lightBlack,
   imageErrorBackground: "rgba(0, 0, 0, 0.5)",
+
+  scrollbarBackground: colors.black,
+  scrollbarThumb: colors.lightBlack,
 };
 
 export default light;

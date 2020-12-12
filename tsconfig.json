@@ -9,7 +9,9 @@
     "module": "commonjs",
     "target": "es2017",
     "jsx": "react",
-    "types": ["react"],
+    "types": [
+      "react"
+    ],
     "rootDir": "src",
     "outDir": "dist",
     "stripInternal": true,

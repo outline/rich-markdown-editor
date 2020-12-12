@@ -9,8 +9,11 @@ import backspaceToParagraph from "../commands/backspaceToParagraph";
 import toggleBlockType from "../commands/toggleBlockType";
 import headingToSlug from "../lib/headingToSlug";
 import Node from "./Node";
+import { ToastType } from "../types";
 
 export default class Heading extends Node {
+  className = "heading-name";
+
   get name() {
     return "heading";
   }
@@ -35,6 +38,7 @@ export default class Heading extends Node {
       parseDOM: this.options.levels.map(level => ({
         tag: `h${level}`,
         attrs: { level },
+        contentElement: "span",
       })),
       toDOM: node => {
         const button = document.createElement("button");
@@ -42,6 +46,7 @@ export default class Heading extends Node {
         button.type = "button";
         button.className = "heading-anchor";
         button.addEventListener("click", this.handleCopyLink());
+
         return [
           `h${node.attrs.level + (this.options.offset || 0)}`,
           // button,
@@ -76,7 +81,11 @@ export default class Heading extends Node {
     return event => {
       // this is unfortunate but appears to be the best way to grab the anchor
       // as it's added directly to the dom by a decoration.
-      const hash = `#${event.target.parentElement.parentElement.id}`;
+      const anchor = event.currentTarget.parentNode.previousSibling;
+      if (!anchor.className.includes(this.className)) {
+        throw new Error("Did not find anchor as previous sibling of heading");
+      }
+      const hash = `#${anchor.id}`;
 
       // the existing url might contain a hash already, lets make sure to remove
       // that rather than appending another one.
@@ -84,7 +93,10 @@ export default class Heading extends Node {
       copy(urlWithoutHash + hash);
 
       if (this.options.onShowToast) {
-        this.options.onShowToast("Link copied to clipboard", "heading_copied");
+        this.options.onShowToast(
+          this.options.dictionary.linkCopied,
+          ToastType.Info
+        );
       }
     };
   };
@@ -107,48 +119,63 @@ export default class Heading extends Node {
   }
 
   get plugins() {
-    return [
-      new Plugin({
-        props: {
-          decorations: state => {
-            const { doc } = state;
-            const decorations: Decoration[] = [];
-            const previouslySeen = {};
+    const getAnchors = doc => {
+      const decorations: Decoration[] = [];
+      const previouslySeen = {};
 
-            doc.descendants((node, pos) => {
-              if (node.type.name !== this.name) return;
+      doc.descendants((node, pos) => {
+        if (node.type.name !== this.name) return;
 
-              // calculate the optimal id
-              const slug = headingToSlug(node);
-              let id = slug;
+        // calculate the optimal id
+        const slug = headingToSlug(node);
+        let id = slug;
 
-              // check if we've already used it, and if so how many times?
-              // Make the new id based on that number ensuring that we have
-              // unique ID's even when headings are identical
-              if (previouslySeen[slug] > 0) {
-                id = headingToSlug(node, previouslySeen[slug]);
-              }
+        // check if we've already used it, and if so how many times?
+        // Make the new id based on that number ensuring that we have
+        // unique ID's even when headings are identical
+        if (previouslySeen[slug] > 0) {
+          id = headingToSlug(node, previouslySeen[slug]);
+        }
 
-              // record that we've seen this slug for the next loop
-              previouslySeen[slug] =
-                previouslySeen[slug] !== undefined
-                  ? previouslySeen[slug] + 1
-                  : 1;
+        // record that we've seen this slug for the next loop
+        previouslySeen[slug] =
+          previouslySeen[slug] !== undefined ? previouslySeen[slug] + 1 : 1;
 
-              decorations.push(
-                Decoration.node(pos, pos + node.nodeSize, {
-                  id,
-                  class: "heading-name",
-                  nodeName: "a",
-                })
-              );
-            });
+        decorations.push(
+          Decoration.widget(
+            pos,
+            () => {
+              const anchor = document.createElement("a");
+              anchor.id = id;
+              anchor.className = this.className;
+              return anchor;
+            },
+            {
+              side: -1,
+              key: id,
+            }
+          )
+        );
+      });
 
-            return DecorationSet.create(doc, decorations);
-          },
+      return DecorationSet.create(doc, decorations);
+    };
+
+    const plugin = new Plugin({
+      state: {
+        init: (config, state) => {
+          return getAnchors(state.doc);
         },
-      }),
-    ];
+        apply: (tr, oldState) => {
+          return tr.docChanged ? getAnchors(tr.doc) : oldState;
+        },
+      },
+      props: {
+        decorations: state => plugin.getState(state),
+      },
+    });
+
+    return [plugin];
   }
 
   inputRules({ type }: { type: NodeType }) {

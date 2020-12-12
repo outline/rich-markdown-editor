@@ -1,6 +1,7 @@
 import assert from "assert";
 import * as React from "react";
 import { Portal } from "react-portal";
+import { some } from "lodash";
 import { EditorView } from "prosemirror-view";
 import getTableColMenuItems from "../menus/tableCol";
 import getTableRowMenuItems from "../menus/tableRow";
@@ -14,7 +15,9 @@ import getMarkRange from "../queries/getMarkRange";
 import isNodeActive from "../queries/isNodeActive";
 import getColumnIndex from "../queries/getColumnIndex";
 import getRowIndex from "../queries/getRowIndex";
+import createAndInsertLink from "../commands/createAndInsertLink";
 import { MenuItem } from "../types";
+import baseDictionary from "../dictionary";
 
 export const getText = content => {
   if (!content) {
@@ -47,46 +50,136 @@ export const android = () => {
 }
 
 type Props = {
-  tooltip: typeof React.Component;
+  dictionary: typeof baseDictionary;
+  tooltip: typeof React.Component | React.FC<any>;
   isTemplate: boolean;
   commands: Record<string, any>;
-  onSearchLink?: (term: any) => void;
-  onClickLink: (url: string) => void;
+  onSearchLink?: (term: string) => Promise<SearchResult[]>;
+  onClickLink: (href: string, event: MouseEvent) => void;
+  onCreateLink?: (title: string) => Promise<string>;
+  onTurnIntoCards?: (href: string) => Promise<string>;
   onShowToast?: (msg: string, code: string) => void;
   view: EditorView;
+  floating?: boolean;
+  linkIsActive?: boolean;
+  onClose?: () => void;
+  searchTriggerOpen?: boolean;
+  resetSearchTrigger?: () => void;
+  Avatar: typeof React.Component | React.FC<any>;
 };
 
 function isActive(props) {
   const { view } = props;
   const { selection } = view.state;
 
-  return selection && !selection.empty && !selection.node;
+  if (!selection) return false;
+  if (selection.empty) return false;
+  if (selection.node) return false;
+
+  const slice = selection.content();
+  const fragment = slice.content;
+  const nodes = fragment.content;
+
+  return some(nodes, n => n.content.size);
 }
 
 export default class SelectionToolbar extends React.Component<Props> {
+  handleOnCreateLink = async (title: string, turnInto: boolean = false) => {
+    const { dictionary, onCreateLink, onTurnIntoCards, view, onShowToast } = this.props;
+    if (this.props.onClose) {
+      this.props.onClose();
+      this.props.view.focus();
+    }
+
+    if (!onCreateLink) {
+      return;
+    }
+
+    const { dispatch, state } = view;
+    let { from, to } = state.selection;
+
+    const href = `creating#${title}…`;
+    const markType = state.schema.marks.link;
+
+    if (from === to) {
+      if (this.props.searchTriggerOpen) {
+        this.props.resetSearchTrigger && this.props.resetSearchTrigger();
+        dispatch(view.state.tr.delete(from - 2, from));
+        from = from - 2;
+        to = to -2;
+      }
+      // Insert a placeholder link
+      dispatch(
+        view.state.tr
+          .insertText(title, from, to)
+          .addMark(
+            from,
+            to + title.length,
+            markType.create({ href })
+          )
+      );
+    } else {
+      // Insert a placeholder link
+      dispatch(
+        view.state.tr
+          .removeMark(from, to, markType)
+          .addMark(from, to, markType.create({ href }))
+      );
+    }
+
+    createAndInsertLink(view, title, href, {
+      onCreateLink: turnInto && onTurnIntoCards ? onTurnIntoCards : onCreateLink,
+      onShowToast,
+      dictionary,
+    });
+  };
+
   handleOnSelectLink = ({
     href,
     from,
     to,
+    title
   }: {
     href: string;
     from: number;
     to: number;
+    title: string;
   }): void => {
     const { view } = this.props;
     const { state, dispatch } = view;
-
+    if (this.props.onClose) {
+      this.props.onClose();
+      this.props.view.focus();
+    }
     const markType = state.schema.marks.link;
 
-    dispatch(
-      state.tr
-        .removeMark(from, to, markType)
-        .addMark(from, to, markType.create({ href }))
-    );
+    if (from === to) {
+      if (this.props.searchTriggerOpen) {
+        this.props.resetSearchTrigger && this.props.resetSearchTrigger();
+        dispatch(view.state.tr.delete(from - 2, from));
+        from = from - 2;
+        to = to -2;
+      }
+      dispatch(
+        view.state.tr
+          .insertText(title, from, to)
+          .addMark(
+            from,
+            to + title.length,
+            state.schema.marks.link.create({ href })
+          )
+      );
+    } else {
+      dispatch(
+        state.tr
+          .removeMark(from, to, markType)
+          .addMark(from, to, markType.create({ href }))
+      );
+    }
   };
 
   render() {
-    const { isTemplate, ...rest } = this.props;
+    const { dictionary, onCreateLink, isTemplate, ...rest } = this.props;
     const { view } = rest;
     const { state } = view;
     const { selection }: { selection: any } = state;
@@ -103,45 +196,67 @@ export default class SelectionToolbar extends React.Component<Props> {
     const link = isMarkActive(state.schema.marks.link)(state);
     // on iOS, native editor conflicts with link search menu and inline edit bar
     // we do need to keep link editing bar however
-    if (!link && (iOS() || android())) {
-      return null;
-    }
+    // if (!link && (iOS() || android())) {
+    //   return null;
+    // }
     const range = getMarkRange(selection.$from, state.schema.marks.link);
 
     const selectedText = getText(selection.content());
 
     let items: MenuItem[] = [];
     if (isTableSelection) {
-      items = getTableMenuItems();
+      items = getTableMenuItems(dictionary);
     } else if (colIndex !== undefined) {
-      items = getTableColMenuItems(state, colIndex);
+      items = getTableColMenuItems(state, colIndex, dictionary);
     } else if (rowIndex !== undefined) {
-      items = getTableRowMenuItems(state, rowIndex);
+      items = getTableRowMenuItems(state, rowIndex, dictionary);
     } else {
-      items = getFormattingMenuItems(state, isTemplate);
+      items = getFormattingMenuItems(state, isTemplate, dictionary);
     }
 
     if (!items.length) {
       return null;
     }
 
-    return (
+    const MenuEl = <Menu items={items} {...rest} />;
+    const LinkEditorEl = (
+      <LinkEditor
+        dictionary={dictionary}
+        mark={(range && range.mark) || undefined}
+        from={(range && range.from) || selection.from}
+        to={(range && range.to) || selection.to}
+        onCreateLink={onCreateLink ? this.handleOnCreateLink : undefined}
+        Avatar={this.props.Avatar}
+        onSelectLink={this.handleOnSelectLink}
+        selectedText={selectedText}
+        onRemoveLink={this.props.onClose}
+        {...rest}
+      />
+    );
+
+    return this.props.floating ? (
       <Portal>
         <FloatingToolbar view={view} active={isActive(this.props)}>
-          {link && range ? (
-            <LinkEditor
-              mark={range.mark}
-              from={range.from}
-              to={range.to}
-              onSelectLink={this.handleOnSelectLink}
-              selectedText={selectedText}
-              {...rest}
-            />
-          ) : (
-            <Menu items={items} {...rest} />
-          )}
+          {link && range ? LinkEditorEl : MenuEl}
         </FloatingToolbar>
       </Portal>
+    ) : (
+      <BottomToolbarWrapper>
+        <div style={{ padding: "5px", paddingRight: "20px" }}>
+          {((link && range) || this.props.linkIsActive) && LinkEditorEl}
+        </div>
+        {MenuEl}
+      </BottomToolbarWrapper>
     );
   }
+}
+
+export const BottomToolbarWrapper = ({ children }) => {
+  return (
+    <div style={{ position: "absolute", bottom: "0px" }}>
+      <div style={{ position: "fixed", bottom: "0px", width: "100%", background: "#fff", paddingLeft: "10px" }}>
+        {children}
+      </div>
+    </div>
+  )
 }

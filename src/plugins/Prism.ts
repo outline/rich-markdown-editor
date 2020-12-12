@@ -1,5 +1,5 @@
 import refractor from "refractor/core";
-import { flattenDeep } from "lodash";
+import flattenDeep from "lodash/flattenDeep";
 import { Plugin, PluginKey } from "prosemirror-state";
 import { Decoration, DecorationSet } from "prosemirror-view";
 import { findBlockNodes } from "prosemirror-utils";
@@ -18,6 +18,7 @@ export const LANGUAGES = {
   powershell: "Powershell",
   python: "Python",
   ruby: "Ruby",
+  sql: "SQL",
   typescript: "TypeScript",
 };
 
@@ -52,11 +53,7 @@ function getDecorations({ doc, name }) {
   blocks.forEach(block => {
     let startPos = block.pos + 1;
     const language = block.node.attrs.language;
-    if (
-      !language ||
-      language === "none" ||
-      !Object.keys(LANGUAGES).includes(language)
-    ) {
+    if (!language || language === "none" || !refractor.registered(language)) {
       return;
     }
 

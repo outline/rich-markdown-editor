@@ -7,7 +7,7 @@ import theme from "../theme";
 import { MenuItem } from "../types";
 
 type Props = {
-  tooltip: typeof React.Component;
+  tooltip: typeof React.Component | React.FC<any>;
   commands: Record<string, any>;
   view: EditorView;
   theme: typeof theme;
@@ -35,9 +35,9 @@ class Menu extends React.Component<Props> {
           return (
             <ToolbarButton
               key={index}
-              onClick={() =>
-                item.name && this.props.commands[item.name](item.attrs)
-              }
+              onClick={() => {
+                item.name && this.props.commands[item.name](item.attrs);
+              }}
               active={isActive}
             >
               <Tooltip tooltip={item.tooltip} placement="top">

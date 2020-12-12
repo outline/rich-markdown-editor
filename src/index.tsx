@@ -1,6 +1,6 @@
 /* global window File Promise */
 import * as React from "react";
-import { Portal } from "react-portal";
+import memoize from "lodash/memoize";
 import { EditorState, Selection, Plugin } from "prosemirror-state";
 import { dropCursor } from "prosemirror-dropcursor";
 import { gapCursor } from "prosemirror-gapcursor";
@@ -13,16 +13,19 @@ import { baseKeymap } from "prosemirror-commands";
 import { selectColumn, selectRow, selectTable } from "prosemirror-utils";
 import styled, { ThemeProvider } from "styled-components";
 import { light as lightTheme, dark as darkTheme } from "./theme";
+import baseDictionary from "./dictionary";
 import Flex from "./components/Flex";
-import { SearchResult } from "./components/LinkEditor";
-import { EmbedDescriptor } from "./types";
-import SelectionToolbar, { getText, iOS, android } from "./components/SelectionToolbar";
+import { SearchResult, AddQuestionIcon } from "./components/LinkEditor";
+import { EmbedDescriptor, ToastType } from "./types";
+import SelectionToolbar, { BottomToolbarWrapper, getText, iOS, android } from "./components/SelectionToolbar";
 import BlockMenu from "./components/BlockMenu";
+import LinkToolbar from "./components/LinkToolbar";
 import Tooltip from "./components/Tooltip";
 import Extension from "./lib/Extension";
 import ExtensionManager from "./lib/ExtensionManager";
 import ComponentView from "./lib/ComponentView";
 import headingToSlug from "./lib/headingToSlug";
+import ToolbarButton from "./components/ToolbarButton";
 
 // nodes
 import ReactNode from "./nodes/ReactNode";
@@ -51,11 +54,12 @@ import TableRow from "./nodes/TableRow";
 // marks
 import Bold from "./marks/Bold";
 import Code from "./marks/Code";
-import Highlight from "./marks/Highlight";
+import Highlight, { getParent } from "./marks/Highlight";
 import Italic from "./marks/Italic";
 import Link from "./marks/Link";
 import Strikethrough from "./marks/Strikethrough";
 import TemplatePlaceholder from "./marks/Placeholder";
+import Underline from "./marks/Underline";
 
 // plugins
 import BlockMenuTrigger from "./plugins/BlockMenuTrigger";
@@ -66,8 +70,6 @@ import Placeholder from "./plugins/Placeholder";
 import SmartText from "./plugins/SmartText";
 import TrailingNode from "./plugins/TrailingNode";
 import MarkdownPaste from "./plugins/MarkdownPaste";
-
-import createAndInsertLink from "./commands/createAndInsertLink";
 
 export { schema, parser, serializer } from "./server";
 
@@ -84,6 +86,7 @@ export type Props = {
   autoFocus?: boolean;
   readOnly?: boolean;
   readOnlyWriteCheckboxes?: boolean;
+  dictionary?: Partial<typeof baseDictionary>;
   dark?: boolean;
   theme?: typeof theme;
   template?: boolean;
@@ -98,19 +101,21 @@ export type Props = {
   onChange: (value: () => string) => void;
   onImageUploadStart?: () => void;
   onImageUploadStop?: () => void;
+  onCreateLink?: (title: string) => Promise<string>;
+  onTurnIntoCards?: (href: string) => Promise<string>;
+  onSearchLink?: (term: string) => Promise<SearchResult[]>;
+  onClickLink: (href: string, event: MouseEvent) => void;
   onHighlight?: (text: string, surroundingText: string) => void;
-  onCreateLink?: (title: string, urlParams?: string) => Promise<string>;
   getPlaceHolderLink: (title: string) => string;
-  onSearchLink?: (term: Object) => Promise<SearchResult[]>;
-  searchResultList?: typeof React.Component;
+  Avatar: typeof React.Component | React.FC<any>;
+  childCards?: Array<string>;
   blockPlaceholders?: Array<string>;
-  onClickLink: (href: string) => void;
   onHoverLink?: (event: MouseEvent) => boolean;
-  onClickHashtag?: (tag: string) => void;
+  onClickHashtag?: (tag: string, event: MouseEvent) => void;
   onKeyDown?: (event: React.KeyboardEvent<HTMLDivElement>) => void;
   embeds: EmbedDescriptor[];
-  onShowToast?: (message: string) => void;
-  tooltip: typeof React.Component;
+  onShowToast?: (message: string, code: ToastType) => void;
+  tooltip: typeof React.Component | React.FC<any>;
   className?: string;
   style?: Record<string, string>;
 };
@@ -118,12 +123,8 @@ export type Props = {
 type State = {
   blockMenuOpen: boolean;
   linkMenuOpen: boolean;
-  triggerSearch: string;
-  searchSource: string;
   searchTriggerOpen: boolean;
   blockMenuSearch: string;
-  linkFrom: number;
-  linkTo: number;
 };
 
 type Step = {
@@ -148,18 +149,15 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     embeds: [],
     extensions: [],
     tooltip: Tooltip,
-    blockPlaceholders: ["Type '/' to insert block…"]
+    blockPlaceholders: ["Type '/' to insert block…"],
+    childCards: []
   };
 
   state = {
     blockMenuOpen: false,
     linkMenuOpen: false,
     searchTriggerOpen: false,
-    searchSource: "typing",
-    triggerSearch: "",
     blockMenuSearch: "",
-    linkFrom: 0,
-    linkTo: 0,
   };
 
   extensions: ExtensionManager;
@@ -192,7 +190,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     }
   }
 
-  componentDidUpdate(prevProps: Props, prevState) {
+  componentDidUpdate(prevProps: Props) {
     // Allow changes to the 'value' prop to update the editor from outside
     if (this.props.value && prevProps.value !== this.props.value) {
       const newState = this.createState(this.props.value);
@@ -216,19 +214,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     if (prevProps.readOnly && !this.props.readOnly && this.props.autoFocus) {
       this.focusAtEnd();
     }
-
-    if (prevState.triggerSearch === this.state.triggerSearch) {
-      const selectionContent = this.view.state.selection.content();
-      const selectedText = this.view && getText(selectionContent);
-      const multiLineSelect = (selectionContent?.content as any)?.content?.length > 1;
-      if (multiLineSelect) {
-        this.handleCloseSearchTrigger();
-      } else {
-        // problem prevents searching from linkeditor on ios
-        const linkEditorSearchOverridden = this.state.triggerSearch && this.state.searchSource === "linkEditor";
-        selectedText && selectedText !== this.state.triggerSearch && (!linkEditorSearchOverridden) && this.setState({ triggerSearch: selectedText, searchSource: "selection", searchTriggerOpen: true, linkFrom: 0, linkTo: 0 });
-      }
-    }
   }
 
   init() {
@@ -247,6 +232,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   }
 
   createExtensions() {
+    const dictionary = this.dictionary(this.props.dictionary);
+
     // adding nodes here? Update schema.ts for serialization on the server
     return new ExtensionManager(
       [
@@ -257,24 +244,31 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new Blockquote(),
         new BulletList(),
         new CodeBlock({
+          dictionary,
           initialReadOnly: this.props.readOnly,
           onShowToast: this.props.onShowToast,
         }),
         new CodeFence({
+          dictionary,
           initialReadOnly: this.props.readOnly,
           onShowToast: this.props.onShowToast,
         }),
         new CheckboxList(),
         new CheckboxItem(),
+        new BulletList(),
         new Embed(),
         new ListItem(),
-        new Notice(),
+        new Notice({
+          dictionary,
+        }),
         new Heading({
+          dictionary,
           onShowToast: this.props.onShowToast,
           offset: this.props.headingsOffset,
         }),
         new HorizontalRule(),
         new Image({
+          dictionary,
           uploadImage: this.props.uploadImage,
           onImageUploadStart: this.props.onImageUploadStart,
           onImageUploadStop: this.props.onImageUploadStop,
@@ -294,31 +288,35 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new Highlight({ onHighlight: this.props.onHighlight }),
         new Italic(),
         new TemplatePlaceholder(),
+        new Underline(),
         new Link({
-          onKeyboardShortcut: () => {}, // this.handleOpenLinkMenu
+          onKeyboardShortcut: this.handleOpenLinkMenu,
           onClickLink: this.props.onClickLink,
-          onHoverLink: this.props.onHoverLink,
           onClickHashtag: this.props.onClickHashtag,
+          onHoverLink: this.props.onHoverLink,
         }),
         new Strikethrough(),
         new OrderedList(),
         new History(),
         new SmartText(),
         new TrailingNode(),
-        new MarkdownPaste({onPaste: this.handlePasteSearchTrigger}),
+        new MarkdownPaste({onPaste: () => {}}),
         new Keys({
           onSave: this.handleSave,
           onSaveAndExit: this.handleSaveAndExit,
           onCancel: this.props.onCancel,
         }),
         new BlockMenuTrigger({
+          dictionary,
           onOpen: this.handleOpenBlockMenu,
           onClose: this.handleCloseBlockMenu,
           placeholders: this.props.blockPlaceholders
         }),
         new SearchTrigger({
-          onOpen: this.handleOpenSearchTrigger,
-          onClose: this.handleCloseSearchTriggerForTyping,
+          onOpen: () => {
+            this.handleOpenLinkMenu();
+            this.setState({ searchTriggerOpen: true });
+          }
         }),
         new Placeholder({
           placeholders: this.props.placeholders,
@@ -408,7 +406,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       plugins: [
         ...this.plugins,
         ...this.keymaps,
-        dropCursor({ color: this.props.theme?.cursor || "black" }),
+        dropCursor({ color: this.theme().cursor || "black" }),
         gapCursor(),
         inputRules({
           rules: this.inputRules,
@@ -517,25 +515,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     this.setState({ linkMenuOpen: false });
   };
 
-  handleOpenSearchTrigger = (triggerSearch) => {
-    this.setState({ searchTriggerOpen: true, triggerSearch, searchSource: "typing", linkFrom: 0, linkTo: 0 });
-  };
-
-  handlePasteSearchTrigger = (triggerSearch) => {
-    this.setState({ searchTriggerOpen: true, triggerSearch, searchSource: "paste", linkFrom: 0, linkTo: 0 });
-  };
-
-  handleCloseSearchTrigger = () => {
-    this.setState({ searchTriggerOpen: false, triggerSearch: "" });
-  };
-
-  handleCloseSearchTriggerForTyping = () => {
-    const { from, to } = this.view.state.selection;
-    if (this.state.searchSource === "typing" || from === to) {
-      this.setState({ searchTriggerOpen: false, triggerSearch: "" });
-    }
-  };
-
   handleOpenBlockMenu = (search: string) => {
     this.setState({ blockMenuOpen: true, blockMenuSearch: search });
   };
@@ -603,178 +582,15 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     return headings;
   };
 
-  handleOnCreateLink = async (title: string, { fromOffset = 0, toOffset = 0, urlParams = "" } = {}) => {
-    const { onCreateLink, onShowToast, getPlaceHolderLink, readOnly, readOnlyWriteCheckboxes } = this.props;
-
-    this.handleCloseLinkMenu();
-    this.view.focus();
-
-    if (!onCreateLink) {
-      return;
-    }
-    const href = getPlaceHolderLink(title);
-
-    if (!readOnly || readOnlyWriteCheckboxes) {
-      const { dispatch, state } = this.view;
-      const { from, to } = state.selection;
-      if (from === to) {
-        const offset = -this.state.triggerSearch.length;
-        // Insert a placeholder link
-        dispatch(
-          this.view.state.tr
-            .insertText(title, from + offset + fromOffset, to + toOffset)
-            .addMark(
-              from + offset + fromOffset,
-              to + offset + fromOffset + toOffset + title.length,
-              state.schema.marks.link.create({ href })
-            )
-        );
-      } else {
-        dispatch(
-          this.view.state.tr
-            .addMark(from, to, state.schema.marks.link.create({ href }))
-        );
-      }
-    }
-
-    createAndInsertLink(this.view, title, href, {
-      onCreateLink,
-      onShowToast,
-      readOnly: readOnly && !readOnlyWriteCheckboxes,
-      urlParams
-    });
-    this.handleCloseSearchTrigger();
+  theme = () => {
+    return this.props.theme || (this.props.dark ? darkTheme : lightTheme);
   };
 
-  handleOnSelectLink = ({
-    href,
-    title,
-    fromOffset = 0,
-    toOffset = 0
-  }: {
-    href: string;
-    title: string;
-    fromOffset: number;
-    toOffset: number;
-  }) => {
-    this.handleCloseLinkMenu();
-    this.view.focus();
-    if (!this.props.readOnly || this.props.readOnlyWriteCheckboxes) {
-      const { dispatch, state } = this.view;
-      if (this.state.linkFrom && this.state.linkTo) {
-        // inset from selection toolbar link editor
-        const markType = state.schema.marks.link;
-        const from = this.state.linkFrom;
-        const to = this.state.linkTo;
-        try {
-          dispatch(
-            state.tr
-              .removeMark(from, to, markType)
-              .addMark(from, to, markType.create({ href }))
-          );
-        } catch (e) {
-          // Catch Rangeerror when inserting link
-          console.warn(`Error inserting link ${href}`, e);
-        }
-      } else {
-        const from = state.selection.from;
-        const to = state.selection.to;
-
-        if (from === to) {
-          // insert by simple click
-          const offset = -this.state.triggerSearch.length;
-          try {
-            dispatch(
-              this.view.state.tr
-                .insertText(title, from + offset + fromOffset, to + toOffset)
-                .addMark(
-                  from + offset + fromOffset,
-                  to + offset + fromOffset + toOffset + title.length,
-                  state.schema.marks.link.create({ href })
-                )
-            );
-          } catch (e) {
-            console.warn(`Error inserting link ${href}`, e);
-          }
-        } else {
-          // insert by select and click
-          try {
-            dispatch(
-              this.view.state.tr
-                .addMark(from, to, state.schema.marks.link.create({ href }))
-            );
-          } catch (e) {
-            console.warn(`Error inserting link ${href}`, e);
-          }
-        }
-      }
+  dictionary = memoize(
+    (providedDictionary?: Partial<typeof baseDictionary>) => {
+      return { ...baseDictionary, ...providedDictionary };
     }
-    this.handleCloseSearchTrigger();
-  };
-
-  calculatePosition(isActive) {
-    const hiddenPos = {
-      left: -1000,
-      top: 0,
-      bottom: undefined
-    };
-    if (!this.view) {
-      return hiddenPos;
-    }
-    const { selection } = this.view.state;
-    try {
-      const startDocPos = this.view.coordsAtPos(0);
-      const left = startDocPos.left;
-      if (
-        !isActive ||
-        !left
-      ) {
-        return hiddenPos;
-      }
-
-      const isIos = iOS();
-      const isAndroid = android();
-
-    
-      const endPos = this.view.coordsAtPos(selection.$to.pos);
-      const startPos = this.view.coordsAtPos(selection.$from.pos);
-    
-      const margin = 24;
-      let pos;
-
-      const editBarOnTop = this.state.searchSource === "linkEditor" || (this.state.searchSource === "selection" && !isIos);
-      // ios native bar adjust automatically top or bottom depending on other bars
-      const nativeBarOnTop = isAndroid;
-      const windowHeight = (window as any).visualViewport?.height || window.innerHeight;
-      const maxHeightBelow = Math.min(windowHeight - endPos.bottom - margin, 0.5 * windowHeight);
-      const maxHeightAbove = Math.min(startPos.top - margin, 0.5 * windowHeight);
-      const enoughSpaceAtBottom = maxHeightBelow > maxHeightAbove;
-
-      if (editBarOnTop || nativeBarOnTop || enoughSpaceAtBottom) {
-        pos = {
-          left: left + window.scrollX,
-          top: endPos.bottom + window.scrollY,
-          bottom: undefined,
-          maxHeight: maxHeightBelow,
-        };
-      } else {
-        // using CSS calc works for all platforms
-        // on ios initially searchmenu may show facing downwards over current line, probably offsetHeight = 0?
-        // For ios calculating bottom is extremely problematic when keyboard comes up. Instead use offsetHeight of search menu and set top (drawback is that height always lags to the result of the previously typed letter)
-        pos =  {
-          left: left + window.scrollX,
-          top: undefined,
-          bottom: `calc(100% - ${startPos.top + window.scrollY}px)`,
-          maxHeight: maxHeightAbove,
-        };
-      }
-      return pos;
-    } catch (e) {
-      // can happen when selecting word, then start typing to replace it
-      console.log(`Error calculating position, probably in coordsAtPos`, e);
-      return hiddenPos;
-    }
-  }
+  );
 
   render = () => {
     const {
@@ -784,130 +600,126 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       tooltip,
       className,
       onKeyDown,
-      searchResultList: SearchResultList
     } = this.props;
+    const dictionary = this.dictionary(this.props.dictionary);
+    const Tooltip = tooltip;
 
-    const position = this.calculatePosition(this.state.searchTriggerOpen);
-    const theme = this.props.theme || lightTheme;
+    const isMobile = iOS() || android();
     return (
-      <Flex
-        onKeyDown={onKeyDown}
-        style={style}
-        className={className}
-        align="flex-start"
-        justify="center"
-        column
-      >
-        <ThemeProvider theme={theme}>
-          <React.Fragment>
-            <StyledEditor
-              readOnly={readOnly}
-              readOnlyWriteCheckboxes={readOnlyWriteCheckboxes}
-              ref={ref => (this.element = ref)}
-            />
-            {!readOnly && this.view && (
-              <React.Fragment>
-                <SelectionToolbar
-                  view={this.view}
-                  commands={this.commands}
-                  onSearchLink={searchVars => this.setState(searchVars)}
-                  isTemplate={this.props.template === true}
-                  onClickLink={this.props.onClickLink}
-                  tooltip={tooltip}
-                />
-                <BlockMenu
-                  view={this.view}
-                  commands={this.commands}
-                  isActive={this.state.blockMenuOpen}
-                  search={this.state.blockMenuSearch}
-                  onClose={this.handleCloseBlockMenu}
-                  uploadImage={this.props.uploadImage}
-                  onLinkToolbarOpen={this.handleOpenLinkMenu}
-                  onImageUploadStart={this.props.onImageUploadStart}
-                  onImageUploadStop={this.props.onImageUploadStop}
-                  onShowToast={this.props.onShowToast}
-                  embeds={this.props.embeds}
-                />
-              </React.Fragment>
-            )}
-            {this.view && SearchResultList && (
-              <Portal>
-                <Wrapper
-                  id="search-menu-container"
-                  tabIndex="0"
-                  active={this.state.searchTriggerOpen}
-                  {...position}
-                >
-                  <SearchResultList
-                    search={this.state.triggerSearch}
-                    searchSource={this.state.searchSource}
-                    isActive={this.state.searchTriggerOpen}
-                    onSearchLink={this.props.onSearchLink}
-                    handleOnSelectLink={this.handleOnSelectLink}
-                    handleOnCreateLink={this.handleOnCreateLink}
-                    handleCloseSearchTrigger={this.handleCloseSearchTrigger}
+      <ThemeProvider theme={this.theme()}>
+        <div style={{ position: "relative" }}>
+          <Flex
+            onKeyDown={onKeyDown}
+            style={style}
+            className={className}
+            align="flex-start"
+            justify="center"
+            column
+          >
+            <React.Fragment>
+              <StyledEditor
+                readOnly={readOnly}
+                readOnlyWriteCheckboxes={readOnlyWriteCheckboxes}
+                ref={ref => (this.element = ref)}
+                // childCards={this.props.childCards}
+              />
+              {!readOnly && this.view && (
+                <React.Fragment>
+                  {isMobile && (
+                    <>
+                      <SelectionToolbar
+                        floating={true}
+                        view={this.view}
+                        dictionary={dictionary}
+                        commands={this.commands}
+                        onSearchLink={this.props.onSearchLink}
+                        isTemplate={this.props.template === true}
+                        onClickLink={this.props.onClickLink}
+                        onCreateLink={this.props.onCreateLink}
+                        Avatar={this.props.Avatar}
+                        onTurnIntoCards={this.props.onTurnIntoCards}
+                        tooltip={tooltip}
+                      />
+                      <LinkToolbar
+                        view={this.view}
+                        dictionary={dictionary}
+                        isActive={this.state.linkMenuOpen}
+                        onCreateLink={this.props.onCreateLink}
+                        Avatar={this.props.Avatar}
+                        onTurnIntoCards={this.props.onTurnIntoCards}
+                        onSearchLink={this.props.onSearchLink}
+                        onClickLink={this.props.onClickLink}
+                        onShowToast={this.props.onShowToast}
+                        onClose={this.handleCloseLinkMenu}
+                        tooltip={tooltip}
+                        searchTriggerOpen={this.state.searchTriggerOpen}
+                        resetSearchTrigger={() => this.setState({ searchTriggerOpen: false })}
+                      />
+                    </>
+                  )}
+                  <BlockMenu
+                    view={this.view}
+                    commands={this.commands}
+                    dictionary={dictionary}
+                    isActive={this.state.blockMenuOpen}
+                    search={this.state.blockMenuSearch}
+                    onClose={this.handleCloseBlockMenu}
+                    uploadImage={this.props.uploadImage}
+                    onLinkToolbarOpen={this.handleOpenLinkMenu}
+                    onImageUploadStart={this.props.onImageUploadStart}
+                    onImageUploadStop={this.props.onImageUploadStop}
+                    onShowToast={this.props.onShowToast}
+                    embeds={this.props.embeds}
                   />
-                </Wrapper>
-              </Portal>
-            )}
-          </React.Fragment>
-        </ThemeProvider>
-      </Flex>
+                </React.Fragment>
+              )}
+            </React.Fragment>
+          </Flex>
+          {!readOnly && this.view && !isMobile && (
+            <SelectionToolbar
+              floating={false}
+              linkIsActive={this.state.linkMenuOpen}
+              searchTriggerOpen={this.state.searchTriggerOpen}
+              resetSearchTrigger={() => this.setState({ searchTriggerOpen: false })}
+              onClose={this.handleCloseLinkMenu}
+              view={this.view}
+              dictionary={dictionary}
+              commands={this.commands}
+              onSearchLink={this.props.onSearchLink}
+              isTemplate={this.props.template === true}
+              onClickLink={this.props.onClickLink}
+              onCreateLink={this.props.onCreateLink}
+              Avatar={this.props.Avatar}
+              onTurnIntoCards={this.props.onTurnIntoCards}
+              tooltip={tooltip}
+            />
+          )}
+          {readOnly && this.props.onHighlight && (
+            <BottomToolbarWrapper>
+              <ToolbarButton
+              onClick={() => {
+                if (this.props.onHighlight) {
+                  const { state } = this.view;
+                  const selectionContent = state.selection.content();
+                  const selectedText = getText(selectionContent);
+                  const parent = getParent(state.selection, state);
+                  const surroundingText = parent ? getText(parent) : selectedText;
+                  this.props.onHighlight(selectedText, surroundingText);
+                }
+              }}
+              active={true}
+            >
+              <Tooltip tooltip={dictionary.addActiveRecallQuestion} placement="top">
+                <AddQuestionIcon />
+              </Tooltip>
+            </ToolbarButton>
+            </BottomToolbarWrapper>
+          )}
+        </div>
+      </ThemeProvider>
     );
   };
 }
-
-const Wrapper = styled.div<{
-  active: boolean;
-  top?: number;
-  bottom?: number;
-  left?: number;
-  maxHeight?: number;
-}>`
-  color: ${props => props.theme.text};
-  font-family: ${props => props.theme.fontFamily};
-  position: absolute;
-  z-index: ${props => {
-    return props.theme.zIndex + 9999;
-  }};
-  ${props => props.top && `top: ${props.top}px`};
-  ${props => props.bottom && `bottom: ${props.bottom}`};
-  left: ${props => props.left}px;
-  background-color: ${props => props.theme.blockToolbarBackground};
-  border-radius: 4px;
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px,
-    rgba(0, 0, 0, 0.08) 0px 4px 8px, rgba(0, 0, 0, 0.08) 0px 2px 4px;
-  opacity: 0;
-  transform: scale(0.95);
-  transition: opacity 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275),
-    transform 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  transition-delay: 150ms;
-  box-sizing: border-box;
-  pointer-events: none;
-  ${props => props.maxHeight && `max-height: ${props.maxHeight}px`};
-  overflow-y: scroll;
-
-  * {
-    box-sizing: border-box;
-  }
-
-  hr {
-    border: 0;
-    height: 0;
-    border-top: 1px solid ${props => props.theme.blockToolbarDivider};
-  }
-
-  ${({ active }) =>
-    active &&
-    `
-    pointer-events: all;
-    opacity: 1;
-  `};
-
-  @media print {
-    display: none;
-  }
-`;
 
 const StyledEditor = styled("div")<{
   readOnly?: boolean;
@@ -972,7 +784,8 @@ const StyledEditor = styled("div")<{
   }
 
   .ProseMirror-selectednode {
-    outline: 2px solid ${props => props.theme.selected};
+    outline: 2px solid
+      ${props => (props.readOnly ? "transparent" : props.theme.selected)};
   }
 
   /* Make sure li selections wrap around markers */
@@ -1216,6 +1029,7 @@ const StyledEditor = styled("div")<{
 
   li p:first-child {
     margin: 0;
+    word-break: break-all;
   }
 
   hr {
@@ -1439,9 +1253,18 @@ const StyledEditor = styled("div")<{
     .selectedCell {
       background: ${props =>
         props.readOnly ? "inherit" : props.theme.tableSelectedBackground};
+        /* fixes Firefox background color painting over border:
+        * https://bugzilla.mozilla.org/show_bug.cgi?id=688556 */
+       background-clip: padding-box;
     }
 
     .grip-column {
+      /* usage of ::after for all of the table grips works around a bug in
+      * prosemirror-tables that causes Safari to hang when selecting a cell
+      * in an empty table:
+      * https://github.com/ProseMirror/prosemirror/issues/947 */
+     &::after {
+       content: "";
       cursor: pointer;
       position: absolute;
       top: -16px;
@@ -1450,63 +1273,70 @@ const StyledEditor = styled("div")<{
       height: 12px;
       background: ${props => props.theme.tableDivider};
       border-bottom: 3px solid ${props => props.theme.background};
-      display: ${props => (props.readOnly ? "none" : "block")};
+      display: ${props => (props.readOnly ? "none" : "block")}; 
+    }
 
-      &:hover {
+      &:hover::after {
         background: ${props => props.theme.text};
       }
-      &.first {
+      &.first::after {
         border-top-left-radius: 3px;
       }
-      &.last {
+      &.last::after {
         border-top-right-radius: 3px;
       }
-      &.selected {
+      &.selected::after {
         background: ${props => props.theme.tableSelected};
       }
     }
 
     .grip-row {
-      cursor: pointer;
-      position: absolute;
-      left: -16px;
-      top: 0;
-      height: 100%;
-      width: 12px;
-      background: ${props => props.theme.tableDivider};
-      border-right: 3px solid ${props => props.theme.background};
-      display: ${props => (props.readOnly ? "none" : "block")};
+      &::after {
+        content: "";
+        cursor: pointer;
+        position: absolute;
+        left: -16px;
+        top: 0;
+        height: 100%;
+        width: 12px;
+        background: ${props => props.theme.tableDivider};
+        border-right: 3px solid ${props => props.theme.background};
+        display: ${props => (props.readOnly ? "none" : "block")};
+      }
 
-      &:hover {
+      &:hover::after {
         background: ${props => props.theme.text};
       }
-      &.first {
+      &.first::after {
         border-top-left-radius: 3px;
       }
-      &.last {
+      &.last::after {
         border-bottom-left-radius: 3px;
       }
-      &.selected {
+      &.selected::after {
         background: ${props => props.theme.tableSelected};
       }
     }
 
     .grip-table {
-      cursor: pointer;
-      background: ${props => props.theme.tableDivider};
-      width: 13px;
-      height: 13px;
-      border-radius: 13px;
-      border: 2px solid ${props => props.theme.background};
-      position: absolute;
-      top: -18px;
-      left: -18px;
-      display: ${props => (props.readOnly ? "none" : "block")};
+      &::after {
+        content: "";
+        cursor: pointer;
+        background: ${props => props.theme.tableDivider};
+        width: 13px;
+        height: 13px;
+        border-radius: 13px;
+        border: 2px solid ${props => props.theme.background};
+        position: absolute;
+        top: -18px;
+        left: -18px;
+        display: ${props => (props.readOnly ? "none" : "block")};
+      }
 
-      &:hover {
+      &:hover::after {
         background: ${props => props.theme.text};
       }
-      &.selected {
+      &.selected::after {
         background: ${props => props.theme.tableSelected};
       }
     }
@@ -1515,11 +1345,38 @@ const StyledEditor = styled("div")<{
   .scrollable-wrapper {
     position: relative;
     margin: 0.5em 0px;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+
+    &:hover {
+      scrollbar-color: ${props => props.theme.scrollbarThumb}
+        ${props => props.theme.scrollbarBackground};
+    }
+
+    & ::-webkit-scrollbar {
+      height: 14px;
+      background-color: transparent;
+    }
+
+    &:hover ::-webkit-scrollbar {
+      background-color: ${props => props.theme.scrollbarBackground};
+    }
+
+    & ::-webkit-scrollbar-thumb {
+      background-color: transparent;
+      border: 3px solid transparent;
+      border-radius: 7px;
+    }
+
+    &:hover ::-webkit-scrollbar-thumb {
+      background-color: ${props => props.theme.scrollbarThumb};
+      border-color: ${props => props.theme.scrollbarBackground};
+    }
   }
 
   .scrollable {
     overflow-y: hidden;
-    overflow-x: scroll;
+    overflow-x: auto;
     padding-left: 1em;
     margin-left: -1em;
     border-left: 1px solid transparent;
@@ -1573,6 +1430,7 @@ const StyledEditor = styled("div")<{
       color: ${props => props.theme.text};
     }
   }
+
   @media print {
     .block-menu-trigger {
       display: none;

@@ -11,6 +11,7 @@ import php from "refractor/lang/php";
 import python from "refractor/lang/python";
 import powershell from "refractor/lang/powershell";
 import ruby from "refractor/lang/ruby";
+import sql from "refractor/lang/sql";
 import typescript from "refractor/lang/typescript";
 
 import { setBlockType } from "prosemirror-commands";
@@ -18,6 +19,7 @@ import { textblockTypeInputRule } from "prosemirror-inputrules";
 import copy from "copy-to-clipboard";
 import Prism, { LANGUAGES } from "../plugins/Prism";
 import Node from "./Node";
+import { ToastType } from "../types";
 
 [
   bash,
@@ -32,6 +34,7 @@ import Node from "./Node";
   python,
   powershell,
   ruby,
+  sql,
   typescript,
 ].forEach(refractor.register);
 
@@ -57,7 +60,19 @@ export default class CodeFence extends Node {
       code: true,
       defining: true,
       draggable: false,
-      parseDOM: [{ tag: "pre", preserveWhitespace: "full" }],
+      parseDOM: [
+        { tag: "pre", preserveWhitespace: "full" },
+        {
+          tag: ".code-block",
+          preserveWhitespace: "full",
+          contentElement: "code",
+          getAttrs: (dom: HTMLDivElement) => {
+            return {
+              language: dom.dataset.language,
+            };
+          },
+        },
+      ],
       toDOM: node => {
         const button = document.createElement("button");
         button.innerText = "Copy";
@@ -78,7 +93,7 @@ export default class CodeFence extends Node {
 
         return [
           "div",
-          { class: "code-block" },
+          { class: "code-block", "data-language": node.attrs.language },
           ["div", { contentEditable: false }, select, button],
           ["pre", ["code", { spellCheck: false }, 0]],
         ];
@@ -100,7 +115,10 @@ export default class CodeFence extends Node {
     return () => {
       copy(node.textContent);
       if (this.options.onShowToast) {
-        this.options.onShowToast("Copied to clipboard", "code_copied");
+        this.options.onShowToast(
+          this.options.dictionary.codeCopied,
+          ToastType.Info
+        );
       }
     };
   }

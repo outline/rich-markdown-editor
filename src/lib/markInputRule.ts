@@ -22,7 +22,7 @@ function getMarksBetween(start: number, end: number, state: EditorState) {
 export default function(
   regexp: RegExp,
   markType: MarkType,
-  getAttrs?: (match) => {}
+  getAttrs?: (match) => Record<string, unknown>
 ): InputRule {
   return new InputRule(
     regexp,
@@ -39,12 +39,12 @@ export default function(
         const textStart = matchStart + match[m - 1].lastIndexOf(match[m]);
         const textEnd = textStart + match[m].length;
 
-        const excludedMarks = getMarksBetween(start, end, state).filter(
-          item => item.end > matchStart
-        );
+        const excludedMarks = getMarksBetween(start, end, state)
+          .filter(item => item.mark.type.excludes(markType))
+          .filter(item => item.end > matchStart);
 
         if (excludedMarks.length) {
-          return tr;
+          return null;
         }
 
         if (textEnd < matchEnd) {

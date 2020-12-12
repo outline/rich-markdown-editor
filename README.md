@@ -15,6 +15,23 @@ The editor is WYSIWYG and includes formatting tools whilst retaining the ability
 
 ## Usage
 
+
+### Install
+
+```bash
+yarn add traverse-markdown-editor
+```
+
+or
+
+```bash
+npm install traverse-markdown-editor
+```
+
+Note that `react`, `react-dom`, and `styled-components` are _required_ peer dependencies.
+
+### Import
+
 ```javascript
 import Editor from "traverse-markdown-editor";
 
@@ -65,6 +82,10 @@ Allows additional [Prosemirror plugins](https://prosemirror.net/docs/ref/#state.
 #### `theme`
 
 Allows overriding the inbuilt theme to brand the editor, for example use your own font face and brand colors to have the editor fit within your application. See the [inbuilt theme](/src/theme.ts) for an example of the keys that should be provided.
+
+#### `dictionary`
+
+Allows overriding the inbuilt copy dictionary, for example to internationalize the editor. See the [inbuilt dictionary](/src/dictionary.ts) for an example of the keys that should be provided.
 
 #### `dark`
 
@@ -142,19 +163,20 @@ This callback is triggered before `uploadImage` and can be used to show some UI 
 
 Triggered once an image upload has succeeded or failed.
 
-#### `onSearchLink(term: string): Promise<{ title: string, url: string }[]>`
+#### `onSearchLink(term: string): Promise<{ title: string, subtitle?: string, url: string }[]>`
 
-The editor provides an ability to search for links to insert from the formatting toolbar. If this callback is provided it should accept a search term and a setter functiion. eg:
+The editor provides an ability to search for links to insert from the formatting toolbar. If this callback is provided it should accept a search term as the only parameter and return a promise that resolves to an array of objects. eg:
 
 ```javascript
 <Editor
-  onSearchLink={async (searchTerm, setter) => {
+  onSearchLink={async searchTerm => {
     const results = await MyAPI.search(searchTerm);
 
-    setter(results.map(result => {
+    return results.map(result => {
       title: result.name,
+      subtitle: `Created ${result.createdAt}`,
       url: result.url
-    }))
+    })
   }}
 />
 ```
@@ -175,15 +197,14 @@ The editor provides an ability to create links from the formatting toolbar for o
 />
 ```
 
-#### `onShowToast(message: string, id: string): void`
+#### `onShowToast(message: string, type: ToastType): void`
 
-Triggered when the editor wishes to show an error message to the user. Hook into your apps
+Triggered when the editor wishes to show a message to the user. Hook into your app's
 notification system, or simplisticly use `window.alert(message)`. The second parameter
-is a stable identifier you can use to identify the message if you'd prefer to write
-your own copy.
+is the type of toast: 'error' or 'info'.
 
 
-#### `onClickLink(href: string): void`
+#### `onClickLink(href: string, event: MouseEvent): void`
 
 This callback allows overriding of link handling. It's often the case that you want to have external links open a new window and have internal links use something like `react-router` to navigate. If no callback is provided then default behavior of opening a new tab will apply to all links. eg:
 
@@ -192,7 +213,7 @@ This callback allows overriding of link handling. It's often the case that you w
 import { history } from "react-router";
 
 <Editor
-  onClickLink={href => {
+  onClickLink={(href, event) => {
     if (isInternalLink(href)) {
       history.push(href);
     } else {
@@ -215,7 +236,7 @@ This callback allows detecting when the user hovers over a link in the document.
 />
 ```
 
-#### `onClickHashtag(tag: string): void`
+#### `onClickHashtag(tag: string, event: MouseEvent): void`
 
 This callback allows handling of clicking on hashtags in the document text. If no callback is provided then hashtags will render as regular text, so you can choose if to support them or not by passing this prop.
 

@@ -30,7 +30,7 @@ export default class Code extends Mark {
 
   get schema() {
     return {
-      excludes: "strong em link mark strikethrough",
+      excludes: "_",
       parseDOM: [{ tag: "code" }],
       toDOM: () => ["code", { spellCheck: false }],
     };

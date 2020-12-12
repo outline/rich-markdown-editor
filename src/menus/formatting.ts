@@ -8,10 +8,6 @@ import {
   LinkIcon,
   StrikethroughIcon,
   InputIcon,
-  HighlightIcon,
-  CommentIcon,
-  QuestionMarkIcon,
-  Icon
 } from "outline-icons";
 import { isInTable } from "prosemirror-tables";
 import { EditorState } from "prosemirror-state";
@@ -19,11 +15,13 @@ import isInList from "../queries/isInList";
 import isMarkActive from "../queries/isMarkActive";
 import isNodeActive from "../queries/isNodeActive";
 import { MenuItem } from "../types";
-import { AddQuestionIcon } from "../components/LinkEditor";
+import { AddQuestionIcon, AddCardIcon } from "../components/LinkEditor";
+import baseDictionary from "../dictionary";
 
 export default function formattingMenuItems(
   state: EditorState,
-  isTemplate: boolean
+  isTemplate: boolean,
+  dictionary: typeof baseDictionary
 ): MenuItem[] {
   const { schema } = state;
   const isTable = isInTable(state);
@@ -32,8 +30,24 @@ export default function formattingMenuItems(
 
   return [
     {
+      name: "mark",
+      tooltip: dictionary.addActiveRecallQuestion,
+      icon: AddQuestionIcon,
+      active: isMarkActive(schema.marks.mark),
+    },
+    {
+      name: "link",
+      tooltip: dictionary.createLink,
+      icon: LinkIcon,
+      active: isMarkActive(schema.marks.link),
+      attrs: { href: "" },
+    },
+    {
+      name: "separator",
+    },
+    {
       name: "placeholder",
-      tooltip: "Placeholder",
+      tooltip: dictionary.placeholder,
       icon: InputIcon,
       active: isMarkActive(schema.marks.placeholder),
       visible: isTemplate,
@@ -44,72 +58,35 @@ export default function formattingMenuItems(
     },
     {
       name: "strong",
-      tooltip: "Bold",
+      tooltip: dictionary.strong,
       icon: BoldIcon,
       active: isMarkActive(schema.marks.strong),
     },
     {
       name: "em",
-      tooltip: "Italic",
+      tooltip: dictionary.em,
       icon: ItalicIcon,
       active: isMarkActive(schema.marks.em),
     },
     {
       name: "strikethrough",
-      tooltip: "Strikethrough",
+      tooltip: dictionary.strikethrough,
       icon: StrikethroughIcon,
       active: isMarkActive(schema.marks.strikethrough),
     },
     {
       name: "code_inline",
-      tooltip: "Code",
+      tooltip: dictionary.codeInline,
       icon: CodeIcon,
       active: isMarkActive(schema.marks.code_inline),
     },
     {
-      name: "separator",
-      visible: allowBlocks,
-    },
-    {
-      name: "heading",
-      tooltip: "Heading",
-      icon: Heading1Icon,
-      active: isNodeActive(schema.nodes.heading, { level: 1 }),
-      attrs: { level: 1 },
-      visible: allowBlocks,
-    },
-    {
-      name: "heading",
-      tooltip: "Subheading",
-      icon: Heading2Icon,
-      active: isNodeActive(schema.nodes.heading, { level: 2 }),
-      attrs: { level: 2 },
-      visible: allowBlocks,
-    },
-    {
       name: "blockquote",
-      tooltip: "Quote",
+      tooltip: dictionary.quote,
       icon: BlockQuoteIcon,
       active: isNodeActive(schema.nodes.blockquote),
       attrs: { level: 2 },
       visible: allowBlocks,
-    },
-    {
-      name: "separator",
-    },
-    {
-      name: "link",
-      tooltip: "Create link",
-      icon: LinkIcon,
-      active: isMarkActive(schema.marks.link),
-      attrs: { href: "" },
-    },
-    {
-      name: "mark",
-      tooltip: "Add active recall question",
-      icon: AddQuestionIcon,
-      active: isMarkActive(schema.marks.mark),
-      visible: !isTemplate,
     },
   ];
 }

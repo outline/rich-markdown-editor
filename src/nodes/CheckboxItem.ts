@@ -23,10 +23,8 @@ export default class CheckboxItem extends Node {
       parseDOM: [
         {
           tag: `li[data-type="${this.name}"]`,
-          getAttrs: dom => ({
-            checked: dom.getElementsByTagName("input")[0].checked
-              ? true
-              : false,
+          getAttrs: (dom: HTMLLIElement) => ({
+            checked: dom.className.includes("checked"),
           }),
         },
       ],

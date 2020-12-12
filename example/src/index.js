@@ -1,5 +1,5 @@
 import * as React from "react";
-import { debounce } from "lodash";
+import debounce from "lodash/debounce";
 import ReactDOM from "react-dom";
 import Editor from "../../src";
 
@@ -15,6 +15,7 @@ const defaultValue = savedText || exampleText;
 const docSearchResults = [
   {
     title: "Hiring",
+    subtitle: "Created by Jane",
     url: "/doc/hiring",
   },
   {
@@ -122,43 +123,44 @@ class YoutubeEmbed extends React.Component {
 
     return (
       <iframe
+        className={this.props.isSelected ? "ProseMirror-selectednode" : ""}
         src={`https://www.youtube.com/embed/${videoId}?modestbranding=1`}
       />
     );
   }
 }
 
-const searchResultList = ({ search, isActive, onSearchLink, searchSource, handleOnSelectLink, handleOnCreateLink }) => {
-  const [results, setResults] = React.useState([]);
+// const searchResultList = ({ search, isActive, onSearchLink, searchSource, handleOnSelectLink, handleOnCreateLink }) => {
+//   const [results, setResults] = React.useState([]);
 
-  // onSearchLink(search, setResults);
-  React.useEffect(() => {
-    onSearchLink(search, setResults);
-  }, [search]);
+//   // onSearchLink(search, setResults);
+//   React.useEffect(() => {
+//     onSearchLink(search, setResults);
+//   }, [search]);
 
-  const closeList = search === "close me";
-  return isActive && !closeList ? (
-    <div>
-      <div onClick={() => handleOnCreateLink(search, { fromOffset: 0, urlParams: "/?test=0" })}>Add card {search}</div>
-      {results.map(rs => (
-        <div
-          key={rs.title}
-          onClick={() => {
-            // clearSearch();
-            handleOnSelectLink({
-              title: rs.title,
-              href: rs.url,
-              fromOffset: 0,
-              toOffset: 0
-            });
-          }}
-        >
-          {rs.title}
-        </div>
-      ))}
-    </div>
-  ) : null;
-};
+//   const closeList = search === "close me";
+//   return isActive && !closeList ? (
+//     <div>
+//       <div onClick={() => handleOnCreateLink(search, { fromOffset: 0, urlParams: "/?test=0" })}>Add card {search}</div>
+//       {results.map(rs => (
+//         <div
+//           key={rs.title}
+//           onClick={() => {
+//             // clearSearch();
+//             handleOnSelectLink({
+//               title: rs.title,
+//               href: rs.url,
+//               fromOffset: 0,
+//               toOffset: 0
+//             });
+//           }}
+//         >
+//           {rs.title}
+//         </div>
+//       ))}
+//     </div>
+//   ) : null;
+// };
 
 class Example extends React.Component {
   state = {
@@ -186,6 +188,7 @@ class Example extends React.Component {
     const existing = localStorage.getItem("saved") || "";
     const value = `${existing}\n\nedit!`;
     localStorage.setItem("saved", value);
+
     this.setState({ value });
   };
 
@@ -241,16 +244,15 @@ class Example extends React.Component {
             console.log("Hovered link: ", event.target.href);
             return false;
           }}
+          onHighlight={(txt, surTxt) => console.log(`Add highlight ${txt} in ${surTxt}`)}
           onClickHashtag={tag => console.log("Clicked hashtag: ", tag)}
-          onCreateLink={(title, urlParams) => {
+          onCreateLink={title => {
             // Delay to simulate time taken for remote API request to complete
             return new Promise((resolve, reject) => {
               setTimeout(() => {
                 if (title !== "error") {
                   return resolve(
-                    `/doc/${encodeURIComponent(
-                      title.toLowerCase()
-                    )}${urlParams}`
+                    `/doc/${encodeURIComponent(title.toLowerCase())}`
                   );
                 } else {
                   reject("500 error");
@@ -258,11 +260,28 @@ class Example extends React.Component {
               }, 1500);
             });
           }}
+          onTurnIntoCards={href => {
+            // Delay to simulate time taken for remote API request to complete
+            return new Promise((resolve, reject) => {
+              setTimeout(() => {
+                return resolve(`/doc/some_article`);
+              }, 1500);
+            });
+          }}
           onShowToast={message => window.alert(message)}
-          onSearchLink={async (term, setter) => {
-            term && setter(docSearchResults.filter(result =>
-              result.title.toLowerCase().includes(term.toLowerCase())
-            ));
+          onSearchLink={async term => {
+            console.log("Searched link: ", term);
+
+            // Delay to simulate time taken for remote API request to complete
+            return new Promise(resolve => {
+              setTimeout(() => {
+                resolve(
+                  docSearchResults.filter(result =>
+                    result.title.toLowerCase().includes(term.toLowerCase())
+                  )
+                );
+              }, Math.random() * 500);
+            });
           }}
           uploadImage={file => {
             console.log("File upload triggered: ", file);
@@ -275,6 +294,7 @@ class Example extends React.Component {
               );
             });
           }}
+          Avatar={user => (<span>{`Created by ${user.userName}`}</span>)}
           embeds={[
             {
               title: "YouTube",
@@ -296,7 +316,7 @@ class Example extends React.Component {
           ]}
           dark={this.state.dark}
           autoFocus
-          searchResultList={searchResultList}
+          childCards={["/doc/hiring"]}
           blockPlaceholders={[
             "Type '/' to insert block…",
             "Paste a link to add cards",

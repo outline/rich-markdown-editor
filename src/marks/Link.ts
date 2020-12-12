@@ -3,6 +3,7 @@ import { Plugin } from "prosemirror-state";
 import { InputRule } from "prosemirror-inputrules";
 import Mark from "./Mark";
 import { getText } from "../components/SelectionToolbar";
+import { markApplies } from "./Highlight";
 
 const LINK_INPUT_REGEX = /\[(.+)]\((\S+)\)/;
 
@@ -37,7 +38,7 @@ export default class Link extends Mark {
     return {
       attrs: {
         href: {
-          default: null,
+          default: "",
         },
       },
       inclusive: false,
@@ -80,7 +81,37 @@ export default class Link extends Mark {
   }
 
   commands({ type }) {
-    return ({ href } = { href: "" }) => toggleMark(type, { href });
+    return ({ href } = { href: "" }) => {
+      return (state, dispatch) => {
+        // inlined toggleMark so can add question only when adding https://github.com/ProseMirror/prosemirror-commands/blob/master/src/commands.js#L488
+          let {empty, $cursor, ranges} = state.selection
+            if ((empty && !$cursor) || !markApplies(state.doc, ranges, type)) return false;
+            if (empty) {
+              this.options.onKeyboardShortcut();
+            }
+            if (dispatch) {
+              if ($cursor) {
+                if (type.isInSet(state.storedMarks || $cursor.marks()))
+                  dispatch(state.tr.removeStoredMark(type))
+                else
+                  dispatch(state.tr.addStoredMark(type.create({ href })))
+              } else {
+                let has = false, tr = state.tr
+                for (let i = 0; !has && i < ranges.length; i++) {
+                  let {$from, $to} = ranges[i]
+                  has = state.doc.rangeHasMark($from.pos, $to.pos, type)
+                }
+                for (let i = 0; i < ranges.length; i++) {
+                  let {$from, $to} = ranges[i]
+                  if (has) tr.removeMark($from.pos, $to.pos, type)
+                  else tr.addMark($from.pos, $to.pos, type.create({ href }))
+                }
+                dispatch(tr.scrollIntoView())
+              }
+            }
+            return true
+        }
+      }
   }
 
   keys({ type }) {
@@ -146,7 +177,8 @@ export default class Link extends Mark {
             touchend: (view, event: MouseEvent) => onEnd(view, event, true),
             mouseup: (view, event: MouseEvent) => onEnd(view, event),
             mouseover: (view, event: MouseEvent) => {
-              if (event.target instanceof HTMLAnchorElement) {
+              if (event.target instanceof HTMLAnchorElement  &&
+                !event.target.className.includes("ProseMirror-widget")) {
                 if (this.options.onHoverLink) {
                   return this.options.onHoverLink(event);
                 }

@@ -4,7 +4,7 @@ import Mark from "./Mark";
 // import { Plugin } from "prosemirror-state";
 import { getText } from "../components/SelectionToolbar";
 
-function markApplies(doc, ranges, type) {
+export function markApplies(doc, ranges, type) {
   for (let i = 0; i < ranges.length; i++) {
     let {$from, $to} = ranges[i]
     let can = $from.depth == 0 ? doc.type.allowsMarkType(type) : false
@@ -17,7 +17,7 @@ function markApplies(doc, ranges, type) {
   return false
 }
 
-const getParent = (selection, state) => {
+export const getParent = (selection, state) => {
   const selectionStart = selection.$from;
   let depth = selectionStart.depth;
   let parent;
@@ -117,7 +117,6 @@ export default class Highlight extends Mark {
                   const selectedText = getText(selectionContent);
                   const parent = getParent(state.selection, state);
                   const surroundingText = parent ? getText(parent) : selectedText;
-                  // pass whole state? so that can select surrounding sentence for question
                   this.onHighlight(selectedText, surroundingText);
                 }
                 dispatch(tr.scrollIntoView())

@@ -133,7 +133,7 @@ export default class BlockMenuTrigger extends Extension {
                     parent.pos + parent.node.nodeSize,
                     {
                       class: "placeholder",
-                      "data-empty-text": "  Keep typing to filter…",
+                      "data-empty-text": `  ${this.options.dictionary.newLineWithSlash}`,
                     }
                   )
                 );
