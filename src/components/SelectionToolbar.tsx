@@ -242,7 +242,7 @@ export default class SelectionToolbar extends React.Component<Props> {
       </Portal>
     ) : (
       <BottomToolbarWrapper>
-        <div style={{ padding: "5px", paddingRight: "20px" }}>
+        <div style={{ padding: "10px" }}>
           {((link && range) || this.props.linkIsActive) && LinkEditorEl}
         </div>
         {MenuEl}
@@ -253,7 +253,7 @@ export default class SelectionToolbar extends React.Component<Props> {
 
 export const BottomToolbarWrapper = ({ children }) => {
   return (
-    <div style={{ width: "100%", background: "#fff", paddingLeft: "10px", position: "sticky", bottom: "0px" }}>
+    <div style={{ width: "100%", background: "#fff", position: "sticky", bottom: "0px" }}>
       {children}
     </div>
   )

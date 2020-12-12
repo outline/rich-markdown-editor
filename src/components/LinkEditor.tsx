@@ -326,12 +326,11 @@ class LinkEditor extends React.Component<Props, State> {
     view.focus();
   };
 
-  // componentDidUpdate() {
-  //   if (this.href !== this.initialValue) {
-  //     this.initialValue = this.href;
-  //     this.setState({ value: this.href });
-  //   }
-  // }
+  componentDidMount() {
+    if (this.state.value) {
+      this.handleChange({ target: { value: this.state.value }})
+    }
+  }
 
   render() {
     const { dictionary, theme, Avatar } = this.props;
@@ -392,7 +391,7 @@ class LinkEditor extends React.Component<Props, State> {
                 key={result.url}
                 title={result.title}
                 subtitle={result.subtitle}
-                icon={<Avatar user={{ userName: result.userName }} />}
+                icon={<Avatar user={{ userName: result.userName }} size={24} />}
                 onMouseOver={() => this.handleFocusLink(index)}
                 onClick={this.handleSelectLink(result.url, result.title)}
                 selected={index === selectedIndex}
