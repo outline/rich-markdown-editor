@@ -13,7 +13,7 @@ type Props = {
   dictionary: typeof baseDictionary;
   onCreateLink?: (title: string) => Promise<string>;
   onTurnIntoCards?: (href: string) => Promise<string>;
-  onSearchLink?: (term: string) => Promise<SearchResult[]>;
+  onSearchLink?: (term: string, setter: (resultObj: object) => void) => void;
   onClickLink: (href: string, event: MouseEvent) => void;
   onShowToast?: (msg: string, code: string) => void;
   onClose: () => void;

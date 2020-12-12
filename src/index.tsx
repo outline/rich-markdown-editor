@@ -103,7 +103,7 @@ export type Props = {
   onImageUploadStop?: () => void;
   onCreateLink?: (title: string) => Promise<string>;
   onTurnIntoCards?: (href: string) => Promise<string>;
-  onSearchLink?: (term: string) => Promise<SearchResult[]>;
+  onSearchLink?: (term: string, setter: (resultObj: object) => void) => void;
   onClickLink: (href: string, event: MouseEvent) => void;
   onHighlight?: (text: string, surroundingText: string) => void;
   getPlaceHolderLink: (title: string) => string;

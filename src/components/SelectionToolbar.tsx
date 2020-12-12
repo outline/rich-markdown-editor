@@ -54,7 +54,7 @@ type Props = {
   tooltip: typeof React.Component | React.FC<any>;
   isTemplate: boolean;
   commands: Record<string, any>;
-  onSearchLink?: (term: string) => Promise<SearchResult[]>;
+  onSearchLink?: (term: string, setter: (resultObj: object) => void) => void;
   onClickLink: (href: string, event: MouseEvent) => void;
   onCreateLink?: (title: string) => Promise<string>;
   onTurnIntoCards?: (href: string) => Promise<string>;

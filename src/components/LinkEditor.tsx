@@ -75,7 +75,6 @@ export type SearchResult = {
   subtitle?: string;
   userName?: string;
   url: string;
-  Avatar: typeof React.Component | React.FC<any>;
 };
 
 type Props = {
@@ -87,7 +86,7 @@ type Props = {
   onRemoveLink?: () => void;
   onCreateLink?: (title: string, turnIntoCards?: boolean) => Promise<void>;
   onTurnIntoCards?: (href: string) => Promise<string>;
-  onSearchLink?: (term: string) => Promise<SearchResult[]>;
+  onSearchLink?: (term: string, setter: (resultObj: object) => void) => void;
   Avatar: typeof React.Component | React.FC<any>;
   onSelectLink: (options: {
     href: string;
@@ -262,14 +261,17 @@ class LinkEditor extends React.Component<Props, State> {
 
     if (trimmedValue && this.props.onSearchLink) {
       try {
-        const results = await this.props.onSearchLink(trimmedValue);
-        this.setState(state => ({
-          results: {
-            ...state.results,
-            [trimmedValue]: results,
-          },
-          previousValue: trimmedValue,
-        }));
+        const setter = resultObj => {
+          const results = (Object.values(resultObj) as any).flat(1);
+          this.setState(state => ({
+            results: {
+              ...state.results,
+              [trimmedValue]: results,
+            },
+            previousValue: trimmedValue,
+          }));
+        }
+        this.props.onSearchLink(trimmedValue, setter);
       } catch (error) {
         console.error(error);
       }

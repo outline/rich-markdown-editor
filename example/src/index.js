@@ -269,17 +269,16 @@ class Example extends React.Component {
             });
           }}
           onShowToast={message => window.alert(message)}
-          onSearchLink={async term => {
+          onSearchLink={async (term, setter) => {
             console.log("Searched link: ", term);
 
             // Delay to simulate time taken for remote API request to complete
             return new Promise(resolve => {
               setTimeout(() => {
-                resolve(
-                  docSearchResults.filter(result =>
-                    result.title.toLowerCase().includes(term.toLowerCase())
-                  )
+                const result = docSearchResults.filter(result =>
+                  result.title.toLowerCase().includes(term.toLowerCase())
                 );
+                setter({ user: result });
               }, Math.random() * 500);
             });
           }}
