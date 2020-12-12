@@ -700,7 +700,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
               tooltip={tooltip}
             />
           )}
-          {readOnly && this.view && this.state.focused && this.props.onHighlight && (
+          {readOnly && this.view && this.props.onHighlight && (
             <BottomToolbarWrapper>
               <ToolbarButton
               onClick={() => {
