@@ -45,7 +45,7 @@ class BlockMenu extends React.Component<Props, State> {
 
   state: State = {
     left: -1000,
-    top: undefined,
+    top: 1,
     bottom: undefined,
     isAbove: false,
     selectedIndex: 0,
