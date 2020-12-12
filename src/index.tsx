@@ -125,6 +125,7 @@ type State = {
   linkMenuOpen: boolean;
   searchTriggerOpen: boolean;
   blockMenuSearch: string;
+  focused: boolean;
 };
 
 type Step = {
@@ -158,6 +159,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     linkMenuOpen: false,
     searchTriggerOpen: false,
     blockMenuSearch: "",
+    focused: false,
   };
 
   extensions: ExtensionManager;
@@ -607,75 +609,79 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     const isMobile = iOS() || android();
     return (
       <ThemeProvider theme={this.theme()}>
-        <div style={{ position: "relative" }}>
-          <Flex
-            onKeyDown={onKeyDown}
-            style={style}
-            className={className}
-            align="flex-start"
-            justify="center"
-            column
-          >
-            <React.Fragment>
-              <StyledEditor
-                readOnly={readOnly}
-                readOnlyWriteCheckboxes={readOnlyWriteCheckboxes}
-                ref={ref => (this.element = ref)}
-                // childCards={this.props.childCards}
-              />
-              {!readOnly && this.view && (
-                <React.Fragment>
-                  {isMobile && (
-                    <>
-                      <SelectionToolbar
-                        floating={true}
-                        view={this.view}
-                        dictionary={dictionary}
-                        commands={this.commands}
-                        onSearchLink={this.props.onSearchLink}
-                        isTemplate={this.props.template === true}
-                        onClickLink={this.props.onClickLink}
-                        onCreateLink={this.props.onCreateLink}
-                        Avatar={this.props.Avatar}
-                        onTurnIntoCards={this.props.onTurnIntoCards}
-                        tooltip={tooltip}
-                      />
-                      <LinkToolbar
-                        view={this.view}
-                        dictionary={dictionary}
-                        isActive={this.state.linkMenuOpen}
-                        onCreateLink={this.props.onCreateLink}
-                        Avatar={this.props.Avatar}
-                        onTurnIntoCards={this.props.onTurnIntoCards}
-                        onSearchLink={this.props.onSearchLink}
-                        onClickLink={this.props.onClickLink}
-                        onShowToast={this.props.onShowToast}
-                        onClose={this.handleCloseLinkMenu}
-                        tooltip={tooltip}
-                        searchTriggerOpen={this.state.searchTriggerOpen}
-                        resetSearchTrigger={() => this.setState({ searchTriggerOpen: false })}
-                      />
-                    </>
-                  )}
-                  <BlockMenu
-                    view={this.view}
-                    commands={this.commands}
-                    dictionary={dictionary}
-                    isActive={this.state.blockMenuOpen}
-                    search={this.state.blockMenuSearch}
-                    onClose={this.handleCloseBlockMenu}
-                    uploadImage={this.props.uploadImage}
-                    onLinkToolbarOpen={this.handleOpenLinkMenu}
-                    onImageUploadStart={this.props.onImageUploadStart}
-                    onImageUploadStop={this.props.onImageUploadStop}
-                    onShowToast={this.props.onShowToast}
-                    embeds={this.props.embeds}
-                  />
-                </React.Fragment>
-              )}
-            </React.Fragment>
-          </Flex>
-          {!readOnly && this.view && !isMobile && (
+        <Flex
+          onKeyDown={onKeyDown}
+          style={style}
+          className={className}
+          align="flex-start"
+          justify="center"
+          column
+          onFocus={() => this.setState({ focused: true })}
+          onBlur={event => {
+            if (event.relatedTarget && !event.currentTarget.contains((event.relatedTarget as any))) {
+              this.setState({ focused: false })
+            }
+          }}
+        >
+          <React.Fragment>
+            <StyledEditor
+              readOnly={readOnly}
+              readOnlyWriteCheckboxes={readOnlyWriteCheckboxes}
+              ref={ref => (this.element = ref)}
+              // childCards={this.props.childCards}
+            />
+            {!readOnly && this.view && (
+              <React.Fragment>
+                {isMobile && (
+                  <>
+                    <SelectionToolbar
+                      floating={true}
+                      view={this.view}
+                      dictionary={dictionary}
+                      commands={this.commands}
+                      onSearchLink={this.props.onSearchLink}
+                      isTemplate={this.props.template === true}
+                      onClickLink={this.props.onClickLink}
+                      onCreateLink={this.props.onCreateLink}
+                      Avatar={this.props.Avatar}
+                      onTurnIntoCards={this.props.onTurnIntoCards}
+                      tooltip={tooltip}
+                    />
+                    <LinkToolbar
+                      view={this.view}
+                      dictionary={dictionary}
+                      isActive={this.state.linkMenuOpen}
+                      onCreateLink={this.props.onCreateLink}
+                      Avatar={this.props.Avatar}
+                      onTurnIntoCards={this.props.onTurnIntoCards}
+                      onSearchLink={this.props.onSearchLink}
+                      onClickLink={this.props.onClickLink}
+                      onShowToast={this.props.onShowToast}
+                      onClose={this.handleCloseLinkMenu}
+                      tooltip={tooltip}
+                      searchTriggerOpen={this.state.searchTriggerOpen}
+                      resetSearchTrigger={() => this.setState({ searchTriggerOpen: false })}
+                    />
+                  </>
+                )}
+                <BlockMenu
+                  view={this.view}
+                  commands={this.commands}
+                  dictionary={dictionary}
+                  isActive={this.state.blockMenuOpen}
+                  search={this.state.blockMenuSearch}
+                  onClose={this.handleCloseBlockMenu}
+                  uploadImage={this.props.uploadImage}
+                  onLinkToolbarOpen={this.handleOpenLinkMenu}
+                  onImageUploadStart={this.props.onImageUploadStart}
+                  onImageUploadStop={this.props.onImageUploadStop}
+                  onShowToast={this.props.onShowToast}
+                  embeds={this.props.embeds}
+                />
+              </React.Fragment>
+            )}
+          </React.Fragment>
+          {!readOnly && this.view && this.state.focused && !isMobile && (
             <SelectionToolbar
               floating={false}
               linkIsActive={this.state.linkMenuOpen}
@@ -694,7 +700,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
               tooltip={tooltip}
             />
           )}
-          {readOnly && this.props.onHighlight && (
+          {readOnly && this.view && this.state.focused && this.props.onHighlight && (
             <BottomToolbarWrapper>
               <ToolbarButton
               onClick={() => {
@@ -715,7 +721,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
             </ToolbarButton>
             </BottomToolbarWrapper>
           )}
-        </div>
+        </Flex>  
       </ThemeProvider>
     );
   };

@@ -323,6 +323,7 @@ class Example extends React.Component {
           ]}
           placeholders={["Link stuff", "Write stuff"]}
         />
+        THIS SHOULD APPEAR BELOW EDIT BAR
       </div>
     );
   }

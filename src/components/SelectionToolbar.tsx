@@ -253,10 +253,8 @@ export default class SelectionToolbar extends React.Component<Props> {
 
 export const BottomToolbarWrapper = ({ children }) => {
   return (
-    <div style={{ position: "absolute", bottom: "0px" }}>
-      <div style={{ position: "fixed", bottom: "0px", width: "100%", background: "#fff", paddingLeft: "10px" }}>
-        {children}
-      </div>
+    <div style={{ width: "100%", background: "#fff", paddingLeft: "10px", position: "sticky", bottom: "0px" }}>
+      {children}
     </div>
   )
 }

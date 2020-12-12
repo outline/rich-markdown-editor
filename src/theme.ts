@@ -7,7 +7,7 @@ const colors = {
   black: "#000",
   black10: "rgba(0, 0, 0, 0.1)",
   primary: "#1EA362",
-  secondary: "#35baf6",
+  secondary: "#01a9f1",
   greyLight: "#F4F7FA",
   grey: "#E8EBED",
   greyMid: "#C5CCD3",
@@ -21,7 +21,7 @@ export const base = {
   fontFamilyMono:
     "'SFMono-Regular',Consolas,'Liberation Mono', Menlo, Courier,monospace",
   fontWeight: 400,
-  zIndex: 100,
+  zIndex: 9999,
   link: colors.primary,
   linkExternal: colors.secondary,
   placeholder: "#B1BECC",
