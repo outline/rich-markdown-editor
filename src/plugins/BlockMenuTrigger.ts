@@ -1,7 +1,8 @@
-import { Plugin } from "prosemirror-state";
 import { InputRule } from "prosemirror-inputrules";
-import { Decoration, DecorationSet } from "prosemirror-view";
+import { Plugin } from "prosemirror-state";
+import { isInTable } from "prosemirror-tables";
 import { findParentNode } from "prosemirror-utils";
+import { Decoration, DecorationSet } from "prosemirror-view";
 import Extension from "../lib/Extension";
 
 const MAX_MATCH = 500;
@@ -153,7 +154,11 @@ export default class BlockMenuTrigger extends Extension {
       // main regex should match only:
       // /word
       new InputRule(OPEN_REGEX, (state, match) => {
-        if (match && state.selection.$from.parent.type.name === "paragraph") {
+        if (
+          match &&
+          state.selection.$from.parent.type.name === "paragraph" &&
+          !isInTable(state)
+        ) {
           this.options.onOpen(match[1]);
         }
         return null;
