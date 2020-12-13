@@ -204,7 +204,7 @@ class Example extends React.Component {
 
     return (
       <div>
-        <div>
+        <div style={{ overflowY: "auto" }}>
           <br />
           <button type="button" onClick={this.handleToggleReadOnly}>
             {this.state.readOnly ? "Switch to Editable" : "Switch to Read-only"}
@@ -223,6 +223,7 @@ class Example extends React.Component {
         <br />
         <Editor
           id="example"
+          editorMinHeight="400px"
           readOnly={this.state.readOnly}
           readOnlyWriteCheckboxes
           value={this.state.value}

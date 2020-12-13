@@ -118,6 +118,7 @@ export type Props = {
   tooltip: typeof React.Component | React.FC<any>;
   className?: string;
   style?: Record<string, string>;
+  editorMinHeight?: string;
 };
 
 type State = {
@@ -613,7 +614,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           style={style}
           className={className}
           align="flex-start"
-          justify="center"
+          justify="flex-start"
           column
           onFocus={() => this.setState({ focused: true })}
           onBlur={event => {
@@ -624,6 +625,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         >
           <React.Fragment>
             <StyledEditor
+              style={{ minHeight: this.props.editorMinHeight ? this.props.editorMinHeight : undefined }}
               readOnly={readOnly}
               readOnlyWriteCheckboxes={readOnlyWriteCheckboxes}
               ref={ref => (this.element = ref)}
