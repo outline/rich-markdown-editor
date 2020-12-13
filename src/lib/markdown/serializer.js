@@ -307,6 +307,9 @@ export class MarkdownSerializerState {
     const prevTable = this.inTable;
     this.inTable = true;
 
+    // ensure there is an empty newline above all tables
+    this.out += "\n";
+
     // rows
     node.forEach((row, _, i) => {
       if (headerBuffer) {
