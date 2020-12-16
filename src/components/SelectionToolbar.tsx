@@ -26,28 +26,30 @@ export const getText = content => {
     return content.text;
   } else if (Array.isArray(content)) {
     return content.map(getText).join("");
-  } else if (typeof content === 'object' && content !== null) {
+  } else if (typeof content === "object" && content !== null) {
     return getText(content.content);
   }
-}
+};
 
 export const iOS = () => {
-  return [
-    'iPad Simulator',
-    'iPhone Simulator',
-    'iPod Simulator',
-    'iPad',
-    'iPhone',
-    'iPod'
-  ].includes(navigator.platform)
-  // iPad on iOS 13 detection
-  || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
-}
+  return (
+    [
+      "iPad Simulator",
+      "iPhone Simulator",
+      "iPod Simulator",
+      "iPad",
+      "iPhone",
+      "iPod",
+    ].includes(navigator.platform) ||
+    // iPad on iOS 13 detection
+    (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+  );
+};
 
 export const android = () => {
   const ua = navigator.userAgent.toLowerCase();
   return ua.indexOf("android") > -1;
-}
+};
 
 type Props = {
   dictionary: typeof baseDictionary;
@@ -84,8 +86,14 @@ function isActive(props) {
 }
 
 export default class SelectionToolbar extends React.Component<Props> {
-  handleOnCreateLink = async (title: string, turnInto: boolean = false) => {
-    const { dictionary, onCreateLink, onTurnIntoCards, view, onShowToast } = this.props;
+  handleOnCreateLink = async (title: string, turnInto = false) => {
+    const {
+      dictionary,
+      onCreateLink,
+      onTurnIntoCards,
+      view,
+      onShowToast,
+    } = this.props;
     if (this.props.onClose) {
       this.props.onClose();
       this.props.view.focus();
@@ -106,17 +114,13 @@ export default class SelectionToolbar extends React.Component<Props> {
         this.props.resetSearchTrigger && this.props.resetSearchTrigger();
         dispatch(view.state.tr.delete(from - 2, from));
         from = from - 2;
-        to = to -2;
+        to = to - 2;
       }
       // Insert a placeholder link
       dispatch(
         view.state.tr
           .insertText(title, from, to)
-          .addMark(
-            from,
-            to + title.length,
-            markType.create({ href })
-          )
+          .addMark(from, to + title.length, markType.create({ href }))
       );
     } else {
       // Insert a placeholder link
@@ -128,7 +132,8 @@ export default class SelectionToolbar extends React.Component<Props> {
     }
 
     createAndInsertLink(view, title, href, {
-      onCreateLink: turnInto && onTurnIntoCards ? onTurnIntoCards : onCreateLink,
+      onCreateLink:
+        turnInto && onTurnIntoCards ? onTurnIntoCards : onCreateLink,
       onShowToast,
       dictionary,
     });
@@ -138,7 +143,7 @@ export default class SelectionToolbar extends React.Component<Props> {
     href,
     from,
     to,
-    title
+    title,
   }: {
     href: string;
     from: number;
@@ -158,7 +163,7 @@ export default class SelectionToolbar extends React.Component<Props> {
         this.props.resetSearchTrigger && this.props.resetSearchTrigger();
         dispatch(view.state.tr.delete(from - 2, from));
         from = from - 2;
-        to = to -2;
+        to = to - 2;
       }
       dispatch(
         view.state.tr
@@ -253,8 +258,15 @@ export default class SelectionToolbar extends React.Component<Props> {
 
 export const BottomToolbarWrapper = ({ children }) => {
   return (
-    <div style={{ width: "100%", background: "#fff", position: "sticky", bottom: "0px" }}>
+    <div
+      style={{
+        width: "100%",
+        background: "#fff",
+        position: "sticky",
+        bottom: "0px",
+      }}
+    >
       {children}
     </div>
-  )
-}
+  );
+};

@@ -40,7 +40,7 @@ const createAndInsertLink = async function(
     dictionary: typeof baseDictionary;
     onCreateLink: (title: string) => Promise<string>;
     onShowToast?: (message: string, code: string) => void;
-    readOnly?: boolean
+    readOnly?: boolean;
   }
 ) {
   const { dispatch, state } = view;

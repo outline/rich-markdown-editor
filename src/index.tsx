@@ -15,9 +15,14 @@ import styled, { ThemeProvider } from "styled-components";
 import { light as lightTheme, dark as darkTheme } from "./theme";
 import baseDictionary from "./dictionary";
 import Flex from "./components/Flex";
-import { SearchResult, AddQuestionIcon } from "./components/LinkEditor";
+import { AddQuestionIcon } from "./components/LinkEditor";
 import { EmbedDescriptor, ToastType } from "./types";
-import SelectionToolbar, { BottomToolbarWrapper, getText, iOS, android } from "./components/SelectionToolbar";
+import SelectionToolbar, {
+  BottomToolbarWrapper,
+  getText,
+  iOS,
+  android,
+} from "./components/SelectionToolbar";
 import BlockMenu from "./components/BlockMenu";
 import LinkToolbar from "./components/LinkToolbar";
 import Tooltip from "./components/Tooltip";
@@ -151,7 +156,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     extensions: [],
     tooltip: Tooltip,
     blockPlaceholders: ["Type '/' to insert block…"],
-    childCards: []
+    childCards: [],
   };
 
   state = {
@@ -302,7 +307,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new History(),
         new SmartText(),
         new TrailingNode(),
-        new MarkdownPaste({onPaste: () => {}}),
+        new MarkdownPaste({ onPaste: () => {} }),
         new Keys({
           onSave: this.handleSave,
           onSaveAndExit: this.handleSaveAndExit,
@@ -312,13 +317,13 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           dictionary,
           onOpen: this.handleOpenBlockMenu,
           onClose: this.handleCloseBlockMenu,
-          placeholders: this.props.blockPlaceholders
+          placeholders: this.props.blockPlaceholders,
         }),
         new SearchTrigger({
           onOpen: () => {
             this.handleOpenLinkMenu();
             this.setState({ searchTriggerOpen: true });
-          }
+          },
         }),
         new Placeholder({
           placeholders: this.props.placeholders,
@@ -419,7 +424,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   }
 
   createDocument(content: string) {
-    // FIXME when pasting html this sometimes unnecessarily escapes resulting markdown 
+    // FIXME when pasting html this sometimes unnecessarily escapes resulting markdown
     return this.parser.parse(content);
   }
 
@@ -432,7 +437,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       return tr.steps.some(
         (step: Step) =>
           step.slice?.content?.firstChild?.type?.name ===
-            this.schema.nodes.checkbox_item.name
+          this.schema.nodes.checkbox_item.name
       );
     };
 
@@ -618,14 +623,21 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           column
           onFocus={() => this.setState({ focused: true })}
           onBlur={event => {
-            if (event.relatedTarget && !event.currentTarget.contains((event.relatedTarget as any))) {
-              this.setState({ focused: false })
+            if (
+              event.relatedTarget &&
+              !event.currentTarget.contains(event.relatedTarget as any)
+            ) {
+              this.setState({ focused: false });
             }
           }}
         >
           <React.Fragment>
             <StyledEditor
-              style={{ minHeight: this.props.editorMinHeight ? this.props.editorMinHeight : undefined }}
+              style={{
+                minHeight: this.props.editorMinHeight
+                  ? this.props.editorMinHeight
+                  : undefined,
+              }}
               readOnly={readOnly}
               readOnlyWriteCheckboxes={readOnlyWriteCheckboxes}
               ref={ref => (this.element = ref)}
@@ -661,7 +673,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                       onClose={this.handleCloseLinkMenu}
                       tooltip={tooltip}
                       searchTriggerOpen={this.state.searchTriggerOpen}
-                      resetSearchTrigger={() => this.setState({ searchTriggerOpen: false })}
+                      resetSearchTrigger={() =>
+                        this.setState({ searchTriggerOpen: false })
+                      }
                     />
                   </>
                 )}
@@ -687,7 +701,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
               floating={false}
               linkIsActive={this.state.linkMenuOpen}
               searchTriggerOpen={this.state.searchTriggerOpen}
-              resetSearchTrigger={() => this.setState({ searchTriggerOpen: false })}
+              resetSearchTrigger={() =>
+                this.setState({ searchTriggerOpen: false })
+              }
               onClose={this.handleCloseLinkMenu}
               view={this.view}
               dictionary={dictionary}
@@ -704,25 +720,31 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           {readOnly && this.view && this.props.onHighlight && (
             <BottomToolbarWrapper>
               <ToolbarButton
-              onClick={() => {
-                if (this.props.onHighlight) {
-                  const { state } = this.view;
-                  const selectionContent = state.selection.content();
-                  const selectedText = getText(selectionContent);
-                  const parent = getParent(state.selection, state);
-                  const surroundingText = parent ? getText(parent) : selectedText;
-                  this.props.onHighlight(selectedText, surroundingText);
-                }
-              }}
-              active={true}
-            >
-              <Tooltip tooltip={dictionary.addActiveRecallQuestion} placement="top">
-                <AddQuestionIcon />
-              </Tooltip>
-            </ToolbarButton>
+                onClick={() => {
+                  if (this.props.onHighlight) {
+                    const { state } = this.view;
+                    const selectionContent = state.selection.content();
+                    const selectedText = getText(selectionContent);
+                    const parent = getParent(state.selection, state);
+                    const surroundingText = parent
+                      ? getText(parent)
+                      : selectedText;
+                    this.props.onHighlight(selectedText, surroundingText);
+                  }
+                }}
+                active={true}
+                childWidth={"110px"}
+              >
+                <Tooltip
+                  tooltip={dictionary.addActiveRecallQuestion}
+                  placement="top"
+                >
+                  <AddQuestionIcon />
+                </Tooltip>
+              </ToolbarButton>
             </BottomToolbarWrapper>
           )}
-        </Flex>  
+        </Flex>
       </ThemeProvider>
     );
   };
@@ -884,7 +906,10 @@ const StyledEditor = styled("div")<{
   .placeholder {
     &:before {
       display: block;
-      content: ${props => (props.readOnly && !props.readOnlyWriteCheckboxes ? "" : "attr(data-empty-text)")};
+      content: ${props =>
+        props.readOnly && !props.readOnlyWriteCheckboxes
+          ? ""
+          : "attr(data-empty-text)"};
       pointer-events: none;
       height: 0;
       color: ${props => props.theme.placeholder};
@@ -973,17 +998,19 @@ const StyledEditor = styled("div")<{
   }
 
   a {
-    color: ${props => props.theme.link};
+    color: #2c2424;
     text-decoration: none;
     user-select: text;
+    background: #e2f3ff;
+    border-radius: 4px;
+    padding: 2px;
   }
 
   a[href*="//"]:not([href*="traverse.link"]) {
+    background: initial;
+    border-radius: initial;
+    padding: initial;
     color: ${props => props.theme.linkExternal};
-  }
-
-  a[href$="/?weight=0"]::before {
-    content: "#";
   }
 
   a:hover {
@@ -1260,9 +1287,9 @@ const StyledEditor = styled("div")<{
     .selectedCell {
       background: ${props =>
         props.readOnly ? "inherit" : props.theme.tableSelectedBackground};
-        /* fixes Firefox background color painting over border:
+      /* fixes Firefox background color painting over border:
         * https://bugzilla.mozilla.org/show_bug.cgi?id=688556 */
-       background-clip: padding-box;
+      background-clip: padding-box;
     }
 
     .grip-column {
@@ -1270,18 +1297,18 @@ const StyledEditor = styled("div")<{
       * prosemirror-tables that causes Safari to hang when selecting a cell
       * in an empty table:
       * https://github.com/ProseMirror/prosemirror/issues/947 */
-     &::after {
-       content: "";
-      cursor: pointer;
-      position: absolute;
-      top: -16px;
-      left: 0;
-      width: 100%;
-      height: 12px;
-      background: ${props => props.theme.tableDivider};
-      border-bottom: 3px solid ${props => props.theme.background};
-      display: ${props => (props.readOnly ? "none" : "block")}; 
-    }
+      &::after {
+        content: "";
+        cursor: pointer;
+        position: absolute;
+        top: -16px;
+        left: 0;
+        width: 100%;
+        height: 12px;
+        background: ${props => props.theme.tableDivider};
+        border-bottom: 3px solid ${props => props.theme.background};
+        display: ${props => (props.readOnly ? "none" : "block")};
+      }
 
       &:hover::after {
         background: ${props => props.theme.text};

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-type Props = { active?: boolean; disabled?: boolean };
+type Props = { active?: boolean; disabled?: boolean; childWidth?: string };
 
 export default styled.button<Props>`
   display: inline-block;
@@ -18,6 +18,7 @@ export default styled.button<Props>`
 
   &:first-child {
     margin-left: 0;
+    ${props => props.childWidth && `width: ${props.childWidth};`};
   }
 
   &:hover {

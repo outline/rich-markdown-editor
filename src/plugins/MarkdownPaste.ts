@@ -19,7 +19,7 @@ export default class MarkdownPaste extends Extension {
             }
             if (!event.clipboardData) return false;
 
-            let text = event.clipboardData.getData("text/plain");
+            const text = event.clipboardData.getData("text/plain");
             const html = event.clipboardData.getData("text/html");
             const { state, dispatch } = view;
 

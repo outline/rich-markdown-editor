@@ -164,7 +164,7 @@ class YoutubeEmbed extends React.Component {
 
 class Example extends React.Component {
   state = {
-    readOnly: false,
+    readOnly: true,
     template: false,
     dark: localStorage.getItem("dark") === "enabled",
     value: undefined,
@@ -245,7 +245,9 @@ class Example extends React.Component {
             console.log("Hovered link: ", event.target.href);
             return false;
           }}
-          onHighlight={(txt, surTxt) => console.log(`Add highlight ${txt} in ${surTxt}`)}
+          onHighlight={(txt, surTxt) =>
+            console.log(`Add highlight ${txt} in ${surTxt}`)
+          }
           onClickHashtag={tag => console.log("Clicked hashtag: ", tag)}
           onCreateLink={title => {
             // Delay to simulate time taken for remote API request to complete
@@ -294,7 +296,7 @@ class Example extends React.Component {
               );
             });
           }}
-          Avatar={user => (<span>{`Created by ${user.userName}`}</span>)}
+          Avatar={user => <span>{`Created by ${user.userName}`}</span>}
           embeds={[
             {
               title: "YouTube",
@@ -323,6 +325,7 @@ class Example extends React.Component {
           ]}
           placeholders={["Link stuff", "Write stuff"]}
         />
+        <br />
         THIS SHOULD APPEAR BELOW EDIT BAR
       </div>
     );

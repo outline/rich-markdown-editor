@@ -22,53 +22,80 @@ import { iOS, android } from "./SelectionToolbar";
 
 export function AddCardIcon(props: any) {
   return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <g transform="scale(0.6, 0.6)">
-        <rect width="40" height="40" rx="20" fill="#0094FF"/>
-        <path fillRule="evenodd" clipRule="evenodd" d="M21 12H19V21V28H21V23L19 21H21V12Z" fill="white"/>
-        <rect x="12" y="21" width="2" height="16" transform="rotate(-90 12 21)" fill="white"/>
+        <rect width="40" height="40" rx="20" fill="#0094FF" />
+        <path
+          fillRule="evenodd"
+          clipRule="evenodd"
+          d="M21 12H19V21V28H21V23L19 21H21V12Z"
+          fill="white"
+        />
+        <rect
+          x="12"
+          y="21"
+          width="2"
+          height="16"
+          transform="rotate(-90 12 21)"
+          fill="white"
+        />
       </g>
     </svg>
-  )
+  );
 }
 
 export function AddQuestionIcon(props: any) {
   return (
-    <Icon {...props}>
-      <g transform="scale(0.047, 0.047)">
-        <g>
+    <>
+      <Icon {...props}>
+        <g transform="scale(0.047, 0.047)">
           <g>
-            <path d="M509.989,463.656L474.84,361.363c16.906-34.174,25.847-72.265,25.907-110.593c0.102-66.002-25.435-128.411-71.909-175.727
-              C382.357,27.718,320.418,1.08,254.433,0.033c-34.571-0.555-68.117,5.815-99.757,18.912c-30.517,12.633-57.884,30.932-81.34,54.388
-              c-23.457,23.456-41.756,50.823-54.388,81.34c-13.097,31.64-19.46,65.203-18.913,99.757
-              c1.045,65.985,27.684,127.924,75.009,174.406c47.224,46.383,109.472,71.912,175.332,71.911c0.129,0,0.265,0,0.394,0
-              c38.328-0.06,76.419-9.001,110.594-25.907l102.293,35.149c3.934,1.352,7.966,2.011,11.954,2.011
-              c9.474,0,18.69-3.722,25.678-10.712C511.218,491.359,514.553,476.939,509.989,463.656z M479.824,479.824
-              c-1.007,1.007-3.163,2.535-6.304,1.457l-108.394-37.246c-1.603-0.55-3.27-0.824-4.932-0.824c-2.45,0-4.889,0.593-7.098,1.762
-              c-31.327,16.573-66.727,25.363-102.374,25.417c-119.55,0.193-218.442-96.91-220.336-216.441
-              C29.433,193.81,52.309,137.289,94.8,94.798c42.491-42.49,98.995-65.362,159.151-64.411
-              c119.53,1.895,216.625,100.738,216.439,220.336c-0.056,35.648-8.845,71.048-25.417,102.373c-1.962,3.708-2.301,8.063-0.938,12.03
-              l37.246,108.394C482.36,476.659,480.832,478.818,479.824,479.824z"/>
+            <g>
+              <path
+                d="M509.989,463.656L474.84,361.363c16.906-34.174,25.847-72.265,25.907-110.593c0.102-66.002-25.435-128.411-71.909-175.727
+                C382.357,27.718,320.418,1.08,254.433,0.033c-34.571-0.555-68.117,5.815-99.757,18.912c-30.517,12.633-57.884,30.932-81.34,54.388
+                c-23.457,23.456-41.756,50.823-54.388,81.34c-13.097,31.64-19.46,65.203-18.913,99.757
+                c1.045,65.985,27.684,127.924,75.009,174.406c47.224,46.383,109.472,71.912,175.332,71.911c0.129,0,0.265,0,0.394,0
+                c38.328-0.06,76.419-9.001,110.594-25.907l102.293,35.149c3.934,1.352,7.966,2.011,11.954,2.011
+                c9.474,0,18.69-3.722,25.678-10.712C511.218,491.359,514.553,476.939,509.989,463.656z M479.824,479.824
+                c-1.007,1.007-3.163,2.535-6.304,1.457l-108.394-37.246c-1.603-0.55-3.27-0.824-4.932-0.824c-2.45,0-4.889,0.593-7.098,1.762
+                c-31.327,16.573-66.727,25.363-102.374,25.417c-119.55,0.193-218.442-96.91-220.336-216.441
+                C29.433,193.81,52.309,137.289,94.8,94.798c42.491-42.49,98.995-65.362,159.151-64.411
+                c119.53,1.895,216.625,100.738,216.439,220.336c-0.056,35.648-8.845,71.048-25.417,102.373c-1.962,3.708-2.301,8.063-0.938,12.03
+                l37.246,108.394C482.36,476.659,480.832,478.818,479.824,479.824z"
+              />
+            </g>
+          </g>
+          <g>
+            <g>
+              <path
+                d="M247.91,362.748c-7.939,0-15.545,6.981-15.178,15.178c0.368,8.223,6.669,15.178,15.178,15.178
+                c7.939,0,15.545-6.981,15.178-15.178C262.72,369.702,256.419,362.748,247.91,362.748z"
+              />
+            </g>
+          </g>
+          <g>
+            <g>
+              <path
+                d="M247.91,127.674c-41.639,0-75.515,33.876-75.515,75.515c0,8.382,6.796,15.178,15.178,15.178s15.178-6.796,15.178-15.178
+                c0-24.9,20.259-45.159,45.159-45.159s45.159,20.259,45.159,45.159s-20.259,45.159-45.159,45.159
+                c-8.382,0-15.178,6.796-15.178,15.178v61.905c0,8.382,6.796,15.178,15.178,15.178c8.382,0,15.178-6.795,15.178-15.179v-48.259
+                c34.389-7.045,60.337-37.54,60.337-73.982C323.425,161.55,289.549,127.674,247.91,127.674z"
+              />
+            </g>
           </g>
         </g>
-        <g>
-          <g>
-            <path d="M247.91,362.748c-7.939,0-15.545,6.981-15.178,15.178c0.368,8.223,6.669,15.178,15.178,15.178
-              c7.939,0,15.545-6.981,15.178-15.178C262.72,369.702,256.419,362.748,247.91,362.748z"/>
-          </g>
-        </g>
-        <g>
-          <g>
-            <path d="M247.91,127.674c-41.639,0-75.515,33.876-75.515,75.515c0,8.382,6.796,15.178,15.178,15.178s15.178-6.796,15.178-15.178
-              c0-24.9,20.259-45.159,45.159-45.159s45.159,20.259,45.159,45.159s-20.259,45.159-45.159,45.159
-              c-8.382,0-15.178,6.796-15.178,15.178v61.905c0,8.382,6.796,15.178,15.178,15.178c8.382,0,15.178-6.795,15.178-15.179v-48.259
-              c34.389-7.045,60.337-37.54,60.337-73.982C323.425,161.55,289.549,127.674,247.91,127.674z"/>
-          </g>
-        </g>
-      </g>
-    </Icon>
+      </Icon>
+      <sup style={{ fontSize: "small", marginLeft: "5px" }}>Add question</sup>
+    </>
   );
-};
+}
 
 export type SearchResult = {
   title: string;
@@ -180,16 +207,16 @@ class LinkEditor extends React.Component<Props, State> {
         event.preventDefault();
         const { selectedIndex, value } = this.state;
         const results = this.state.results[value] || [];
-        const { onCreateLink, onTurnIntoCards } = this.props;
+
+        const looksLikeUrl = value.match(/^https?:\/\//i);
 
         if (selectedIndex >= 0) {
           const result = results[selectedIndex];
           if (result) {
             this.save(result.url, result.title);
-          } else if (onTurnIntoCards && selectedIndex === results.length) {
+          } else if (looksLikeUrl && selectedIndex === results.length) {
             this.handleCreateLink(value, true);
-            // FIXME this should check looksLikeUrl?
-          } else if (onCreateLink && selectedIndex === results.length + Number(!!onTurnIntoCards)) {
+          } else if (!looksLikeUrl && selectedIndex === results.length) {
             this.handleCreateLink(this.suggestedLinkTitle);
           }
         } else {
@@ -270,7 +297,7 @@ class LinkEditor extends React.Component<Props, State> {
             },
             previousValue: trimmedValue,
           }));
-        }
+        };
         this.props.onSearchLink(trimmedValue, setter);
       } catch (error) {
         console.error(error);
@@ -283,7 +310,7 @@ class LinkEditor extends React.Component<Props, State> {
     this.props.onClickLink(this.href, event);
   };
 
-  handleCreateLink = (value: string, turnIntoCards: boolean = false) => {
+  handleCreateLink = (value: string, turnIntoCards = false) => {
     this.discardInputValue = true;
     const { onCreateLink } = this.props;
 
@@ -328,7 +355,7 @@ class LinkEditor extends React.Component<Props, State> {
 
   componentDidMount() {
     if (this.state.value) {
-      this.handleChange({ target: { value: this.state.value }})
+      this.handleChange({ target: { value: this.state.value } });
     }
   }
 
@@ -353,7 +380,8 @@ class LinkEditor extends React.Component<Props, State> {
       !looksLikeUrl;
 
     const showResults =
-      !!suggestedLinkTitle && (showCreateLink || showTurnInto || results.length > 0);
+      !!suggestedLinkTitle &&
+      (showCreateLink || showTurnInto || results.length > 0);
 
     return (
       <Wrapper>
@@ -422,7 +450,7 @@ class LinkEditor extends React.Component<Props, State> {
                 title={suggestedLinkTitle}
                 subtitle={dictionary.createNewDoc}
                 icon={<AddCardIcon />}
-                onMouseOver={() => this.handleFocusLink(results.length + Number(showTurnInto))}
+                onMouseOver={() => this.handleFocusLink(results.length)}
                 onClick={() => {
                   this.handleCreateLink(suggestedLinkTitle);
 
@@ -449,7 +477,7 @@ const Wrapper = styled(Flex)`
 const SearchResults = styled.ol`
   background: ${props => props.theme.toolbarBackground};
   position: absolute;
-  ${props => (iOS() || android()) ? "top" : "bottom"}: 100%;
+  ${props => (iOS() || android() ? "top" : "bottom")}: 100%;
   width: 100%;
   height: auto;
   left: 0;

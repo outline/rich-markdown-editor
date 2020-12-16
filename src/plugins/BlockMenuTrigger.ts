@@ -112,7 +112,7 @@ export default class BlockMenuTrigger extends Extension {
                     return icon;
                   })
                 );
-                
+
                 decorations.push(
                   Decoration.node(
                     parent.pos,
@@ -120,7 +120,11 @@ export default class BlockMenuTrigger extends Extension {
                     {
                       class: "placeholder",
                       // pass an array as props and select randomly
-                      "data-empty-text": this.options.placeholders[Math.floor(Math.random() * this.options.placeholders.length)],
+                      "data-empty-text": this.options.placeholders[
+                        Math.floor(
+                          Math.random() * this.options.placeholders.length
+                        )
+                      ],
                     }
                   )
                 );

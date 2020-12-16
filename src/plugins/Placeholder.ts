@@ -36,7 +36,9 @@ export default class Placeholder extends Extension {
 
               const decoration = Decoration.node(pos, pos + node.nodeSize, {
                 class: this.options.emptyNodeClass,
-                "data-empty-text": this.options.placeholders[Math.floor(Math.random() * this.options.placeholders.length)],
+                "data-empty-text": this.options.placeholders[
+                  Math.floor(Math.random() * this.options.placeholders.length)
+                ],
               });
               decorations.push(decoration);
             });

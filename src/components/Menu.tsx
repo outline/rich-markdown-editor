@@ -5,6 +5,7 @@ import ToolbarButton from "./ToolbarButton";
 import ToolbarSeparator from "./ToolbarSeparator";
 import theme from "../theme";
 import { MenuItem } from "../types";
+import { iOS, android } from "./SelectionToolbar";
 
 type Props = {
   tooltip: typeof React.Component | React.FC<any>;
@@ -38,6 +39,9 @@ class Menu extends React.Component<Props> {
               onClick={() => {
                 item.name && this.props.commands[item.name](item.attrs);
               }}
+              childWidth={
+                item.name === "mark" ? "110px" : undefined
+              }
               active={isActive}
             >
               <Tooltip tooltip={item.tooltip} placement="top">

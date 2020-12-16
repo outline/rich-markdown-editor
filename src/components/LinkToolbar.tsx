@@ -58,8 +58,15 @@ export default class LinkToolbar extends React.Component<Props> {
     this.props.onClose();
   };
 
-  handleOnCreateLink = async (title: string, turnInto: boolean = false) => {
-    const { dictionary, onCreateLink, onTurnIntoCards, view, onClose, onShowToast } = this.props;
+  handleOnCreateLink = async (title: string, turnInto = false) => {
+    const {
+      dictionary,
+      onCreateLink,
+      onTurnIntoCards,
+      view,
+      onClose,
+      onShowToast,
+    } = this.props;
 
     onClose();
     this.props.view.focus();
@@ -75,7 +82,7 @@ export default class LinkToolbar extends React.Component<Props> {
       this.props.resetSearchTrigger && this.props.resetSearchTrigger();
       dispatch(view.state.tr.delete(from - 2, from));
       from = from - 2;
-      to = to -2;
+      to = to - 2;
     }
 
     const href = `creating#${title}…`;
@@ -92,7 +99,8 @@ export default class LinkToolbar extends React.Component<Props> {
     );
 
     createAndInsertLink(view, title, href, {
-      onCreateLink: turnInto && onTurnIntoCards ? onTurnIntoCards : onCreateLink,
+      onCreateLink:
+        turnInto && onTurnIntoCards ? onTurnIntoCards : onCreateLink,
       onShowToast,
       dictionary,
     });
@@ -119,7 +127,7 @@ export default class LinkToolbar extends React.Component<Props> {
       this.props.resetSearchTrigger && this.props.resetSearchTrigger();
       dispatch(view.state.tr.delete(from - 2, from));
       from = from - 2;
-      to = to -2;
+      to = to - 2;
     }
 
     dispatch(
