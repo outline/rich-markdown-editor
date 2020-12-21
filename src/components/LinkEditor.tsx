@@ -362,17 +362,18 @@ class LinkEditor extends React.Component<Props, State> {
   render() {
     const { dictionary, theme, Avatar } = this.props;
     const { value, selectedIndex } = this.state;
-    const results =
-      this.state.results[value.trim()] ||
-      this.state.results[this.state.previousValue] ||
-      [];
+    const looksLikeUrl = value.match(/^https?:\/\//i);
+    const showTurnInto = !!looksLikeUrl;
+    const results = showTurnInto
+      ? []
+      : this.state.results[value.trim()] ||
+        this.state.results[this.state.previousValue] ||
+        [];
 
     const Tooltip = this.props.tooltip;
-    const looksLikeUrl = value.match(/^https?:\/\//i);
 
     const suggestedLinkTitle = this.suggestedLinkTitle;
 
-    const showTurnInto = !!looksLikeUrl;
     const showCreateLink =
       !!this.props.onCreateLink &&
       !(suggestedLinkTitle === this.initialValue) &&

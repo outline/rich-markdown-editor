@@ -998,19 +998,16 @@ const StyledEditor = styled("div")<{
   }
 
   a {
+    color: ${props => props.theme.linkExternal};
+  }
+
+  a[href^="/"] {
     color: #2c2424;
     text-decoration: none;
     user-select: text;
     background: #e2f3ff;
     border-radius: 4px;
     padding: 2px;
-  }
-
-  a[href*="//"]:not([href*="traverse.link"]) {
-    background: initial;
-    border-radius: initial;
-    padding: initial;
-    color: ${props => props.theme.linkExternal};
   }
 
   a:hover {
@@ -1063,7 +1060,6 @@ const StyledEditor = styled("div")<{
 
   li p:first-child {
     margin: 0;
-    word-break: break-all;
   }
 
   hr {
