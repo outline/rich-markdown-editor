@@ -263,7 +263,8 @@ export const BottomToolbarWrapper = ({ children }) => {
         width: "100%",
         background: "#fff",
         position: "sticky",
-        bottom: "0px",
+        // prevent gap on chrome
+        bottom: "-2px",
       }}
     >
       {children}
