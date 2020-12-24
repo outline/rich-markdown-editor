@@ -58,7 +58,6 @@ const ListItem = styled.li<{
   color: ${props => props.theme.toolbarItem};
   background: ${props =>
     props.selected ? props.theme.toolbarHoverBackground : "transparent"};
-  font-family: ${props => props.theme.fontFamily};
   text-decoration: none;
   overflow: hidden;
   white-space: nowrap;

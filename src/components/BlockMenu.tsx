@@ -521,7 +521,6 @@ export const Wrapper = styled.div<{
   isAbove: boolean;
 }>`
   color: ${props => props.theme.text};
-  font-family: ${props => props.theme.fontFamily};
   position: absolute;
   z-index: ${props => {
     return props.theme.zIndex + 100;
