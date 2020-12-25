@@ -209,7 +209,7 @@ class LinkEditor extends React.Component<Props, State> {
         const results = this.state.results[value] || [];
 
         const looksLikeUrl = value.match(/^https?:\/\//i);
-
+        console.log(`selectedIndex`, selectedIndex);
         if (selectedIndex >= 0) {
           const result = results[selectedIndex];
           if (result) {
@@ -221,7 +221,7 @@ class LinkEditor extends React.Component<Props, State> {
           }
         } else {
           // saves the raw input as href
-          this.save(value, value);
+          this.handleCreateLink(this.suggestedLinkTitle);
         }
 
         if (this.initialSelectionLength) {
@@ -371,6 +371,7 @@ class LinkEditor extends React.Component<Props, State> {
         [];
 
     const Tooltip = this.props.tooltip;
+    // create card on top, should be default action. order of search results
 
     const suggestedLinkTitle = this.suggestedLinkTitle;
 
