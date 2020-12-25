@@ -422,6 +422,24 @@ class LinkEditor extends React.Component<Props, State> {
 
         {showResults && (
           <SearchResults id="link-search-results">
+            {showCreateLink && (
+              <LinkSearchResult
+                key="create"
+                title={suggestedLinkTitle}
+                subtitle={dictionary.createNewDoc}
+                icon={<AddCardIcon />}
+                onMouseOver={() => this.handleFocusLink(results.length)}
+                onClick={() => {
+                  this.handleCreateLink(suggestedLinkTitle);
+
+                  if (this.initialSelectionLength) {
+                    this.moveSelectionToEnd();
+                  }
+                }}
+                selected={results.length === selectedIndex}
+              />
+            )}
+
             {results.map((result, index) => (
               <LinkSearchResult
                 key={result.url}
@@ -443,24 +461,6 @@ class LinkEditor extends React.Component<Props, State> {
                 onMouseOver={() => this.handleFocusLink(results.length)}
                 onClick={() => {
                   this.handleCreateLink(value, true);
-
-                  if (this.initialSelectionLength) {
-                    this.moveSelectionToEnd();
-                  }
-                }}
-                selected={results.length === selectedIndex}
-              />
-            )}
-
-            {showCreateLink && (
-              <LinkSearchResult
-                key="create"
-                title={suggestedLinkTitle}
-                subtitle={dictionary.createNewDoc}
-                icon={<AddCardIcon />}
-                onMouseOver={() => this.handleFocusLink(results.length)}
-                onClick={() => {
-                  this.handleCreateLink(suggestedLinkTitle);
 
                   if (this.initialSelectionLength) {
                     this.moveSelectionToEnd();
