@@ -92,7 +92,7 @@ export function AddQuestionIcon(props: any) {
           </g>
         </g>
       </Icon>
-      <sup style={{ fontSize: "small", marginLeft: "5px" }}>Add question</sup>
+      <sup style={{ fontSize: "small", marginLeft: "5px" }}>Add prompt</sup>
     </>
   );
 }
