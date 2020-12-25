@@ -209,7 +209,6 @@ class LinkEditor extends React.Component<Props, State> {
         const results = this.state.results[value] || [];
 
         const looksLikeUrl = value.match(/^https?:\/\//i);
-        console.log(`selectedIndex`, selectedIndex);
         if (selectedIndex >= 0) {
           const result = results[selectedIndex];
           if (result) {
@@ -289,7 +288,14 @@ class LinkEditor extends React.Component<Props, State> {
     if (trimmedValue && this.props.onSearchLink) {
       try {
         const setter = resultObj => {
-          const results = (Object.values(resultObj) as any).flat(1);
+          const normalizedResultObj = {
+            searchCardUser: resultObj.searchCardUser || [],
+            searchCardSubscriptions: resultObj.searchCardSubscriptions || [],
+            wiki: resultObj.wiki || [],
+            searchCardPublic: resultObj.searchCardPublic || [],
+            ...resultObj
+          };
+          const results = (Object.values(normalizedResultObj) as any).flat(1);
           this.setState(state => ({
             results: {
               ...state.results,
