@@ -55,7 +55,7 @@ import TableRow from "./nodes/TableRow";
 // marks
 import Bold from "./marks/Bold";
 import Code from "./marks/Code";
-import Highlight, { getParent } from "./marks/Highlight";
+import Highlight from "./marks/Highlight";
 import Italic from "./marks/Italic";
 import Link from "./marks/Link";
 import Strikethrough from "./marks/Strikethrough";
