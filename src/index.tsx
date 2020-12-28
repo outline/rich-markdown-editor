@@ -17,8 +17,6 @@ import baseDictionary from "./dictionary";
 import Flex from "./components/Flex";
 import { EmbedDescriptor, ToastType } from "./types";
 import SelectionToolbar, {
-  BottomToolbarWrapper,
-  getText,
   iOS,
   android,
 } from "./components/SelectionToolbar";
@@ -29,7 +27,6 @@ import Extension from "./lib/Extension";
 import ExtensionManager from "./lib/ExtensionManager";
 import ComponentView from "./lib/ComponentView";
 import headingToSlug from "./lib/headingToSlug";
-import ToolbarButton from "./components/ToolbarButton";
 
 // nodes
 import ReactNode from "./nodes/ReactNode";
@@ -609,9 +606,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       onKeyDown,
     } = this.props;
     const dictionary = this.dictionary(this.props.dictionary);
-    const Tooltip = tooltip;
 
-    const isMobile = iOS() || android();
     return (
       <ThemeProvider theme={this.theme()}>
         <Flex
@@ -986,6 +981,11 @@ const StyledEditor = styled("div")<{
 
   a:hover {
     text-decoration: underline;
+  }
+
+  a[href^="/"]:hover {
+    background: #b5defc;
+    text-decoration: none;
   }
 
   ul,

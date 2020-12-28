@@ -173,7 +173,9 @@ class LinkEditor extends React.Component<Props, State> {
           }
         } else {
           // saves the raw input as href
-          this.handleCreateLink(this.suggestedLinkTitle);
+          looksLikeUrl
+            ? this.save(value, value)
+            : this.handleCreateLink(this.suggestedLinkTitle);
         }
 
         if (this.initialSelectionLength) {
@@ -246,7 +248,7 @@ class LinkEditor extends React.Component<Props, State> {
             searchCardSubscriptions: resultObj.searchCardSubscriptions || [],
             wiki: resultObj.wiki || [],
             searchCardPublic: resultObj.searchCardPublic || [],
-            ...resultObj
+            ...resultObj,
           };
           const results = (Object.values(normalizedResultObj) as any).flat(1);
           this.setState(state => ({
