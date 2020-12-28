@@ -164,7 +164,7 @@ class YoutubeEmbed extends React.Component {
 
 class Example extends React.Component {
   state = {
-    readOnly: true,
+    readOnly: false,
     template: false,
     dark: localStorage.getItem("dark") === "enabled",
     value: undefined,
@@ -224,6 +224,7 @@ class Example extends React.Component {
         <Editor
           id="example"
           editorMinHeight="400px"
+          fixedToolbar={true}
           readOnly={this.state.readOnly}
           readOnlyWriteCheckboxes
           value={this.state.value}
@@ -245,9 +246,6 @@ class Example extends React.Component {
             console.log("Hovered link: ", event.target.href);
             return false;
           }}
-          onHighlight={(txt, surTxt) =>
-            console.log(`Add highlight ${txt} in ${surTxt}`)
-          }
           onClickHashtag={tag => console.log("Clicked hashtag: ", tag)}
           onCreateLink={title => {
             // Delay to simulate time taken for remote API request to complete
@@ -318,12 +316,7 @@ class Example extends React.Component {
           ]}
           dark={this.state.dark}
           autoFocus
-          childCards={["/doc/hiring"]}
-          blockPlaceholders={[
-            "Type '/' to insert block…",
-            "Paste a link to add cards",
-          ]}
-          placeholders={["Link stuff", "Write stuff"]}
+          placeholders={"Write stuff"}
         />
         <br />
         THIS SHOULD APPEAR BELOW EDIT BAR

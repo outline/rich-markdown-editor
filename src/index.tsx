@@ -15,7 +15,6 @@ import styled, { ThemeProvider } from "styled-components";
 import { light as lightTheme, dark as darkTheme } from "./theme";
 import baseDictionary from "./dictionary";
 import Flex from "./components/Flex";
-import { AddQuestionIcon } from "./components/LinkEditor";
 import { EmbedDescriptor, ToastType } from "./types";
 import SelectionToolbar, {
   BottomToolbarWrapper,
@@ -86,7 +85,7 @@ export type Props = {
   id?: string;
   value?: string;
   defaultValue: string;
-  placeholders: Array<string>;
+  placeholder: string;
   extensions: Extension[];
   autoFocus?: boolean;
   readOnly?: boolean;
@@ -110,11 +109,10 @@ export type Props = {
   onTurnIntoCards?: (href: string) => Promise<string>;
   onSearchLink?: (term: string, setter: (resultObj: object) => void) => void;
   onClickLink: (href: string, event: MouseEvent) => void;
-  onHighlight?: (text: string, surroundingText: string) => void;
   getPlaceHolderLink: (title: string) => string;
   Avatar: typeof React.Component | React.FC<any>;
   childCards?: Array<string>;
-  blockPlaceholders?: Array<string>;
+  blockPlaceholder?: string;
   onHoverLink?: (event: MouseEvent) => boolean;
   onClickHashtag?: (tag: string, event: MouseEvent) => void;
   onKeyDown?: (event: React.KeyboardEvent<HTMLDivElement>) => void;
@@ -124,6 +122,7 @@ export type Props = {
   className?: string;
   style?: Record<string, string>;
   editorMinHeight?: string;
+  fixedToolbar?: boolean;
 };
 
 type State = {
@@ -141,7 +140,7 @@ type Step = {
 class RichMarkdownEditor extends React.PureComponent<Props, State> {
   static defaultProps = {
     defaultValue: "",
-    placeholders: ["Write note…"],
+    placeholders: "Write note…",
     onImageUploadStart: () => {
       // no default behavior
     },
@@ -155,8 +154,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     embeds: [],
     extensions: [],
     tooltip: Tooltip,
-    blockPlaceholders: ["Type '/' to insert block…"],
+    blockPlaceholder: "Type '/' to insert block…",
     childCards: [],
+    fixedToolbar: false,
   };
 
   state = {
@@ -292,7 +292,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new TableRow(),
         new Bold(),
         new Code(),
-        new Highlight({ onHighlight: this.props.onHighlight }),
+        new Highlight(),
         new Italic(),
         new TemplatePlaceholder(),
         new Underline(),
@@ -317,7 +317,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           dictionary,
           onOpen: this.handleOpenBlockMenu,
           onClose: this.handleCloseBlockMenu,
-          placeholders: this.props.blockPlaceholders,
+          placeholder: this.props.blockPlaceholder,
         }),
         new SearchTrigger({
           onOpen: () => {
@@ -326,7 +326,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           },
         }),
         new Placeholder({
-          placeholders: this.props.placeholders,
+          placeholder: this.props.placeholder,
         }),
         ...this.props.extensions,
       ],
@@ -645,7 +645,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
             />
             {!readOnly && this.view && (
               <React.Fragment>
-                {isMobile && (
+                {!this.props.fixedToolbar && (
                   <>
                     <SelectionToolbar
                       floating={true}
@@ -696,54 +696,30 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
               </React.Fragment>
             )}
           </React.Fragment>
-          {!readOnly && this.view && this.state.focused && !isMobile && (
-            <SelectionToolbar
-              floating={false}
-              linkIsActive={this.state.linkMenuOpen}
-              searchTriggerOpen={this.state.searchTriggerOpen}
-              resetSearchTrigger={() =>
-                this.setState({ searchTriggerOpen: false })
-              }
-              onClose={this.handleCloseLinkMenu}
-              view={this.view}
-              dictionary={dictionary}
-              commands={this.commands}
-              onSearchLink={this.props.onSearchLink}
-              isTemplate={this.props.template === true}
-              onClickLink={this.props.onClickLink}
-              onCreateLink={this.props.onCreateLink}
-              Avatar={this.props.Avatar}
-              onTurnIntoCards={this.props.onTurnIntoCards}
-              tooltip={tooltip}
-            />
-          )}
-          {readOnly && this.view && this.props.onHighlight && (
-            <BottomToolbarWrapper>
-              <ToolbarButton
-                onClick={() => {
-                  if (this.props.onHighlight) {
-                    const { state } = this.view;
-                    const selectionContent = state.selection.content();
-                    const selectedText = getText(selectionContent);
-                    const parent = getParent(state.selection, state);
-                    const surroundingText = parent
-                      ? getText(parent)
-                      : selectedText;
-                    this.props.onHighlight(selectedText, surroundingText);
-                  }
-                }}
-                active={true}
-                childWidth={"110px"}
-              >
-                <Tooltip
-                  tooltip={dictionary.addActiveRecallQuestion}
-                  placement="top"
-                >
-                  <AddQuestionIcon />
-                </Tooltip>
-              </ToolbarButton>
-            </BottomToolbarWrapper>
-          )}
+          {!readOnly &&
+            this.view &&
+            this.state.focused &&
+            this.props.fixedToolbar && (
+              <SelectionToolbar
+                floating={false}
+                linkIsActive={this.state.linkMenuOpen}
+                searchTriggerOpen={this.state.searchTriggerOpen}
+                resetSearchTrigger={() =>
+                  this.setState({ searchTriggerOpen: false })
+                }
+                onClose={this.handleCloseLinkMenu}
+                view={this.view}
+                dictionary={dictionary}
+                commands={this.commands}
+                onSearchLink={this.props.onSearchLink}
+                isTemplate={this.props.template === true}
+                onClickLink={this.props.onClickLink}
+                onCreateLink={this.props.onCreateLink}
+                Avatar={this.props.Avatar}
+                onTurnIntoCards={this.props.onTurnIntoCards}
+                tooltip={tooltip}
+              />
+            )}
         </Flex>
       </ThemeProvider>
     );

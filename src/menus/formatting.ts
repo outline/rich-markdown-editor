@@ -15,7 +15,7 @@ import isInList from "../queries/isInList";
 import isMarkActive from "../queries/isMarkActive";
 import isNodeActive from "../queries/isNodeActive";
 import { MenuItem } from "../types";
-import { AddQuestionIcon, AddCardIcon } from "../components/LinkEditor";
+import { AddCardIcon } from "../components/LinkEditor";
 import baseDictionary from "../dictionary";
 
 export default function formattingMenuItems(
@@ -29,12 +29,6 @@ export default function formattingMenuItems(
   const allowBlocks = !isTable && !isList;
 
   return [
-    {
-      name: "mark",
-      tooltip: dictionary.addActiveRecallQuestion,
-      icon: AddQuestionIcon,
-      active: isMarkActive(schema.marks.mark),
-    },
     {
       name: "link",
       tooltip: dictionary.createLink,

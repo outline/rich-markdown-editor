@@ -39,11 +39,16 @@ class Menu extends React.Component<Props> {
               onClick={() => {
                 item.name && this.props.commands[item.name](item.attrs);
               }}
-              childWidth={item.name === "mark" ? "110px" : undefined}
+              childWidth={item.name === "link" ? "90px" : undefined}
               active={isActive}
             >
               <Tooltip tooltip={item.tooltip} placement="top">
                 <Icon color={this.props.theme.toolbarItem} />
+                {item.name === "link" && (
+                  <sup style={{ fontSize: "small", marginLeft: "5px" }}>
+                    Add link
+                  </sup>
+                )}
               </Tooltip>
             </ToolbarButton>
           );

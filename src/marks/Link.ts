@@ -3,7 +3,19 @@ import { Plugin } from "prosemirror-state";
 import { InputRule } from "prosemirror-inputrules";
 import Mark from "./Mark";
 import { getText } from "../components/SelectionToolbar";
-import { markApplies } from "./Highlight";
+
+function markApplies(doc, ranges, type) {
+  for (let i = 0; i < ranges.length; i++) {
+    const { $from, $to } = ranges[i];
+    let can = $from.depth === 0 ? doc.type.allowsMarkType(type) : false;
+    doc.nodesBetween($from.pos, $to.pos, node => {
+      if (can) return false;
+      can = node.inlineContent && node.type.allowsMarkType(type);
+    });
+    if (can) return true;
+  }
+  return false;
+}
 
 const LINK_INPUT_REGEX = /\[(.+)]\((\S+)\)/;
 
@@ -54,6 +66,7 @@ export default class Link extends Mark {
         "a",
         {
           ...node.attrs,
+          // FIXME nofollow for external links
           rel: "noopener noreferrer",
         },
         0,
@@ -83,7 +96,7 @@ export default class Link extends Mark {
   commands({ type }) {
     return ({ href } = { href: "" }) => {
       return (state, dispatch) => {
-        // inlined toggleMark so can add question only when adding https://github.com/ProseMirror/prosemirror-commands/blob/master/src/commands.js#L488
+        // inlined toggleMark so can add link when nothing selected https://github.com/ProseMirror/prosemirror-commands/blob/master/src/commands.js#L488
         const { empty, $cursor, ranges } = state.selection;
         if ((empty && !$cursor) || !markApplies(state.doc, ranges, type))
           return false;
