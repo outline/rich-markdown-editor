@@ -727,7 +727,6 @@ const StyledEditor = styled("div")<{
 }>`
   color: ${props => props.theme.text};
   background: ${props => props.theme.background};
-  font-size: 1em;
   line-height: 1.7em;
   width: 100%;
 

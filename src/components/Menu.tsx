@@ -39,7 +39,7 @@ class Menu extends React.Component<Props> {
               onClick={() => {
                 item.name && this.props.commands[item.name](item.attrs);
               }}
-              childWidth={item.name === "link" ? "90px" : undefined}
+              childWidth={item.name === "link" ? "85px" : undefined}
               active={isActive}
             >
               <Tooltip tooltip={item.tooltip} placement="top">

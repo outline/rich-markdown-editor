@@ -11,7 +11,7 @@ export const base = {
   codeBlock: "Code block",
   codeCopied: "Copied to clipboard",
   codeInline: "Code",
-  createLink: "Create link",
+  createLink: "Search or create card",
   createLinkError: "Sorry, an error occurred creating the link",
   createNewDoc: "Add card inside",
   turnIntoCards: "Turn web article into cards",
