@@ -978,7 +978,7 @@ const StyledEditor = styled("div")<{
       0px 3px no-repeat;
     border-radius: 4px;
     padding: 2px;
-    padding-left: 16px;
+    padding-left: 18px;
   }
 
   a:hover {
@@ -995,7 +995,7 @@ const StyledEditor = styled("div")<{
   ${props =>
     props.cardsInside
       ? props.cardsInside.map(
-          pth => `a[href="${pth}"] {
+          pth => `a[href^="${pth}"] {
     background: #e2f3ff;
     padding-left: 2px;
   }
