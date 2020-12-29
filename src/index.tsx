@@ -16,10 +16,7 @@ import { light as lightTheme, dark as darkTheme } from "./theme";
 import baseDictionary from "./dictionary";
 import Flex from "./components/Flex";
 import { EmbedDescriptor, ToastType } from "./types";
-import SelectionToolbar, {
-  iOS,
-  android,
-} from "./components/SelectionToolbar";
+import SelectionToolbar, { iOS, android } from "./components/SelectionToolbar";
 import BlockMenu from "./components/BlockMenu";
 import LinkToolbar from "./components/LinkToolbar";
 import Tooltip from "./components/Tooltip";
@@ -120,6 +117,7 @@ export type Props = {
   style?: Record<string, string>;
   editorMinHeight?: string;
   fixedToolbar?: boolean;
+  cardsInside?: Array<string>;
 };
 
 type State = {
@@ -154,6 +152,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     blockPlaceholder: "Type '/' to insert block…",
     childCards: [],
     fixedToolbar: false,
+    cardsInside: [],
   };
 
   state = {
@@ -633,10 +632,10 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   ? this.props.editorMinHeight
                   : undefined,
               }}
+              cardsInside={this.props.cardsInside}
               readOnly={readOnly}
               readOnlyWriteCheckboxes={readOnlyWriteCheckboxes}
               ref={ref => (this.element = ref)}
-              // childCards={this.props.childCards}
             />
             {!readOnly && this.view && (
               <React.Fragment>
@@ -724,6 +723,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 const StyledEditor = styled("div")<{
   readOnly?: boolean;
   readOnlyWriteCheckboxes?: boolean;
+  cardsInside?: Array<string>;
 }>`
   color: ${props => props.theme.text};
   background: ${props => props.theme.background};
@@ -973,9 +973,12 @@ const StyledEditor = styled("div")<{
     color: #2c2424;
     text-decoration: none;
     user-select: text;
-    background: #e2f3ff;
+    background: #e2f3ff
+      url(https://storage.googleapis.com/alley-d0944.appspot.com/public/externallink4.svg)
+      0px 3px no-repeat;
     border-radius: 4px;
     padding: 2px;
+    padding-left: 16px;
   }
 
   a:hover {
@@ -983,9 +986,25 @@ const StyledEditor = styled("div")<{
   }
 
   a[href^="/"]:hover {
-    background: #b5defc;
+    background: #b5defc
+      url(https://storage.googleapis.com/alley-d0944.appspot.com/public/externallink4.svg)
+      0px 3px no-repeat;
     text-decoration: none;
   }
+
+  ${props =>
+    props.cardsInside
+      ? props.cardsInside.map(
+          pth => `a[href="${pth}"] {
+    background: #e2f3ff;
+    padding-left: 2px;
+  }
+
+  a[href^="${pth}"]:hover {
+    background: #b5defc;
+  }`
+        )
+      : ""}
 
   ul,
   ol {

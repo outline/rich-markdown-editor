@@ -223,6 +223,7 @@ class Example extends React.Component {
         <br />
         <Editor
           id="example"
+          cardsInside={["/doc/hiring"]}
           editorMinHeight="400px"
           fixedToolbar={true}
           readOnly={this.state.readOnly}
