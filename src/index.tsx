@@ -975,10 +975,10 @@ const StyledEditor = styled("div")<{
     user-select: text;
     background: #e2f3ff
       url(https://storage.googleapis.com/alley-d0944.appspot.com/public/externallink4.svg)
-      0px 3px no-repeat;
+      0px 5px no-repeat;
     border-radius: 4px;
     padding: 2px;
-    padding-left: 18px;
+    padding-left: 16px;
   }
 
   a:hover {
@@ -988,7 +988,7 @@ const StyledEditor = styled("div")<{
   a[href^="/"]:hover {
     background: #b5defc
       url(https://storage.googleapis.com/alley-d0944.appspot.com/public/externallink4.svg)
-      0px 3px no-repeat;
+      0px 5px no-repeat;
     text-decoration: none;
   }
 
