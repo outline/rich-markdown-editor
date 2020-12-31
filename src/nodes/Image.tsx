@@ -97,8 +97,8 @@ export default class Image extends Node {
           default: null,
         },
         className: {
-          default: 'image',
-        }
+          default: "image",
+        },
       },
       content: "text*",
       marks: "",
@@ -229,21 +229,21 @@ export default class Image extends Node {
         state.esc((node.attrs.alt || "").replace("\n", "") || "") +
         "](" +
         state.esc(node.attrs.src) +
-        " \"" +
+        ' "' +
         state.esc(node.attrs.className) +
-        "\")"
+        '")'
     );
   }
 
   parseMarkdown() {
     return {
       node: "image",
-      getAttrs: (token) => {
+      getAttrs: token => {
         return {
           src: token.attrGet("src"),
           alt: (token.children[0] && token.children[0].content) || null,
           className: token.attrGet("className") || "image", // Ensure works with old versions
-        }
+        };
       },
     };
   }
@@ -273,7 +273,9 @@ export default class Image extends Node {
             type.create({
               src,
               alt,
-              className: classShorthand ? `image image-${classShorthand}` : null,
+              className: classShorthand
+                ? `image image-${classShorthand}`
+                : null,
             })
           );
         }
