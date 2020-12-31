@@ -45,7 +45,7 @@ export const base = {
   placeholder: "Placeholder",
   quote: "Quote",
   removeLink: "Remove link",
-  searchOrPasteLink: "Search or paste a link…",
+  searchOrPasteLink: "Search or create cards…",
   strikethrough: "Strikethrough",
   strong: "Bold",
   subheading: "Subheading",
