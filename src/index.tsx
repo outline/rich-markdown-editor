@@ -674,25 +674,50 @@ const StyledEditor = styled("div")<{
     position: relative;
   }
 
-  img {
-    max-width: 100%;
-  }
-
   .image {
     text-align: center;
-
+    max-width: 100%;
     img {
       pointer-events: ${props => (props.readOnly ? "initial" : "none")};
     }
   }
 
+  .image img {
+    display: inline-block;
+    max-width: 100%;
+  }
+
   .image.placeholder {
     position: relative;
     background: ${props => props.theme.background};
-
     img {
       opacity: 0.5;
     }
+  }
+
+  .image-small {
+    float: right;
+    margin-left: 2em;
+  }
+
+  .image-small img {
+    height: 10em;
+  }
+
+  .image-half {
+    float: right;
+    width: 50%;
+    margin-left: 2em;
+  }
+
+  .image-banner span {
+    height: 10em;
+    overflow: hidden;
+  }
+
+  .image-banner span img {
+    object-fit: cover;
+    object-position: 0 -50px;
   }
 
   .ProseMirror-hideselection *::selection {

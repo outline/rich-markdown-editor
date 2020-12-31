@@ -10,20 +10,14 @@ import insertFiles from "../commands/insertFiles";
 import Node from "./Node";
 
 /**
- * Matches following attributes in Markdown-typed image: [, alt, src, title]
+ * Matches following attributes in Markdown-typed image: [, alt, src, class]
  *
  * Example:
  * ![Lorem](image.jpg) -> [, "Lorem", "image.jpg"]
- * ![](image.jpg "Ipsum") -> [, "", "image.jpg", "Ipsum"]
- * ![Lorem](image.jpg "Ipsum") -> [, "Lorem", "image.jpg", "Ipsum"]
+ * ![](image.jpg "class") -> [, "", "image.jpg", "small"]
+ * ![Lorem](image.jpg "class") -> [, "Lorem", "image.jpg", "small"]
  */
-const IMAGE_INPUT_REGEX = /!\[(.+|:?)]\((\S+)(?:(?:\s+)["'](\S+)["'])?\)/;
-
-const STYLE = {
-  display: "inline-block",
-  maxWidth: "100%",
-  maxHeight: "75vh",
-};
+const IMAGE_INPUT_REGEX = /!\[(?<alt>.*?)]\((?<filename>.*?)(?=\“|\))\“?(?<optionalpart>[^\”]+)?\”?\)/;
 
 const uploadPlugin = options =>
   new Plugin({
@@ -102,6 +96,9 @@ export default class Image extends Node {
         alt: {
           default: null,
         },
+        className: {
+          default: 'image',
+        }
       },
       content: "text*",
       marks: "",
@@ -113,10 +110,10 @@ export default class Image extends Node {
           tag: "div[class=image]",
           getAttrs: (dom: HTMLDivElement) => {
             const img = dom.getElementsByTagName("img")[0];
-
             return {
               src: img.getAttribute("src"),
               alt: img.getAttribute("alt"),
+              className: dom.className,
             };
           },
         },
@@ -125,7 +122,7 @@ export default class Image extends Node {
         return [
           "div",
           {
-            class: "image",
+            class: node.attrs.className,
           },
           ["img", { ...node.attrs, contentEditable: false }],
           ["p", { class: "caption" }, 0],
@@ -162,6 +159,7 @@ export default class Image extends Node {
   handleBlur = ({ node, getPos }) => event => {
     const alt = event.target.innerText;
     const src = node.attrs.src;
+    const className = node.attrs.className;
     if (alt === node.attrs.alt) return;
 
     const { view } = this.editor;
@@ -172,6 +170,7 @@ export default class Image extends Node {
     const transaction = tr.setNodeMarkup(pos, undefined, {
       src,
       alt,
+      className,
     });
     view.dispatch(transaction);
   };
@@ -187,10 +186,10 @@ export default class Image extends Node {
 
   component = props => {
     const { theme, isEditable, isSelected } = props;
-    const { alt, src } = props.node.attrs;
+    const { alt, src, className } = props.node.attrs;
 
     return (
-      <div contentEditable={false} className="image">
+      <div contentEditable={false} className={className}>
         <ImageWrapper
           className={isSelected ? "ProseMirror-selectednode" : ""}
           onClick={isEditable ? this.handleSelect(props) : undefined}
@@ -199,7 +198,6 @@ export default class Image extends Node {
             image={{
               src,
               alt,
-              style: STYLE,
             }}
             defaultStyles={{
               overlay: {
@@ -231,17 +229,22 @@ export default class Image extends Node {
         state.esc((node.attrs.alt || "").replace("\n", "") || "") +
         "](" +
         state.esc(node.attrs.src) +
-        ")"
+        " \"" +
+        state.esc(node.attrs.className) +
+        "\")"
     );
   }
 
   parseMarkdown() {
     return {
       node: "image",
-      getAttrs: token => ({
-        src: token.attrGet("src"),
-        alt: (token.children[0] && token.children[0].content) || null,
-      }),
+      getAttrs: (token) => {
+        return {
+          src: token.attrGet("src"),
+          alt: (token.children[0] && token.children[0].content) || null,
+          className: token.attrGet("className") || "image", // Ensure works with old versions
+        }
+      },
     };
   }
 
@@ -261,9 +264,8 @@ export default class Image extends Node {
   inputRules({ type }) {
     return [
       new InputRule(IMAGE_INPUT_REGEX, (state, match, start, end) => {
-        const [okay, alt, src] = match;
+        const [okay, alt, src, classShorthand] = match;
         const { tr } = state;
-
         if (okay) {
           tr.replaceWith(
             start - 1,
@@ -271,6 +273,7 @@ export default class Image extends Node {
             type.create({
               src,
               alt,
+              className: classShorthand ? `image image-${classShorthand}` : null,
             })
           );
         }
@@ -299,7 +302,6 @@ const Caption = styled.p`
   padding: 2px 0;
   line-height: 16px;
   text-align: center;
-  width: 100%;
   min-height: 1em;
   outline: none;
   background: none;
