@@ -679,12 +679,10 @@ const StyledEditor = styled("div")<{
     max-width: 100%;
     img {
       pointer-events: ${props => (props.readOnly ? "initial" : "none")};
+      display: inline-block;
+      max-width: 100%;
+      max-height: 75vh;
     }
-  }
-
-  .image img {
-    display: inline-block;
-    max-width: 100%;
   }
 
   .image.placeholder {
@@ -920,7 +918,6 @@ const StyledEditor = styled("div")<{
   }
 
   p {
-    position: relative;
     margin: 0;
   }
 
