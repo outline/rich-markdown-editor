@@ -89,19 +89,22 @@ function usePosition({ menuRef, isSelectingText, props }) {
     const { node: element } = view.domAtPos(selection.ranges[0].$to.pos);
     const { width } = element.getBoundingClientRect();
 
-    const isLeftAligned = selection.node.attrs.layoutClass === 'half-left';
-    const isRightAligned = selection.node.attrs.layoutClass === 'half-right'
+    const isLeftAligned = selection.node.attrs.layoutClass === "half-left";
+    const isRightAligned = selection.node.attrs.layoutClass === "half-right";
     let left = Math.round(element.offsetLeft + element.offsetParent.offsetLeft);
 
     if (isLeftAligned) {
-      left = Math.round(left + width/4 - menuWidth/2)
+      left = Math.round(left + width / 4 - menuWidth / 2);
     } else if (isRightAligned) {
-      left = element.offsetWidth + Math.round(menuWidth/2) - Math.round(width/4)
+      left =
+        element.offsetWidth + Math.round(menuWidth / 2) - Math.round(width / 4);
     } else {
-      left = Math.round(left + width/2 - menuWidth/2)
+      left = Math.round(left + width / 2 - menuWidth / 2);
     }
 
-    const top = Math.round(element.offsetTop + element.offsetParent.offsetTop) - menuHeight;
+    const top =
+      Math.round(element.offsetTop + element.offsetParent.offsetTop) -
+      menuHeight;
 
     return {
       left,
