@@ -704,20 +704,16 @@ const StyledEditor = styled("div")<{
     height: 10em;
   }
 
-  .image-half {
+  .image-half-right {
     float: right;
     width: 50%;
     margin-left: 2em;
   }
 
-  .image-banner span {
-    height: 10em;
-    overflow: hidden;
-  }
-
-  .image-banner span img {
-    object-fit: cover;
-    object-position: 0 -50px;
+  .image-half-left {
+    float: left;
+    width: 50%;
+    margin-right: 2em;
   }
 
   .ProseMirror-hideselection *::selection {

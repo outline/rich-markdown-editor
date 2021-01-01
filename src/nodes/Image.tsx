@@ -17,7 +17,7 @@ import Node from "./Node";
  * ![](image.jpg "class") -> [, "", "image.jpg", "small"]
  * ![Lorem](image.jpg "class") -> [, "Lorem", "image.jpg", "small"]
  */
-const IMAGE_INPUT_REGEX = /!\[(?<alt>.*?)]\((?<filename>.*?)(?=\“|\))\“?(?<optionalpart>[^\”]+)?\”?\)/;
+const IMAGE_INPUT_REGEX = /!\[(?<alt>.*?)]\((?<filename>.*?)(?=\“|\))\“?(?<layoutclass>[^\”]+)?\”?\)/;
 
 const uploadPlugin = options =>
   new Plugin({
@@ -96,8 +96,8 @@ export default class Image extends Node {
         alt: {
           default: null,
         },
-        className: {
-          default: "image",
+        layoutClass: {
+          default: null,
         },
       },
       content: "text*",
@@ -110,10 +110,16 @@ export default class Image extends Node {
           tag: "div[class=image]",
           getAttrs: (dom: HTMLDivElement) => {
             const img = dom.getElementsByTagName("img")[0];
+            const className = dom.className;
+            const layoutClassMatched =
+              className && className.match(/image-(.*)$/);
+            const layoutClass = layoutClassMatched
+              ? layoutClassMatched[1]
+              : null;
             return {
               src: img.getAttribute("src"),
               alt: img.getAttribute("alt"),
-              className: dom.className,
+              layoutClass: layoutClass,
             };
           },
         },
@@ -122,7 +128,7 @@ export default class Image extends Node {
         return [
           "div",
           {
-            class: node.attrs.className,
+            class: node.attrs.layoutClass,
           },
           ["img", { ...node.attrs, contentEditable: false }],
           ["p", { class: "caption" }, 0],
@@ -159,7 +165,7 @@ export default class Image extends Node {
   handleBlur = ({ node, getPos }) => event => {
     const alt = event.target.innerText;
     const src = node.attrs.src;
-    const className = node.attrs.className;
+    const layoutClass = node.attrs.layoutClass;
     if (alt === node.attrs.alt) return;
 
     const { view } = this.editor;
@@ -170,7 +176,7 @@ export default class Image extends Node {
     const transaction = tr.setNodeMarkup(pos, undefined, {
       src,
       alt,
-      className,
+      layoutClass,
     });
     view.dispatch(transaction);
   };
@@ -186,7 +192,8 @@ export default class Image extends Node {
 
   component = props => {
     const { theme, isEditable, isSelected } = props;
-    const { alt, src, className } = props.node.attrs;
+    const { alt, src, layoutClass } = props.node.attrs;
+    const className = layoutClass ? `image image-${layoutClass}` : "image";
 
     return (
       <div contentEditable={false} className={className}>
@@ -224,15 +231,16 @@ export default class Image extends Node {
   };
 
   toMarkdown(state, node) {
-    state.write(
+    let markdown =
       "![" +
-        state.esc((node.attrs.alt || "").replace("\n", "") || "") +
-        "](" +
-        state.esc(node.attrs.src) +
-        ' "' +
-        state.esc(node.attrs.className) +
-        '")'
-    );
+      state.esc((node.attrs.alt || "").replace("\n", "") || "") +
+      "](" +
+      state.esc(node.attrs.src);
+    if (node.attrs.layoutClass) {
+      markdown += ' "' + state.esc(node.attrs.layoutClass) + '"';
+    }
+    markdown += ")";
+    state.write(markdown);
   }
 
   parseMarkdown() {
@@ -242,7 +250,7 @@ export default class Image extends Node {
         return {
           src: token.attrGet("src"),
           alt: (token.children[0] && token.children[0].content) || null,
-          className: token.attrGet("className") || "image", // Ensure works with old versions
+          layoutClass: token.attrGet("title"),
         };
       },
     };
@@ -264,7 +272,7 @@ export default class Image extends Node {
   inputRules({ type }) {
     return [
       new InputRule(IMAGE_INPUT_REGEX, (state, match, start, end) => {
-        const [okay, alt, src, classShorthand] = match;
+        const [okay, alt, src, layoutClass] = match;
         const { tr } = state;
         if (okay) {
           tr.replaceWith(
@@ -273,9 +281,7 @@ export default class Image extends Node {
             type.create({
               src,
               alt,
-              className: classShorthand
-                ? `image image-${classShorthand}`
-                : null,
+              layoutClass,
             })
           );
         }

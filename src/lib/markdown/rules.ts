@@ -6,7 +6,6 @@ import breakPlugin from "./breaks";
 import tablesPlugin from "./tables";
 import noticesPlugin from "./notices";
 import underlinesPlugin from "./underlines";
-import imagesPlugin from "./images";
 
 export default function rules({ embeds }) {
   return markdownit("default", {
@@ -20,6 +19,5 @@ export default function rules({ embeds }) {
     .use(markPlugin({ delim: "!!", mark: "placeholder" }))
     .use(underlinesPlugin)
     .use(tablesPlugin)
-    .use(noticesPlugin)
-    .use(imagesPlugin);
+    .use(noticesPlugin);
 }
