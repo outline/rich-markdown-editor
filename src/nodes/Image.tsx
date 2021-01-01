@@ -83,6 +83,19 @@ const uploadPlugin = options =>
     },
   });
 
+const IMAGE_CLASSES = ["half-right", "half-left"];
+const getLayoutAndTitle = tokenTitle => {
+  if (IMAGE_CLASSES.includes(tokenTitle)) {
+    return {
+      layoutClass: tokenTitle,
+    };
+  } else {
+    return {
+      title: tokenTitle,
+    };
+  }
+};
+
 export default class Image extends Node {
   get name() {
     return "image";
@@ -97,6 +110,9 @@ export default class Image extends Node {
           default: null,
         },
         layoutClass: {
+          default: null,
+        },
+        title: {
           default: null,
         },
       },
@@ -119,6 +135,7 @@ export default class Image extends Node {
             return {
               src: img.getAttribute("src"),
               alt: img.getAttribute("alt"),
+              title: img.getAttribute("title"),
               layoutClass: layoutClass,
             };
           },
@@ -167,8 +184,8 @@ export default class Image extends Node {
 
   handleBlur = ({ node, getPos }) => event => {
     const alt = event.target.innerText;
-    const src = node.attrs.src;
-    const layoutClass = node.attrs.layoutClass;
+    const { src, title, layoutClass } = node.attrs;
+
     if (alt === node.attrs.alt) return;
 
     const { view } = this.editor;
@@ -179,6 +196,7 @@ export default class Image extends Node {
     const transaction = tr.setNodeMarkup(pos, undefined, {
       src,
       alt,
+      title,
       layoutClass,
     });
     view.dispatch(transaction);
@@ -195,7 +213,7 @@ export default class Image extends Node {
 
   component = props => {
     const { theme, isEditable, isSelected } = props;
-    const { alt, src, layoutClass } = props.node.attrs;
+    const { alt, src, title, layoutClass } = props.node.attrs;
     const className = layoutClass ? `image image-${layoutClass}` : "image";
 
     return (
@@ -208,6 +226,7 @@ export default class Image extends Node {
             image={{
               src,
               alt,
+              title,
             }}
             defaultStyles={{
               overlay: {
@@ -242,6 +261,9 @@ export default class Image extends Node {
     if (node.attrs.layoutClass) {
       markdown += ' "' + state.esc(node.attrs.layoutClass) + '"';
     }
+    if (node.attrs.title) {
+      markdown += ' "' + state.esc(node.attrs.title) + '"';
+    }
     markdown += ")";
     state.write(markdown);
   }
@@ -253,7 +275,7 @@ export default class Image extends Node {
         return {
           src: token.attrGet("src"),
           alt: (token.children[0] && token.children[0].content) || null,
-          layoutClass: token.attrGet("title"),
+          ...getLayoutAndTitle(token.attrGet("title")),
         };
       },
     };
@@ -268,6 +290,7 @@ export default class Image extends Node {
       alignRight: () => (state, dispatch) => {
         const attrs = {
           ...state.selection.node.attrs,
+          title: null,
           layoutClass: "half-right",
         };
         dispatch(state.tr.replaceSelectionWith(type.create(attrs)));
@@ -276,6 +299,7 @@ export default class Image extends Node {
       alignLeft: () => (state, dispatch) => {
         const attrs = {
           ...state.selection.node.attrs,
+          title: null,
           layoutClass: "half-left",
         };
         dispatch(state.tr.replaceSelectionWith(type.create(attrs)));
@@ -305,7 +329,7 @@ export default class Image extends Node {
   inputRules({ type }) {
     return [
       new InputRule(IMAGE_INPUT_REGEX, (state, match, start, end) => {
-        const [okay, alt, src, layoutClass] = match;
+        const [okay, alt, src, matchedTitle] = match;
         const { tr } = state;
         if (okay) {
           tr.replaceWith(
@@ -314,7 +338,7 @@ export default class Image extends Node {
             type.create({
               src,
               alt,
-              layoutClass,
+              ...getLayoutAndTitle(matchedTitle),
             })
           );
         }
