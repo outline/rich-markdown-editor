@@ -125,10 +125,13 @@ export default class Image extends Node {
         },
       ],
       toDOM: node => {
+        const className = node.attrs.layoutClass
+          ? `image image-${node.attrs.layoutClass}`
+          : "image";
         return [
           "div",
           {
-            class: node.attrs.layoutClass,
+            class: className,
           },
           ["img", { ...node.attrs, contentEditable: false }],
           ["p", { class: "caption" }, 0],
