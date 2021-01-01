@@ -695,15 +695,6 @@ const StyledEditor = styled("div")<{
     }
   }
 
-  .image-small {
-    float: right;
-    margin-left: 2em;
-  }
-
-  .image-small img {
-    height: 10em;
-  }
-
   .image-half-right {
     float: right;
     width: 50%;

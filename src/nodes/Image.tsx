@@ -260,17 +260,47 @@ export default class Image extends Node {
   }
 
   commands({ type }) {
-    return attrs => (state, dispatch) => {
-      const { selection } = state;
-      const position = selection.$cursor
-        ? selection.$cursor.pos
-        : selection.$to.pos;
-      const node = type.create(attrs);
-      const transaction = state.tr.insert(position, node);
-      dispatch(transaction);
-      return true;
+    return {
+      deleteImage: () => (state, dispatch) => {
+        dispatch(state.tr.deleteSelection());
+        return true;
+      },
+      alignRight: () => (state, dispatch) => {
+        const attrs = {
+          ...state.selection.node.attrs,
+          layoutClass: "half-right",
+        };
+        dispatch(state.tr.replaceSelectionWith(type.create(attrs)));
+        return true;
+      },
+      alignLeft: () => (state, dispatch) => {
+        const attrs = {
+          ...state.selection.node.attrs,
+          layoutClass: "half-left",
+        };
+        dispatch(state.tr.replaceSelectionWith(type.create(attrs)));
+        return true;
+      },
+      alignCenter: () => (state, dispatch) => {
+        const attrs = { ...state.selection.node.attrs, layoutClass: null };
+        dispatch(state.tr.replaceSelectionWith(type.create(attrs)));
+        return true;
+      },
     };
   }
+
+  // commands({ type }) {
+  //   return attrs => (state, dispatch) => {
+  //     const { selection } = state;
+  //     const position = selection.$cursor
+  //       ? selection.$cursor.pos
+  //       : selection.$to.pos;
+  //     const node = type.create(attrs);
+  //     const transaction = state.tr.insert(position, node);
+  //     dispatch(transaction);
+  //     return true;
+  //   };
+  // }
 
   inputRules({ type }) {
     return [
