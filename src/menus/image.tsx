@@ -1,8 +1,8 @@
 import {
   TrashIcon,
-  AlignLeftIcon,
-  AlignRightIcon,
-  AlignCenterIcon,
+  AlignImageLeftIcon,
+  AlignImageRightIcon,
+  AlignImageCenterIcon,
 } from "outline-icons";
 import { MenuItem } from "../types";
 import baseDictionary from "../dictionary";
@@ -12,9 +12,23 @@ export default function imageMenuItems(
 ): MenuItem[] {
   return [
     {
-      name: "deleteImage",
-      tooltip: dictionary.deleteImage,
-      icon: TrashIcon,
+      name: "alignLeft",
+      tooltip: dictionary.alignLeft,
+      icon: AlignImageLeftIcon,
+      visible: true,
+      active: () => false,
+    },
+    {
+      name: "alignCenter",
+      tooltip: dictionary.alignCenter,
+      icon: AlignImageCenterIcon,
+      visible: true,
+      active: () => false,
+    },
+    {
+      name: "alignRight",
+      tooltip: dictionary.alignRight,
+      icon: AlignImageRightIcon,
       visible: true,
       active: () => false,
     },
@@ -23,23 +37,9 @@ export default function imageMenuItems(
       visible: true,
     },
     {
-      name: "alignLeft",
-      tooltip: dictionary.alignLeft,
-      icon: AlignLeftIcon,
-      visible: true,
-      active: () => false,
-    },
-    {
-      name: "alignCenter",
-      tooltip: dictionary.alignCenter,
-      icon: AlignCenterIcon,
-      visible: true,
-      active: () => false,
-    },
-    {
-      name: "alignRight",
-      tooltip: dictionary.alignRight,
-      icon: AlignRightIcon,
+      name: "deleteImage",
+      tooltip: dictionary.deleteImage,
+      icon: TrashIcon,
       visible: true,
       active: () => false,
     },

@@ -123,7 +123,7 @@ export default class Image extends Node {
       draggable: true,
       parseDOM: [
         {
-          tag: "div[class=image]",
+          tag: "div[class=~image]",
           getAttrs: (dom: HTMLDivElement) => {
             const img = dom.getElementsByTagName("img")[0];
             const className = dom.className;
@@ -260,8 +260,7 @@ export default class Image extends Node {
       state.esc(node.attrs.src);
     if (node.attrs.layoutClass) {
       markdown += ' "' + state.esc(node.attrs.layoutClass) + '"';
-    }
-    if (node.attrs.title) {
+    } else if (node.attrs.title) {
       markdown += ' "' + state.esc(node.attrs.title) + '"';
     }
     markdown += ")";
@@ -293,7 +292,8 @@ export default class Image extends Node {
           title: null,
           layoutClass: "half-right",
         };
-        dispatch(state.tr.replaceSelectionWith(type.create(attrs)));
+        const { selection } = state;
+        dispatch(state.tr.setNodeMarkup(selection.$from.pos, undefined, attrs));
         return true;
       },
       alignLeft: () => (state, dispatch) => {
@@ -302,29 +302,28 @@ export default class Image extends Node {
           title: null,
           layoutClass: "half-left",
         };
-        dispatch(state.tr.replaceSelectionWith(type.create(attrs)));
+        const { selection } = state;
+        dispatch(state.tr.setNodeMarkup(selection.$from.pos, undefined, attrs));
         return true;
       },
       alignCenter: () => (state, dispatch) => {
         const attrs = { ...state.selection.node.attrs, layoutClass: null };
-        dispatch(state.tr.replaceSelectionWith(type.create(attrs)));
+        const { selection } = state;
+        dispatch(state.tr.setNodeMarkup(selection.$from.pos, undefined, attrs));
+        return true;
+      },
+      createImage: attrs => (state, dispatch) => {
+        const { selection } = state;
+        const position = selection.$cursor
+          ? selection.$cursor.pos
+          : selection.$to.pos;
+        const node = type.create(attrs);
+        const transaction = state.tr.insert(position, node);
+        dispatch(transaction);
         return true;
       },
     };
   }
-
-  // commands({ type }) {
-  //   return attrs => (state, dispatch) => {
-  //     const { selection } = state;
-  //     const position = selection.$cursor
-  //       ? selection.$cursor.pos
-  //       : selection.$to.pos;
-  //     const node = type.create(attrs);
-  //     const transaction = state.tr.insert(position, node);
-  //     dispatch(transaction);
-  //     return true;
-  //   };
-  // }
 
   inputRules({ type }) {
     return [

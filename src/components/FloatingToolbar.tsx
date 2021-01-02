@@ -87,28 +87,15 @@ function usePosition({ menuRef, isSelectingText, props }) {
   // Images need their own positioning to get the toolbar in the center
   if (isImageSelection) {
     const { node: element } = view.domAtPos(selection.ranges[0].$to.pos);
-    const { width } = element.getBoundingClientRect();
 
-    const isLeftAligned = selection.node.attrs.layoutClass === "half-left";
-    const isRightAligned = selection.node.attrs.layoutClass === "half-right";
-    let left = Math.round(element.offsetLeft + element.offsetParent.offsetLeft);
-
-    if (isLeftAligned) {
-      left = Math.round(left + width / 4 - menuWidth / 2);
-    } else if (isRightAligned) {
-      left =
-        element.offsetWidth + Math.round(menuWidth / 2) - Math.round(width / 4);
-    } else {
-      left = Math.round(left + width / 2 - menuWidth / 2);
-    }
-
-    const top =
-      Math.round(element.offsetTop + element.offsetParent.offsetTop) -
-      menuHeight;
+    // Images are wrapped which impacts positioning - need to traverse through
+    // p > span > div.image
+    const imageElement = element.firstChild.firstChild;
+    const { left, top, width } = imageElement.getBoundingClientRect();
 
     return {
-      left,
-      top,
+      left: Math.round(left + width / 2 + window.scrollX - menuWidth / 2),
+      top: Math.round(top + window.scrollY - menuHeight),
       offset: 0,
       visible: true,
     };
