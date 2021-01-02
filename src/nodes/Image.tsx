@@ -123,7 +123,7 @@ export default class Image extends Node {
       draggable: true,
       parseDOM: [
         {
-          tag: "div[class=~image]",
+          tag: "div[class~=image]",
           getAttrs: (dom: HTMLDivElement) => {
             const img = dom.getElementsByTagName("img")[0];
             const className = dom.className;

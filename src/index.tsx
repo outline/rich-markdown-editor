@@ -697,12 +697,14 @@ const StyledEditor = styled("div")<{
     float: right;
     width: 50%;
     margin-left: 2em;
+    margin-bottom: 1em;
   }
 
   .image-half-left {
     float: left;
     width: 50%;
     margin-right: 2em;
+    margin-bottom: 1em;
   }
 
   .ProseMirror-hideselection *::selection {
