@@ -74,7 +74,10 @@ export default function(options: {
       for (i = 0; i < max; i++) {
         startDelim = delimiters[i];
 
-        if (startDelim.marker !== delimCharCode && startDelim.marker !== delimEndCharCode) {
+        if (
+          startDelim.marker !== delimCharCode &&
+          startDelim.marker !== delimEndCharCode
+        ) {
           continue;
         }
 
@@ -104,7 +107,8 @@ export default function(options: {
         if (
           state.tokens[endDelim.token - 1].type === "text" &&
           (state.tokens[endDelim.token - 1].content === options.delim[0] ||
-          state.tokens[endDelim.token - 1].content === options.delimEnd[0])
+            (options.delimEnd &&
+              state.tokens[endDelim.token - 1].content === options.delimEnd[0]))
         ) {
           loneMarkers.push(endDelim.token - 1);
         }

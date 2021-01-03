@@ -125,7 +125,9 @@ export default class Placeholder extends Mark {
           },
           handleClick: (view, pos, event: MouseEvent) => {
             if (!view.props.editable || !view.props.editable(view.state)) {
-              return false;
+              if (!this.editor.props.readOnlyWriteCheckboxes) {
+                return false;
+              }
             }
             if (this.editor.props.template) {
               return false;
@@ -141,7 +143,8 @@ export default class Placeholder extends Mark {
                 state.schema.marks.placeholder
               );
               if (!range) return false;
-
+              this.editor.props.onClickTemplatePlaceholder &&
+                this.editor.props.onClickTemplatePlaceholder(event);
               event.stopPropagation();
               event.preventDefault();
               const startOfMark = state.doc.resolve(range.from);

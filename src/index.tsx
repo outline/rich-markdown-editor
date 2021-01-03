@@ -103,6 +103,7 @@ export type Props = {
   onTurnIntoCards?: (href: string) => Promise<string>;
   onSearchLink?: (term: string, setter: (resultObj: object) => void) => void;
   onClickLink: (href: string, event: MouseEvent) => void;
+  onClickTemplatePlaceholder?: (event: MouseEvent) => void;
   getPlaceHolderLink: (title: string) => string;
   Avatar: typeof React.Component | React.FC<any>;
   childCards?: Array<string>;
@@ -144,6 +145,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     },
     onClickLink: href => {
       window.open(href, "_blank");
+    },
+    onClickTemplatePlaceholder: () => {
+      // no default behavior
     },
     getPlaceHolderLink: title => `/cards/${title}`,
     embeds: [],
