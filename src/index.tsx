@@ -750,12 +750,13 @@ const StyledEditor = styled("div")<{
     cursor: default;
 
     &:not(.placeholder):before {
-      display: ${props => (props.readOnly ? "none" : "block")};
-      position: absolute;
+      display: ${props => (props.readOnly ? "none" : "inline")};
+      position: relative;
       font-family: ${props => props.theme.fontFamilyMono};
       color: ${props => props.theme.textSecondary};
       font-size: 13px;
-      left: -24px;
+      margin-right: -16px;
+      left: -20px;
     }
 
     &:hover {
@@ -934,7 +935,8 @@ const StyledEditor = styled("div")<{
   ul,
   ol {
     margin: 0 0.1em;
-    padding: 0 0 0 1em;
+    padding: 0 0 0 1.2em;
+    overflow: hidden;
 
     ul,
     ol {
