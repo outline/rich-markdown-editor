@@ -693,14 +693,14 @@ const StyledEditor = styled("div")<{
     }
   }
 
-  .image-half-right {
+  .image-right-50 {
     float: right;
     width: 50%;
     margin-left: 2em;
     margin-bottom: 1em;
   }
 
-  .image-half-left {
+  .image-left-50 {
     float: left;
     width: 50%;
     margin-right: 2em;

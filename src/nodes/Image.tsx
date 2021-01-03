@@ -83,7 +83,7 @@ const uploadPlugin = options =>
     },
   });
 
-const IMAGE_CLASSES = ["half-right", "half-left"];
+const IMAGE_CLASSES = ["right-50", "left-50"];
 const getLayoutAndTitle = tokenTitle => {
   if (IMAGE_CLASSES.includes(tokenTitle)) {
     return {
@@ -290,7 +290,7 @@ export default class Image extends Node {
         const attrs = {
           ...state.selection.node.attrs,
           title: null,
-          layoutClass: "half-right",
+          layoutClass: "right-50",
         };
         const { selection } = state;
         dispatch(state.tr.setNodeMarkup(selection.$from.pos, undefined, attrs));
@@ -300,7 +300,7 @@ export default class Image extends Node {
         const attrs = {
           ...state.selection.node.attrs,
           title: null,
-          layoutClass: "half-left",
+          layoutClass: "left-50",
         };
         const { selection } = state;
         dispatch(state.tr.setNodeMarkup(selection.$from.pos, undefined, attrs));
