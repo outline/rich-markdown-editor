@@ -85,6 +85,7 @@ const uploadPlugin = options =>
 
 const IMAGE_CLASSES = ["right-50", "left-50"];
 const getLayoutAndTitle = tokenTitle => {
+  if (!tokenTitle) return {};
   if (IMAGE_CLASSES.includes(tokenTitle)) {
     return {
       layoutClass: tokenTitle,
