@@ -1,6 +1,7 @@
 import { Plugin, TextSelection } from "prosemirror-state";
 import getMarkRange from "../queries/getMarkRange";
 import Mark from "./Mark";
+import markInputRule from "../lib/markInputRule";
 
 export default class Placeholder extends Mark {
   get name() {
@@ -16,8 +17,8 @@ export default class Placeholder extends Mark {
 
   get toMarkdown() {
     return {
-      open: "!!",
-      close: "!!",
+      open: "{{",
+      close: "}}",
       mixable: true,
       expelEnclosingWhitespace: true,
     };

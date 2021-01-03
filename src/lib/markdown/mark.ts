@@ -1,8 +1,17 @@
 // Adapted from:
 // https://github.com/markdown-it/markdown-it-mark/blob/master/index.js
 
-export default function(options: { delim: string; mark: string }) {
+export default function(options: {
+  delim: string;
+  delimEnd?: string;
+  mark: string;
+}) {
+  if (!options.delimEnd) {
+    options.delimEnd = options.delim;
+  }
   const delimCharCode = options.delim.charCodeAt(0);
+  const delimEndCharCode = options.delimEnd.charCodeAt(0);
+  console.log(`char code`, delimCharCode, delimEndCharCode);
 
   return function emphasisPlugin(md) {
     function tokenize(state, silent) {
@@ -14,8 +23,7 @@ export default function(options: { delim: string; mark: string }) {
       if (silent) {
         return false;
       }
-
-      if (marker !== delimCharCode) {
+      if (marker !== delimCharCode && marker !== delimEndCharCode) {
         return false;
       }
 
@@ -66,15 +74,19 @@ export default function(options: { delim: string; mark: string }) {
       for (i = 0; i < max; i++) {
         startDelim = delimiters[i];
 
-        if (startDelim.marker !== delimCharCode) {
+        if (startDelim.marker !== delimCharCode && startDelim.marker !== delimEndCharCode) {
           continue;
         }
 
         if (startDelim.end === -1) {
-          continue;
+          // HACK TO MAKE IT WORK WITH {{ }}, NOT SURE WHY IT WORKS LIKE THIS (it would continue when it shouldn't, hence the additional check)
+          if (startDelim.token !== 3) {
+            startDelim.end = 1;
+          } else {
+            continue;
+          }
         }
-
-        endDelim = delimiters[startDelim.end];
+        endDelim = delimiters[delimiters[i].end];
 
         token = state.tokens[startDelim.token];
         token.type = `${options.mark}_open`;
@@ -82,22 +94,22 @@ export default function(options: { delim: string; mark: string }) {
         token.nesting = 1;
         token.markup = options.delim;
         token.content = "";
-
         token = state.tokens[endDelim.token];
         token.type = `${options.mark}_close`;
         token.tag = "span";
         token.nesting = -1;
-        token.markup = options.delim;
+        token.markup = options.delimEnd;
         token.content = "";
 
         if (
           state.tokens[endDelim.token - 1].type === "text" &&
-          state.tokens[endDelim.token - 1].content === options.delim[0]
+          (state.tokens[endDelim.token - 1].content === options.delim[0] ||
+          state.tokens[endDelim.token - 1].content === options.delimEnd[0])
         ) {
           loneMarkers.push(endDelim.token - 1);
         }
       }
-
+      // console.log(`loneMarkers`, loneMarkers);
       // If a marker sequence has an odd number of characters, it's split
       // like this: `~~~~~` -> `~` + `~~` + `~~`, leaving one marker at the
       // start of the sequence.
