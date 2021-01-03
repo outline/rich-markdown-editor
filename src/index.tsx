@@ -787,19 +787,15 @@ const StyledEditor = styled("div")<{
 
   h1:not(.placeholder):before {
     content: "H1";
-    line-height: 3em;
   }
   h2:not(.placeholder):before {
     content: "H2";
-    line-height: 2.8em;
   }
   h3:not(.placeholder):before {
     content: "H3";
-    line-height: 2.3em;
   }
   h4:not(.placeholder):before {
     content: "H4";
-    line-height: 2.2em;
   }
   h5:not(.placeholder):before {
     content: "H5";
@@ -814,7 +810,7 @@ const StyledEditor = styled("div")<{
 
   .heading-anchor {
     opacity: 0;
-    display: ${props => (props.readOnly ? "block" : "none")};
+    display: ${props => (props.readOnly ? "inline" : "none")};
     color: ${props => props.theme.textSecondary};
     cursor: pointer;
     background: none;
@@ -822,7 +818,9 @@ const StyledEditor = styled("div")<{
     outline: none;
     padding: 2px 12px 2px 4px;
     margin: 0;
-    position: absolute;
+    position: relative;
+    margin-right: -30px;
+    left: -20px;
     transition: opacity 100ms ease-in-out;
     font-family: ${props => props.theme.fontFamilyMono};
     font-size: 22px;
