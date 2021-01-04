@@ -305,6 +305,26 @@ class BlockMenu extends React.Component<Props, State> {
     this.props.onClose();
   }
 
+  get caretPosition() {
+    const selection = window.document.getSelection();
+    const range = window.document.createRange();
+    range.setStart(selection.anchorNode, selection.anchorOffset);
+    range.setEnd(selection.focusNode, selection.focusOffset);
+
+    // This is a workaround for an edgecase where getBoundingClientRect will
+    // return zero values if the selection is collapsed at the start of a newline
+    // see reference here: https://stackoverflow.com/a/59780954
+    const rects = range.getClientRects();
+    if (rects.length === 0) {
+      // probably buggy newline behavior, explicitly select the node contents
+      if (range.startContainer && range.collapsed) {
+        range.selectNodeContents(range.startContainer);
+      }
+    }
+
+    return range.getBoundingClientRect();
+  }
+
   calculatePosition(props) {
     const { view } = props;
     const { selection } = view.state;
@@ -327,7 +347,8 @@ class BlockMenu extends React.Component<Props, State> {
       };
     }
 
-    const { top, left, bottom } = paragraph.node.getBoundingClientRect();
+    const { left } = this.caretPosition;
+    const { top, bottom } = paragraph.node.getBoundingClientRect();
     const margin = 24;
 
     if (startPos.top - offsetHeight > margin) {
