@@ -11,6 +11,7 @@ export const LANGUAGES = {
   clike: "C",
   csharp: "C#",
   markup: "HTML",
+  go: "Go",
   java: "Java",
   javascript: "JavaScript",
   json: "JSON",
