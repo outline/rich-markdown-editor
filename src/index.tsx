@@ -1357,7 +1357,7 @@ const StyledEditor = styled("div")<{
   }
 
   .block-menu-trigger {
-    display: ${props => (props.readOnly ? "none" : "block")};
+    display: ${props => (props.readOnly ? "none" : "inline")};
     height: 1em;
     color: ${props => props.theme.textSecondary};
     background: none;
@@ -1370,8 +1370,8 @@ const StyledEditor = styled("div")<{
     outline: none;
     border: 0;
     line-height: 1;
-    margin-top: -6px;
-    left: -34px;
+    margin-top: -2px;
+    margin-left: -28px;
 
     &:hover,
     &:focus {
