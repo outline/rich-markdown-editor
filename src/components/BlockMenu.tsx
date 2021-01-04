@@ -305,8 +305,15 @@ class BlockMenu extends React.Component<Props, State> {
     this.props.onClose();
   }
 
-  get caretPosition() {
+  get caretPosition(): { top: number; left: number } {
     const selection = window.document.getSelection();
+    if (!selection || !selection.anchorNode || !selection.focusNode) {
+      return {
+        top: 0,
+        left: 0,
+      };
+    }
+
     const range = window.document.createRange();
     range.setStart(selection.anchorNode, selection.anchorOffset);
     range.setEnd(selection.focusNode, selection.focusOffset);
@@ -322,7 +329,11 @@ class BlockMenu extends React.Component<Props, State> {
       }
     }
 
-    return range.getBoundingClientRect();
+    const rect = range.getBoundingClientRect();
+    return {
+      top: rect.top,
+      left: rect.left,
+    };
   }
 
   calculatePosition(props) {
