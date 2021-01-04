@@ -952,15 +952,13 @@ const StyledEditor = styled("div")<{
   }
 
   .template-placeholder {
-    color: ${props => props.theme.placeholder};
-    border-bottom: 1px dotted ${props => props.theme.placeholder};
+    color: ${props => props.theme.templatePlaceholder};
+    border-bottom: 1px dotted ${props => props.theme.templatePlaceholder};
     border-radius: 2px;
     cursor: text;
 
     &:hover {
-      border-bottom: 1px dotted
-        ${props =>
-          props.readOnly ? props.theme.placeholder : props.theme.textSecondary};
+      border-bottom: 1px dotted ${props => props.theme.textSecondary};
     }
   }
 

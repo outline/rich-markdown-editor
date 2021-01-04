@@ -25,6 +25,7 @@ export const base = {
   link: colors.primary,
   linkExternal: colors.secondary,
   placeholder: "#B1BECC",
+  templatePlaceholder: "#f03",
   textSecondary: "#4E5C6E",
   textLight: colors.white,
   textHighlight: "#fff200",

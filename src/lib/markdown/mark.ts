@@ -11,7 +11,6 @@ export default function(options: {
   }
   const delimCharCode = options.delim.charCodeAt(0);
   const delimEndCharCode = options.delimEnd.charCodeAt(0);
-  console.log(`char code`, delimCharCode, delimEndCharCode);
 
   return function emphasisPlugin(md) {
     function tokenize(state, silent) {
