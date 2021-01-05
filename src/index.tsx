@@ -1383,7 +1383,7 @@ const StyledEditor = styled("div")<{
       transform 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
     outline: none;
     border: 0;
-    line-height: 1;
+    line-height: 26px;
     margin-top: -2px;
     margin-left: -28px;
 
