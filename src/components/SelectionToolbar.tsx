@@ -7,6 +7,7 @@ import getTableColMenuItems from "../menus/tableCol";
 import getTableRowMenuItems from "../menus/tableRow";
 import getTableMenuItems from "../menus/table";
 import getFormattingMenuItems from "../menus/formatting";
+import getImageMenuItems from "../menus/image";
 import FloatingToolbar from "./FloatingToolbar";
 import LinkEditor, { SearchResult } from "./LinkEditor";
 import Menu from "./Menu";
@@ -37,6 +38,9 @@ function isActive(props) {
 
   if (!selection) return false;
   if (selection.empty) return false;
+  if (selection.node && selection.node.type.name === "image") {
+    return true;
+  }
   if (selection.node) return false;
 
   const slice = selection.content();
@@ -113,6 +117,8 @@ export default class SelectionToolbar extends React.Component<Props> {
     const isTableSelection = colIndex !== undefined && rowIndex !== undefined;
     const link = isMarkActive(state.schema.marks.link)(state);
     const range = getMarkRange(selection.$from, state.schema.marks.link);
+    const isImageSelection =
+      selection.node && selection.node.type.name === "image";
 
     let items: MenuItem[] = [];
     if (isTableSelection) {
@@ -121,6 +127,8 @@ export default class SelectionToolbar extends React.Component<Props> {
       items = getTableColMenuItems(state, colIndex, dictionary);
     } else if (rowIndex !== undefined) {
       items = getTableRowMenuItems(state, rowIndex, dictionary);
+    } else if (isImageSelection) {
+      items = getImageMenuItems(dictionary);
     } else {
       items = getFormattingMenuItems(state, isTemplate, dictionary);
     }
