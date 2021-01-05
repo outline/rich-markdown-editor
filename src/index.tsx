@@ -895,10 +895,23 @@ const StyledEditor = styled("div")<{
   }
 
   blockquote {
-    border-left: 3px solid ${props => props.theme.quote};
     margin: 0;
-    padding-left: 10px;
+    padding-left: 1em;
     font-style: italic;
+    overflow: hidden;
+    position: relative;
+
+    &:before {
+      content: "";
+      display: inline-block;
+      width: 3px;
+      border-radius: 1px;
+      position: absolute;
+      margin-left: -16px;
+      top: 0;
+      bottom: 0;
+      background: ${props => props.theme.quote};
+    }
   }
 
   b,
