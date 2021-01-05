@@ -674,25 +674,38 @@ const StyledEditor = styled("div")<{
     position: relative;
   }
 
-  img {
-    max-width: 100%;
-  }
-
   .image {
     text-align: center;
+    max-width: 100%;
 
     img {
       pointer-events: ${props => (props.readOnly ? "initial" : "none")};
+      display: inline-block;
+      max-width: 100%;
+      max-height: 75vh;
     }
   }
 
   .image.placeholder {
     position: relative;
     background: ${props => props.theme.background};
-
     img {
       opacity: 0.5;
     }
+  }
+
+  .image-right-50 {
+    float: right;
+    width: 50%;
+    margin-left: 2em;
+    margin-bottom: 1em;
+  }
+
+  .image-left-50 {
+    float: left;
+    width: 50%;
+    margin-right: 2em;
+    margin-bottom: 1em;
   }
 
   .ProseMirror-hideselection *::selection {
@@ -738,12 +751,13 @@ const StyledEditor = styled("div")<{
     cursor: default;
 
     &:not(.placeholder):before {
-      display: ${props => (props.readOnly ? "none" : "block")};
-      position: absolute;
+      display: ${props => (props.readOnly ? "none" : "inline")};
+      position: relative;
       font-family: ${props => props.theme.fontFamilyMono};
       color: ${props => props.theme.textSecondary};
       font-size: 13px;
-      left: -24px;
+      margin-right: -16px;
+      left: -20px;
     }
 
     &:hover {
@@ -774,19 +788,15 @@ const StyledEditor = styled("div")<{
 
   h1:not(.placeholder):before {
     content: "H1";
-    line-height: 3em;
   }
   h2:not(.placeholder):before {
     content: "H2";
-    line-height: 2.8em;
   }
   h3:not(.placeholder):before {
     content: "H3";
-    line-height: 2.3em;
   }
   h4:not(.placeholder):before {
     content: "H4";
-    line-height: 2.2em;
   }
   h5:not(.placeholder):before {
     content: "H5";
@@ -801,7 +811,7 @@ const StyledEditor = styled("div")<{
 
   .heading-anchor {
     opacity: 0;
-    display: ${props => (props.readOnly ? "block" : "none")};
+    display: ${props => (props.readOnly ? "inline" : "none")};
     color: ${props => props.theme.textSecondary};
     cursor: pointer;
     background: none;
@@ -809,7 +819,9 @@ const StyledEditor = styled("div")<{
     outline: none;
     padding: 2px 12px 2px 4px;
     margin: 0;
-    position: absolute;
+    position: relative;
+    margin-right: -30px;
+    left: -20px;
     transition: opacity 100ms ease-in-out;
     font-family: ${props => props.theme.fontFamilyMono};
     font-size: 22px;
@@ -883,10 +895,23 @@ const StyledEditor = styled("div")<{
   }
 
   blockquote {
-    border-left: 3px solid ${props => props.theme.quote};
     margin: 0;
-    padding-left: 10px;
+    padding-left: 1em;
     font-style: italic;
+    overflow: hidden;
+    position: relative;
+
+    &:before {
+      content: "";
+      display: inline-block;
+      width: 3px;
+      border-radius: 1px;
+      position: absolute;
+      margin-left: -16px;
+      top: 0;
+      bottom: 0;
+      background: ${props => props.theme.quote};
+    }
   }
 
   b,
@@ -908,7 +933,6 @@ const StyledEditor = styled("div")<{
   }
 
   p {
-    position: relative;
     margin: 0;
   }
 
@@ -923,7 +947,8 @@ const StyledEditor = styled("div")<{
   ul,
   ol {
     margin: 0 0.1em;
-    padding: 0 0 0 1em;
+    padding: 0 0 0 1.2em;
+    overflow: hidden;
 
     ul,
     ol {
@@ -1346,7 +1371,7 @@ const StyledEditor = styled("div")<{
   }
 
   .block-menu-trigger {
-    display: ${props => (props.readOnly ? "none" : "block")};
+    display: ${props => (props.readOnly ? "none" : "inline")};
     height: 1em;
     color: ${props => props.theme.textSecondary};
     background: none;
@@ -1359,8 +1384,8 @@ const StyledEditor = styled("div")<{
     outline: none;
     border: 0;
     line-height: 1;
-    margin-top: -6px;
-    left: -34px;
+    margin-top: -2px;
+    margin-left: -28px;
 
     &:hover,
     &:focus {
