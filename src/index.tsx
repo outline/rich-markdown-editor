@@ -677,6 +677,7 @@ const StyledEditor = styled("div")<{
   .image {
     text-align: center;
     max-width: 100%;
+
     img {
       pointer-events: ${props => (props.readOnly ? "initial" : "none")};
       display: inline-block;

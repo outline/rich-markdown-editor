@@ -373,6 +373,10 @@ const Caption = styled.p`
   resize: none;
   user-select: text;
 
+  &[contenteditable="true"] {
+    cursor: text;
+  }
+
   &:empty:before {
     color: ${props => props.theme.placeholder};
     content: "Write a caption";
