@@ -47,8 +47,15 @@ export default class Heading extends Node {
         button.className = "heading-anchor";
         button.addEventListener("click", this.handleCopyLink());
 
+        // A spacer is added to fix caret sizing challenges
+        const spacer = document.createElement("div");
+        spacer.innerText = ` `;
+        spacer.className = "heading-spacer";
+        spacer.contentEditable="false";
+
         return [
           `h${node.attrs.level + (this.options.offset || 0)}`,
+          spacer,
           button,
           ["span", 0],
         ];

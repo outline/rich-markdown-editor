@@ -749,17 +749,6 @@ const StyledEditor = styled("div")<{
     margin: 1em 0 0.5em;
     font-weight: 500;
     cursor: default;
-
-    &:not(.placeholder):before {
-      display: ${props => (props.readOnly ? "none" : "inline")};
-      position: relative;
-      font-family: ${props => props.theme.fontFamilyMono};
-      color: ${props => props.theme.textSecondary};
-      font-size: 13px;
-      margin-right: -16px;
-      left: -20px;
-    }
-
     &:hover {
       .heading-anchor {
         opacity: 1;
@@ -769,7 +758,6 @@ const StyledEditor = styled("div")<{
 
   .heading-name {
     color: ${props => props.theme.text};
-
     &:hover {
       text-decoration: none;
     }
@@ -786,27 +774,45 @@ const StyledEditor = styled("div")<{
     }
   }
 
-  h1:not(.placeholder):before {
-    content: "H1";
-  }
-  h2:not(.placeholder):before {
-    content: "H2";
-  }
-  h3:not(.placeholder):before {
-    content: "H3";
-  }
-  h4:not(.placeholder):before {
-    content: "H4";
-  }
-  h5:not(.placeholder):before {
-    content: "H5";
-  }
-  h6:not(.placeholder):before {
-    content: "H6";
-  }
-
   .with-emoji {
     margin-left: -1em;
+  }
+
+  .heading-spacer {
+    display: inline;
+    &:before {
+      display: ${props => (props.readOnly ? "none" : "inline")};
+      color: ${props => props.theme.textSecondary};
+      position: relative;
+      margin-right: -1.5em;
+      font-family: ${props => props.theme.fontFamilyMono};
+      font-size: 13px;
+      left: -1.7em;
+    }
+  }
+
+  h1:not(.placeholder) .heading-spacer:before {
+    content: "H1";
+  }
+
+  h2:not(.placeholder) .heading-spacer:before {
+    content: "H2";
+  }
+
+  h3:not(.placeholder) .heading-spacer:before {
+    content: "H3";
+  }
+
+  h4:not(.placeholder) .heading-spacer:before {
+    content: "H4";
+  }
+
+  h5:not(.placeholder) .heading-spacer:before {
+    content: "H5";
+  }
+
+  h6:not(.placeholder) .heading-spacer:before {
+    content: "H6";
   }
 
   .heading-anchor {
