@@ -51,7 +51,7 @@ export default class Heading extends Node {
         const spacer = document.createElement("div");
         spacer.innerText = ` `;
         spacer.className = "heading-spacer";
-        spacer.contentEditable="false";
+        spacer.contentEditable = "false";
 
         return [
           `h${node.attrs.level + (this.options.offset || 0)}`,
