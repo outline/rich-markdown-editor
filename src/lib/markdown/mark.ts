@@ -88,28 +88,35 @@ export default function(options: {
             continue;
           }
         }
-        endDelim = delimiters[delimiters[i].end];
+        // sometimes get error for endDelim.token.token
+        try {
+          endDelim = delimiters[delimiters[i].end];
 
-        token = state.tokens[startDelim.token];
-        token.type = `${options.mark}_open`;
-        token.tag = "span";
-        token.nesting = 1;
-        token.markup = options.delim;
-        token.content = "";
-        token = state.tokens[endDelim.token];
-        token.type = `${options.mark}_close`;
-        token.tag = "span";
-        token.nesting = -1;
-        token.markup = options.delimEnd;
-        token.content = "";
+          token = state.tokens[startDelim.token];
+          token.type = `${options.mark}_open`;
+          token.tag = "span";
+          token.nesting = 1;
+          token.markup = options.delim;
+          token.content = "";
 
-        if (
-          state.tokens[endDelim.token - 1].type === "text" &&
-          (state.tokens[endDelim.token - 1].content === options.delim[0] ||
-            (options.delimEnd &&
-              state.tokens[endDelim.token - 1].content === options.delimEnd[0]))
-        ) {
-          loneMarkers.push(endDelim.token - 1);
+          token = state.tokens[endDelim.token];
+          token.type = `${options.mark}_close`;
+          token.tag = "span";
+          token.nesting = -1;
+          token.markup = options.delimEnd;
+          token.content = "";
+
+          if (
+            state.tokens[endDelim.token - 1].type === "text" &&
+            (state.tokens[endDelim.token - 1].content === options.delim[0] ||
+              (options.delimEnd &&
+                state.tokens[endDelim.token - 1].content === options.delimEnd[0]))
+          ) {
+            loneMarkers.push(endDelim.token - 1);
+          }
+        } catch (e) {
+          console.warn("Error with token mark", e);
+          continue;
         }
       }
       // console.log(`loneMarkers`, loneMarkers);
