@@ -701,13 +701,6 @@ const StyledEditor = styled("div")<{
     margin-bottom: 1em;
   }
 
-  .image-left-50 {
-    float: left;
-    width: 50%;
-    margin-right: 2em;
-    margin-bottom: 1em;
-  }
-
   .ProseMirror-hideselection *::selection {
     background: transparent;
   }
@@ -749,32 +742,26 @@ const StyledEditor = styled("div")<{
     margin: 1em 0 0.5em;
     font-weight: 500;
     cursor: default;
-
     &:not(.placeholder):before {
-      display: ${props => (props.readOnly ? "none" : "inline")};
-      position: relative;
+      display: ${props => (props.readOnly ? "none" : "block")};
+      position: absolute;
       font-family: ${props => props.theme.fontFamilyMono};
       color: ${props => props.theme.textSecondary};
       font-size: 13px;
-      margin-right: -16px;
-      left: -20px;
+      left: -24px;
     }
-
     &:hover {
       .heading-anchor {
         opacity: 1;
       }
     }
   }
-
   .heading-name {
     color: ${props => props.theme.text};
-
     &:hover {
       text-decoration: none;
     }
   }
-
   a:first-child {
     h1,
     h2,
@@ -785,18 +772,21 @@ const StyledEditor = styled("div")<{
       margin-top: 0;
     }
   }
-
   h1:not(.placeholder):before {
     content: "H1";
+    line-height: 3em;
   }
   h2:not(.placeholder):before {
     content: "H2";
+    line-height: 2.8em;
   }
   h3:not(.placeholder):before {
     content: "H3";
+    line-height: 2.3em;
   }
   h4:not(.placeholder):before {
     content: "H4";
+    line-height: 2.2em;
   }
   h5:not(.placeholder):before {
     content: "H5";
@@ -804,14 +794,12 @@ const StyledEditor = styled("div")<{
   h6:not(.placeholder):before {
     content: "H6";
   }
-
   .with-emoji {
     margin-left: -1em;
   }
-
   .heading-anchor {
     opacity: 0;
-    display: ${props => (props.readOnly ? "inline" : "none")};
+    display: ${props => (props.readOnly ? "block" : "none")};
     color: ${props => props.theme.textSecondary};
     cursor: pointer;
     background: none;
@@ -819,17 +807,23 @@ const StyledEditor = styled("div")<{
     outline: none;
     padding: 2px 12px 2px 4px;
     margin: 0;
-    position: relative;
-    margin-right: -30px;
-    left: -20px;
+    position: absolute;
     transition: opacity 100ms ease-in-out;
     font-family: ${props => props.theme.fontFamilyMono};
     font-size: 22px;
     left: -1.3em;
-
     &:focus,
     &:hover {
       color: ${props => props.theme.text};
+    }
+  }
+  .placeholder {
+    &:before {
+      display: block;
+      content: ${props => (props.readOnly ? "" : "attr(data-empty-text)")};
+      pointer-events: none;
+      height: 0;
+      color: ${props => props.theme.placeholder};
     }
   }
 

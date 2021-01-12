@@ -83,7 +83,7 @@ const uploadPlugin = options =>
     },
   });
 
-const IMAGE_CLASSES = ["right-50", "left-50"];
+const IMAGE_CLASSES = ["right-50"];
 const getLayoutAndTitle = tokenTitle => {
   if (!tokenTitle) return {};
   if (IMAGE_CLASSES.includes(tokenTitle)) {
@@ -292,16 +292,6 @@ export default class Image extends Node {
           ...state.selection.node.attrs,
           title: null,
           layoutClass: "right-50",
-        };
-        const { selection } = state;
-        dispatch(state.tr.setNodeMarkup(selection.$from.pos, undefined, attrs));
-        return true;
-      },
-      alignLeft: () => (state, dispatch) => {
-        const attrs = {
-          ...state.selection.node.attrs,
-          title: null,
-          layoutClass: "left-50",
         };
         const { selection } = state;
         dispatch(state.tr.setNodeMarkup(selection.$from.pos, undefined, attrs));

@@ -1,6 +1,5 @@
 import {
   TrashIcon,
-  AlignImageLeftIcon,
   AlignImageRightIcon,
   AlignImageCenterIcon,
 } from "outline-icons";
@@ -14,30 +13,18 @@ export default function imageMenuItems(
   dictionary: typeof baseDictionary
 ): MenuItem[] {
   const { schema } = state;
-  const isLeftAligned = isNodeActive(schema.nodes.image, {
-    layoutClass: "left-50",
-  });
   const isRightAligned = isNodeActive(schema.nodes.image, {
     layoutClass: "right-50",
   });
 
   return [
     {
-      name: "alignLeft",
-      tooltip: dictionary.alignLeft,
-      icon: AlignImageLeftIcon,
-      visible: true,
-      active: isLeftAligned,
-    },
-    {
       name: "alignCenter",
       tooltip: dictionary.alignCenter,
       icon: AlignImageCenterIcon,
       visible: true,
       active: state =>
-        isNodeActive(schema.nodes.image)(state) &&
-        !isLeftAligned(state) &&
-        !isRightAligned(state),
+        isNodeActive(schema.nodes.image)(state) && !isRightAligned(state),
     },
     {
       name: "alignRight",
