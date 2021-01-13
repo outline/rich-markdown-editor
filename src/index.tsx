@@ -677,6 +677,7 @@ const StyledEditor = styled("div")<{
   .image {
     text-align: center;
     max-width: 100%;
+    clear: both;
 
     img {
       pointer-events: ${props => (props.readOnly ? "initial" : "none")};
@@ -699,6 +700,7 @@ const StyledEditor = styled("div")<{
     width: 50%;
     margin-left: 2em;
     margin-bottom: 1em;
+    clear: initial;
   }
 
   .image-left-50 {
@@ -706,6 +708,7 @@ const StyledEditor = styled("div")<{
     width: 50%;
     margin-right: 2em;
     margin-bottom: 1em;
+    clear: initial;
   }
 
   .ProseMirror-hideselection *::selection {

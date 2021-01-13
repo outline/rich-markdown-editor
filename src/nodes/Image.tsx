@@ -255,7 +255,7 @@ export default class Image extends Node {
 
   toMarkdown(state, node) {
     let markdown =
-      "![" +
+      " ![" +
       state.esc((node.attrs.alt || "").replace("\n", "") || "") +
       "](" +
       state.esc(node.attrs.src);
