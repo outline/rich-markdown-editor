@@ -86,7 +86,7 @@ function usePosition({ menuRef, isSelectingText, props }) {
     selection.node && selection.node.type.name === "image";
   // Images need their own positioning to get the toolbar in the center
   if (isImageSelection) {
-    const { node: element } = view.domAtPos(selection.from);
+    const element = view.nodeDOM(selection.from);
 
     // Images are wrapped which impacts positioning - need to traverse through
     // p > span > div.image

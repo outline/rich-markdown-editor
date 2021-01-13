@@ -677,6 +677,7 @@ const StyledEditor = styled("div")<{
   .image {
     text-align: center;
     max-width: 100%;
+    clear: both;
 
     img {
       pointer-events: ${props => (props.readOnly ? "initial" : "none")};
@@ -699,6 +700,7 @@ const StyledEditor = styled("div")<{
     width: 50%;
     margin-left: 2em;
     margin-bottom: 1em;
+    clear: initial;
   }
 
   .image-left-50 {
@@ -706,6 +708,7 @@ const StyledEditor = styled("div")<{
     width: 50%;
     margin-right: 2em;
     margin-bottom: 1em;
+    clear: initial;
   }
 
   .ProseMirror-hideselection *::selection {
@@ -751,13 +754,13 @@ const StyledEditor = styled("div")<{
     cursor: default;
 
     &:not(.placeholder):before {
-      display: ${props => (props.readOnly ? "none" : "inline")};
-      position: relative;
+      display: ${props => (props.readOnly ? "none" : "inline-block")};
       font-family: ${props => props.theme.fontFamilyMono};
       color: ${props => props.theme.textSecondary};
       font-size: 13px;
-      margin-right: -16px;
-      left: -20px;
+      line-height: 0;
+      margin-left: -24px;
+      width: 24px;
     }
 
     &:hover {
@@ -766,7 +769,12 @@ const StyledEditor = styled("div")<{
       }
     }
   }
-
+  .heading-content {
+    &:before {
+      content: "​";
+      display: inline;
+    }
+  }
   .heading-name {
     color: ${props => props.theme.text};
 
@@ -811,7 +819,7 @@ const StyledEditor = styled("div")<{
 
   .heading-anchor {
     opacity: 0;
-    display: ${props => (props.readOnly ? "inline" : "none")};
+    display: ${props => (props.readOnly ? "inline-block" : "none")};
     color: ${props => props.theme.textSecondary};
     cursor: pointer;
     background: none;
@@ -819,13 +827,12 @@ const StyledEditor = styled("div")<{
     outline: none;
     padding: 2px 12px 2px 4px;
     margin: 0;
-    position: relative;
-    margin-right: -30px;
-    left: -20px;
     transition: opacity 100ms ease-in-out;
     font-family: ${props => props.theme.fontFamilyMono};
     font-size: 22px;
-    left: -1.3em;
+    line-height: 0;
+    margin-left: -24px;
+    width: 24px;
 
     &:focus,
     &:hover {
