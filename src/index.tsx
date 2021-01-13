@@ -1191,6 +1191,11 @@ const StyledEditor = styled("div")<{
     border-collapse: collapse;
     border-radius: 4px;
     margin-top: 1em;
+    box-sizing: border-box;
+
+    * {
+      box-sizing: border-box;
+    }
 
     tr {
       position: relative;
