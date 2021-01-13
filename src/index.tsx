@@ -754,13 +754,13 @@ const StyledEditor = styled("div")<{
     cursor: default;
 
     &:not(.placeholder):before {
-      display: ${props => (props.readOnly ? "none" : "inline-block")};
+      display: ${props => (props.readOnly ? "none" : "inline")};
+      position: relative;
       font-family: ${props => props.theme.fontFamilyMono};
       color: ${props => props.theme.textSecondary};
       font-size: 13px;
-      line-height: 0;
-      margin-left: -24px;
-      width: 24px;
+      margin-right: -16px;
+      left: -20px;
     }
 
     &:hover {
@@ -769,12 +769,7 @@ const StyledEditor = styled("div")<{
       }
     }
   }
-  .heading-content {
-    &:before {
-      content: "​";
-      display: inline;
-    }
-  }
+
   .heading-name {
     color: ${props => props.theme.text};
 
@@ -819,7 +814,7 @@ const StyledEditor = styled("div")<{
 
   .heading-anchor {
     opacity: 0;
-    display: ${props => (props.readOnly ? "inline-block" : "none")};
+    display: ${props => (props.readOnly ? "inline" : "none")};
     color: ${props => props.theme.textSecondary};
     cursor: pointer;
     background: none;
@@ -827,12 +822,13 @@ const StyledEditor = styled("div")<{
     outline: none;
     padding: 2px 12px 2px 4px;
     margin: 0;
+    position: relative;
+    margin-right: -30px;
+    left: -20px;
     transition: opacity 100ms ease-in-out;
     font-family: ${props => props.theme.fontFamilyMono};
     font-size: 22px;
-    line-height: 0;
-    margin-left: -24px;
-    width: 24px;
+    left: -1.3em;
 
     &:focus,
     &:hover {
