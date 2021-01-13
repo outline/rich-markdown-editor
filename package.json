@@ -11,6 +11,7 @@
     "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet",
     "start": "webpack-serve --config example/webpack.config.js",
     "build": "tsc",
+    "watch": "watch 'yarn build' ./src",
     "prepublish": "yarn build"
   },
   "serve": {
@@ -85,6 +86,7 @@
     "source-map-loader": "^0.2.4",
     "styled-components": "^5.2.1",
     "ts-loader": "^6.2.1",
+    "watch": "^1.0.2",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.2.3",
     "webpack-serve": "^3.2.0"
