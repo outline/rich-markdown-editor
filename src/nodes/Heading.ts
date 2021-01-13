@@ -50,7 +50,7 @@ export default class Heading extends Node {
         return [
           `h${node.attrs.level + (this.options.offset || 0)}`,
           button,
-          ["span", 0],
+          ["span", { class: "heading-content" }, 0],
         ];
       },
     };
