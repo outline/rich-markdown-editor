@@ -743,6 +743,15 @@ const StyledEditor = styled("div")<{
     pointer-events: none;
   }
 
+  .ProseMirror[contenteditable="false"] {
+    .caption {
+      pointer-events: none;
+    }
+    .caption:empty {
+      visibility: hidden;
+    }
+  }
+
   h1,
   h2,
   h3,

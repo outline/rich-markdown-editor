@@ -213,7 +213,7 @@ export default class Image extends Node {
   };
 
   component = props => {
-    const { theme, isEditable, isSelected } = props;
+    const { theme, isSelected } = props;
     const { alt, src, title, layoutClass } = props.node.attrs;
     const className = layoutClass ? `image image-${layoutClass}` : "image";
 
@@ -221,7 +221,7 @@ export default class Image extends Node {
       <div contentEditable={false} className={className}>
         <ImageWrapper
           className={isSelected ? "ProseMirror-selectednode" : ""}
-          onClick={isEditable ? this.handleSelect(props) : undefined}
+          onClick={this.handleSelect(props)}
         >
           <ImageZoom
             image={{
@@ -237,18 +237,16 @@ export default class Image extends Node {
             shouldRespectMaxDimension
           />
         </ImageWrapper>
-
-        {(isEditable || alt) && (
-          <Caption
-            onKeyDown={this.handleKeyDown(props)}
-            onBlur={this.handleBlur(props)}
-            tabIndex={-1}
-            contentEditable={isEditable}
-            suppressContentEditableWarning
-          >
-            {alt}
-          </Caption>
-        )}
+        <Caption
+          onKeyDown={this.handleKeyDown(props)}
+          onBlur={this.handleBlur(props)}
+          className="caption"
+          tabIndex={-1}
+          contentEditable
+          suppressContentEditableWarning
+        >
+          {alt}
+        </Caption>
       </div>
     );
   };
@@ -372,10 +370,7 @@ const Caption = styled.p`
   background: none;
   resize: none;
   user-select: text;
-
-  &[contenteditable="true"] {
-    cursor: text;
-  }
+  cursor: text;
 
   &:empty:before {
     color: ${props => props.theme.placeholder};
