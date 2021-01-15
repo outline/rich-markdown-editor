@@ -8,6 +8,7 @@ import {
   LinkIcon,
   StrikethroughIcon,
   InputIcon,
+  HighlightIcon,
 } from "outline-icons";
 import { isInTable } from "prosemirror-tables";
 import { EditorState } from "prosemirror-state";
@@ -15,7 +16,6 @@ import isInList from "../queries/isInList";
 import isMarkActive from "../queries/isMarkActive";
 import isNodeActive from "../queries/isNodeActive";
 import { MenuItem } from "../types";
-import { AddCardIcon } from "../components/LinkEditor";
 import baseDictionary from "../dictionary";
 
 export default function formattingMenuItems(
@@ -67,6 +67,13 @@ export default function formattingMenuItems(
       tooltip: dictionary.strikethrough,
       icon: StrikethroughIcon,
       active: isMarkActive(schema.marks.strikethrough),
+    },
+    {
+      name: "mark",
+      tooltip: dictionary.mark,
+      icon: HighlightIcon,
+      active: isMarkActive(schema.marks.mark),
+      visible: !isTemplate,
     },
     {
       name: "code_inline",

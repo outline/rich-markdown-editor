@@ -3,6 +3,7 @@ import bash from "refractor/lang/bash";
 import css from "refractor/lang/css";
 import clike from "refractor/lang/clike";
 import csharp from "refractor/lang/csharp";
+import go from "refractor/lang/go";
 import java from "refractor/lang/java";
 import javascript from "refractor/lang/javascript";
 import json from "refractor/lang/json";
@@ -26,6 +27,7 @@ import { ToastType } from "../types";
   css,
   clike,
   csharp,
+  go,
   java,
   javascript,
   json,

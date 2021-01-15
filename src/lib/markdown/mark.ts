@@ -82,7 +82,7 @@ export default function(options: {
 
         if (startDelim.end === -1) {
           // HACK TO MAKE IT WORK WITH {{ }}, NOT SURE WHY IT WORKS LIKE THIS (it would continue when it shouldn't, hence the additional check)
-          if (startDelim.token !== 3) {
+          if (options.delimEnd !== options.delim && startDelim.token !== 3) {
             startDelim.end = 1;
           } else {
             continue;
@@ -90,7 +90,7 @@ export default function(options: {
         }
         // sometimes get error for endDelim.token.token
         try {
-          endDelim = delimiters[delimiters[i].end];
+          endDelim = options.delimEnd === options.delim ? delimiters[startDelim.end] : delimiters[delimiters[i].end];
 
           token = state.tokens[startDelim.token];
           token.type = `${options.mark}_open`;
@@ -119,7 +119,6 @@ export default function(options: {
           continue;
         }
       }
-      // console.log(`loneMarkers`, loneMarkers);
       // If a marker sequence has an odd number of characters, it's split
       // like this: `~~~~~` -> `~` + `~~` + `~~`, leaving one marker at the
       // start of the sequence.
