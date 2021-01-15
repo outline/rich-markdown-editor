@@ -79,7 +79,8 @@ export default function(options: {
         }
         if (startDelim.end === -1) {
           const hackConditionForCurlyBrackets = startDelim.token !== 3;
-          const hackConditionForHighlightCloze = startDelim.token === 3;
+          const hackConditionForHighlightCloze = startDelim.token === 3 || startDelim.token === 2;
+          console.log(startDelim);
           // HACK TO MAKE IT WORK WITH {{ }}, NOT SURE WHY IT WORKS LIKE THIS (it would continue when it shouldn't, hence the additional check)
           if (options.delimEnd === options.delim ? hackConditionForHighlightCloze : hackConditionForCurlyBrackets) {
             startDelim.end = 1;
