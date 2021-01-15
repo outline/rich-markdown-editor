@@ -28,7 +28,7 @@ export const base = {
   templatePlaceholder: "#f03",
   textSecondary: "#4E5C6E",
   textLight: colors.white,
-  textHighlight: "#fff200",
+  textHighlight: "#abff32",
   selected: colors.primary,
   codeComment: "#6a737d",
   codePunctuation: "#5e6687",
