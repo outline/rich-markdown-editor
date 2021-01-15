@@ -47,7 +47,6 @@ export default function(options: {
         if (!scanned.can_open && !scanned.can_close) {
           continue;
         }
-
         state.delimiters.push({
           marker,
           length: 0, // disable "rule of 3" length checks meant for emphasis
@@ -69,7 +68,6 @@ export default function(options: {
       let i, j, startDelim, endDelim, token;
       const loneMarkers: number[] = [],
         max = delimiters.length;
-
       for (i = 0; i < max; i++) {
         startDelim = delimiters[i];
 
@@ -79,10 +77,11 @@ export default function(options: {
         ) {
           continue;
         }
-
         if (startDelim.end === -1) {
+          const hackConditionForCurlyBrackets = startDelim.token !== 3;
+          const hackConditionForHighlightCloze = startDelim.token === 3;
           // HACK TO MAKE IT WORK WITH {{ }}, NOT SURE WHY IT WORKS LIKE THIS (it would continue when it shouldn't, hence the additional check)
-          if (options.delimEnd !== options.delim && startDelim.token !== 3) {
+          if (options.delimEnd === options.delim ? hackConditionForHighlightCloze : hackConditionForCurlyBrackets) {
             startDelim.end = 1;
           } else {
             continue;
