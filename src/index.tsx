@@ -964,7 +964,6 @@ const StyledEditor = styled("div")<{
   ol {
     margin: 0 0.1em;
     padding: 0 0 0 1.2em;
-    overflow: hidden;
 
     ul,
     ol {
