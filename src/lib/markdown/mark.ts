@@ -80,9 +80,13 @@ export default function(options: {
         if (startDelim.end === -1) {
           const hackConditionForCurlyBrackets = startDelim.token !== 3;
           // maybe simplifies to: not equal to 4/2?
-          const hackConditionForHighlightCloze = startDelim.token === 3 || startDelim.token === 2 || startDelim.token === 6 || startDelim.token === 8;
+          const hackConditionForHighlightCloze = startDelim.token !== 2 && startDelim.jump !== 1;
           // HACK TO MAKE IT WORK WITH {{ }}, NOT SURE WHY IT WORKS LIKE THIS (it would continue when it shouldn't, hence the additional check)
-          if (options.delimEnd === options.delim ? hackConditionForHighlightCloze : hackConditionForCurlyBrackets) {
+          if (
+            options.delimEnd === options.delim
+              ? hackConditionForHighlightCloze
+              : hackConditionForCurlyBrackets
+          ) {
             startDelim.end = 1;
           } else {
             continue;
@@ -90,7 +94,10 @@ export default function(options: {
         }
         // sometimes get error for endDelim.token.token
         try {
-          endDelim = options.delimEnd === options.delim ? delimiters[startDelim.end] : delimiters[delimiters[i].end];
+          endDelim =
+            options.delimEnd === options.delim
+              ? delimiters[startDelim.end]
+              : delimiters[delimiters[i].end];
 
           token = state.tokens[startDelim.token];
           token.type = `${options.mark}_open`;
@@ -110,7 +117,8 @@ export default function(options: {
             state.tokens[endDelim.token - 1].type === "text" &&
             (state.tokens[endDelim.token - 1].content === options.delim[0] ||
               (options.delimEnd &&
-                state.tokens[endDelim.token - 1].content === options.delimEnd[0]))
+                state.tokens[endDelim.token - 1].content ===
+                  options.delimEnd[0]))
           ) {
             loneMarkers.push(endDelim.token - 1);
           }
