@@ -78,7 +78,6 @@ export default function(options: {
           continue;
         }
         if (startDelim.end === -1) {
-          console.log(`sd`, startDelim);
           const hackConditionForCurlyBrackets = startDelim.token !== 3;
           // maybe simplifies to: not equal to 4/2?
           const hackConditionForHighlightCloze = startDelim.token !== 2 && !(startDelim.jump % 2);
@@ -88,10 +87,8 @@ export default function(options: {
               ? hackConditionForHighlightCloze
               : hackConditionForCurlyBrackets
           ) {
-            console.log(`set`);
             startDelim.end = 1;
           } else {
-            console.log(`cont`);
             continue;
           }
         }
