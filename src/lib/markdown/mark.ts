@@ -78,17 +78,20 @@ export default function(options: {
           continue;
         }
         if (startDelim.end === -1) {
+          console.log(`sd`, startDelim);
           const hackConditionForCurlyBrackets = startDelim.token !== 3;
           // maybe simplifies to: not equal to 4/2?
-          const hackConditionForHighlightCloze = startDelim.token !== 2 && startDelim.jump !== 1;
+          const hackConditionForHighlightCloze = startDelim.token !== 2 && !(startDelim.jump % 2);
           // HACK TO MAKE IT WORK WITH {{ }}, NOT SURE WHY IT WORKS LIKE THIS (it would continue when it shouldn't, hence the additional check)
           if (
             options.delimEnd === options.delim
               ? hackConditionForHighlightCloze
               : hackConditionForCurlyBrackets
           ) {
+            console.log(`set`);
             startDelim.end = 1;
           } else {
+            console.log(`cont`);
             continue;
           }
         }
