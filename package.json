@@ -9,8 +9,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet",
-    "start": "webpack-serve --config example/webpack.config.js",
+    "start": "webpack-serve --config example/webpack.config.js --port 9000",
     "build": "tsc",
+    "watch": "yarn tsc-watch",
     "prepublish": "yarn build"
   },
   "serve": {
@@ -85,6 +86,7 @@
     "source-map-loader": "^0.2.4",
     "styled-components": "^5.2.1",
     "ts-loader": "^6.2.1",
+    "tsc-watch": "^4.2.9",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.2.3",
     "webpack-serve": "^3.2.0"
