@@ -1025,8 +1025,12 @@ const StyledEditor = styled("div")<{
 
   mark {
     border-radius: 1px;
-    color: ${props => props.theme.black};
+    color: ${props => props.theme.textHighlightForeground};
     background: ${props => props.theme.textHighlight};
+
+    a {
+      color: ${props => props.theme.textHighlightForeground};
+    }
   }
 
   .code-block,
