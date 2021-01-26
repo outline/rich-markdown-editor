@@ -11,8 +11,8 @@
     "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet",
     "start": "webpack-serve --config example/webpack.config.js --port 9000",
     "build": "tsc",
-    "watch": "yarn tsc-watch",
-    "prepublish": "yarn build"
+    "prepublish": "yarn build",
+    "watch": "yarn tsc-watch"
   },
   "serve": {
     "open": true,
