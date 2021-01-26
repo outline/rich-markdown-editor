@@ -69,7 +69,7 @@ import SmartText from "./plugins/SmartText";
 import TrailingNode from "./plugins/TrailingNode";
 import MarkdownPaste from "./plugins/MarkdownPaste";
 
-export { schema, parser, serializer } from "./server";
+export { schema, parser, serializer, renderToHtml } from "./server";
 
 export { default as Extension } from "./lib/Extension";
 

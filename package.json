@@ -7,7 +7,7 @@
   "license": "BSD-3-Clause",
   "funding": "https://github.com/sponsors/outline",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet",
     "start": "webpack-serve --config example/webpack.config.js",
     "build": "tsc",
@@ -51,6 +51,10 @@
     "styled-components": "^5.0.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "@babel/preset-typescript": "^7.12.7",
+    "@types/jest": "^26.0.20",
     "@types/lodash": "^4.14.149",
     "@types/markdown-it": "^10.0.1",
     "@types/prosemirror-commands": "^1.0.1",
@@ -70,6 +74,7 @@
     "@types/styled-components": "^4.4.2",
     "@typescript-eslint/eslint-plugin": "^4.0.0",
     "@typescript-eslint/parser": "^4.0.0",
+    "babel-jest": "^26.6.3",
     "eslint": "^7.13.0",
     "eslint-config-prettier": "^6.15.0",
     "eslint-config-react-app": "^6.0.0",
@@ -79,6 +84,7 @@
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.0.8",
+    "jest": "^26.6.3",
     "prettier": "^1.19.1",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",

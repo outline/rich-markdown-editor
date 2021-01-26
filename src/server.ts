@@ -1,5 +1,6 @@
 import { Schema } from "prosemirror-model";
 import ExtensionManager from "./lib/ExtensionManager";
+import render from "./lib/renderToHtml";
 
 // nodes
 import Doc from "./nodes/Doc";
@@ -76,3 +77,5 @@ export const parser = extensions.parser({
 });
 
 export const serializer = extensions.serializer();
+
+export const renderToHtml = render;
