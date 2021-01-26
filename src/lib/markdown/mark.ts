@@ -78,20 +78,18 @@ export default function(options: {
           continue;
         }
         if (startDelim.end === -1) {
-          console.log(`sd`, startDelim);
-          const hackConditionForCurlyBrackets = startDelim.token !== 3;
-          // maybe simplifies to: not equal to 4/2?
-          const hackConditionForHighlightCloze = startDelim.token !== 2 && !(startDelim.jump % 2);
+          const hackConditionForCurlyBrackets = ![3].includes(startDelim.token);
+          // can get around this by surrounding with spaces
+          const hackConditionForHighlightCloze = false;
+          // startDelim.token !== 2 && !(startDelim.jump % 2);
           // HACK TO MAKE IT WORK WITH {{ }}, NOT SURE WHY IT WORKS LIKE THIS (it would continue when it shouldn't, hence the additional check)
           if (
             options.delimEnd === options.delim
               ? hackConditionForHighlightCloze
               : hackConditionForCurlyBrackets
           ) {
-            console.log(`set`);
             startDelim.end = 1;
           } else {
-            console.log(`cont`);
             continue;
           }
         }
@@ -117,11 +115,11 @@ export default function(options: {
           token.content = "";
 
           if (
-            state.tokens[endDelim.token - 1].type === "text" &&
-            (state.tokens[endDelim.token - 1].content === options.delim[0] ||
+            (state.tokens[endDelim.token - 1].type === "text" &&
+            state.tokens[endDelim.token - 1].content === options.delim[0]) ||
               (options.delimEnd &&
                 state.tokens[endDelim.token - 1].content ===
-                  options.delimEnd[0]))
+                  options.delimEnd[0])
           ) {
             loneMarkers.push(endDelim.token - 1);
           }
