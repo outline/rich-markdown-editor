@@ -31,7 +31,7 @@ export default class Strikethrough extends Mark {
   }
 
   inputRules({ type }) {
-    return [markInputRule(/~([^~]+)~$/, type)];
+    return [markInputRule(/~([^~\S]+)~$/, type)];
   }
 
   get toMarkdown() {

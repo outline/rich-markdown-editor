@@ -19,7 +19,7 @@ export default class Bold extends Mark {
   }
 
   inputRules({ type }) {
-    return [markInputRule(/(?:\*\*)([^*]+)(?:\*\*)$/, type)];
+    return [markInputRule(/(?:\*\*)([^*\S]+)(?:\*\*)$/, type)];
   }
 
   keys({ type }) {

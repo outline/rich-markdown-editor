@@ -12,7 +12,7 @@ export default class Italic extends Mark {
       parseDOM: [
         { tag: "i" },
         { tag: "em" },
-        { style: "font-style", getAttrs: value => value === "italic" },
+        { style: "font-style", getAttrs: (value) => value === "italic" },
       ],
       toDOM: () => ["em"],
     };
@@ -20,8 +20,8 @@ export default class Italic extends Mark {
 
   inputRules({ type }) {
     return [
-      markInputRule(/(?:^|[^_])(_([^_]+)_)$/, type),
-      markInputRule(/(?:^|[^*])(\*([^*]+)\*)$/, type),
+      markInputRule(/(?:^|[^_\S])(_([^_]+)_)$/, type),
+      markInputRule(/(?:^|[^*\S])(\*([^*]+)\*)$/, type),
     ];
   }
 

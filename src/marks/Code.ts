@@ -37,7 +37,7 @@ export default class Code extends Mark {
   }
 
   inputRules({ type }) {
-    return [markInputRule(/(?:^|[^`])(`([^`]+)`)$/, type)];
+    return [markInputRule(/(?:^|[^`\S])(`([^`]+)`)$/, type)];
   }
 
   keys({ type }) {
