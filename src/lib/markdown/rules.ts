@@ -15,7 +15,7 @@ export default function rules({ embeds }) {
     .use(embedsPlugin(embeds))
     .use(breakPlugin)
     .use(checkboxPlugin)
-    .use(markPlugin({ delim: "==", mark: "mark" }))
+    .use(markPlugin({ delim: "==", mark: "highlight" }))
     .use(markPlugin({ delim: "!!", mark: "placeholder" }))
     .use(underlinesPlugin)
     .use(tablesPlugin)

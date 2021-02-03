@@ -79,6 +79,7 @@ export default function(options: { delim: string; mark: string }) {
         token = state.tokens[startDelim.token];
         token.type = `${options.mark}_open`;
         token.tag = "span";
+        token.attrs = [["class", options.mark]];
         token.nesting = 1;
         token.markup = options.delim;
         token.content = "";

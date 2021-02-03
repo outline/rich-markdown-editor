@@ -45,7 +45,7 @@ exports[`renders headings 1`] = `
 <h4>Heading 4</h4>"
 `;
 
-exports[`renders highlight marks 1`] = `"<p>this is <span>highlighted</span> text</p>"`;
+exports[`renders highlight marks 1`] = `"<p>this is <span class=\\"highlight\\">highlighted</span> text</p>"`;
 
 exports[`renders horizontal rule 1`] = `"<hr>"`;
 
@@ -110,7 +110,7 @@ exports[`renders table 1`] = `
 </table>"
 `;
 
-exports[`renders template placeholder marks 1`] = `"<p>this is <span>a placeholder</span></p>"`;
+exports[`renders template placeholder marks 1`] = `"<p>this is <span class=\\"placeholder\\">a placeholder</span></p>"`;
 
 exports[`renders tip notice 1`] = `
 "<div class=\\"notice\\">

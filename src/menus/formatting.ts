@@ -59,10 +59,10 @@ export default function formattingMenuItems(
       active: isMarkActive(schema.marks.strikethrough),
     },
     {
-      name: "mark",
+      name: "highlight",
       tooltip: dictionary.mark,
       icon: HighlightIcon,
-      active: isMarkActive(schema.marks.mark),
+      active: isMarkActive(schema.marks.highlight),
       visible: !isTemplate,
     },
     {
