@@ -285,6 +285,8 @@ yarn install
 
 When running in development [webpack-serve](https://github.com/webpack-contrib/webpack-serve) is included to serve an example editor with hot reloading. After installing dependencies run `yarn start` to get going.
 
+When developing using `yarn link`, you can use `yarn watch` to continuously rebuild on change into `dist` as you make changes.
+
 ## License
 
 This project is [BSD licensed](/LICENSE).
