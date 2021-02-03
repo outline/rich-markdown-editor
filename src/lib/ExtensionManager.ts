@@ -60,7 +60,7 @@ export default class ExtensionManager {
   }
 
   parser({ schema }) {
-    const tokens = this.extensions
+    const tokens: Record<string, any> = this.extensions
       .filter(
         extension => extension.type === "mark" || extension.type === "node"
       )
@@ -73,6 +73,11 @@ export default class ExtensionManager {
           [extension.markdownToken || extension.name]: md,
         };
       }, {});
+
+    // checkbox is a special case as all the data we need is kept on the
+    // checkbox_item (list item), the checkbox token itself returned from
+    // markdown-it is purely for HTML presentation.
+    tokens.checkbox = { ignore: true, noCloseToken: true };
 
     return new MarkdownParser(
       schema,

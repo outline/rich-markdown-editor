@@ -55,6 +55,13 @@ export default function markdownItCheckbox(md: MarkdownIt): void {
             tokens[i].content = label;
             tokenChildren[0].content = label;
           }
+
+          const token = new Token("checkbox", "input", 0);
+          token.attrs = [["type", "checkbox"]];
+          if (checked === true) {
+            token.attrs.push(["checked", "true"]);
+          }
+          tokenChildren.unshift(token);
         }
 
         // open list item and ensure checked state is transferred
