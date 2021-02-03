@@ -54,7 +54,7 @@ exports[`renders image 1`] = `"<p><img src=\\"https://lorempixel.com/200/200\\" 
 exports[`renders image with alignment 1`] = `"<p><img src=\\"https://lorempixel.com/200/200\\" alt=\\"caption\\" title=\\"left-40\\"></p>"`;
 
 exports[`renders info notice 1`] = `
-"<div class=\\"notice\\">
+"<div class=\\"notice notice-info\\">
 <p>content of notice</p>
 </div>"
 `;
@@ -113,7 +113,7 @@ exports[`renders table 1`] = `
 exports[`renders template placeholder marks 1`] = `"<p>this is <span class=\\"placeholder\\">a placeholder</span></p>"`;
 
 exports[`renders tip notice 1`] = `
-"<div class=\\"notice\\">
+"<div class=\\"notice notice-tip\\">
 <p>content of notice</p>
 </div>"
 `;
@@ -123,7 +123,7 @@ exports[`renders underline marks 1`] = `"<p>this is <underline>underlined</under
 exports[`renders underline marks 2`] = `"<p>this is <s>strikethrough</s> text</p>"`;
 
 exports[`renders warning notice 1`] = `
-"<div class=\\"notice\\">
+"<div class=\\"notice notice-warning\\">
 <p>content of notice</p>
 </div>"
 `;
