@@ -227,6 +227,7 @@ class Example extends React.Component {
           editorMinHeight="400px"
           fixedToolbar={true}
           readOnly={this.state.readOnly}
+          alwaysShowBlockPlus={true}
           readOnlyWriteCheckboxes
           value={this.state.value}
           enableTemplatePlaceholder={true}

@@ -123,7 +123,7 @@ export type Props = {
   getPlaceHolderLink: (title: string) => string;
   Avatar: typeof React.Component | React.FC<any>;
   childCards?: Array<string>;
-  blockPlaceholder?: string;
+  alwaysShowBlockPlus?: boolean;
   onHoverLink?: (event: MouseEvent) => boolean;
   onClickHashtag?: (tag: string, event: MouseEvent) => void;
   onKeyDown?: (event: React.KeyboardEvent<HTMLDivElement>) => void;
@@ -167,7 +167,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     embeds: [],
     extensions: [],
     tooltip: Tooltip,
-    blockPlaceholder: "Type '/' to insert block…",
+    alwaysShowBlockPlus: false,
     childCards: [],
     fixedToolbar: false,
     cardsInside: [],
@@ -330,7 +330,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           dictionary,
           onOpen: this.handleOpenBlockMenu,
           onClose: this.handleCloseBlockMenu,
-          placeholder: this.props.blockPlaceholder,
+          alwaysShowBlockPlus: this.props.alwaysShowBlockPlus
         }),
         new SearchTrigger({
           onOpen: () => {
