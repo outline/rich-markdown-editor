@@ -119,7 +119,7 @@ export type Props = {
   onTurnIntoCards?: (href: string) => Promise<string>;
   onSearchLink?: (term: string, setter: (resultObj: object) => void) => void;
   onClickLink: (href: string, event: MouseEvent) => void;
-  onClickTemplatePlaceholder?: (event: MouseEvent) => void;
+  enableTemplatePlaceholder?: boolean
   getPlaceHolderLink: (title: string) => string;
   Avatar: typeof React.Component | React.FC<any>;
   childCards?: Array<string>;
@@ -162,10 +162,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     onClickLink: href => {
       window.open(href, "_blank");
     },
-    onClickTemplatePlaceholder: () => {
-      // no default behavior
-    },
     getPlaceHolderLink: title => `/cards/${title}`,
+    enableTemplatePlaceholder: true,
     embeds: [],
     extensions: [],
     tooltip: Tooltip,
@@ -256,7 +254,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
   createExtensions() {
     const dictionary = this.dictionary(this.props.dictionary);
-
+    const templatePlaceHolderList = this.props.enableTemplatePlaceholder ? [new TemplatePlaceholder()] : [];
     // adding nodes here? Update schema.ts for serialization on the server
     return new ExtensionManager(
       [
@@ -309,7 +307,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new Code(),
         new Highlight(),
         new Italic(),
-        new TemplatePlaceholder(),
+        ...templatePlaceHolderList,
         new Underline(),
         new Link({
           onKeyboardShortcut: this.handleOpenLinkMenu,

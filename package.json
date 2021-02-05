@@ -1,7 +1,7 @@
 {
   "name": "traverse-markdown-editor",
   "description": "A rich text editor with Markdown shortcuts",
-  "version": "11.2.40",
+  "version": "11.2.42",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "license": "BSD-3-Clause",
@@ -48,7 +48,7 @@
     "react": "^16.0.0 || ^17.0.0",
     "react-dom": "^16.0.0 || ^17.0.0",
     "styled-components": "^5.0.0"
-    },
+  },
   "devDependencies": {
     "@types/lodash": "^4.14.149",
     "@types/markdown-it": "^10.0.1",

@@ -143,8 +143,6 @@ export default class Placeholder extends Mark {
                 state.schema.marks.placeholder
               );
               if (!range) return false;
-              this.editor.props.onClickTemplatePlaceholder &&
-                this.editor.props.onClickTemplatePlaceholder(event);
               event.stopPropagation();
               event.preventDefault();
               const startOfMark = state.doc.resolve(range.from);

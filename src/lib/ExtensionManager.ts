@@ -11,6 +11,7 @@ import Mark from "../marks/Mark";
 export default class ExtensionManager {
   extensions: Extension[];
   embeds;
+  enableTemplatePlaceholder;
 
   constructor(extensions: Extension[] = [], editor?: Editor) {
     if (editor) {
@@ -21,6 +22,7 @@ export default class ExtensionManager {
 
     this.extensions = extensions;
     this.embeds = editor ? editor.props.embeds : undefined;
+    this.enableTemplatePlaceholder = editor ? editor.props.enableTemplatePlaceholder : true;
   }
 
   get nodes() {
@@ -76,7 +78,7 @@ export default class ExtensionManager {
 
     return new MarkdownParser(
       schema,
-      makeRules({ embeds: this.embeds }),
+      makeRules({ embeds: this.embeds, enableTemplatePlaceholder: this.enableTemplatePlaceholder }),
       tokens
     );
   }

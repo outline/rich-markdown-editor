@@ -228,8 +228,8 @@ class Example extends React.Component {
           fixedToolbar={true}
           readOnly={this.state.readOnly}
           readOnlyWriteCheckboxes
-          onClickTemplatePlaceholder={e => console.log(e.target.textContent)}
           value={this.state.value}
+          enableTemplatePlaceholder={true}
           template={this.state.template}
           defaultValue={defaultValue}
           scrollTo={window.location.hash}
