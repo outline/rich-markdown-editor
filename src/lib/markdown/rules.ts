@@ -17,12 +17,14 @@ export default function rules({ embeds, enableTemplatePlaceholder }) {
     .use(breakPlugin)
     .use(checkboxPlugin);
   if (enableTemplatePlaceholder) {
-    mdIt = mdIt.use(markPlugin({ delim: "{{", delimEnd: "}}", mark: "placeholder" }))
+    mdIt = mdIt.use(
+      markPlugin({ delim: "{{", delimEnd: "}}", mark: "placeholder" })
+    );
   }
-  mdIt = mdIt.use(markPlugin({ delim: "==", mark: "mark" }))
+  mdIt = mdIt
+    .use(markPlugin({ delim: "==", mark: "mark" }))
     .use(underlinesPlugin)
     .use(tablesPlugin)
     .use(noticesPlugin);
   return mdIt;
-    
 }

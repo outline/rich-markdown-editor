@@ -116,10 +116,9 @@ export default function(options: {
 
           if (
             (state.tokens[endDelim.token - 1].type === "text" &&
-            state.tokens[endDelim.token - 1].content === options.delim[0]) ||
-              (options.delimEnd &&
-                state.tokens[endDelim.token - 1].content ===
-                  options.delimEnd[0])
+              state.tokens[endDelim.token - 1].content === options.delim[0]) ||
+            (options.delimEnd &&
+              state.tokens[endDelim.token - 1].content === options.delimEnd[0])
           ) {
             loneMarkers.push(endDelim.token - 1);
           }
