@@ -16,7 +16,11 @@ import { light as lightTheme, dark as darkTheme } from "./theme";
 import baseDictionary from "./dictionary";
 import Flex from "./components/Flex";
 import { EmbedDescriptor, ToastType } from "./types";
-import SelectionToolbar, { iOS, android, getText } from "./components/SelectionToolbar";
+import SelectionToolbar, {
+  iOS,
+  android,
+  getText,
+} from "./components/SelectionToolbar";
 import BlockMenu from "./components/BlockMenu";
 import LinkToolbar from "./components/LinkToolbar";
 import Tooltip from "./components/Tooltip";
@@ -119,7 +123,7 @@ export type Props = {
   onTurnIntoCards?: (href: string) => Promise<string>;
   onSearchLink?: (term: string, setter: (resultObj: object) => void) => void;
   onClickLink: (href: string, event: MouseEvent) => void;
-  enableTemplatePlaceholder?: boolean
+  enableTemplatePlaceholder?: boolean;
   getPlaceHolderLink: (title: string) => string;
   Avatar: typeof React.Component | React.FC<any>;
   childCards?: Array<string>;
@@ -254,7 +258,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
   createExtensions() {
     const dictionary = this.dictionary(this.props.dictionary);
-    const templatePlaceHolderList = this.props.enableTemplatePlaceholder ? [new TemplatePlaceholder()] : [];
+    const templatePlaceHolderList = this.props.enableTemplatePlaceholder
+      ? [new TemplatePlaceholder()]
+      : [];
     // adding nodes here? Update schema.ts for serialization on the server
     return new ExtensionManager(
       [
@@ -330,7 +336,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           dictionary,
           onOpen: this.handleOpenBlockMenu,
           onClose: this.handleCloseBlockMenu,
-          alwaysShowBlockPlus: this.props.alwaysShowBlockPlus
+          alwaysShowBlockPlus: this.props.alwaysShowBlockPlus,
         }),
         new SearchTrigger({
           onOpen: () => {
@@ -607,11 +613,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     const selectionContent = selection?.content();
     const selectedText = (selectionContent && getText(selectionContent)) || "";
     const parent = getParent(selection, this.view.state);
-    const surroundingText = parent
-      ? getText(parent)
-      : selectedText;
+    const surroundingText = parent ? getText(parent) : selectedText;
     return [selectedText, surroundingText];
-  }
+  };
 
   theme = () => {
     return this.props.theme || (this.props.dark ? darkTheme : lightTheme);
@@ -650,6 +654,19 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
               !event.currentTarget.contains(event.relatedTarget as any)
             ) {
               this.setState({ focused: false });
+            }
+            if (
+              !event.relatedTarget ||
+              (document.getElementById("block-menu-container") &&
+                !document.getElementById("block-menu-container") &&
+                (document.getElementById(
+                  "block-menu-container"
+                ) as any).contains(event.relatedTarget as any) &&
+                !(event.relatedTarget as any).className.includes(
+                  "block-menu-trigger"
+                ))
+            ) {
+              this.handleCloseBlockMenu();
             }
           }}
         >
