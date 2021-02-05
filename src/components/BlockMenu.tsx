@@ -343,11 +343,15 @@ class BlockMenu extends React.Component<Props, State> {
     const ref = this.menuRef.current;
     const offsetHeight = ref ? ref.offsetHeight : 0;
     const paragraph = view.domAtPos(selection.$from.pos);
+    let node = paragraph.node;
+    if (!node.getBoundingClientRect) {
+      node = paragraph.node.parentNode;
+    }
 
     if (
       !props.isActive ||
       !paragraph.node ||
-      !paragraph.node.getBoundingClientRect ||
+      !node.getBoundingClientRect ||
       SSR
     ) {
       return {
@@ -357,9 +361,8 @@ class BlockMenu extends React.Component<Props, State> {
         isAbove: false,
       };
     }
-
     const { left } = this.caretPosition;
-    const { top, bottom } = paragraph.node.getBoundingClientRect();
+    const { top, bottom } = node.getBoundingClientRect();
     const margin = 24;
 
     if (startPos.top - offsetHeight > margin) {
