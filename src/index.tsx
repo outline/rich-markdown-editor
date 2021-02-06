@@ -442,6 +442,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       },
     });
 
+    // Tell third-party libraries and screen-readers that this is an input
+    view.dom.setAttribute("role", "textbox");
+
     return view;
   }
 
