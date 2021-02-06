@@ -70,6 +70,10 @@ With `readOnlyWriteCheckboxes` set to `true` checkboxes can still be checked or 
 When set `true` together with `readOnly` set to `false`, focus at the end of the
 document automatically.
 
+#### `maxLength`
+
+When set enforces a maximum character length on the document, not including markdown syntax.
+
 #### `extensions`
 
 Allows additional [Prosemirror plugins](https://prosemirror.net/docs/ref/#state.Plugin_System) to be passed to the underlying Prosemirror instance.

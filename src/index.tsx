@@ -64,6 +64,7 @@ import Underline from "./marks/Underline";
 import BlockMenuTrigger from "./plugins/BlockMenuTrigger";
 import History from "./plugins/History";
 import Keys from "./plugins/Keys";
+import MaxLength from "./plugins/MaxLength";
 import Placeholder from "./plugins/Placeholder";
 import SmartText from "./plugins/SmartText";
 import TrailingNode from "./plugins/TrailingNode";
@@ -89,6 +90,7 @@ export type Props = {
   theme?: typeof theme;
   template?: boolean;
   headingsOffset?: number;
+  maxLength?: number;
   scrollTo?: string;
   handleDOMEvents?: {
     [name: string]: (view: EditorView, event: Event) => boolean;
@@ -298,6 +300,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         }),
         new Placeholder({
           placeholder: this.props.placeholder,
+        }),
+        new MaxLength({
+          maxLength: this.props.maxLength,
         }),
         ...this.props.extensions,
       ],
