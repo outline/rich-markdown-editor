@@ -139,6 +139,7 @@ export type Props = {
   editorMinHeight?: string;
   fixedToolbar?: boolean;
   cardsInside?: Array<string>;
+  limitBlockMenuItems?: Array<string>;
 };
 
 type State = {
@@ -174,7 +175,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     alwaysShowBlockPlus: false,
     childCards: [],
     fixedToolbar: false,
-    cardsInside: [],
+    cardsInside: []
   };
 
   state = {
@@ -731,6 +732,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   onImageUploadStop={this.props.onImageUploadStop}
                   onShowToast={this.props.onShowToast}
                   embeds={this.props.embeds}
+                  limitBlockMenuItems={this.props.limitBlockMenuItems}
                 />
               </React.Fragment>
             )}

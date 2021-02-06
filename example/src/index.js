@@ -297,6 +297,7 @@ class Example extends React.Component {
               );
             });
           }}
+          limitBlockMenuItems={["Big heading", "Image", "Link", "YouTube"]}
           Avatar={user => <span>{`Created by ${user.userName}`}</span>}
           embeds={[
             {

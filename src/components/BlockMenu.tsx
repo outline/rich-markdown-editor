@@ -28,6 +28,7 @@ type Props = {
   onLinkToolbarOpen: () => void;
   onClose: () => void;
   embeds: EmbedDescriptor[];
+  limitBlockMenuItems?: Array<string>;
 };
 
 type State = {
@@ -387,6 +388,7 @@ class BlockMenu extends React.Component<Props, State> {
     let items: (EmbedDescriptor | MenuItem)[] = getMenuItems(dictionary);
     const embedItems: EmbedDescriptor[] = [];
 
+    console.log(`embedItems`, embedItems);
     for (const embed of embeds) {
       if (embed.title && embed.icon) {
         embedItems.push({
@@ -403,8 +405,18 @@ class BlockMenu extends React.Component<Props, State> {
       items = items.concat(embedItems);
     }
 
+    console.log(`items`, items);
     const filtered = items.filter(item => {
       if (item.name === "separator") return true;
+
+      const { limitBlockMenuItems } = this.props;
+      if (
+        limitBlockMenuItems &&
+        item.title &&
+        !limitBlockMenuItems.includes(item.title)
+      ) {
+        return false;
+      }
 
       // If no image upload callback has been passed, filter the image block out
       if (!uploadImage && item.name === "image") return false;
