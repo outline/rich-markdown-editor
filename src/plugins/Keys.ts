@@ -1,9 +1,6 @@
 import { Plugin, Selection, AllSelection } from "prosemirror-state";
 import Extension from "../lib/Extension";
-
-const SSR = typeof window === "undefined";
-const isMac = !SSR && window.navigator.platform === "MacIntel";
-
+import isModKey from "../lib/isModKey";
 export default class Keys extends Extension {
   get name() {
     return "keys";
@@ -29,10 +26,8 @@ export default class Keys extends Extension {
               }
             }
 
-            const isModKey = isMac ? event.metaKey : event.ctrlKey;
-
             // All the following keys require mod to be down
-            if (!isModKey) {
+            if (!isModKey(event)) {
               return false;
             }
 
