@@ -96,7 +96,6 @@ class Example extends React.Component {
 
   handleChange = debounce(value => {
     const text = value();
-    console.log(text);
     localStorage.setItem("saved", text);
   }, 250);
 
@@ -185,6 +184,20 @@ class Example extends React.Component {
             // Delay to simulate time taken to upload
             return new Promise(resolve => {
               setTimeout(() => resolve("https://picsum.photos/600/600"), 1500);
+            });
+          }}
+          uploadFile={file => {
+            console.log("File upload triggered: ", file);
+
+            // Delay to simulate time taken to upload
+            return new Promise(resolve => {
+              setTimeout(
+                () =>
+                  resolve(
+                    "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+                  ),
+                1500
+              );
             });
           }}
           embeds={[
