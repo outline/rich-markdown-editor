@@ -96,6 +96,8 @@ export type Props = {
     [name: string]: (view: EditorView, event: Event) => boolean;
   };
   uploadImage?: (file: File) => Promise<string>;
+  onBlur?: () => void;
+  onFocus?: () => void;
   onSave?: ({ done: boolean }) => void;
   onCancel?: () => void;
   onChange: (value: () => string) => void;
@@ -115,6 +117,8 @@ export type Props = {
 };
 
 type State = {
+  isEditorFocused: boolean;
+  selectionMenuOpen: boolean;
   blockMenuOpen: boolean;
   linkMenuOpen: boolean;
   blockMenuSearch: string;
@@ -143,11 +147,14 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   state = {
+    isEditorFocused: false,
+    selectionMenuOpen: false,
     blockMenuOpen: false,
     linkMenuOpen: false,
     blockMenuSearch: "",
   };
 
+  isBlurred: boolean;
   extensions: ExtensionManager;
   element?: HTMLElement | null;
   view: EditorView;
@@ -201,6 +208,32 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     // is set to true
     if (prevProps.readOnly && !this.props.readOnly && this.props.autoFocus) {
       this.focusAtEnd();
+    }
+
+    if (
+      !this.isBlurred &&
+      !this.state.isEditorFocused &&
+      !this.state.blockMenuOpen &&
+      !this.state.linkMenuOpen &&
+      !this.state.selectionMenuOpen
+    ) {
+      this.isBlurred = true;
+      if (this.props.onBlur) {
+        this.props.onBlur();
+      }
+    }
+
+    if (
+      this.isBlurred &&
+      (this.state.isEditorFocused ||
+        this.state.blockMenuOpen ||
+        this.state.linkMenuOpen ||
+        this.state.selectionMenuOpen)
+    ) {
+      this.isBlurred = false;
+      if (this.props.onFocus) {
+        this.props.onFocus();
+      }
     }
   }
 
@@ -289,6 +322,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new TrailingNode(),
         new MarkdownPaste(),
         new Keys({
+          onBlur: this.handleEditorBlur,
+          onFocus: this.handleEditorFocus,
           onSave: this.handleSave,
           onSaveAndExit: this.handleSaveAndExit,
           onCancel: this.props.onCancel,
@@ -493,6 +528,22 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     }
   };
 
+  handleEditorBlur = () => {
+    this.setState({ isEditorFocused: false });
+  };
+
+  handleEditorFocus = () => {
+    this.setState({ isEditorFocused: true });
+  };
+
+  handleOpenSelectionMenu = () => {
+    this.setState({ selectionMenuOpen: true });
+  };
+
+  handleCloseSelectionMenu = () => {
+    this.setState({ selectionMenuOpen: false });
+  };
+
   handleOpenLinkMenu = () => {
     this.setState({ linkMenuOpen: true });
   };
@@ -612,6 +663,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   dictionary={dictionary}
                   commands={this.commands}
                   isTemplate={this.props.template === true}
+                  onOpen={this.handleOpenSelectionMenu}
+                  onClose={this.handleCloseSelectionMenu}
                   onSearchLink={this.props.onSearchLink}
                   onClickLink={this.props.onClickLink}
                   onCreateLink={this.props.onCreateLink}

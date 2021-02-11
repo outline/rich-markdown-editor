@@ -131,12 +131,8 @@ class Example extends React.Component {
           template={this.state.template}
           defaultValue={defaultValue}
           scrollTo={window.location.hash}
-          handleDOMEvents={{
-            focus: () => console.log("FOCUS"),
-            blur: () => console.log("BLUR"),
-            paste: () => console.log("PASTE"),
-            touchstart: () => console.log("TOUCH START"),
-          }}
+          onBlur={() => console.log("onBlur")}
+          onFocus={() => console.log("onFocus")}
           onSave={options => console.log("Save triggered", options)}
           onCancel={() => console.log("Cancel triggered")}
           onChange={this.handleChange}
