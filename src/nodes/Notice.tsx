@@ -74,7 +74,7 @@ export default class Notice extends Node {
           { class: `notice-block ${node.attrs.style}` },
           icon,
           ["div", { contentEditable: false }, select],
-          ["div", 0],
+          ["div", { class: "content" }, 0],
         ];
       },
     };

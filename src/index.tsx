@@ -943,6 +943,10 @@ const StyledEditor = styled("div")<{
     }
   }
 
+  .notice-block .content {
+    flex-grow: 1;
+  }
+
   .notice-block .icon {
     width: 24px;
     height: 24px;
