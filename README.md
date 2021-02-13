@@ -140,6 +140,18 @@ If you want the editor to support images then this callback must be provided. Th
 />
 ```
 
+#### `onBlur(): void`
+
+This callback is triggered when the user loses focus on the editor contenteditable and all
+associated UI elements such as the block menu and floating toolbars. If you want to listen
+for blur events on _only_ the contenteditable area then use `handleDOMEvents` props.
+
+#### `onFocus(): void`
+
+This callback is triggered when the user gains focus on the editor contenteditable or any
+associated UI elements such as the block menu or floating toolbars. If you want to listen
+for focus events on _only_ the contenteditable area then use `handleDOMEvents` props.
+
 #### `onSave({ done: boolean }): void`
 
 This callback is triggered when the user explicitly requests to save using a keyboard shortcut, `Cmd+S` or `Cmd+Enter`. You can use this as a signal to save the document to a remote server.
