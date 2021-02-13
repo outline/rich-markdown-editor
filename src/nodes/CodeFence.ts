@@ -107,7 +107,7 @@ export default class CodeFence extends Node {
     return () => setBlockType(type);
   }
 
-  keys({ type, schema }) {
+  keys({ type }) {
     return {
       "Shift-Ctrl-\\": setBlockType(type),
       "Shift-Enter": (state, dispatch) => {

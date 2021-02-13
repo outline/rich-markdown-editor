@@ -21,7 +21,7 @@ export default class ListItem extends Node {
     };
   }
 
-  keys({ type, schema }) {
+  keys({ type }) {
     return {
       Enter: splitListItem(type),
       Tab: sinkListItem(type),

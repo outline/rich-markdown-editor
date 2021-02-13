@@ -299,7 +299,7 @@ This project uses [yarn](https://yarnpkg.com) to manage dependencies. You can us
 yarn install
 ```
 
-When running in development [webpack-serve](https://github.com/webpack-contrib/webpack-serve) is included to serve an example editor with hot reloading. After installing dependencies run `yarn start` to get going.
+When running in development Storybook is included to example editors with hot reloading. After installing dependencies run `yarn start` to get going.
 
 When developing using `yarn link`, you can use `yarn watch` to continuously rebuild on change into `dist` as you make changes.
 

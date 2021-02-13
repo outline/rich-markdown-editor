@@ -9,10 +9,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet",
-    "start": "webpack-serve --config example/webpack.config.js --port 9000",
+    "start": "start-storybook -p 6006",
     "build": "tsc",
     "prepublish": "yarn build",
-    "watch": "yarn tsc-watch"
+    "watch": "yarn tsc-watch",
+    "build-storybook": "build-storybook"
   },
   "serve": {
     "open": true,
@@ -51,6 +52,11 @@
     "styled-components": "^5.0.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.12.16",
+    "@storybook/addon-actions": "^6.1.17",
+    "@storybook/addon-essentials": "^6.1.17",
+    "@storybook/addon-links": "^6.1.17",
+    "@storybook/react": "^6.1.17",
     "@types/lodash": "^4.14.149",
     "@types/markdown-it": "^10.0.1",
     "@types/prosemirror-commands": "^1.0.1",
@@ -70,6 +76,7 @@
     "@types/styled-components": "^4.4.2",
     "@typescript-eslint/eslint-plugin": "^4.0.0",
     "@typescript-eslint/parser": "^4.0.0",
+    "babel-loader": "^8.2.2",
     "eslint": "^7.13.0",
     "eslint-config-prettier": "^6.15.0",
     "eslint-config-react-app": "^6.0.0",
@@ -85,10 +92,7 @@
     "source-map-loader": "^0.2.4",
     "styled-components": "^5.2.1",
     "ts-loader": "^6.2.1",
-    "tsc-watch": "^4.2.9",
-    "webpack": "^4.29.6",
-    "webpack-cli": "^3.2.3",
-    "webpack-serve": "^3.2.0"
+    "tsc-watch": "^4.2.9"
   },
   "resolutions": {
     "yargs-parser": "^15.0.1"
