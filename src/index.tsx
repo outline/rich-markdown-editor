@@ -1,7 +1,7 @@
 /* global window File Promise */
 import * as React from "react";
 import memoize from "lodash/memoize";
-import { EditorState, Selection, Plugin } from "prosemirror-state";
+import { EditorState, Selection, Plugin, Transaction } from "prosemirror-state";
 import { dropCursor } from "prosemirror-dropcursor";
 import { gapCursor } from "prosemirror-gapcursor";
 import { MarkdownParser, MarkdownSerializer } from "prosemirror-markdown";
@@ -125,7 +125,7 @@ type State = {
 };
 
 type Step = {
-  slice: Slice;
+  slice?: Slice;
 };
 
 class RichMarkdownEditor extends React.PureComponent<Props, State> {
@@ -446,9 +446,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     const isEditingCheckbox = tr => {
       return tr.steps.some(
         (step: Step) =>
-          step.slice.content.firstChild &&
-          step.slice.content.firstChild.type.name ===
-            this.schema.nodes.checkbox_item.name
+          step.slice?.content?.firstChild?.type.name ===
+          this.schema.nodes.checkbox_item.name
       );
     };
 
