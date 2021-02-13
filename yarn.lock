@@ -226,6 +226,13 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
+"@types/hast@^2.0.0":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@types/hast/-/hast-2.3.1.tgz#b16872f2a6144c7025f296fb9636a667ebb79cd9"
+  integrity sha512-viwwrB+6xGzw+G1eWpF9geV3fnsDgXqHG+cqgiHrvQfDUW5hzhCyV7Sy3UJxhfRFBsgky2SSW33qi/YrIkjX5Q==
+  dependencies:
+    "@types/unist" "*"
+
 "@types/hoist-non-react-statics@*":
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/@types/hoist-non-react-statics/-/hoist-non-react-statics-3.3.1.tgz#1124aafe5118cb591977aeb1ceaaed1070eb039f"
@@ -433,6 +440,11 @@
     "@types/react" "*"
     "@types/react-native" "*"
     csstype "^2.2.0"
+
+"@types/unist@*":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@types/unist/-/unist-2.0.3.tgz#9c088679876f374eb5983f150d4787aa6fb32d7e"
+  integrity sha512-FvUupuM3rlRsRtCN+fDudtmytGO6iHJuuRKS1Ss0pG5z8oX0diNEw94UEL7hgDbpN94rgaK5R7sWm6RrSkZuAQ==
 
 "@typescript-eslint/eslint-plugin@^4.0.0":
   version "4.7.0"
@@ -1338,10 +1350,10 @@ compressible@^2.0.0:
   dependencies:
     mime-db ">= 1.43.0 < 2"
 
-compute-scroll-into-view@^1.0.14:
-  version "1.0.14"
-  resolved "https://registry.yarnpkg.com/compute-scroll-into-view/-/compute-scroll-into-view-1.0.14.tgz#80e3ebb25d6aa89f42e533956cb4b16a04cfe759"
-  integrity sha512-mKDjINe3tc6hGelUMNDzuhorIUZ7kS7BwyY0r2wQd2HOH2tRuJykiC06iSEX8y1TuhNzvz4GcJnK16mM2J1NMQ==
+compute-scroll-into-view@^1.0.16:
+  version "1.0.16"
+  resolved "https://registry.yarnpkg.com/compute-scroll-into-view/-/compute-scroll-into-view-1.0.16.tgz#5b7bf4f7127ea2c19b750353d7ce6776a90ee088"
+  integrity sha512-a85LHKY81oQnikatZYA90pufpZ6sQx++BoCxOEMsjpZx+ZnaKGQnCyCehTRr/1p9GBIAHTjcU9k71kSYWloLiQ==
 
 concat-map@0.0.1:
   version "0.0.1"
@@ -2581,11 +2593,12 @@ hast-util-parse-selector@^2.0.0:
   resolved "https://registry.yarnpkg.com/hast-util-parse-selector/-/hast-util-parse-selector-2.2.4.tgz#60c99d0b519e12ab4ed32e58f150ec3f61ed1974"
   integrity sha512-gW3sxfynIvZApL4L07wryYF4+C9VvH3AUi7LAnVXV4MneGEgwOByXvFo18BgmTWnm7oHAe874jKbIB1YhHSIzA==
 
-hastscript@^5.0.0:
-  version "5.1.2"
-  resolved "https://registry.yarnpkg.com/hastscript/-/hastscript-5.1.2.tgz#bde2c2e56d04c62dd24e8c5df288d050a355fb8a"
-  integrity sha512-WlztFuK+Lrvi3EggsqOkQ52rKbxkXL3RwB6t5lwoa8QLMemoWfBuL43eDrwOamJyR7uKQKdmKYaBH1NZBiIRrQ==
+hastscript@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/hastscript/-/hastscript-6.0.0.tgz#e8768d7eac56c3fdeac8a92830d58e811e5bf640"
+  integrity sha512-nDM6bvd7lIqDUiYEiu5Sl/+6ReP0BMk/2f4U/Rooccxkj0P5nm+acM5PrGJ/t5I8qPGiqZSE6hVAwZEdZIvP4w==
   dependencies:
+    "@types/hast" "^2.0.0"
     comma-separated-tokens "^1.0.0"
     hast-util-parse-selector "^2.0.0"
     property-information "^5.0.0"
@@ -4080,10 +4093,10 @@ prettier@^1.19.1:
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.19.1.tgz#f7d7f5ff8a9cd872a7be4ca142095956a60797cb"
   integrity sha512-s7PoyDv/II1ObgQunCbB9PdLmUcBZcnWOcxDh7O0N/UwDEsHyqkW+Qh28jW+mVuCdx7gLB0BotYI1Y6uI9iyew==
 
-prismjs@^1.19.0, prismjs@~1.21.0:
-  version "1.21.0"
-  resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.21.0.tgz#36c086ec36b45319ec4218ee164c110f9fc015a3"
-  integrity sha512-uGdSIu1nk3kej2iZsLyDoJ7e9bnPzIgY0naW/HdknGj61zScaprVEVGHrPoXqI+M9sP0NDnTK2jpkvmldpuqDw==
+prismjs@~1.23.0:
+  version "1.23.0"
+  resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.23.0.tgz#d3b3967f7d72440690497652a9d40ff046067f33"
+  integrity sha512-c29LVsqOaLbBHuIbsTxaKENh1N2EQBOHaWv7gkHN4dgRbxSREqDnDbtFJYdpPauS4YCplMSNCABQ6Eeor69bAA==
   optionalDependencies:
     clipboard "^2.0.0"
 
@@ -4123,19 +4136,19 @@ property-information@^5.0.0:
   dependencies:
     xtend "^4.0.0"
 
-prosemirror-commands@^1.1.4:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/prosemirror-commands/-/prosemirror-commands-1.1.4.tgz#991563e67623acab4f8c510fad1570f8b4693780"
-  integrity sha512-kj4Qi+8h3EpJtZuuEDwZ9h2/QNGWDsIX/CzjmClxi9GhxWyBUMVUvIFk0mgdqHyX20lLeGmOpc0TLA5aPzgpWg==
+prosemirror-commands@^1.1.6:
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/prosemirror-commands/-/prosemirror-commands-1.1.6.tgz#727c045eb60e7d61f1b1d0a9411a7f60286bb1de"
+  integrity sha512-oh3DN9qhtYR+4/Yfb9+hAKjiV4pEqPRxsPqUeoVqJP7Dfbk4jQKYZFDKMZgLAdSFi49fMeiVYieN3fpjOLuP0Q==
   dependencies:
     prosemirror-model "^1.0.0"
     prosemirror-state "^1.0.0"
     prosemirror-transform "^1.0.0"
 
-prosemirror-dropcursor@^1.3.2:
-  version "1.3.2"
-  resolved "https://registry.yarnpkg.com/prosemirror-dropcursor/-/prosemirror-dropcursor-1.3.2.tgz#28738c4ed7102e814d7a8a26d70018523fc7cd6d"
-  integrity sha512-4c94OUGyobGnwcQI70OXyMhE/9T4aTgjU+CHxkd5c7D+jH/J0mKM/lk+jneFVKt7+E4/M0D9HzRPifu8U28Thw==
+prosemirror-dropcursor@^1.3.3:
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/prosemirror-dropcursor/-/prosemirror-dropcursor-1.3.3.tgz#583d6a82b4960d468132c07c40803cc1d697fda4"
+  integrity sha512-zavE+wh+qkDcP7LaWn+jXVujGyQzBYSmM8E2HSngQ3KaaR+HJYgEBYGs9ynLHqKWLlLCXsxWdVYPV49v4caFyg==
   dependencies:
     prosemirror-state "^1.0.0"
     prosemirror-transform "^1.1.0"
@@ -4184,10 +4197,10 @@ prosemirror-markdown@^1.4.4:
     markdown-it "^10.0.0"
     prosemirror-model "^1.0.0"
 
-prosemirror-model@^1.0.0, prosemirror-model@^1.1.0, prosemirror-model@^1.11.2, prosemirror-model@^1.8.1:
-  version "1.11.2"
-  resolved "https://registry.yarnpkg.com/prosemirror-model/-/prosemirror-model-1.11.2.tgz#3ce08172b465bc725c8808c18c2e9378fe69418d"
-  integrity sha512-+gM+x1VUfGAyKR/g0bK7FC46fVNq0xVVL859QAQ7my2p5HzKrPps/pSbYn7T50XTG2r2IhZJChsUFUBHtcoN0Q==
+prosemirror-model@^1.0.0, prosemirror-model@^1.1.0, prosemirror-model@^1.13.3, prosemirror-model@^1.8.1:
+  version "1.13.3"
+  resolved "https://registry.yarnpkg.com/prosemirror-model/-/prosemirror-model-1.13.3.tgz#3ccfde73b9c9e706933c72bdf7462906509ff1c9"
+  integrity sha512-wujIYYQEcxdkbKmIJiekVjqtylKxuoEcc+w2PnN7Itc58m/75J4rCUz2dibygVQJFi3gZrD2DNFLjOS6LP4w1g==
   dependencies:
     orderedmap "^1.1.0"
 
@@ -4199,10 +4212,10 @@ prosemirror-schema-list@^1.1.2:
     prosemirror-model "^1.0.0"
     prosemirror-transform "^1.0.0"
 
-prosemirror-state@^1.0.0, prosemirror-state@^1.2.2, prosemirror-state@^1.3.1, prosemirror-state@^1.3.3:
-  version "1.3.3"
-  resolved "https://registry.yarnpkg.com/prosemirror-state/-/prosemirror-state-1.3.3.tgz#b2862866b14dec2b3ae1ab18229f2bd337651a2c"
-  integrity sha512-PLXh2VJsIgvlgSTH6I2Yg6vk1CzPDp21DFreVpQtDMY2S6WaMmrQgDTLRcsrD8X38v8Yc873H7+ogdGzyIPn+w==
+prosemirror-state@^1.0.0, prosemirror-state@^1.2.2, prosemirror-state@^1.3.1, prosemirror-state@^1.3.4:
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/prosemirror-state/-/prosemirror-state-1.3.4.tgz#4c6b52628216e753fc901c6d2bfd84ce109e8952"
+  integrity sha512-Xkkrpd1y/TQ6HKzN3agsQIGRcLckUMA9u3j207L04mt8ToRgpGeyhbVv0HI7omDORIBHjR29b7AwlATFFf2GLA==
   dependencies:
     prosemirror-model "^1.0.0"
     prosemirror-transform "^1.0.0"
@@ -4230,10 +4243,10 @@ prosemirror-utils@^0.9.6:
   resolved "https://registry.yarnpkg.com/prosemirror-utils/-/prosemirror-utils-0.9.6.tgz#3d97bd85897e3b535555867dc95a51399116a973"
   integrity sha512-UC+j9hQQ1POYfMc5p7UFxBTptRiGPR7Kkmbl3jVvU8VgQbkI89tR/GK+3QYC8n+VvBZrtAoCrJItNhWSxX3slA==
 
-prosemirror-view@^1.0.0, prosemirror-view@^1.1.0, prosemirror-view@^1.13.3, prosemirror-view@^1.16.1:
-  version "1.16.1"
-  resolved "https://registry.yarnpkg.com/prosemirror-view/-/prosemirror-view-1.16.1.tgz#375794a253151205394bb1ece07bcc2a647c85da"
-  integrity sha512-7iDdRf2PAIgOnstcxqUxzf8IbHGfxygQs5covfxOHLWKyx7SSLRnBIlwVda54Hr6N26F4t5Kj2jfK7uIBcAKAw==
+prosemirror-view@^1.0.0, prosemirror-view@^1.1.0, prosemirror-view@^1.13.3, prosemirror-view@^1.17.6:
+  version "1.17.6"
+  resolved "https://registry.yarnpkg.com/prosemirror-view/-/prosemirror-view-1.17.6.tgz#9c31c84b9b78bd3aa3343d1b90eff36869387a5b"
+  integrity sha512-ZnpIQg8DzrvpeBPLab3UUEjwjA37CwOjQruDyzdHYUf6MA95H48tchIOVrwUdQxFDhETaG5iQOWZlAzYj+olzw==
   dependencies:
     prosemirror-model "^1.1.0"
     prosemirror-state "^1.0.0"
@@ -4443,14 +4456,14 @@ rechoir@^0.7.0:
   dependencies:
     resolve "^1.9.0"
 
-refractor@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/refractor/-/refractor-3.1.0.tgz#b05a43c8a1b4fccb30001ffcbd5cd781f7f06f78"
-  integrity sha512-bN8GvY6hpeXfC4SzWmYNQGLLF2ZakRDNBkgCL0vvl5hnpMrnyURk8Mv61v6pzn4/RBHzSWLp44SzMmVHqMGNww==
+refractor@^3.3.1:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/refractor/-/refractor-3.3.1.tgz#ebbc04b427ea81dc25ad333f7f67a0b5f4f0be3a"
+  integrity sha512-vaN6R56kLMuBszHSWlwTpcZ8KTMG6aUCok4GrxYDT20UIOXxOc5o6oDc8tNTzSlH3m2sI+Eu9Jo2kVdDcUTWYw==
   dependencies:
-    hastscript "^5.0.0"
+    hastscript "^6.0.0"
     parse-entities "^2.0.0"
-    prismjs "~1.21.0"
+    prismjs "~1.23.0"
 
 regenerator-runtime@^0.13.4:
   version "0.13.7"
@@ -4659,12 +4672,12 @@ schema-utils@^1.0.0:
     ajv-errors "^1.0.0"
     ajv-keywords "^3.1.0"
 
-scroll-into-view-if-needed@^2.2.25:
-  version "2.2.25"
-  resolved "https://registry.yarnpkg.com/scroll-into-view-if-needed/-/scroll-into-view-if-needed-2.2.25.tgz#117b7bc7c61bc7a2b7872a0984bc73a19bc6e961"
-  integrity sha512-C8RKJPq9lK7eubwGpLbUkw3lklcG3Ndjmea2PyauzrA0i4DPlzAmVMGxaZrBFqCrVLfvJmP80IyHnv4jxvg1OQ==
+scroll-into-view-if-needed@^2.2.26:
+  version "2.2.26"
+  resolved "https://registry.yarnpkg.com/scroll-into-view-if-needed/-/scroll-into-view-if-needed-2.2.26.tgz#e4917da0c820135ff65ad6f7e4b7d7af568c4f13"
+  integrity sha512-SQ6AOKfABaSchokAmmaxVnL9IArxEnLEX9j4wAZw+x4iUTb40q7irtHG3z4GtAWz5veVZcCnubXDBRyLVQaohw==
   dependencies:
-    compute-scroll-into-view "^1.0.14"
+    compute-scroll-into-view "^1.0.16"
 
 select@^1.1.2:
   version "1.1.2"
@@ -4797,12 +4810,12 @@ slugify@^1.4.0:
   resolved "https://registry.yarnpkg.com/slugify/-/slugify-1.4.5.tgz#a7517acf5f4c02a4df41e735354b660a4ed1efcf"
   integrity sha512-WpECLAgYaxHoEAJ8Q1Lo8HOs1ngn7LN7QjXgOLbmmfkcWvosyk4ZTXkTzKyhngK640USTZUlgoQJfED1kz5fnQ==
 
-smooth-scroll-into-view-if-needed@^1.1.27:
-  version "1.1.28"
-  resolved "https://registry.yarnpkg.com/smooth-scroll-into-view-if-needed/-/smooth-scroll-into-view-if-needed-1.1.28.tgz#70591d6723aa747114e0c0348379f8739701e4ba"
-  integrity sha512-VBxjAYySCfPix8JaiYKB+Rr4+1tFJ+aJ80caiVmsEA1cgQ3G/aFEfIRSpabJfX5o3FGm3IEttBLebe0uNtgURw==
+smooth-scroll-into-view-if-needed@^1.1.29:
+  version "1.1.29"
+  resolved "https://registry.yarnpkg.com/smooth-scroll-into-view-if-needed/-/smooth-scroll-into-view-if-needed-1.1.29.tgz#4f532d9f0353dbca122e546fb062e7b5e0643734"
+  integrity sha512-UxvIEbmMEqwbw0aZI4SOAtwwkMaLYVION20bDQmazVp3sNb1+WIA5koukqoJizRuAAUANRmcBcrTnodcB7maqw==
   dependencies:
-    scroll-into-view-if-needed "^2.2.25"
+    scroll-into-view-if-needed "^2.2.26"
 
 snapdragon-node@^2.0.1:
   version "2.1.1"
