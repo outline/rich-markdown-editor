@@ -35,14 +35,14 @@ import Editor from "rich-markdown-editor";
 />
 ```
 
-See a working example in the [example directory](/example) with many example props.
+Clone this repo and run the Storybook with `yarn start` to see a wide variety of example usage.
 
 
 ### Props
 
 #### `id`
 
-A unique id for this editor, used to persist settings such as collapsed headings. If no `id` is passed then the editor will default to using the location pathname.
+A unique id for this editor, used to persist settings in local storage. If no `id` is passed then the editor will default to using the location pathname.
 
 #### `defaultValue`
 
