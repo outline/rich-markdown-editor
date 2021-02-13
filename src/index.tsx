@@ -1,7 +1,7 @@
 /* global window File Promise */
 import * as React from "react";
 import memoize from "lodash/memoize";
-import { EditorState, Selection, Plugin, Transaction } from "prosemirror-state";
+import { EditorState, Selection, Plugin } from "prosemirror-state";
 import { dropCursor } from "prosemirror-dropcursor";
 import { gapCursor } from "prosemirror-gapcursor";
 import { MarkdownParser, MarkdownSerializer } from "prosemirror-markdown";
@@ -536,7 +536,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   handleOpenSelectionMenu = () => {
-    this.setState({ selectionMenuOpen: true });
+    this.setState({ blockMenuOpen: false, selectionMenuOpen: true });
   };
 
   handleCloseSelectionMenu = () => {
@@ -544,7 +544,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   handleOpenLinkMenu = () => {
-    this.setState({ linkMenuOpen: true });
+    this.setState({ blockMenuOpen: false, linkMenuOpen: true });
   };
 
   handleCloseLinkMenu = () => {
