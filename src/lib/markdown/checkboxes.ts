@@ -23,6 +23,22 @@ function looksLikeChecklist(tokens: Token[], index: number) {
 }
 
 export default function markdownItCheckbox(md: MarkdownIt): void {
+  function render(tokens, idx) {
+    const token = tokens[idx];
+    const checked = !!token.attrGet("checked");
+
+    if (token.nesting === 1) {
+      // opening tag
+      return `<li><span class="checkbox">${checked ? "[x]" : "[_]"}</span>`;
+    } else {
+      // closing tag
+      return "</li>\n";
+    }
+  }
+
+  md.renderer.rules.checkbox_item_open = render;
+  md.renderer.rules.checkbox_item_close = render;
+
   // insert a new rule after the "inline" rules are parsed
   md.core.ruler.after("inline", "checkboxes", state => {
     const tokens = state.tokens;
@@ -56,16 +72,19 @@ export default function markdownItCheckbox(md: MarkdownIt): void {
             tokenChildren[0].content = label;
           }
 
-          const token = new Token("checkbox", "input", 0);
-          token.attrs = [["type", "checkbox"]];
-          if (checked === true) {
-            token.attrs.push(["checked", "true"]);
-          }
-          tokenChildren.unshift(token);
+          // const openCheckbox = new Token("checkbox_open", "span", 1);
+          // const closeCheckbox = new Token("checkbox_close", "span", -1);
+          // openCheckbox.attrSet("class", "checkbox");
+
+          // const checkbox = new Token("checkbox", "", 0);
+          // checkbox.content = checked === true ? "[x]" : "[_]";
+          // tokenChildren.unshift(checkbox);
         }
 
         // open list item and ensure checked state is transferred
         tokens[i - 2].type = "checkbox_item_open";
+        console.log(tokens[i - 2].nesting);
+
         if (checked === true) {
           tokens[i - 2].attrs = [["checked", "true"]];
         }
