@@ -1,6 +1,6 @@
 import * as React from "react";
 import { EditorView } from "prosemirror-view";
-import { withTheme } from "styled-components";
+import styled, { withTheme } from "styled-components";
 import ToolbarButton from "./ToolbarButton";
 import ToolbarSeparator from "./ToolbarSeparator";
 import theme from "../theme";
@@ -14,6 +14,10 @@ type Props = {
   items: MenuItem[];
 };
 
+const FlexibleWrapper = styled.div`
+  display: flex;
+`;
+
 class Menu extends React.Component<Props> {
   render() {
     const { view, items } = this.props;
@@ -21,7 +25,7 @@ class Menu extends React.Component<Props> {
     const Tooltip = this.props.tooltip;
 
     return (
-      <div>
+      <FlexibleWrapper>
         {items.map((item, index) => {
           if (item.name === "separator" && item.visible !== false) {
             return <ToolbarSeparator key={index} />;
@@ -46,7 +50,7 @@ class Menu extends React.Component<Props> {
             </ToolbarButton>
           );
         })}
-      </div>
+      </FlexibleWrapper>
     );
   }
 }

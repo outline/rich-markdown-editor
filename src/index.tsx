@@ -64,6 +64,7 @@ import Underline from "./marks/Underline";
 import BlockMenuTrigger from "./plugins/BlockMenuTrigger";
 import History from "./plugins/History";
 import Keys from "./plugins/Keys";
+import MaxLength from "./plugins/MaxLength";
 import Placeholder from "./plugins/Placeholder";
 import SmartText from "./plugins/SmartText";
 import TrailingNode from "./plugins/TrailingNode";
@@ -89,11 +90,14 @@ export type Props = {
   theme?: typeof theme;
   template?: boolean;
   headingsOffset?: number;
+  maxLength?: number;
   scrollTo?: string;
   handleDOMEvents?: {
     [name: string]: (view: EditorView, event: Event) => boolean;
   };
   uploadImage?: (file: File) => Promise<string>;
+  onBlur?: () => void;
+  onFocus?: () => void;
   onSave?: ({ done: boolean }) => void;
   onCancel?: () => void;
   onChange: (value: () => string) => void;
@@ -113,13 +117,15 @@ export type Props = {
 };
 
 type State = {
+  isEditorFocused: boolean;
+  selectionMenuOpen: boolean;
   blockMenuOpen: boolean;
   linkMenuOpen: boolean;
   blockMenuSearch: string;
 };
 
 type Step = {
-  slice: Slice;
+  slice?: Slice;
 };
 
 class RichMarkdownEditor extends React.PureComponent<Props, State> {
@@ -141,11 +147,14 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   state = {
+    isEditorFocused: false,
+    selectionMenuOpen: false,
     blockMenuOpen: false,
     linkMenuOpen: false,
     blockMenuSearch: "",
   };
 
+  isBlurred: boolean;
   extensions: ExtensionManager;
   element?: HTMLElement | null;
   view: EditorView;
@@ -199,6 +208,32 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     // is set to true
     if (prevProps.readOnly && !this.props.readOnly && this.props.autoFocus) {
       this.focusAtEnd();
+    }
+
+    if (
+      !this.isBlurred &&
+      !this.state.isEditorFocused &&
+      !this.state.blockMenuOpen &&
+      !this.state.linkMenuOpen &&
+      !this.state.selectionMenuOpen
+    ) {
+      this.isBlurred = true;
+      if (this.props.onBlur) {
+        this.props.onBlur();
+      }
+    }
+
+    if (
+      this.isBlurred &&
+      (this.state.isEditorFocused ||
+        this.state.blockMenuOpen ||
+        this.state.linkMenuOpen ||
+        this.state.selectionMenuOpen)
+    ) {
+      this.isBlurred = false;
+      if (this.props.onFocus) {
+        this.props.onFocus();
+      }
     }
   }
 
@@ -287,6 +322,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new TrailingNode(),
         new MarkdownPaste(),
         new Keys({
+          onBlur: this.handleEditorBlur,
+          onFocus: this.handleEditorFocus,
           onSave: this.handleSave,
           onSaveAndExit: this.handleSaveAndExit,
           onCancel: this.props.onCancel,
@@ -298,6 +335,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         }),
         new Placeholder({
           placeholder: this.props.placeholder,
+        }),
+        new MaxLength({
+          maxLength: this.props.maxLength,
         }),
         ...this.props.extensions,
       ],
@@ -406,9 +446,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     const isEditingCheckbox = tr => {
       return tr.steps.some(
         (step: Step) =>
-          step.slice.content.firstChild &&
-          step.slice.content.firstChild.type.name ===
-            this.schema.nodes.checkbox_item.name
+          step.slice?.content?.firstChild?.type.name ===
+          this.schema.nodes.checkbox_item.name
       );
     };
 
@@ -441,6 +480,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         this.forceUpdate();
       },
     });
+
+    // Tell third-party libraries and screen-readers that this is an input
+    view.dom.setAttribute("role", "textbox");
 
     return view;
   }
@@ -485,8 +527,24 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     }
   };
 
+  handleEditorBlur = () => {
+    this.setState({ isEditorFocused: false });
+  };
+
+  handleEditorFocus = () => {
+    this.setState({ isEditorFocused: true });
+  };
+
+  handleOpenSelectionMenu = () => {
+    this.setState({ blockMenuOpen: false, selectionMenuOpen: true });
+  };
+
+  handleCloseSelectionMenu = () => {
+    this.setState({ selectionMenuOpen: false });
+  };
+
   handleOpenLinkMenu = () => {
-    this.setState({ linkMenuOpen: true });
+    this.setState({ blockMenuOpen: false, linkMenuOpen: true });
   };
 
   handleCloseLinkMenu = () => {
@@ -604,6 +662,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   dictionary={dictionary}
                   commands={this.commands}
                   isTemplate={this.props.template === true}
+                  onOpen={this.handleOpenSelectionMenu}
+                  onClose={this.handleCloseSelectionMenu}
                   onSearchLink={this.props.onSearchLink}
                   onClickLink={this.props.onClickLink}
                   onCreateLink={this.props.onCreateLink}
@@ -881,6 +941,10 @@ const StyledEditor = styled("div")<{
     a:not(.heading-name) {
       text-decoration: underline;
     }
+  }
+
+  .notice-block .content {
+    flex-grow: 1;
   }
 
   .notice-block .icon {
@@ -1396,24 +1460,23 @@ const StyledEditor = styled("div")<{
 
   .block-menu-trigger {
     display: ${props => (props.readOnly ? "none" : "inline")};
-    height: 1em;
+    width: 24px;
+    height: 24px;
     color: ${props => props.theme.textSecondary};
     background: none;
-    border-radius: 100%;
-    font-size: 1em;
     position: absolute;
-    transform: scale(2);
     transition: color 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275),
       transform 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
     outline: none;
     border: 0;
-    line-height: 1.2em;
-    margin-left: -28px;
+    padding: 0;
+    margin-top: 1px;
+    margin-left: -24px;
 
     &:hover,
     &:focus {
       cursor: pointer;
-      transform: scale(2.25);
+      transform: scale(1.2);
       color: ${props => props.theme.text};
     }
   }

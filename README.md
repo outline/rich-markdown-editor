@@ -35,14 +35,14 @@ import Editor from "rich-markdown-editor";
 />
 ```
 
-See a working example in the [example directory](/example) with many example props.
+Clone this repo and run the Storybook with `yarn start` to see a wide variety of example usage.
 
 
 ### Props
 
 #### `id`
 
-A unique id for this editor, used to persist settings such as collapsed headings. If no `id` is passed then the editor will default to using the location pathname.
+A unique id for this editor, used to persist settings in local storage. If no `id` is passed then the editor will default to using the location pathname.
 
 #### `defaultValue`
 
@@ -69,6 +69,10 @@ With `readOnlyWriteCheckboxes` set to `true` checkboxes can still be checked or 
 
 When set `true` together with `readOnly` set to `false`, focus at the end of the
 document automatically.
+
+#### `maxLength`
+
+When set enforces a maximum character length on the document, not including markdown syntax.
 
 #### `extensions`
 
@@ -135,6 +139,18 @@ If you want the editor to support images then this callback must be provided. Th
   }}
 />
 ```
+
+#### `onBlur(): void`
+
+This callback is triggered when the user loses focus on the editor contenteditable and all
+associated UI elements such as the block menu and floating toolbars. If you want to listen
+for blur events on _only_ the contenteditable area then use `handleDOMEvents` props.
+
+#### `onFocus(): void`
+
+This callback is triggered when the user gains focus on the editor contenteditable or any
+associated UI elements such as the block menu or floating toolbars. If you want to listen
+for focus events on _only_ the contenteditable area then use `handleDOMEvents` props.
 
 #### `onSave({ done: boolean }): void`
 
@@ -283,7 +299,7 @@ This project uses [yarn](https://yarnpkg.com) to manage dependencies. You can us
 yarn install
 ```
 
-When running in development [webpack-serve](https://github.com/webpack-contrib/webpack-serve) is included to serve an example editor with hot reloading. After installing dependencies run `yarn start` to get going.
+When running in development Storybook is included to example editors with hot reloading. After installing dependencies run `yarn start` to get going.
 
 When developing using `yarn link`, you can use `yarn watch` to continuously rebuild on change into `dist` as you make changes.
 

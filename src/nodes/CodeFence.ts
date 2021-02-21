@@ -14,11 +14,11 @@ import powershell from "refractor/lang/powershell";
 import ruby from "refractor/lang/ruby";
 import sql from "refractor/lang/sql";
 import typescript from "refractor/lang/typescript";
-
 import { setBlockType } from "prosemirror-commands";
 import { textblockTypeInputRule } from "prosemirror-inputrules";
 import copy from "copy-to-clipboard";
 import Prism, { LANGUAGES } from "../plugins/Prism";
+import isInCode from "../queries/isInCode";
 import Node from "./Node";
 import { ToastType } from "../types";
 
@@ -110,6 +110,20 @@ export default class CodeFence extends Node {
   keys({ type }) {
     return {
       "Shift-Ctrl-\\": setBlockType(type),
+      "Shift-Enter": (state, dispatch) => {
+        if (!isInCode(state)) return false;
+
+        const { tr, selection } = state;
+        dispatch(tr.insertText("\n", selection.from, selection.to));
+        return true;
+      },
+      Tab: (state, dispatch) => {
+        if (!isInCode(state)) return false;
+
+        const { tr, selection } = state;
+        dispatch(tr.insertText("  ", selection.from, selection.to));
+        return true;
+      },
     };
   }
 

@@ -25,6 +25,8 @@ type Props = {
   tooltip: typeof React.Component | React.FC<any>;
   isTemplate: boolean;
   commands: Record<string, any>;
+  onOpen: () => void;
+  onClose: () => void;
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
   onClickLink: (href: string, event: MouseEvent) => void;
   onCreateLink?: (title: string) => Promise<string>;
@@ -32,7 +34,7 @@ type Props = {
   view: EditorView;
 };
 
-function isActive(props) {
+function isVisible(props) {
   const { view } = props;
   const { selection } = view.state;
 
@@ -51,6 +53,20 @@ function isActive(props) {
 }
 
 export default class SelectionToolbar extends React.Component<Props> {
+  isActive = false;
+
+  componentDidUpdate(): void {
+    const visible = isVisible(this.props);
+    if (this.isActive && !visible) {
+      this.isActive = false;
+      this.props.onClose();
+    }
+    if (!this.isActive && visible) {
+      this.isActive = true;
+      this.props.onOpen();
+    }
+  }
+
   handleOnCreateLink = async (title: string) => {
     const { dictionary, onCreateLink, view, onShowToast } = this.props;
 
@@ -139,7 +155,7 @@ export default class SelectionToolbar extends React.Component<Props> {
 
     return (
       <Portal>
-        <FloatingToolbar view={view} active={isActive(this.props)}>
+        <FloatingToolbar view={view} active={isVisible(this.props)}>
           {link && range ? (
             <LinkEditor
               dictionary={dictionary}

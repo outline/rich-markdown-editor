@@ -19,6 +19,6 @@ export type MenuItem = {
 };
 
 export type EmbedDescriptor = MenuItem & {
-  matcher: (url: string) => boolean | [];
+  matcher: (url: string) => boolean | [] | RegExpMatchArray;
   component: typeof React.Component | React.FC<any>;
 };
