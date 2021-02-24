@@ -22,8 +22,12 @@ function isActive(props: Props) {
   const { view } = props;
   const { selection } = view.state;
 
-  const paragraph = view.domAtPos(selection.from);
-  return props.isActive && !!paragraph.node;
+  try {
+    const paragraph = view.domAtPos(selection.from);
+    return props.isActive && !!paragraph.node;
+  } catch (err) {
+    return false;
+  }
 }
 
 export default class LinkToolbar extends React.Component<Props> {
