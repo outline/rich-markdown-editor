@@ -118,6 +118,7 @@ Optionally define embeds which will be inserted in place of links when the `matc
       title: "Google Doc",
       keywords: "google docs gdocs",
       icon: <GoogleDocIcon />,
+      defaultHidden: false,
       matcher: href => href.matches(/docs.google.com/i),
       component: GoogleDocEmbed
     }

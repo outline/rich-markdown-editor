@@ -406,6 +406,9 @@ class BlockMenu extends React.Component<Props, State> {
       // If no image upload callback has been passed, filter the image block out
       if (!uploadImage && item.name === "image") return false;
 
+      // some items (defaultHidden) are not visible until a search query exists
+      if (!search) return !item.defaultHidden;
+
       const n = search.toLowerCase();
       return (
         (item.title || "").toLowerCase().includes(n) ||
