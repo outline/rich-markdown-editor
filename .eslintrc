@@ -7,17 +7,20 @@
     "plugin:prettier/recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
-    "plugin:import/typescript",
+    "plugin:import/typescript"
   ],
   "plugins": [
     "jsx-a11y"
   ],
   "rules": {
     "eqeqeq": 2,
-    "no-unused-vars": 2,
+    "no-unused-vars": "off",
     "no-mixed-operators": "off",
     "jsx-a11y/href-no-hash": "off",
     "react/prop-types": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error"
+    ],
     "@typescript-eslint/explicit-function-return-type": "off",
     "prettier/prettier": [
       "error",
