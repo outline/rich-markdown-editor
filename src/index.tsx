@@ -1026,12 +1026,12 @@ const StyledEditor = styled("div")<{
 
   ul,
   ol {
-    margin: 0 0.1em;
-    padding: 0 0 0 1.2em;
+    margin: 0 0.1em 0 -26px;
+    padding: 0 0 0 44px;
 
     ul,
     ol {
-      margin: 0;
+      margin-right: -24px;
     }
   }
 
@@ -1046,16 +1046,21 @@ const StyledEditor = styled("div")<{
   ul.checkbox_list {
     list-style: none;
     padding: 0;
-    margin: 0;
+    margin: 0 0 0 -24px;
   }
 
   ul li,
   ol li {
     position: relative;
+
+    > div {
+      width: 100%;
+    }
   }
 
   ul.checkbox_list li {
     display: flex;
+    padding-left: 24px;
   }
 
   ul.checkbox_list li.checked > div > p {
@@ -1089,7 +1094,7 @@ const StyledEditor = styled("div")<{
   }
 
   ul.checkbox_list li::before {
-    left: -24px;
+    left: 0;
   }
 
   ul.checkbox_list li input {
