@@ -29,7 +29,7 @@ export default function markdownItCheckbox(md: MarkdownIt): void {
 
     if (token.nesting === 1) {
       // opening tag
-      return `<li><span class="checkbox">${checked ? "[x]" : "[_]"}</span>`;
+      return `<li><span class="checkbox">${checked ? "[x]" : "[ ]"}</span>`;
     } else {
       // closing tag
       return "</li>\n";
@@ -71,19 +71,10 @@ export default function markdownItCheckbox(md: MarkdownIt): void {
             tokens[i].content = label;
             tokenChildren[0].content = label;
           }
-
-          // const openCheckbox = new Token("checkbox_open", "span", 1);
-          // const closeCheckbox = new Token("checkbox_close", "span", -1);
-          // openCheckbox.attrSet("class", "checkbox");
-
-          // const checkbox = new Token("checkbox", "", 0);
-          // checkbox.content = checked === true ? "[x]" : "[_]";
-          // tokenChildren.unshift(checkbox);
         }
 
         // open list item and ensure checked state is transferred
         tokens[i - 2].type = "checkbox_item_open";
-        console.log(tokens[i - 2].nesting);
 
         if (checked === true) {
           tokens[i - 2].attrs = [["checked", "true"]];

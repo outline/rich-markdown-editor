@@ -21,8 +21,8 @@ exports[`renders bullet list 1`] = `
 
 exports[`renders checkbox list 1`] = `
 "<ul>
-<li><input type=\\"checkbox\\">unchecked</li>
-<li checked=\\"true\\"><input type=\\"checkbox\\" checked=\\"true\\">checked</li>
+<li><span class=\\"checkbox\\">[ ]</span>unchecked</li>
+<li><span class=\\"checkbox\\">[x]</span>checked</li>
 </ul>"
 `;
 
