@@ -1,6 +1,8 @@
 import * as React from "react";
 import Node from "./Node";
 
+const cache = {};
+
 export default class Embed extends Node {
   get name() {
     return "embed";
@@ -13,7 +15,6 @@ export default class Embed extends Node {
       atom: true,
       attrs: {
         href: {},
-        component: {},
         matches: {},
       },
       parseDOM: [
@@ -29,7 +30,6 @@ export default class Embed extends Node {
                 if (matches) {
                   return {
                     href,
-                    component: embed.component,
                     matches,
                   };
                 }
@@ -49,7 +49,25 @@ export default class Embed extends Node {
   }
 
   component({ isEditable, isSelected, theme, node }) {
-    const Component = node.attrs.component;
+    const { embeds } = this.editor.props;
+
+    // matches are cached in module state to avoid re running loops and regex
+    // here. Unfortuantely this function is not compatible with React.memo or
+    // we would use that instead.
+    let Component = cache[node.attrs.href];
+
+    if (!Component) {
+      for (const embed of embeds) {
+        const matches = embed.matcher(node.attrs.href);
+        if (matches) {
+          Component = cache[node.attrs.href] = embed.component;
+        }
+      }
+    }
+
+    if (!Component) {
+      return null;
+    }
 
     return (
       <Component
@@ -84,7 +102,6 @@ export default class Embed extends Node {
       getAttrs: token => ({
         href: token.attrGet("href"),
         matches: token.attrGet("matches"),
-        component: token.attrGet("component"),
       }),
     };
   }
