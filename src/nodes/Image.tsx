@@ -242,6 +242,7 @@ export default class Image extends Node {
           onBlur={this.handleBlur(props)}
           className="caption"
           tabIndex={-1}
+          role="textbox"
           contentEditable
           suppressContentEditableWarning
         >
