@@ -19,7 +19,7 @@ export default class CheckboxItem extends Node {
       },
       content: "paragraph block*",
       defining: true,
-      draggable: false,
+      draggable: true,
       parseDOM: [
         {
           tag: `li[data-type="${this.name}"]`,
