@@ -1078,10 +1078,8 @@ const StyledEditor = styled("div")<{
     transition: opacity 200ms ease-in-out;
   }
 
-  ul > li:hover::before,
-  ol li:hover::before,
-  ul li.ProseMirror-selectednode::before,
-  ol li.ProseMirror-selectednode::before {
+  ul > li.hovering::before,
+  ol li.hovering::before {
     opacity: 0.5;
   }
 
