@@ -3,12 +3,18 @@ import {
   sinkListItem,
   liftListItem,
 } from "prosemirror-schema-list";
-import { Transaction, Plugin, EditorState } from "prosemirror-state";
+import {
+  Transaction,
+  EditorState,
+  Plugin,
+  TextSelection,
+} from "prosemirror-state";
 import { DecorationSet, Decoration } from "prosemirror-view";
 import { findParentNodeClosestToPos } from "prosemirror-utils";
 
 import Node from "./Node";
 import isInList from "../queries/isInList";
+import getParentListItem from "../queries/getParentListItem";
 
 export default class ListItem extends Node {
   get name() {
@@ -155,6 +161,60 @@ export default class ListItem extends Node {
 
         const { tr, selection } = state;
         dispatch(tr.split(selection.to));
+        return true;
+      },
+      "Alt-ArrowUp": (state, dispatch) => {
+        if (!state.selection.empty) return false;
+        const result = getParentListItem(state);
+        if (!result) return false;
+
+        const [li, pos] = result;
+        const $pos = state.doc.resolve(pos);
+
+        if (
+          !$pos.nodeBefore ||
+          !["list_item", "checkbox_item"].includes($pos.nodeBefore.type.name)
+        ) {
+          console.log("Node before not a list item");
+          return false;
+        }
+
+        const { tr } = state;
+        const newPos = pos - $pos.nodeBefore.nodeSize;
+
+        dispatch(
+          tr
+            .delete(pos, pos + li.nodeSize)
+            .insert(newPos, li)
+            .setSelection(TextSelection.near(tr.doc.resolve(newPos)))
+        );
+        return true;
+      },
+      "Alt-ArrowDown": (state, dispatch) => {
+        if (!state.selection.empty) return false;
+        const result = getParentListItem(state);
+        if (!result) return false;
+
+        const [li, pos] = result;
+        const $pos = state.doc.resolve(pos + li.nodeSize);
+
+        if (
+          !$pos.nodeAfter ||
+          !["list_item", "checkbox_item"].includes($pos.nodeAfter.type.name)
+        ) {
+          console.log("Node after not a list item");
+          return false;
+        }
+
+        const { tr } = state;
+        const newPos = pos + li.nodeSize + $pos.nodeAfter.nodeSize;
+
+        dispatch(
+          tr
+            .insert(newPos, li)
+            .setSelection(TextSelection.near(tr.doc.resolve(newPos)))
+            .delete(pos, pos + li.nodeSize)
+        );
         return true;
       },
     };
