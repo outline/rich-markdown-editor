@@ -216,6 +216,7 @@ export default class Image extends Node {
     const { theme, isSelected } = props;
     const { alt, src, title, layoutClass } = props.node.attrs;
     const className = layoutClass ? `image image-${layoutClass}` : "image";
+    const readOnly = this.editor.props.readOnly;
 
     return (
       <div contentEditable={false} className={className}>
@@ -225,7 +226,7 @@ export default class Image extends Node {
         >
           <div
             style={{
-              pointerEvents: this.editor.props.readOnly || isSelected ? "initial" : "none",
+              pointerEvents: readOnly || isSelected ? "initial" : "none",
             }}
           >
             <ImageZoom
@@ -248,7 +249,7 @@ export default class Image extends Node {
           onBlur={this.handleBlur(props)}
           className="caption"
           tabIndex={-1}
-          role="textbox"
+          role={readOnly ? "" : "textbox"}
           contentEditable
           suppressContentEditableWarning
         >
@@ -381,7 +382,7 @@ const Caption = styled.p`
 
   &:empty:before {
     color: ${props => props.theme.placeholder};
-    content: "Write a caption";
+    content: "${props => (props.role ? "Write a caption" : "")}";
     pointer-events: none;
   }
 `;
