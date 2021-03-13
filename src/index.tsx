@@ -802,9 +802,13 @@ const StyledEditor = styled("div")<{
 
   .image {
     text-align: center;
+    max-width: 100%;
+    clear: both;
 
     img {
-      pointer-events: ${props => (props.readOnly ? "initial" : "none")};
+      display: inline-block;
+      max-width: 100%;
+      max-height: 75vh;
     }
   }
 
@@ -815,6 +819,22 @@ const StyledEditor = styled("div")<{
     img {
       opacity: 0.5;
     }
+  }
+
+  .image-right-50 {
+    float: right;
+    width: 50%;
+    margin-left: 2em;
+    margin-bottom: 1em;
+    clear: initial;
+  }
+
+  .image-left-50 {
+    float: left;
+    width: 50%;
+    margin-right: 2em;
+    margin-bottom: 1em;
+    clear: initial;
   }
 
   .ProseMirror-hideselection *::selection {

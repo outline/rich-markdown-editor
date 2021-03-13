@@ -223,25 +223,32 @@ export default class Image extends Node {
           className={isSelected ? "ProseMirror-selectednode" : ""}
           onClick={this.handleSelect(props)}
         >
-          <ImageZoom
-            image={{
-              src,
-              alt,
-              title,
+          <div
+            style={{
+              pointerEvents: this.editor.props.readOnly || isSelected ? "initial" : "none",
             }}
-            defaultStyles={{
-              overlay: {
-                backgroundColor: theme.background,
-              },
-            }}
-            shouldRespectMaxDimension
-          />
+          >
+            <ImageZoom
+              image={{
+                src,
+                alt,
+                title,
+              }}
+              defaultStyles={{
+                overlay: {
+                  backgroundColor: theme.background,
+                },
+              }}
+              shouldRespectMaxDimension
+            />
+          </div>
         </ImageWrapper>
         <Caption
           onKeyDown={this.handleKeyDown(props)}
           onBlur={this.handleBlur(props)}
           className="caption"
           tabIndex={-1}
+          role="textbox"
           contentEditable
           suppressContentEditableWarning
         >

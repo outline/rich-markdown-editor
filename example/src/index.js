@@ -164,7 +164,7 @@ class YoutubeEmbed extends React.Component {
 
 class Example extends React.Component {
   state = {
-    readOnly: false,
+    readOnly: true,
     template: false,
     dark: localStorage.getItem("dark") === "enabled",
     value: undefined,
