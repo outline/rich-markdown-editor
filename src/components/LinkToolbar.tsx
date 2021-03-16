@@ -20,6 +20,8 @@ type Props = {
   searchTriggerOpen?: boolean;
   resetSearchTrigger?: () => void;
   Avatar: typeof React.Component | React.FC<any>;
+  cardsInside?: Array<string>;
+  onMoveLink?: (title: string) => Promise<string>;
 };
 
 export function isActive(props) {
@@ -153,9 +155,11 @@ export default class LinkToolbar extends React.Component<Props> {
       >
         {isActive(this.props) && (
           <LinkEditor
+            cardsInside={this.props.cardsInside}
             from={selection.from}
             to={selection.to}
             onCreateLink={onCreateLink ? this.handleOnCreateLink : undefined}
+            onMoveLink={this.props.onMoveLink}
             Avatar={this.props.Avatar}
             onSelectLink={this.handleOnSelectLink}
             onRemoveLink={onClose}

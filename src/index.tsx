@@ -120,6 +120,7 @@ export type Props = {
   onImageUploadStart?: () => void;
   onImageUploadStop?: () => void;
   onCreateLink?: (title: string) => Promise<string>;
+  onMoveLink?: (title: string) => Promise<string>;
   onTurnIntoCards?: (href: string) => Promise<string>;
   onSearchLink?: (term: string, setter: (resultObj: object) => void) => void;
   onClickLink: (href: string, event: MouseEvent) => void;
@@ -696,6 +697,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                       isTemplate={this.props.template === true}
                       onClickLink={this.props.onClickLink}
                       onCreateLink={this.props.onCreateLink}
+                      onMoveLink={this.props.onMoveLink}
+                      cardsInside={this.props.cardsInside}
                       Avatar={this.props.Avatar}
                       onTurnIntoCards={this.props.onTurnIntoCards}
                       tooltip={tooltip}
@@ -705,6 +708,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                       dictionary={dictionary}
                       isActive={this.state.linkMenuOpen}
                       onCreateLink={this.props.onCreateLink}
+                      onMoveLink={this.props.onMoveLink}
+                      cardsInside={this.props.cardsInside}
                       Avatar={this.props.Avatar}
                       onTurnIntoCards={this.props.onTurnIntoCards}
                       onSearchLink={this.props.onSearchLink}
@@ -748,6 +753,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                 resetSearchTrigger={() =>
                   this.setState({ searchTriggerOpen: false })
                 }
+                cardsInside={this.props.cardsInside}
+                onMoveLink={this.props.onMoveLink}
                 onClose={this.handleCloseLinkMenu}
                 view={this.view}
                 dictionary={dictionary}

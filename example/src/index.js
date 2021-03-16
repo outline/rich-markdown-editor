@@ -116,6 +116,8 @@ const docSearchResults = [
   },
 ];
 
+const cardsInside = ["/doc/hiring"];
+
 class YoutubeEmbed extends React.Component {
   render() {
     const { attrs } = this.props;
@@ -164,7 +166,7 @@ class YoutubeEmbed extends React.Component {
 
 class Example extends React.Component {
   state = {
-    readOnly: true,
+    readOnly: false,
     template: false,
     dark: localStorage.getItem("dark") === "enabled",
     value: undefined,
@@ -223,7 +225,10 @@ class Example extends React.Component {
         <br />
         <Editor
           id="example"
-          cardsInside={["/doc/hiring"]}
+          cardsInside={cardsInside}
+          onMoveLink={lnk =>
+            console.log(cardsInside.includes(lnk) ? "move out" : "move in")
+          }
           editorMinHeight="400px"
           fixedToolbar={true}
           readOnly={this.state.readOnly}

@@ -8,6 +8,7 @@ import {
   ArchiveIcon,
   TrashIcon,
   OpenIcon,
+  InsertRightIcon,
   Icon,
 } from "outline-icons";
 import styled, { withTheme } from "styled-components";
@@ -19,6 +20,26 @@ import ToolbarButton from "./ToolbarButton";
 import LinkSearchResult from "./LinkSearchResult";
 import baseDictionary from "../dictionary";
 import { iOS, android } from "./SelectionToolbar";
+
+const MoveToIcon = ({ color, moveOut = true }) => {
+  return (
+    <svg
+      viewBox="0 0 30 30"
+      style={{
+        width: "17px",
+        height: "17px",
+        display: "block",
+        fill: color,
+        backfaceVisibility: "hidden",
+        transformOrigin: "center",
+        transform: moveOut ? "" : "rotate(90deg)",
+      }}
+      className="moveTo"
+    >
+      <polygon points="7 26 7 9 25.188 9 21.594 12.594 23 14 29 8 23 2 21.594 3.406 25.188 7 5 7 5 26"></polygon>
+    </svg>
+  );
+};
 
 export function AddCardIcon(props: any) {
   return (
@@ -79,6 +100,8 @@ type Props = {
   view: EditorView;
   theme: typeof theme;
   selectedText?: string;
+  cardsInside?: Array<string>;
+  onMoveLink?: (title: string) => Promise<string>;
 };
 
 type State = {
@@ -321,15 +344,20 @@ class LinkEditor extends React.Component<Props, State> {
   }
 
   render() {
-    const { dictionary, theme, Avatar } = this.props;
+    const { dictionary, theme, Avatar, cardsInside, onMoveLink } = this.props;
     const { value, selectedIndex } = this.state;
     const looksLikeUrl = value.match(/^https?:\/\//i);
     const showTurnInto = !!looksLikeUrl;
-    const results = showTurnInto
-      ? []
-      : this.state.results[value.trim()] ||
-        this.state.results[this.state.previousValue] ||
-        [];
+    const initialIsCardLink =
+      this.initialValue === value && value.startsWith("/");
+    const results =
+      showTurnInto || initialIsCardLink
+        ? []
+        : this.state.results[value.trim()] ||
+          this.state.results[this.state.previousValue] ||
+          [];
+
+    const isInside = cardsInside && cardsInside.includes(value);
 
     const Tooltip = this.props.tooltip;
     // create card on top, should be default action. order of search results
@@ -374,6 +402,20 @@ class LinkEditor extends React.Component<Props, State> {
             )}
           </Tooltip>
         </ToolbarButton>
+        {cardsInside && onMoveLink && (
+          <ToolbarButton onClick={() => onMoveLink(value)} disabled={!value}>
+            <Tooltip
+              tooltip={
+                isInside
+                  ? "Move linked card outside"
+                  : "Move linked card inside"
+              }
+              placement="top"
+            >
+              <MoveToIcon color={theme.toolbarItem} moveOut={isInside} />
+            </Tooltip>
+          </ToolbarButton>
+        )}
 
         {showResults && (
           <SearchResults id="link-search-results">
