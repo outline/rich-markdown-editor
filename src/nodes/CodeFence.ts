@@ -79,7 +79,7 @@ export default class CodeFence extends Node {
         const button = document.createElement("button");
         button.innerText = "Copy";
         button.type = "button";
-        button.addEventListener("click", this.handleCopyToClipboard(node));
+        button.addEventListener("click", this.handleCopyToClipboard);
 
         const select = document.createElement("select");
         select.addEventListener("change", this.handleLanguageChange);
@@ -127,17 +127,25 @@ export default class CodeFence extends Node {
     };
   }
 
-  handleCopyToClipboard(node) {
-    return () => {
-      copy(node.textContent);
-      if (this.options.onShowToast) {
-        this.options.onShowToast(
-          this.options.dictionary.codeCopied,
-          ToastType.Info
-        );
+  handleCopyToClipboard = event => {
+    const { view } = this.editor;
+    const element = event.target;
+    const { top, left } = element.getBoundingClientRect();
+    const result = view.posAtCoords({ top, left });
+
+    if (result) {
+      const node = view.state.doc.nodeAt(result.pos);
+      if (node) {
+        copy(node.textContent);
+        if (this.options.onShowToast) {
+          this.options.onShowToast(
+            this.options.dictionary.codeCopied,
+            ToastType.Info
+          );
+        }
       }
-    };
-  }
+    }
+  };
 
   handleLanguageChange = event => {
     const { view } = this.editor;
