@@ -19,7 +19,7 @@ export default class Embed extends Node {
       },
       parseDOM: [
         {
-          tag: "iframe",
+          tag: "iframe[class=embed]",
           getAttrs: (dom: HTMLIFrameElement) => {
             const { embeds } = this.editor.props;
             const href = dom.getAttribute("src") || "";
@@ -42,7 +42,7 @@ export default class Embed extends Node {
       ],
       toDOM: node => [
         "iframe",
-        { src: node.attrs.href, contentEditable: false },
+        { class: "embed", src: node.attrs.href, contentEditable: false },
         0,
       ],
     };
