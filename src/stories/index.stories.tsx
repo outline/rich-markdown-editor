@@ -186,6 +186,12 @@ Placeholder.args = {
   placeholder: "This is a custom placeholder…",
 };
 
+export const Images = Template.bind({});
+Images.args = {
+  defaultValue: `# Images
+![A caption](https://upload.wikimedia.org/wikipedia/commons/0/06/Davide-ragusa-gcDwzUGuUoI-unsplash.jpg)`,
+};
+
 export const Focused = Template.bind({});
 Focused.args = {
   autoFocus: true,
