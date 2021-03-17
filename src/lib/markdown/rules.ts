@@ -11,6 +11,7 @@ export default function rules({ embeds }) {
   return markdownit("default", {
     breaks: false,
     html: false,
+    linkify: true,
   })
     .use(embedsPlugin(embeds))
     .use(breakPlugin)
