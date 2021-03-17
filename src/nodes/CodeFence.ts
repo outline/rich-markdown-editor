@@ -163,12 +163,7 @@ export default class CodeFence extends Node {
   };
 
   get plugins() {
-    return [
-      Prism({
-        name: this.name,
-        deferred: !this.options.initialReadOnly,
-      }),
-    ];
+    return [Prism({ name: this.name })];
   }
 
   inputRules({ type }) {

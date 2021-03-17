@@ -265,12 +265,10 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new Blockquote(),
         new CodeBlock({
           dictionary,
-          initialReadOnly: this.props.readOnly,
           onShowToast: this.props.onShowToast,
         }),
         new CodeFence({
           dictionary,
-          initialReadOnly: this.props.readOnly,
           onShowToast: this.props.onShowToast,
         }),
         new CheckboxList(),
