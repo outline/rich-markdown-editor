@@ -60,7 +60,7 @@ export default class ExtensionManager {
   }
 
   parser({ schema }) {
-    const tokens = this.extensions
+    const tokens: Record<string, any> = this.extensions
       .filter(
         extension => extension.type === "mark" || extension.type === "node"
       )

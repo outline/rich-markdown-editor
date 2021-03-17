@@ -4,7 +4,7 @@ import Mark from "./Mark";
 
 export default class Highlight extends Mark {
   get name() {
-    return "mark";
+    return "highlight";
   }
 
   get schema() {
@@ -34,6 +34,6 @@ export default class Highlight extends Mark {
   }
 
   parseMarkdown() {
-    return { mark: "mark" };
+    return { mark: "highlight" };
   }
 }

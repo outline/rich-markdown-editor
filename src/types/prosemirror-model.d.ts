@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-import model from "prosemirror-model";
+import "prosemirror-model";
 
 declare module "prosemirror-model" {
   interface Slice {
