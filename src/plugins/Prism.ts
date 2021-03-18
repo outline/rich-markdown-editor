@@ -84,31 +84,43 @@ function getDecorations({ doc, name }) {
   return DecorationSet.create(doc, decorations);
 }
 
-export default function Prism({ name, deferred = true }) {
+export default function Prism({ name }) {
+  let highlighted = false;
+
   return new Plugin({
     key: new PluginKey("prism"),
     state: {
-      init: (_, { doc }) => {
-        if (deferred) return;
-
-        return getDecorations({ doc, name });
+      init: (_: Plugin, { doc }) => {
+        return DecorationSet.create(doc, []);
       },
       apply: (transaction, decorationSet, oldState, state) => {
         // TODO: find way to cache decorations
         // see: https://discuss.prosemirror.net/t/how-to-update-multiple-inline-decorations-on-node-change/1493
 
-        const deferredInit = !decorationSet;
         const nodeName = state.selection.$head.parent.type.name;
         const previousNodeName = oldState.selection.$head.parent.type.name;
         const codeBlockChanged =
           transaction.docChanged && [nodeName, previousNodeName].includes(name);
 
-        if (deferredInit || codeBlockChanged) {
+        if (!highlighted || codeBlockChanged) {
+          highlighted = true;
           return getDecorations({ doc: transaction.doc, name });
         }
 
         return decorationSet.map(transaction.mapping, transaction.doc);
       },
+    },
+    view: view => {
+      if (!highlighted) {
+        // we don't highlight code blocks on the first render as part of mounting
+        // as it's expensive (relative to the rest of the document). Instead let
+        // it render un-highlighted and then trigger a defered render of Prism
+        // by updating the plugins metadata
+        setTimeout(() => {
+          view.dispatch(view.state.tr.setMeta("prism", { loaded: true }));
+        }, 10);
+      }
+      return {};
     },
     props: {
       decorations(state) {
