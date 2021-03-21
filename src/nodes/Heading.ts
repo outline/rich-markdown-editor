@@ -41,26 +41,24 @@ export default class Heading extends Node {
         contentElement: "span",
       })),
       toDOM: node => {
+        const level = node.attrs.level + (this.options.offset || 0);
         const button = document.createElement("button");
         button.innerText = "#";
         button.type = "button";
         button.className = "heading-anchor";
         button.addEventListener("click", this.handleCopyLink());
 
-        return [
-          `h${node.attrs.level + (this.options.offset || 0)}`,
-          button,
-          ["span", { class: "heading-content" }, 0],
-        ];
+        return [`h${level}`, button, ["span", { class: "heading-content" }, 0]];
       },
     };
   }
 
-  toMarkdown(state: MarkdownSerializerState, node: ProsemirrorNode) {
-    state.write(state.repeat("#", node.attrs.level) + " ");
+  toMarkdown = (state: MarkdownSerializerState, node: ProsemirrorNode) => {
+    const level = node.attrs.level + (this.options.offset || 0);
+    state.write(state.repeat("#", level) + " ");
     state.renderInline(node);
     state.closeBlock(node);
-  }
+  };
 
   parseMarkdown() {
     return {
