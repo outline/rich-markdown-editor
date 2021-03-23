@@ -1050,6 +1050,11 @@ const StyledEditor = styled("div")<{
   ul li,
   ol li {
     position: relative;
+    white-space: initial;
+
+    p {
+      white-space: pre-wrap;
+    }
 
     > div {
       width: 100%;
