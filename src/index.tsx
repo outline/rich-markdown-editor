@@ -1011,7 +1011,7 @@ const StyledEditor = styled("div")<{
 
   blockquote {
     border-left: 3px solid ${props => props.theme.quote};
-    margin: 0;
+    margin: 5px;
     padding-left: 10px;
     font-style: italic;
   }
