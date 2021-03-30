@@ -10178,9 +10178,9 @@ prosemirror-utils@^0.9.6:
   integrity sha512-UC+j9hQQ1POYfMc5p7UFxBTptRiGPR7Kkmbl3jVvU8VgQbkI89tR/GK+3QYC8n+VvBZrtAoCrJItNhWSxX3slA==
 
 prosemirror-view@^1.0.0, prosemirror-view@^1.1.0, prosemirror-view@^1.13.3, prosemirror-view@^1.17.6:
-  version "1.17.6"
-  resolved "https://registry.yarnpkg.com/prosemirror-view/-/prosemirror-view-1.17.6.tgz#9c31c84b9b78bd3aa3343d1b90eff36869387a5b"
-  integrity sha512-ZnpIQg8DzrvpeBPLab3UUEjwjA37CwOjQruDyzdHYUf6MA95H48tchIOVrwUdQxFDhETaG5iQOWZlAzYj+olzw==
+  version "1.18.2"
+  resolved "https://registry.yarnpkg.com/prosemirror-view/-/prosemirror-view-1.18.2.tgz#dd5d72e90266ec897464005eb6090fbc6acfeb11"
+  integrity sha512-dgJiPMC7fTtndwSthuIW4P2GlSRL+7JFrVPt+tvAkZ9Kq6xWaAbyZOvGKziTJnoiXk9qAGyqELSHhiJ3t6iNfQ==
   dependencies:
     prosemirror-model "^1.1.0"
     prosemirror-state "^1.0.0"
