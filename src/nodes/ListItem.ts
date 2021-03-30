@@ -106,7 +106,11 @@ export default class ListItem extends Node {
               const { state, dispatch } = view;
               const target = event.target as HTMLElement;
               const li = target?.closest("li");
+
               if (!li) {
+                return false;
+              }
+              if (!view.dom.contains(li)) {
                 return false;
               }
               const pos = view.posAtDOM(li, 0);
@@ -126,7 +130,11 @@ export default class ListItem extends Node {
               const { state, dispatch } = view;
               const target = event.target as HTMLElement;
               const li = target?.closest("li");
+
               if (!li) {
+                return false;
+              }
+              if (!view.dom.contains(li)) {
                 return false;
               }
               const pos = view.posAtDOM(li, 0);
