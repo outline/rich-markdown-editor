@@ -14,6 +14,7 @@ import powershell from "refractor/lang/powershell";
 import ruby from "refractor/lang/ruby";
 import sql from "refractor/lang/sql";
 import typescript from "refractor/lang/typescript";
+import yaml from "refractor/lang/yaml";
 import { setBlockType } from "prosemirror-commands";
 import { textblockTypeInputRule } from "prosemirror-inputrules";
 import copy from "copy-to-clipboard";
@@ -38,6 +39,7 @@ import { ToastType } from "../types";
   ruby,
   sql,
   typescript,
+  yaml,
 ].forEach(refractor.register);
 
 export default class CodeFence extends Node {
