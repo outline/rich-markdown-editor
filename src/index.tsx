@@ -828,6 +828,13 @@ const StyledEditor = styled("div")<{
     }
   }
 
+  .image-center-50 {
+    width: 50%;
+    margin: auto;
+    margin-bottom: 1em;
+    clear: initial;
+  }
+
   .image-right-50 {
     float: right;
     width: 50%;

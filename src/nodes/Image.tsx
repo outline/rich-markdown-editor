@@ -83,7 +83,7 @@ const uploadPlugin = options =>
     },
   });
 
-const IMAGE_CLASSES = ["right-50", "left-50"];
+const IMAGE_CLASSES = ["right-50", "left-50", "center-50"];
 const getLayoutAndTitle = tokenTitle => {
   if (!tokenTitle) return {};
   if (IMAGE_CLASSES.includes(tokenTitle)) {
@@ -314,7 +314,14 @@ export default class Image extends Node {
         return true;
       },
       alignCenter: () => (state, dispatch) => {
-        const attrs = { ...state.selection.node.attrs, layoutClass: null };
+        console.log(`state.selection.node.attrs`, state.selection.node.attrs);
+        const attrs = {
+          ...state.selection.node.attrs,
+          layoutClass:
+            state.selection.node.attrs.layoutClass === "center-50"
+              ? null
+              : "center-50",
+        };
         const { selection } = state;
         dispatch(state.tr.setNodeMarkup(selection.$from.pos, undefined, attrs));
         return true;

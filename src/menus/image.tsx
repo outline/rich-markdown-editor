@@ -20,6 +20,9 @@ export default function imageMenuItems(
   const isRightAligned = isNodeActive(schema.nodes.image, {
     layoutClass: "right-50",
   });
+  const isCenterAligned = isNodeActive(schema.nodes.image, {
+    layoutClass: "center-50",
+  });
 
   return [
     {
@@ -35,9 +38,7 @@ export default function imageMenuItems(
       icon: AlignImageCenterIcon,
       visible: true,
       active: state =>
-        isNodeActive(schema.nodes.image)(state) &&
-        !isLeftAligned(state) &&
-        !isRightAligned(state),
+        isNodeActive(schema.nodes.image)(state) && isCenterAligned(state),
     },
     {
       name: "alignRight",
