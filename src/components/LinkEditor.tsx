@@ -407,8 +407,8 @@ class LinkEditor extends React.Component<Props, State> {
             <Tooltip
               tooltip={
                 isInside
-                  ? "Move linked card outside"
-                  : "Move linked card inside"
+                  ? "Move linked lesson outside"
+                  : "Move linked lesson inside"
               }
               placement="top"
             >
