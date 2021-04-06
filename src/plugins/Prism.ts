@@ -1,6 +1,7 @@
 import refractor from "refractor/core";
 import flattenDeep from "lodash/flattenDeep";
 import { Plugin, PluginKey } from "prosemirror-state";
+import { Node } from "prosemirror-model";
 import { Decoration, DecorationSet } from "prosemirror-view";
 import { findBlockNodes } from "prosemirror-utils";
 
@@ -28,9 +29,11 @@ type ParsedNode = {
   classes: string[];
 };
 
-function getDecorations({ doc, name }) {
+const cache: Record<number, { node: Node, decorations: Decoration[] }> = {};
+
+function getDecorations({ doc, name }: { doc: Node, name: string }) {
   const decorations: Decoration[] = [];
-  const blocks = findBlockNodes(doc).filter(
+  const blocks: { node: Node, pos: number }[] = findBlockNodes(doc).filter(
     item => item.node.type.name === name
   );
 
@@ -60,26 +63,39 @@ function getDecorations({ doc, name }) {
 
     const nodes = refractor.highlight(block.node.textContent, language);
 
-    flattenDeep(parseNodes(nodes))
-      .map((node: ParsedNode) => {
-        const from = startPos;
-        const to = from + node.text.length;
+    if (!cache[block.pos] || !cache[block.pos].node.eq(block.node)) {
+      const _decorations = flattenDeep(parseNodes(nodes))
+        .map((node: ParsedNode) => {
+          const from = startPos;
+          const to = from + node.text.length;
 
-        startPos = to;
+          startPos = to;
 
-        return {
-          ...node,
-          from,
-          to,
-        };
-      })
-      .forEach(node => {
-        const decoration = Decoration.inline(node.from, node.to, {
-          class: (node.classes || []).join(" "),
+          return {
+            ...node,
+            from,
+            to,
+          };
+        })
+        .map(node => {
+          return Decoration.inline(node.from, node.to, {
+            class: (node.classes || []).join(" "),
+          });
         });
-        decorations.push(decoration);
-      });
+
+      cache[block.pos] = {
+        node: block.node,
+        decorations: _decorations,
+      }
+    }
+    cache[block.pos].decorations.forEach(decoration => decorations.push(decoration));
   });
+
+  Object.keys(cache)
+    .filter((pos) => !blocks.find(block => block.pos === Number(pos)))
+    .forEach((pos) => {
+      delete cache[Number(pos)];
+    })
 
   return DecorationSet.create(doc, decorations);
 }
@@ -94,8 +110,6 @@ export default function Prism({ name }) {
         return DecorationSet.create(doc, []);
       },
       apply: (transaction, decorationSet, oldState, state) => {
-        // TODO: find way to cache decorations
-        // see: https://discuss.prosemirror.net/t/how-to-update-multiple-inline-decorations-on-node-change/1493
 
         const nodeName = state.selection.$head.parent.type.name;
         const previousNodeName = oldState.selection.$head.parent.type.name;
