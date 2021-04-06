@@ -89,7 +89,7 @@ function getDecorations({ doc, name }: { doc: Node; name: string }) {
       };
     }
     cache[block.pos].decorations.forEach(decoration => {
-      decorations.push(decoration)
+      decorations.push(decoration);
     });
   });
 
