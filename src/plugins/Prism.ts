@@ -29,11 +29,11 @@ type ParsedNode = {
   classes: string[];
 };
 
-const cache: Record<number, { node: Node, decorations: Decoration[] }> = {};
+const cache: Record<number, { node: Node; decorations: Decoration[] }> = {};
 
-function getDecorations({ doc, name }: { doc: Node, name: string }) {
+function getDecorations({ doc, name }: { doc: Node; name: string }) {
   const decorations: Decoration[] = [];
-  const blocks: { node: Node, pos: number }[] = findBlockNodes(doc).filter(
+  const blocks: { node: Node; pos: number }[] = findBlockNodes(doc).filter(
     item => item.node.type.name === name
   );
 
@@ -86,16 +86,18 @@ function getDecorations({ doc, name }: { doc: Node, name: string }) {
       cache[block.pos] = {
         node: block.node,
         decorations: _decorations,
-      }
+      };
     }
-    cache[block.pos].decorations.forEach(decoration => decorations.push(decoration));
+    cache[block.pos].decorations.forEach(decoration => {
+      decorations.push(decoration)
+    });
   });
 
   Object.keys(cache)
-    .filter((pos) => !blocks.find(block => block.pos === Number(pos)))
-    .forEach((pos) => {
+    .filter(pos => !blocks.find(block => block.pos === Number(pos)))
+    .forEach(pos => {
       delete cache[Number(pos)];
-    })
+    });
 
   return DecorationSet.create(doc, decorations);
 }
@@ -110,7 +112,6 @@ export default function Prism({ name }) {
         return DecorationSet.create(doc, []);
       },
       apply: (transaction, decorationSet, oldState, state) => {
-
         const nodeName = state.selection.$head.parent.type.name;
         const previousNodeName = oldState.selection.$head.parent.type.name;
         const codeBlockChanged =
