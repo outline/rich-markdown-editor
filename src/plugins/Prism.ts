@@ -61,9 +61,8 @@ function getDecorations({ doc, name }: { doc: Node; name: string }) {
       return;
     }
 
-    const nodes = refractor.highlight(block.node.textContent, language);
-
     if (!cache[block.pos] || !cache[block.pos].node.eq(block.node)) {
+      const nodes = refractor.highlight(block.node.textContent, language);
       const _decorations = flattenDeep(parseNodes(nodes))
         .map((node: ParsedNode) => {
           const from = startPos;
