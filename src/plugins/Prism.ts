@@ -22,6 +22,7 @@ export const LANGUAGES = {
   ruby: "Ruby",
   sql: "SQL",
   typescript: "TypeScript",
+  yaml: "YAML",
 };
 
 type ParsedNode = {
