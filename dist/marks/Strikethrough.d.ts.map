@@ -1,0 +1,1 @@
+{"version":3,"file":"Strikethrough.d.ts","sourceRoot":"","sources":["../../src/marks/Strikethrough.ts"],"names":[],"mappings":"AAEA,OAAO,IAAI,MAAM,QAAQ,CAAC;AAE1B,MAAM,CAAC,OAAO,OAAO,aAAc,SAAQ,IAAI;IAC7C,IAAI,IAAI,WAEP;IAED,IAAI,MAAM;;;;;MAeT;IAED,IAAI,CAAC,EAAE,IAAI,EAAE;;KAAA;;;IAMb,UAAU,CAAC,EAAE,IAAI,EAAE;;KAAA;IAInB,IAAI,UAAU;;;;;MAOb;IAED,IAAI,aAAa,WAEhB;IAED,aAAa;;;CAGd"}

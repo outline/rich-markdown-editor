@@ -1,0 +1,1 @@
+{"version":3,"file":"TrailingNode.d.ts","sourceRoot":"","sources":["../../src/plugins/TrailingNode.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,MAAM,EAAa,MAAM,mBAAmB,CAAC;AACtD,OAAO,SAAS,MAAM,kBAAkB,CAAC;AAEzC,MAAM,CAAC,OAAO,OAAO,YAAa,SAAQ,SAAS;IACjD,IAAI,IAAI,WAEP;IAED,IAAI,cAAc;;;MAKjB;IAED,IAAI,OAAO,uBAwCV;CACF"}

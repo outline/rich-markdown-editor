@@ -1,0 +1,1 @@
+{"version":3,"file":"ReactNode.d.ts","sourceRoot":"","sources":["../../src/nodes/ReactNode.ts"],"names":[],"mappings":";AAAA,OAAO,IAAI,MAAM,QAAQ,CAAC;AAE1B,MAAM,CAAC,OAAO,CAAC,QAAQ,OAAO,SAAU,SAAQ,IAAI;IAClD,QAAQ,CAAC,SAAS,CAAC,EACjB,IAAI,EACJ,UAAU,EACV,UAAU,EACV,QAAQ,GACT;;;;;KAAA,GAAG,KAAK,CAAC,YAAY;CACvB"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"toggleList.d.ts","sourceRoot":"","sources":["../../src/commands/toggleList.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,QAAQ,EAAE,MAAM,mBAAmB,CAAC;AAC7C,OAAO,EAAE,WAAW,EAAE,WAAW,EAAE,MAAM,mBAAmB,CAAC;AAK7D,MAAM,CAAC,OAAO,UAAU,UAAU,CAAC,QAAQ,EAAE,QAAQ,EAAE,QAAQ,EAAE,QAAQ,WACxD,WAAW,iBAAiB,WAAW,KAAK,IAAI,aAiChE"}
