@@ -201,7 +201,7 @@ class Example extends React.Component {
           fixedToolbar={true}
           readOnly={this.state.readOnly}
           alwaysShowBlockPlus={true}
-          limitBlockMenuItems={["Big heading", "Image", "Link", "YouTube"]}
+          // limitBlockMenuItems={["Big heading", "Image", "Link", "YouTube"]}
           readOnlyWriteCheckboxes
           value={this.state.value}
           enableTemplatePlaceholder={true}

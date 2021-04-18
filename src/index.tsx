@@ -1349,6 +1349,7 @@ const StyledEditor = styled("div")<{
       padding: 4px 8px;
       text-align: left;
       min-width: 100px;
+      font-weight: normal;
     }
 
     .selectedCell {
