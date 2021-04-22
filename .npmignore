@@ -5,3 +5,5 @@ example
 .github
 .eslintignore
 .eslintrc
+.map
+dist/stories
