@@ -15,8 +15,11 @@ export default class HorizontalRule extends Node {
       },
       group: "block",
       parseDOM: [{ tag: "hr" }],
-      toDOM() {
-        return ["hr"];
+      toDOM: node => {
+        return [
+          "hr",
+          { class: node.attrs.markup === "***" ? "page-break" : "" },
+        ];
       },
     };
   }

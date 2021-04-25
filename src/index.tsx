@@ -1121,6 +1121,10 @@ const StyledEditor = styled("div")<{
     border-top: 1px solid ${props => props.theme.horizontalRule};
   }
 
+  hr.page-break {
+    page-break-after: always;
+  }
+
   code {
     border-radius: 4px;
     border: 1px solid ${props => props.theme.codeBorder};
