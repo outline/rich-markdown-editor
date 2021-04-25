@@ -8,6 +8,11 @@ export default class HorizontalRule extends Node {
 
   get schema() {
     return {
+      attrs: {
+        markup: {
+          default: "---",
+        },
+      },
       group: "block",
       parseDOM: [{ tag: "hr" }],
       toDOM() {
@@ -38,7 +43,8 @@ export default class HorizontalRule extends Node {
         const { tr } = state;
 
         if (match[0]) {
-          tr.replaceWith(start - 1, end, type.create({}));
+          const markup = match[0].trim();
+          tr.replaceWith(start - 1, end, type.create({ markup }));
         }
 
         return tr;
@@ -47,11 +53,16 @@ export default class HorizontalRule extends Node {
   }
 
   toMarkdown(state, node) {
-    state.write(node.attrs.markup || "\n---");
+    state.write(`\n${node.attrs.markup}`);
     state.closeBlock(node);
   }
 
   parseMarkdown() {
-    return { node: "hr" };
+    return {
+      node: "hr",
+      getAttrs: tok => ({
+        markup: tok.markup,
+      }),
+    };
   }
 }
