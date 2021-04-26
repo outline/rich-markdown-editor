@@ -25,6 +25,7 @@ import Extension from "./lib/Extension";
 import ExtensionManager from "./lib/ExtensionManager";
 import ComponentView from "./lib/ComponentView";
 import headingToSlug from "./lib/headingToSlug";
+import { mathSerializer } from "@benrbray/prosemirror-math";
 
 // nodes
 import ReactNode from "./nodes/ReactNode";
@@ -458,6 +459,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       editable: () => !this.props.readOnly,
       nodeViews: this.nodeViews,
       handleDOMEvents: this.props.handleDOMEvents,
+      clipboardTextSerializer: slice => mathSerializer.serializeSlice(slice),
       dispatchTransaction: transaction => {
         const { state, transactions } = this.view.state.applyTransaction(
           transaction

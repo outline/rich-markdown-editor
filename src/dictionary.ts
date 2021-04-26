@@ -36,6 +36,7 @@ export const base = {
   link: "Link",
   linkCopied: "Link copied to clipboard",
   mark: "Highlight",
+  math: "Math",
   newLineEmpty: "Type '/' to insert…",
   newLineWithSlash: "Keep typing to filter…",
   noResults: "No results",

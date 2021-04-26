@@ -39,6 +39,10 @@ export default class Math extends Node {
     };
   }
 
+  commands({ type }) {
+    return () => insertMathCmd(type);
+  }
+
   inputRules({ schema }) {
     return [
       makeInlineMathInputRule(
@@ -48,9 +52,9 @@ export default class Math extends Node {
     ];
   }
 
-  keys({ schema }) {
+  keys({ type }) {
     return {
-      "Mod-Space": insertMathCmd(schema.nodes.math_inline),
+      "Mod-Space": insertMathCmd(type),
       Backspace: chainCommands(
         deleteSelection,
         mathBackspaceCmd,

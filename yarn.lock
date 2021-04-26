@@ -9495,10 +9495,10 @@ os-tmpdir@~1.0.2:
   resolved "https://registry.yarnpkg.com/os-tmpdir/-/os-tmpdir-1.0.2.tgz#bbe67406c79aa85c5cfec766fe5734555dfa1274"
   integrity sha1-u+Z0BseaqFxc/sdm/lc0VV36EnQ=
 
-outline-icons@^1.25.1-1:
-  version "1.25.1-1"
-  resolved "https://registry.yarnpkg.com/outline-icons/-/outline-icons-1.25.1-1.tgz#1d17b478283181fd360f43498421a8b63f3fd9e0"
-  integrity sha512-rnTl/v2nMabiyCmsL9WmVz2PoZXNEO135MULXUTVtTmWo6KGWsl4B9ug8dxw4MR08fIiJt5niwQsE2EDlH6n6A==
+outline-icons@^1.27.0:
+  version "1.27.0"
+  resolved "https://registry.yarnpkg.com/outline-icons/-/outline-icons-1.27.0.tgz#0d923a0b81fe2f3eac1ee5ffe9617158d41e4c29"
+  integrity sha512-YGm0IjCGO3+dduESI4aU/VMmu5uVJwsbStGn6+fRVZLryv2HEFcfofgF93AvPnc8AdFgF9xwzyYisnzpLjhPbA==
 
 overlayscrollbars@^1.10.2:
   version "1.13.1"

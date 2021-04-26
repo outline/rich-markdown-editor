@@ -1,6 +1,7 @@
 import {
   makeBlockMathInputRule,
   REGEX_BLOCK_MATH_DOLLARS,
+  insertMathCmd,
 } from "@benrbray/prosemirror-math";
 import Node from "./Node";
 
@@ -28,13 +29,12 @@ export default class MathDisplay extends Node {
     };
   }
 
-  inputRules({ schema }) {
-    return [
-      makeBlockMathInputRule(
-        REGEX_BLOCK_MATH_DOLLARS,
-        schema.nodes.math_display
-      ),
-    ];
+  commands({ type }) {
+    return () => insertMathCmd(type);
+  }
+
+  inputRules({ type }) {
+    return [makeBlockMathInputRule(REGEX_BLOCK_MATH_DOLLARS, type)];
   }
 
   toMarkdown(state, node) {
