@@ -1,4 +1,5 @@
 import markdownit from "markdown-it";
+import mathPlugin from "./math";
 import markPlugin from "./mark";
 import checkboxPlugin from "./checkboxes";
 import embedsPlugin from "./embeds";
@@ -20,5 +21,6 @@ export default function rules({ embeds }) {
     .use(markPlugin({ delim: "!!", mark: "placeholder" }))
     .use(underlinesPlugin)
     .use(tablesPlugin)
+    .use(mathPlugin)
     .use(noticesPlugin);
 }
