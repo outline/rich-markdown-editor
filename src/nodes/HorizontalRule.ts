@@ -25,8 +25,10 @@ export default class HorizontalRule extends Node {
   }
 
   commands({ type }) {
-    return () => (state, dispatch) => {
-      dispatch(state.tr.replaceSelectionWith(type.create()).scrollIntoView());
+    return attrs => (state, dispatch) => {
+      dispatch(
+        state.tr.replaceSelectionWith(type.create(attrs)).scrollIntoView()
+      );
       return true;
     };
   }
