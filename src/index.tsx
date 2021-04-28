@@ -1116,9 +1116,27 @@ const StyledEditor = styled("div")<{
   }
 
   hr {
-    height: 0;
+    position: relative;
+    height: 1em;
     border: 0;
+  }
+
+  hr:before {
+    content: "";
+    display: block;
+    position: absolute;
     border-top: 1px solid ${props => props.theme.horizontalRule};
+    top: 0.5em;
+    left: 0;
+    right: 0;
+  }
+
+  hr.page-break {
+    page-break-after: always;
+  }
+
+  hr.page-break:before {
+    border-top: 1px dashed ${props => props.theme.horizontalRule};
   }
 
   code {
@@ -1526,6 +1544,10 @@ const StyledEditor = styled("div")<{
   @media print {
     .block-menu-trigger {
       display: none;
+    }
+
+    .page-break {
+      opacity: 0;
     }
   }
 

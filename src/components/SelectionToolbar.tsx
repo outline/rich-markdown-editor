@@ -8,6 +8,7 @@ import getTableRowMenuItems from "../menus/tableRow";
 import getTableMenuItems from "../menus/table";
 import getFormattingMenuItems from "../menus/formatting";
 import getImageMenuItems from "../menus/image";
+import getDividerMenuItems from "../menus/divider";
 import FloatingToolbar from "./FloatingToolbar";
 import LinkEditor, { SearchResult } from "./LinkEditor";
 import Menu from "./Menu";
@@ -40,6 +41,9 @@ function isVisible(props) {
 
   if (!selection) return false;
   if (selection.empty) return false;
+  if (selection.node && selection.node.type.name === "hr") {
+    return true;
+  }
   if (selection.node && selection.node.type.name === "image") {
     return true;
   }
@@ -67,7 +71,7 @@ export default class SelectionToolbar extends React.Component<Props> {
     }
   }
 
-  handleOnCreateLink = async (title: string) => {
+  handleOnCreateLink = async (title: string): Promise<void> => {
     const { dictionary, onCreateLink, view, onShowToast } = this.props;
 
     if (!onCreateLink) {
@@ -122,6 +126,7 @@ export default class SelectionToolbar extends React.Component<Props> {
     const { state } = view;
     const { selection }: { selection: any } = state;
     const isCodeSelection = isNodeActive(state.schema.nodes.code_block)(state);
+    const isDividerSelection = isNodeActive(state.schema.nodes.hr)(state);
 
     // toolbar is disabled in code blocks, no bold / italic etc
     if (isCodeSelection) {
@@ -145,6 +150,8 @@ export default class SelectionToolbar extends React.Component<Props> {
       items = getTableRowMenuItems(state, rowIndex, dictionary);
     } else if (isImageSelection) {
       items = getImageMenuItems(state, dictionary);
+    } else if (isDividerSelection) {
+      items = getDividerMenuItems(state, dictionary);
     } else {
       items = getFormattingMenuItems(state, isTemplate, dictionary);
     }
