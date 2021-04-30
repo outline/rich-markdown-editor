@@ -82,6 +82,7 @@ export type Props = {
   defaultValue: string;
   placeholder: string;
   extensions: Extension[];
+  disableExtensions?: string[];
   autoFocus?: boolean;
   readOnly?: boolean;
   readOnlyWriteCheckboxes?: boolean;
@@ -258,84 +259,92 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     // adding nodes here? Update schema.ts for serialization on the server
     return new ExtensionManager(
       [
-        new Doc(),
-        new Text(),
-        new HardBreak(),
-        new Paragraph(),
-        new Blockquote(),
-        new CodeBlock({
-          dictionary,
-          onShowToast: this.props.onShowToast,
-        }),
-        new CodeFence({
-          dictionary,
-          onShowToast: this.props.onShowToast,
-        }),
-        new CheckboxList(),
-        new CheckboxItem(),
-        new BulletList(),
-        new Embed(),
-        new ListItem(),
-        new Notice({
-          dictionary,
-        }),
-        new Heading({
-          dictionary,
-          onShowToast: this.props.onShowToast,
-          offset: this.props.headingsOffset,
-        }),
-        new HorizontalRule(),
-        new Image({
-          dictionary,
-          uploadImage: this.props.uploadImage,
-          onImageUploadStart: this.props.onImageUploadStart,
-          onImageUploadStop: this.props.onImageUploadStop,
-          onShowToast: this.props.onShowToast,
-        }),
-        new Table(),
-        new TableCell({
-          onSelectTable: this.handleSelectTable,
-          onSelectRow: this.handleSelectRow,
-        }),
-        new TableHeadCell({
-          onSelectColumn: this.handleSelectColumn,
-        }),
-        new TableRow(),
-        new Bold(),
-        new Code(),
-        new Highlight(),
-        new Italic(),
-        new TemplatePlaceholder(),
-        new Underline(),
-        new Link({
-          onKeyboardShortcut: this.handleOpenLinkMenu,
-          onClickLink: this.props.onClickLink,
-          onClickHashtag: this.props.onClickHashtag,
-          onHoverLink: this.props.onHoverLink,
-        }),
-        new Strikethrough(),
-        new OrderedList(),
-        new History(),
-        new SmartText(),
-        new TrailingNode(),
-        new MarkdownPaste(),
-        new Keys({
-          onBlur: this.handleEditorBlur,
-          onFocus: this.handleEditorFocus,
-          onSave: this.handleSave,
-          onSaveAndExit: this.handleSaveAndExit,
-          onCancel: this.props.onCancel,
-        }),
-        new BlockMenuTrigger({
-          dictionary,
-          onOpen: this.handleOpenBlockMenu,
-          onClose: this.handleCloseBlockMenu,
-        }),
-        new Placeholder({
-          placeholder: this.props.placeholder,
-        }),
-        new MaxLength({
-          maxLength: this.props.maxLength,
+        ...[
+          new Doc(),
+          new Text(),
+          new HardBreak(),
+          new Paragraph(),
+          new Blockquote(),
+          new CodeBlock({
+            dictionary,
+            onShowToast: this.props.onShowToast,
+          }),
+          new CodeFence({
+            dictionary,
+            onShowToast: this.props.onShowToast,
+          }),
+          new CheckboxList(),
+          new CheckboxItem(),
+          new BulletList(),
+          new Embed(),
+          new ListItem(),
+          new Notice({
+            dictionary,
+          }),
+          new Heading({
+            dictionary,
+            onShowToast: this.props.onShowToast,
+            offset: this.props.headingsOffset,
+          }),
+          new HorizontalRule(),
+          new Image({
+            dictionary,
+            uploadImage: this.props.uploadImage,
+            onImageUploadStart: this.props.onImageUploadStart,
+            onImageUploadStop: this.props.onImageUploadStop,
+            onShowToast: this.props.onShowToast,
+          }),
+          new Table(),
+          new TableCell({
+            onSelectTable: this.handleSelectTable,
+            onSelectRow: this.handleSelectRow,
+          }),
+          new TableHeadCell({
+            onSelectColumn: this.handleSelectColumn,
+          }),
+          new TableRow(),
+          new Bold(),
+          new Code(),
+          new Highlight(),
+          new Italic(),
+          new TemplatePlaceholder(),
+          new Underline(),
+          new Link({
+            onKeyboardShortcut: this.handleOpenLinkMenu,
+            onClickLink: this.props.onClickLink,
+            onClickHashtag: this.props.onClickHashtag,
+            onHoverLink: this.props.onHoverLink,
+          }),
+          new Strikethrough(),
+          new OrderedList(),
+          new History(),
+          new SmartText(),
+          new TrailingNode(),
+          new MarkdownPaste(),
+          new Keys({
+            onBlur: this.handleEditorBlur,
+            onFocus: this.handleEditorFocus,
+            onSave: this.handleSave,
+            onSaveAndExit: this.handleSaveAndExit,
+            onCancel: this.props.onCancel,
+          }),
+          new BlockMenuTrigger({
+            dictionary,
+            onOpen: this.handleOpenBlockMenu,
+            onClose: this.handleCloseBlockMenu,
+          }),
+          new Placeholder({
+            placeholder: this.props.placeholder,
+          }),
+          new MaxLength({
+            maxLength: this.props.maxLength,
+          }),
+        ].filter(extension => {
+          // Optionaly disable extensions
+          if (this.props.disableExtensions) {
+            return !this.props.disableExtensions.includes(extension.name);
+          }
+          return true;
         }),
         ...this.props.extensions,
       ],
