@@ -19,7 +19,7 @@ export default {
     disableExtensions: { control: "array" },
   },
   args: {
-    disableExtensions: ["strong"],
+    disableExtensions: [],
   },
 } as Meta;
 
