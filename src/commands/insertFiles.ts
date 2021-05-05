@@ -61,11 +61,15 @@ const insertFiles = function(view, event, pos, files, options) {
 
         // otherwise, insert it at the placeholder's position, and remove
         // the placeholder itself
-        const transaction = view.state.tr
-          .replaceWith(pos, pos, schema.nodes.image.create({ src }))
-          .setMeta(uploadPlaceholderPlugin, { remove: { id } });
+        const newImg = new Image();
+        newImg.onload = () => {
+          const transaction = view.state.tr
+            .replaceWith(pos, pos, schema.nodes.image.create({ src }))
+            .setMeta(uploadPlaceholderPlugin, { remove: { id } });
 
-        view.dispatch(transaction);
+          view.dispatch(transaction);
+        };
+        newImg.src = src;
       })
       .catch(error => {
         console.error(error);
