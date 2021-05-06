@@ -62,6 +62,7 @@ const insertFiles = function(view, event, pos, files, options) {
         // otherwise, insert it at the placeholder's position, and remove
         // the placeholder itself
         const newImg = new Image();
+
         newImg.onload = () => {
           const transaction = view.state.tr
             .replaceWith(pos, pos, schema.nodes.image.create({ src }))
@@ -69,6 +70,11 @@ const insertFiles = function(view, event, pos, files, options) {
 
           view.dispatch(transaction);
         };
+
+        newImg.onerror = error => {
+          throw error;
+        };
+
         newImg.src = src;
       })
       .catch(error => {
