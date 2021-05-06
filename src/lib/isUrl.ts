@@ -4,8 +4,8 @@ export default function isUrl(text: string) {
   }
 
   try {
-    new URL(text);
-    return true;
+    const url = new URL(text);
+    return url.hostname !== "";
   } catch (err) {
     return false;
   }
