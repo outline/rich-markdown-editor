@@ -748,6 +748,8 @@ const StyledEditor = styled("div")<{
   .image.placeholder {
     position: relative;
     background: ${props => props.theme.background};
+    margin-bottom: calc(28px + 1.2em);
+
     img {
       opacity: 0.5;
     }
