@@ -293,7 +293,7 @@ export default class Image extends Node {
           layoutClass: "right-50",
         };
         const { selection } = state;
-        dispatch(state.tr.setNodeMarkup(selection.$from.pos, undefined, attrs));
+        dispatch(state.tr.setNodeMarkup(selection.from, undefined, attrs));
         return true;
       },
       alignLeft: () => (state, dispatch) => {
@@ -303,13 +303,13 @@ export default class Image extends Node {
           layoutClass: "left-50",
         };
         const { selection } = state;
-        dispatch(state.tr.setNodeMarkup(selection.$from.pos, undefined, attrs));
+        dispatch(state.tr.setNodeMarkup(selection.from, undefined, attrs));
         return true;
       },
       alignCenter: () => (state, dispatch) => {
         const attrs = { ...state.selection.node.attrs, layoutClass: null };
         const { selection } = state;
-        dispatch(state.tr.setNodeMarkup(selection.$from.pos, undefined, attrs));
+        dispatch(state.tr.setNodeMarkup(selection.from, undefined, attrs));
         return true;
       },
       createImage: attrs => (state, dispatch) => {
