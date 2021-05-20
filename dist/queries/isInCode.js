@@ -7,7 +7,7 @@ const isMarkActive_1 = __importDefault(require("./isMarkActive"));
 function isInCode(state) {
     const $head = state.selection.$head;
     for (let d = $head.depth; d > 0; d--) {
-        if ($head.node(d).type === state.schema.nodes.code_block) {
+        if ($head.node(d).type === state.schema.nodes.code_block || $head.node(d).type === state.schema.nodes.query_block) {
             return true;
         }
     }

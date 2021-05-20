@@ -11,12 +11,14 @@ const breaks_1 = __importDefault(require("./breaks"));
 const tables_1 = __importDefault(require("./tables"));
 const notices_1 = __importDefault(require("./notices"));
 const underlines_1 = __importDefault(require("./underlines"));
+const queryblock_1 = __importDefault(require("./queryblock"));
 function rules({ embeds }) {
     return markdown_it_1.default("default", {
         breaks: false,
         html: false,
         linkify: true,
     })
+        .use(queryblock_1.default)
         .use(embeds_1.default(embeds))
         .use(breaks_1.default)
         .use(checkboxes_1.default)

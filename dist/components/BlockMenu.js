@@ -109,7 +109,7 @@ class BlockMenu extends React.Component {
                 this.close();
             }
         };
-        this.insertItem = item => {
+        this.insertItem = (item) => {
             switch (item.name) {
                 case "image":
                     return this.triggerImagePick();
@@ -182,14 +182,14 @@ class BlockMenu extends React.Component {
                 this.inputRef.current.click();
             }
         };
-        this.triggerLinkInput = item => {
+        this.triggerLinkInput = (item) => {
             this.setState({ insertItem: item });
         };
-        this.handleImagePicked = event => {
+        this.handleImagePicked = (event) => {
             const files = getDataTransferFiles_1.default(event);
             const { view, uploadImage, onImageUploadStart, onImageUploadStop, onShowToast, } = this.props;
             const { state, dispatch } = view;
-            const parent = prosemirror_utils_1.findParentNode(node => !!node)(state.selection);
+            const parent = prosemirror_utils_1.findParentNode((node) => !!node)(state.selection);
             if (parent) {
                 dispatch(state.tr.insertText("", parent.pos, parent.pos + parent.node.textContent.length + 1));
                 insertFiles_1.default(view, event, parent.pos, files, {
@@ -232,14 +232,15 @@ class BlockMenu extends React.Component {
     }
     clearSearch() {
         const { state, dispatch } = this.props.view;
-        const parent = prosemirror_utils_1.findParentNode(node => !!node)(state.selection);
+        const parent = prosemirror_utils_1.findParentNode((node) => !!node)(state.selection);
         if (parent) {
-            dispatch(state.tr.insertText("", parent.pos, parent.pos + parent.node.textContent.length + 1));
+            dispatch(state.tr.insertText("", parent.pos + 1, parent.pos + parent.node.textContent.length + 1));
         }
     }
     insertBlock(item) {
         this.clearSearch();
         const command = this.props.commands[item.name];
+        console.log("INSERTING BLOCK: ", this.props.commands, item, this.props.commands[`create${capitalize_1.default(item.name)}`]);
         if (command) {
             command(item.attrs);
         }
@@ -324,7 +325,7 @@ class BlockMenu extends React.Component {
             });
             items = items.concat(embedItems);
         }
-        const filtered = items.filter(item => {
+        const filtered = items.filter((item) => {
             if (item.name === "separator")
                 return true;
             if (!uploadImage && item.name === "image")
@@ -383,7 +384,7 @@ const LinkInputWrapper = styled_components_1.default.div `
 const LinkInput = styled_components_1.default(Input_1.default) `
   height: 36px;
   width: 100%;
-  color: ${props => props.theme.blockToolbarText};
+  color: ${(props) => props.theme.blockToolbarText};
 `;
 const List = styled_components_1.default.ol `
   list-style: none;
@@ -399,23 +400,23 @@ const ListItem = styled_components_1.default.li `
 const Empty = styled_components_1.default.div `
   display: flex;
   align-items: center;
-  color: ${props => props.theme.textSecondary};
+  color: ${(props) => props.theme.textSecondary};
   font-weight: 500;
   font-size: 14px;
   height: 36px;
   padding: 0 16px;
 `;
 exports.Wrapper = styled_components_1.default.div `
-  color: ${props => props.theme.text};
-  font-family: ${props => props.theme.fontFamily};
+  color: ${(props) => props.theme.text};
+  font-family: ${(props) => props.theme.fontFamily};
   position: absolute;
-  z-index: ${props => {
+  z-index: ${(props) => {
     return props.theme.zIndex + 100;
 }};
-  ${props => props.top !== undefined && `top: ${props.top}px`};
-  ${props => props.bottom !== undefined && `bottom: ${props.bottom}px`};
-  left: ${props => props.left}px;
-  background-color: ${props => props.theme.blockToolbarBackground};
+  ${(props) => props.top !== undefined && `top: ${props.top}px`};
+  ${(props) => props.bottom !== undefined && `bottom: ${props.bottom}px`};
+  left: ${(props) => props.left}px;
+  background-color: ${(props) => props.theme.blockToolbarBackground};
   border-radius: 4px;
   box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px,
     rgba(0, 0, 0, 0.08) 0px 4px 8px, rgba(0, 0, 0, 0.08) 0px 2px 4px;
@@ -440,7 +441,7 @@ exports.Wrapper = styled_components_1.default.div `
   hr {
     border: 0;
     height: 0;
-    border-top: 1px solid ${props => props.theme.blockToolbarDivider};
+    border-top: 1px solid ${(props) => props.theme.blockToolbarDivider};
   }
 
   ${({ active, isAbove }) => active &&

@@ -329,6 +329,7 @@ declare class RichMarkdownEditor extends React.PureComponent<Props, State> {
         pasteLink: string;
         pasteLinkWithTitle: (title: string) => string;
         placeholder: string;
+        queryBlock: string;
         quote: string;
         removeLink: string;
         searchOrPasteLink: string;
@@ -386,6 +387,7 @@ declare class RichMarkdownEditor extends React.PureComponent<Props, State> {
         pasteLink: string;
         pasteLinkWithTitle: (title: string) => string;
         placeholder: string;
+        queryBlock: string;
         quote: string;
         removeLink: string;
         searchOrPasteLink: string;
@@ -443,6 +445,7 @@ declare class RichMarkdownEditor extends React.PureComponent<Props, State> {
         pasteLink: string;
         pasteLinkWithTitle: (title: string) => string;
         placeholder: string;
+        queryBlock: string;
         quote: string;
         removeLink: string;
         searchOrPasteLink: string;

@@ -47,6 +47,7 @@ exports.base = {
     pasteLink: "Paste a link…",
     pasteLinkWithTitle: (title) => `Paste a ${title} link…`,
     placeholder: "Placeholder",
+    queryBlock: "Query block",
     quote: "Quote",
     removeLink: "Remove link",
     searchOrPasteLink: "Search or paste a link…",

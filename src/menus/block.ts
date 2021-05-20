@@ -88,6 +88,13 @@ export default function blockMenuItems(
       shortcut: `${mod} ]`,
     },
     {
+      name: "container_query_block",
+      title: dictionary.queryBlock,
+      icon: CodeIcon,
+      shortcut: "^ ⇧ ]",
+      keywords: "query sql script runs results",
+    },
+    {
       name: "code_block",
       title: dictionary.codeBlock,
       icon: CodeIcon,

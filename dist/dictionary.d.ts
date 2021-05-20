@@ -44,6 +44,7 @@ export declare const base: {
     pasteLink: string;
     pasteLinkWithTitle: (title: string) => string;
     placeholder: string;
+    queryBlock: string;
     quote: string;
     removeLink: string;
     searchOrPasteLink: string;

@@ -14,7 +14,7 @@ function toggleList(listType, itemType) {
         if (!range) {
             return false;
         }
-        const parentList = prosemirror_utils_1.findParentNode(node => isList_1.default(node, schema))(selection);
+        const parentList = prosemirror_utils_1.findParentNode((node) => isList_1.default(node, schema))(selection);
         if (range.depth >= 1 && parentList && range.depth - parentList.depth <= 1) {
             if (parentList.node.type === listType) {
                 return prosemirror_schema_list_1.liftListItem(itemType)(state, dispatch);

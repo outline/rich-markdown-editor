@@ -23,7 +23,7 @@ class Extension {
         return [];
     }
     commands(options) {
-        return attrs => () => false;
+        return (attrs) => () => false;
     }
     get defaultOptions() {
         return {};

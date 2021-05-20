@@ -44,6 +44,7 @@ export const base = {
   pasteLink: "Paste a link…",
   pasteLinkWithTitle: (title: string) => `Paste a ${title} link…`,
   placeholder: "Placeholder",
+  queryBlock: "Query block",
   quote: "Quote",
   removeLink: "Remove link",
   searchOrPasteLink: "Search or paste a link…",

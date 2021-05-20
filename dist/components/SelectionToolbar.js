@@ -117,7 +117,8 @@ class SelectionToolbar extends React.Component {
         const { state } = view;
         const { selection } = state;
         const isCodeSelection = isNodeActive_1.default(state.schema.nodes.code_block)(state);
-        if (isCodeSelection) {
+        const isQuerySelection = isNodeActive_1.default(state.schema.nodes.query_block)(state);
+        if (isCodeSelection || isQuerySelection) {
             return null;
         }
         const colIndex = getColumnIndex_1.default(state.selection);

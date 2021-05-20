@@ -9,22 +9,14 @@
     "module": "commonjs",
     "target": "es2017",
     "jsx": "react",
-    "types": [
-      "react",
-      "jest"
-    ],
+    "types": ["react", "jest"],
     "rootDir": "src",
     "outDir": "dist",
     "stripInternal": true,
     "removeComments": true,
     "declarationMap": true,
-    "declaration": true,
+    "declaration": true
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "dist",
-    "node_modules"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["dist", "node_modules"]
 }

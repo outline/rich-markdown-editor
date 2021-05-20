@@ -1,6 +1,6 @@
 import { InputRule } from "prosemirror-inputrules";
 import { Plugin } from "prosemirror-state";
-import Editor from "../";
+import Editor from "..";
 declare type Command = (attrs: any) => (state: any, dispatch: any) => any;
 export default class Extension {
     options: Record<string, any>;

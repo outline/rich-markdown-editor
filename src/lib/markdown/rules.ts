@@ -6,6 +6,7 @@ import breakPlugin from "./breaks";
 import tablesPlugin from "./tables";
 import noticesPlugin from "./notices";
 import underlinesPlugin from "./underlines";
+import queryblockPlugin from "./queryblock";
 
 export default function rules({ embeds }) {
   return markdownit("default", {
@@ -13,6 +14,7 @@ export default function rules({ embeds }) {
     html: false,
     linkify: true,
   })
+    .use(queryblockPlugin)
     .use(embedsPlugin(embeds))
     .use(breakPlugin)
     .use(checkboxPlugin)
