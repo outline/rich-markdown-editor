@@ -18,6 +18,7 @@ export const base = {
   deleteRow: "Delete row",
   deleteTable: "Delete table",
   deleteImage: "Delete image",
+  downloadImage: "Download image",
   alignImageLeft: "Float left half width",
   alignImageRight: "Float right half width",
   alignImageDefault: "Center large",

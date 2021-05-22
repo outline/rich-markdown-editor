@@ -282,6 +282,32 @@ export default class Image extends Node {
 
   commands({ type }) {
     return {
+      downloadImage: () => async state => {
+        const { node } = state.selection;
+
+        if (node.type.name !== "image") {
+          return false;
+        }
+
+        const image = await fetch(node.attrs.src);
+        const imageBlob = await image.blob();
+        const imageURL = URL.createObjectURL(imageBlob);
+
+        const parts = node.attrs.src.split("/");
+        const potentialName = parts[parts.length - 1];
+
+        // create a temporary link node and click it with our image data
+        const link = document.createElement("a");
+        link.href = imageURL;
+        link.download = potentialName || "download";
+        document.body.appendChild(link);
+        link.click();
+
+        // cleanup
+        document.body.removeChild(link);
+
+        return true;
+      },
       deleteImage: () => (state, dispatch) => {
         dispatch(state.tr.deleteSelection());
         return true;
