@@ -55,7 +55,7 @@ export default class CodeFence extends Node {
     return {
       attrs: {
         language: {
-          default: "javascript",
+          default: "sql",
         },
       },
       content: "text*",
