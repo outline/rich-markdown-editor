@@ -1,5 +1,7 @@
 import { toggleMark } from "prosemirror-commands";
 import markInputRule from "../lib/markInputRule";
+import moveLeft from "../commands/moveLeft";
+import moveRight from "../commands/moveRight";
 import Mark from "./Mark";
 
 function backticksFor(node, side) {
@@ -31,7 +33,7 @@ export default class Code extends Mark {
   get schema() {
     return {
       excludes: "_",
-      parseDOM: [{ tag: "code" }],
+      parseDOM: [{ tag: "code", preserveWhitespace: true }],
       toDOM: () => ["code", { spellCheck: false }],
     };
   }
@@ -45,6 +47,8 @@ export default class Code extends Mark {
     // https://github.com/ProseMirror/prosemirror/issues/515
     return {
       "Mod`": toggleMark(type),
+      ArrowLeft: moveLeft(),
+      ArrowRight: moveRight(),
     };
   }
 
