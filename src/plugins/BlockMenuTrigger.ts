@@ -100,7 +100,7 @@ export default class BlockMenuTrigger extends Extension {
             const isTopLevel = state.selection.$from.depth === 1;
 
             if (isTopLevel) {
-              if (this.options.newLinePlaceholder || isEmpty) {
+              if (isEmpty) {
                 decorations.push(
                   Decoration.widget(parent.pos, () => {
                     const icon = document.createElement("button");
