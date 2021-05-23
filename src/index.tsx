@@ -128,7 +128,7 @@ export type Props = {
   getPlaceHolderLink: (title: string) => string;
   Avatar: typeof React.Component | React.FC<any>;
   childCards?: Array<string>;
-  alwaysShowBlockPlus?: boolean;
+  newLinePlaceholder?: string;
   onHoverLink?: (event: MouseEvent) => boolean;
   onClickHashtag?: (tag: string, event: MouseEvent) => void;
   onKeyDown?: (event: React.KeyboardEvent<HTMLDivElement>) => void;
@@ -173,7 +173,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     embeds: [],
     extensions: [],
     tooltip: Tooltip,
-    alwaysShowBlockPlus: false,
+    newLinePlaceholder: "",
     childCards: [],
     fixedToolbar: false,
     cardsInside: []
@@ -338,7 +338,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           dictionary,
           onOpen: this.handleOpenBlockMenu,
           onClose: this.handleCloseBlockMenu,
-          alwaysShowBlockPlus: this.props.alwaysShowBlockPlus,
+          newLinePlaceholder: this.props.newLinePlaceholder,
         }),
         new SearchTrigger({
           onOpen: () => {
