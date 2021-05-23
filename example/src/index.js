@@ -200,7 +200,7 @@ class Example extends React.Component {
           editorMinHeight="400px"
           fixedToolbar={true}
           readOnly={this.state.readOnly}
-          newLinePlaceholder={true}
+          newLinePlaceholder={"Hello"}
           // limitBlockMenuItems={["Big heading", "Image", "Link", "YouTube"]}
           readOnlyWriteCheckboxes
           value={this.state.value}
