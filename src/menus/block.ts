@@ -1,3 +1,4 @@
+import * as React from "react";
 import {
   BlockQuoteIcon,
   BulletedListIcon,
@@ -10,6 +11,7 @@ import {
   TableIcon,
   TodoListIcon,
   ImageIcon,
+  ArchiveIcon,
   StarredIcon,
   WarningIcon,
   InfoIcon,
@@ -106,6 +108,12 @@ export default function blockMenuItems(
       title: dictionary.image,
       icon: ImageIcon,
       keywords: "picture photo",
+    },
+    {
+      name: "audiofile",
+      title: "Audio file",
+      icon: ArchiveIcon,
+      keywords: "audio sound mp3",
     },
     {
       name: "link",

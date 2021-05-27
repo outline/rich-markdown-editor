@@ -22,6 +22,7 @@ type Props = {
   view: EditorView;
   search: string;
   uploadImage?: (file: File) => Promise<string>;
+  uploadAudio?: (file: File) => Promise<string>;
   onImageUploadStart?: () => void;
   onImageUploadStop?: () => void;
   onShowToast?: (message: string, id: string) => void;
@@ -43,6 +44,7 @@ type State = {
 class BlockMenu extends React.Component<Props, State> {
   menuRef = React.createRef<HTMLDivElement>();
   inputRef = React.createRef<HTMLInputElement>();
+  inputRefAudio = React.createRef<HTMLInputElement>();
 
   state: State = {
     left: -1000,
@@ -155,6 +157,8 @@ class BlockMenu extends React.Component<Props, State> {
     switch (item.name) {
       case "image":
         return this.triggerImagePick();
+      case "audiofile":
+        return this.triggerAudioPick();
       case "embed":
         return this.triggerLinkInput(item);
       case "link": {
@@ -236,8 +240,52 @@ class BlockMenu extends React.Component<Props, State> {
     }
   };
 
+  triggerAudioPick = () => {
+    if (this.inputRefAudio.current) {
+      this.inputRefAudio.current.click();
+    }
+  };
+
   triggerLinkInput = item => {
     this.setState({ insertItem: item });
+  };
+
+  handleAudioPicked = event => {
+    const files = getDataTransferFiles(event);
+
+    const {
+      view,
+      uploadAudio,
+      onImageUploadStart,
+      onImageUploadStop,
+      onShowToast,
+    } = this.props;
+    const { state, dispatch } = view;
+    const parent = findParentNode(node => !!node)(state.selection);
+    if (parent) {
+      dispatch(
+        state.tr.insertText(
+          "",
+          parent.pos,
+          parent.pos + parent.node.textContent.length + 1
+        )
+      );
+
+      insertFiles(view, event, parent.pos, files, {
+        uploadImage: uploadAudio,
+        onImageUploadStart,
+        onImageUploadStop,
+        onShowToast,
+        dictionary: this.props.dictionary,
+        isImage: false,
+      });
+    }
+
+    if (this.inputRefAudio.current) {
+      this.inputRefAudio.current.value = "";
+    }
+
+    this.props.onClose();
   };
 
   handleImagePicked = event => {
@@ -384,7 +432,13 @@ class BlockMenu extends React.Component<Props, State> {
   }
 
   get filtered() {
-    const { dictionary, embeds, search = "", uploadImage } = this.props;
+    const {
+      dictionary,
+      embeds,
+      search = "",
+      uploadImage,
+      uploadAudio,
+    } = this.props;
     let items: (EmbedDescriptor | MenuItem)[] = getMenuItems(dictionary);
     const embedItems: EmbedDescriptor[] = [];
 
@@ -418,6 +472,7 @@ class BlockMenu extends React.Component<Props, State> {
 
       // If no image upload callback has been passed, filter the image block out
       if (!uploadImage && item.name === "image") return false;
+      if (!uploadAudio && item.name === "audiofile") return false;
 
       const n = search.toLowerCase();
       return (
@@ -448,7 +503,7 @@ class BlockMenu extends React.Component<Props, State> {
   }
 
   render() {
-    const { dictionary, isActive, uploadImage } = this.props;
+    const { dictionary, isActive, uploadImage, uploadAudio } = this.props;
     const items = this.filtered;
     const { insertItem, ...positioning } = this.state;
 
@@ -516,6 +571,16 @@ class BlockMenu extends React.Component<Props, State> {
                 ref={this.inputRef}
                 onChange={this.handleImagePicked}
                 accept="image/*"
+              />
+            </VisuallyHidden>
+          )}
+          {uploadAudio && (
+            <VisuallyHidden>
+              <input
+                type="file"
+                ref={this.inputRefAudio}
+                onChange={this.handleAudioPicked}
+                accept="audio/*"
               />
             </VisuallyHidden>
           )}

@@ -271,6 +271,17 @@ class Example extends React.Component {
               );
             });
           }}
+          uploadAudio={file => {
+            console.log("File upload triggered: ", file);
+
+            // Delay to simulate time taken to upload
+            return new Promise(resolve => {
+              setTimeout(
+                () => resolve("https://www.purpleculture.net/mp3/yuan1.mp3"),
+                1500
+              );
+            });
+          }}
           Avatar={user => <span>{`Created by ${user.userName}`}</span>}
           embeds={[
             {

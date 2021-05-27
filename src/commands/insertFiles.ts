@@ -5,15 +5,15 @@ import { ToastType } from "../types";
 
 const insertFiles = function(view, event, pos, files, options) {
   // filter to only include image files
-  const images = files.filter(file => /image/i.test(file.type));
+  const images = files; //.filter(file => /image/i.test(file.type));
   if (images.length === 0) return;
-
   const {
     dictionary,
     uploadImage,
     onImageUploadStart,
     onImageUploadStop,
     onShowToast,
+    isImage = true,
   } = options;
 
   if (!uploadImage) {
@@ -61,9 +61,15 @@ const insertFiles = function(view, event, pos, files, options) {
 
         // otherwise, insert it at the placeholder's position, and remove
         // the placeholder itself
-        const transaction = view.state.tr
-          .replaceWith(pos, pos, schema.nodes.image.create({ src }))
-          .setMeta(uploadPlaceholderPlugin, { remove: { id } });
+        const transaction = isImage
+          ? view.state.tr
+              .replaceWith(
+                pos,
+                pos,
+                schema.nodes.paragraph.create({ content: src })
+              )
+              .setMeta(uploadPlaceholderPlugin, { remove: { id } })
+          : view.state.tr.insertText(`<${src}>`);
 
         view.dispatch(transaction);
       })
