@@ -63,11 +63,7 @@ const insertFiles = function(view, event, pos, files, options) {
         // the placeholder itself
         const transaction = isImage
           ? view.state.tr
-              .replaceWith(
-                pos,
-                pos,
-                schema.nodes.paragraph.create({ content: src })
-              )
+              .replaceWith(pos, pos, schema.nodes.image.create({ src }))
               .setMeta(uploadPlaceholderPlugin, { remove: { id } })
           : view.state.tr.insertText(`\n<${src}>\n`);
 
