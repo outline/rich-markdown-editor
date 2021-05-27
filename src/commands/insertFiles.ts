@@ -69,7 +69,7 @@ const insertFiles = function(view, event, pos, files, options) {
                 schema.nodes.paragraph.create({ content: src })
               )
               .setMeta(uploadPlaceholderPlugin, { remove: { id } })
-          : view.state.tr.insertText(`<${src}>`);
+          : view.state.tr.insertText(`\n<${src}>\n`);
 
         view.dispatch(transaction);
       })
