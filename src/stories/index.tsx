@@ -71,7 +71,7 @@ const embeds = [
       />
     ),
     matcher: url => {
-      return !!url.match(
+      return url.match(
         /(?:https?:\/\/)?(?:www\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([a-zA-Z0-9_-]{11})$/i
       );
     },
