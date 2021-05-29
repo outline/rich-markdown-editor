@@ -3,6 +3,7 @@ import debounce from "lodash/debounce";
 import ReactDOM from "react-dom";
 import Editor from "../../src";
 
+// to publish, build with node 10, then publish with node 15
 const element = document.getElementById("main");
 const savedText = localStorage.getItem("saved");
 const exampleText = `
