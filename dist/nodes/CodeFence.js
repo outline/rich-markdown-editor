@@ -106,7 +106,7 @@ class CodeFence extends Node_1.default {
         return {
             attrs: {
                 language: {
-                    default: "javascript",
+                    default: "sql",
                 },
             },
             content: "text*",
