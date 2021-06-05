@@ -236,6 +236,21 @@ const Wrapper = styled.div<{
   @media print {
     display: none;
   }
+
+  @media (hover: none) and (pointer: coarse) {
+    &:before {
+      display: none;
+    }
+
+    transition: opacity 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform: scale(1);
+    border-radius: 0;
+    position: fixed;
+    top: auto !important;
+    bottom: 0;
+    left: 0 !important;
+    right: 0 !important;
+  }
 `;
 
 export default React.forwardRef(function FloatingToolbarWithForwardedRef(

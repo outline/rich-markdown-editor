@@ -373,6 +373,15 @@ const SearchResults = styled.ol`
   border-radius: 0 0 4px 4px;
   overflow-y: auto;
   max-height: 25vh;
+
+  @media (hover: none) and (pointer: coarse) {
+    position: fixed;
+    top: auto;
+    bottom: 40px;
+    border-radius: 0;
+    max-height: 50vh;
+    padding: 8px 8px 4px;
+  }
 `;
 
 export default withTheme(LinkEditor);
