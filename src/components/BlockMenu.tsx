@@ -256,18 +256,12 @@ class BlockMenu extends React.Component<Props, State> {
       onImageUploadStop,
       onShowToast,
     } = this.props;
-    const { state, dispatch } = view;
+    const { state } = view;
     const parent = findParentNode(node => !!node)(state.selection);
 
-    if (parent) {
-      dispatch(
-        state.tr.insertText(
-          "",
-          parent.pos,
-          parent.pos + parent.node.textContent.length + 1
-        )
-      );
+    this.clearSearch();
 
+    if (parent) {
       insertFiles(view, event, parent.pos, files, {
         uploadImage,
         onImageUploadStart,
@@ -291,7 +285,7 @@ class BlockMenu extends React.Component<Props, State> {
     if (parent) {
       dispatch(
         state.tr.insertText(
-          "",
+          parent.node.textContent.slice(state.selection.to - parent.pos - 1),
           parent.pos,
           parent.pos + parent.node.textContent.length + 1
         )
