@@ -23,6 +23,8 @@ import isInCode from "../queries/isInCode";
 import Node from "./Node";
 import { ToastType } from "../types";
 
+const PERSISTENCE_KEY = "rme-code-language";
+
 [
   bash,
   css,
@@ -106,7 +108,8 @@ export default class CodeFence extends Node {
   }
 
   commands({ type }) {
-    return () => setBlockType(type);
+    return () =>
+      setBlockType(type, { language: localStorage?.getItem(PERSISTENCE_KEY) });
   }
 
   keys({ type }) {
@@ -157,10 +160,13 @@ export default class CodeFence extends Node {
     const result = view.posAtCoords({ top, left });
 
     if (result) {
+      const language = element.value;
       const transaction = tr.setNodeMarkup(result.inside, undefined, {
-        language: element.value,
+        language,
       });
       view.dispatch(transaction);
+
+      localStorage?.setItem(PERSISTENCE_KEY, language);
     }
   };
 
