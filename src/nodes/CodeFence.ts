@@ -24,6 +24,7 @@ import Node from "./Node";
 import { ToastType } from "../types";
 
 const PERSISTENCE_KEY = "rme-code-language";
+const DEFAULT_LANGUAGE = "javascript";
 
 [
   bash,
@@ -57,7 +58,7 @@ export default class CodeFence extends Node {
     return {
       attrs: {
         language: {
-          default: "javascript",
+          default: DEFAULT_LANGUAGE,
         },
       },
       content: "text*",
@@ -109,7 +110,9 @@ export default class CodeFence extends Node {
 
   commands({ type }) {
     return () =>
-      setBlockType(type, { language: localStorage?.getItem(PERSISTENCE_KEY) });
+      setBlockType(type, {
+        language: localStorage?.getItem(PERSISTENCE_KEY) || DEFAULT_LANGUAGE,
+      });
   }
 
   keys({ type }) {
