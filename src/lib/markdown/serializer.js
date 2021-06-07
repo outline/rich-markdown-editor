@@ -357,7 +357,7 @@ export class MarkdownSerializerState {
   // Escape the given string so that it can safely appear in Markdown
   // content. If `startOfLine` is true, also escape characters that
   // has special meaning only at the start of the line.
-  esc(str, startOfLine) {
+  esc(str = "", startOfLine) {
     str = str.replace(/[`*\\~\[\]]/g, "\\$&");
     if (startOfLine) {
       str = str.replace(/^[:#\-*+]/, "\\$&").replace(/^(\d+)\./, "$1\\.");
