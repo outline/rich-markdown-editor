@@ -82,7 +82,35 @@ export type Props = {
   defaultValue: string;
   placeholder: string;
   extensions: Extension[];
-  disableExtensions?: string[];
+  disableExtensions?: (
+    | "strong"
+    | "code_inline"
+    | "highlight"
+    | "em"
+    | "link"
+    | "placeholder"
+    | "strikethrough"
+    | "underline"
+    | "blockquote"
+    | "bullet_list"
+    | "checkbox_item"
+    | "checkbox_list"
+    | "code_block"
+    | "code_fence"
+    | "embed"
+    | "br"
+    | "heading"
+    | "hr"
+    | "image"
+    | "list_item"
+    | "container_notice"
+    | "ordered_list"
+    | "paragraph"
+    | "table"
+    | "td"
+    | "th"
+    | "tr"
+  )[];
   autoFocus?: boolean;
   readOnly?: boolean;
   readOnlyWriteCheckboxes?: boolean;
