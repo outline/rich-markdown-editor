@@ -370,7 +370,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         ].filter(extension => {
           // Optionaly disable extensions
           if (this.props.disableExtensions) {
-            return !this.props.disableExtensions.includes(extension.name);
+            return !(this.props.disableExtensions as string[]).includes(
+              extension.name
+            );
           }
           return true;
         }),
