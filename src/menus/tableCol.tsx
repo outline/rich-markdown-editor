@@ -14,6 +14,7 @@ import baseDictionary from "../dictionary";
 export default function tableColMenuItems(
   state: EditorState,
   index: number,
+  rtl: boolean,
   dictionary: typeof baseDictionary
 ): MenuItem[] {
   const { schema } = state;
@@ -56,14 +57,14 @@ export default function tableColMenuItems(
       name: "separator",
     },
     {
-      name: "addColumnBefore",
-      tooltip: dictionary.addColumnBefore,
+      name: rtl ? "addColumnAfter" : "addColumnBefore",
+      tooltip: rtl ? dictionary.addColumnAfter : dictionary.addColumnBefore,
       icon: InsertLeftIcon,
       active: () => false,
     },
     {
-      name: "addColumnAfter",
-      tooltip: dictionary.addColumnAfter,
+      name: rtl ? "addColumnBefore" : "addColumnAfter",
+      tooltip: rtl ? dictionary.addColumnBefore : dictionary.addColumnAfter,
       icon: InsertRightIcon,
       active: () => false,
     },

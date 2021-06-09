@@ -23,6 +23,7 @@ const defaultPosition = {
 };
 
 type Props = {
+  rtl: boolean;
   isActive: boolean;
   commands: Record<string, any>;
   dictionary: typeof baseDictionary;
@@ -359,16 +360,21 @@ class BlockMenu extends React.Component<Props, State> {
     const { top, bottom } = paragraph.node.getBoundingClientRect();
     const margin = 24;
 
+    let leftPos = left + window.scrollX
+    if (props.rtl && ref) {
+      leftPos -= ref.scrollWidth
+    }
+
     if (startPos.top - offsetHeight > margin) {
       return {
-        left: left + window.scrollX,
+        left: leftPos,
         top: undefined,
         bottom: window.innerHeight - top - window.scrollY,
         isAbove: false,
       };
     } else {
       return {
-        left: left + window.scrollX,
+        left: leftPos,
         top: bottom + window.scrollY,
         bottom: undefined,
         isAbove: true,

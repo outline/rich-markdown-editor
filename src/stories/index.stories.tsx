@@ -207,3 +207,16 @@ Dark.args = {
 
 There's a customizable dark theme too`,
 };
+
+
+export const RTL = Template.bind({});
+RTL.args = {
+  rtl: true,
+  defaultValue: `# خوش آمدید
+
+متن نمونه برای نمایش پشتیبانی از زبان‌های RTL نظیر فارسی، عربی، عبری و ...
+
+\\
+- [x] آیتم اول
+- [ ] آیتم دوم`,
+};
