@@ -719,7 +719,6 @@ const StyledEditor = styled("div")<{
   font-size: 1em;
   line-height: 1.7em;
   width: 100%;
-
   .ProseMirror {
     position: relative;
     outline: none;
@@ -1021,6 +1020,7 @@ const StyledEditor = styled("div")<{
 
   p {
     margin: 0;
+    unicode-bidi: plaintext;
   }
 
   a {
