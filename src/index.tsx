@@ -1420,7 +1420,8 @@ const StyledEditor = styled("div")<{
         height: 100%;
         width: 12px;
         background: ${props => props.theme.tableDivider};
-        border-${props => (props.rtl ? "left" : "right")}: 3px solid ${props => props.theme.background};
+        border-${props => (props.rtl ? "left" : "right")}: 3px solid;
+        border-color: ${props => props.theme.background};
         display: ${props => (props.readOnly ? "none" : "block")};
       }
 

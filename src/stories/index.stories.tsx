@@ -208,7 +208,6 @@ Dark.args = {
 There's a customizable dark theme too`,
 };
 
-
 export const RTL = Template.bind({});
 RTL.args = {
   rtl: true,
