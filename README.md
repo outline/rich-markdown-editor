@@ -65,6 +65,10 @@ With `readOnly` set to `false` the editor is optimized for composition. When `tr
 
 With `readOnlyWriteCheckboxes` set to `true` checkboxes can still be checked or unchecked as a special case while `readOnly` is set to `true` and the editor is otherwise unable to be edited.
 
+#### `rtl`
+
+With `rtl` set to `true`, the editor is enhanced for viewing and editing documents in RTL languages.
+
 #### `autoFocus`
 
 When set `true` together with `readOnly` set to `false`, focus at the end of the
