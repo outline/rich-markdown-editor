@@ -1400,10 +1400,10 @@ const StyledEditor = styled("div")<{
         background: ${props => props.theme.text};
       }
       &.first::after {
-        border-top-left-radius: 3px;
+        border-top-${props => (props.rtl ? "right" : "left")}-radius: 3px;
       }
       &.last::after {
-        border-top-right-radius: 3px;
+        border-top-${props => (props.rtl ? "left" : "right")}-radius: 3px;
       }
       &.selected::after {
         background: ${props => props.theme.tableSelected};
@@ -1429,10 +1429,10 @@ const StyledEditor = styled("div")<{
         background: ${props => props.theme.text};
       }
       &.first::after {
-        border-top-left-radius: 3px;
+        border-top-${props => (props.rtl ? "right" : "left")}-radius: 3px;
       }
       &.last::after {
-        border-bottom-left-radius: 3px;
+        border-bottom-${props => (props.rtl ? "right" : "left")}-radius: 3px;
       }
       &.selected::after {
         background: ${props => props.theme.tableSelected};
