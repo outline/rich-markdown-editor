@@ -65,10 +65,6 @@ With `readOnly` set to `false` the editor is optimized for composition. When `tr
 
 With `readOnlyWriteCheckboxes` set to `true` checkboxes can still be checked or unchecked as a special case while `readOnly` is set to `true` and the editor is otherwise unable to be edited.
 
-#### `rtl`
-
-With `rtl` set to `true`, the editor is enhanced for viewing and editing documents in RTL languages.
-
 #### `autoFocus`
 
 When set `true` together with `readOnly` set to `false`, focus at the end of the
@@ -93,6 +89,15 @@ Allows overriding the inbuilt copy dictionary, for example to internationalize t
 #### `dark`
 
 With `dark` set to `true` the editor will use a default dark theme that's included. See the [source here](/src/theme.ts).
+
+#### `dir`
+
+*Default: `auto`*
+
+Controls direction of the document. Possible values are:
+- `ltr`: Editor components are optimized for LTR documents and the content is explicitly marked as LTR.
+- `rtl`: Editor components are optimized for RTL documents and the content is explicitly marked as RTL.
+- `auto`: Editor components are optimized for LTR documents but the browser decides the direction of the content.
 
 #### `tooltip`
 

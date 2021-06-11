@@ -87,7 +87,7 @@ export type Props = {
   readOnlyWriteCheckboxes?: boolean;
   dictionary?: Partial<typeof baseDictionary>;
   dark?: boolean;
-  rtl?: boolean;
+  dir?: string;
   theme?: typeof theme;
   template?: boolean;
   headingsOffset?: number;
@@ -132,6 +132,7 @@ type Step = {
 class RichMarkdownEditor extends React.PureComponent<Props, State> {
   static defaultProps = {
     defaultValue: "",
+    dir: "auto",
     placeholder: "Write something nice…",
     onImageUploadStart: () => {
       // no default behavior
@@ -629,7 +630,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
   render = () => {
     const {
-      rtl,
+      dir,
       readOnly,
       readOnlyWriteCheckboxes,
       style,
@@ -638,7 +639,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       onKeyDown,
     } = this.props;
     const dictionary = this.dictionary(this.props.dictionary);
-
+    const isRTL = dir === 'rtl';
     return (
       <Flex
         onKeyDown={onKeyDown}
@@ -646,13 +647,13 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         className={className}
         align="flex-start"
         justify="center"
-        dir={rtl ? "rtl" : "ltr"}
+        dir={dir}
         column
       >
         <ThemeProvider theme={this.theme()}>
           <React.Fragment>
             <StyledEditor
-              rtl={rtl === true}
+              rtl={isRTL}
               readOnly={readOnly}
               readOnlyWriteCheckboxes={readOnlyWriteCheckboxes}
               ref={ref => (this.element = ref)}
@@ -663,7 +664,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   view={this.view}
                   dictionary={dictionary}
                   commands={this.commands}
-                  rtl={rtl === true}
+                  rtl={isRTL}
                   isTemplate={this.props.template === true}
                   onOpen={this.handleOpenSelectionMenu}
                   onClose={this.handleCloseSelectionMenu}
@@ -687,7 +688,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   view={this.view}
                   commands={this.commands}
                   dictionary={dictionary}
-                  rtl={rtl === true}
+                  rtl={isRTL}
                   isActive={this.state.blockMenuOpen}
                   search={this.state.blockMenuSearch}
                   onClose={this.handleCloseBlockMenu}
