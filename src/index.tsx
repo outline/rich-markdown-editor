@@ -639,7 +639,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       onKeyDown,
     } = this.props;
     const dictionary = this.dictionary(this.props.dictionary);
-    const isRTL = dir === 'rtl';
+    const isRTL = dir === "rtl";
     return (
       <Flex
         onKeyDown={onKeyDown}
