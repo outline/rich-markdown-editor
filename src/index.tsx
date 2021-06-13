@@ -118,6 +118,7 @@ export type Props = {
 };
 
 type State = {
+  isRTL: boolean;
   isEditorFocused: boolean;
   selectionMenuOpen: boolean;
   blockMenuOpen: boolean;
@@ -149,6 +150,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   state = {
+    isRTL: false,
     isEditorFocused: false,
     selectionMenuOpen: false,
     blockMenuOpen: false,
@@ -180,6 +182,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       this.scrollToAnchor(this.props.scrollTo);
     }
 
+    this.calculateDir();
+
     if (this.props.readOnly) return;
 
     if (this.props.autoFocus) {
@@ -210,6 +214,10 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     // is set to true
     if (prevProps.readOnly && !this.props.readOnly && this.props.autoFocus) {
       this.focusAtEnd();
+    }
+
+    if (prevProps.dir !== this.props.dir) {
+      this.calculateDir();
     }
 
     if (
@@ -475,6 +483,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           this.handleChange();
         }
 
+        this.calculateDir();
+
         // Because Prosemirror and React are not linked we must tell React that
         // a render is needed whenever the Prosemirror state changes.
         this.forceUpdate();
@@ -500,6 +510,18 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       console.warn(`Attempted to scroll to invalid hash: ${hash}`, err);
     }
   }
+
+  calculateDir = () => {
+    if (!this.element) return;
+
+    const isRTL =
+      this.props.dir === "rtl" ||
+      getComputedStyle(this.element).direction === "rtl";
+
+    if (this.state.isRTL !== isRTL) {
+      this.setState({ isRTL });
+    }
+  };
 
   value = (): string => {
     return this.serializer.serialize(this.view.state.doc);
@@ -638,8 +660,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       className,
       onKeyDown,
     } = this.props;
+    const { isRTL } = this.state;
     const dictionary = this.dictionary(this.props.dictionary);
-    const isRTL = dir === "rtl";
+
     return (
       <Flex
         onKeyDown={onKeyDown}
@@ -653,6 +676,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         <ThemeProvider theme={this.theme()}>
           <React.Fragment>
             <StyledEditor
+              dir={dir}
               rtl={isRTL}
               readOnly={readOnly}
               readOnlyWriteCheckboxes={readOnlyWriteCheckboxes}

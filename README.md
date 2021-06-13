@@ -95,9 +95,9 @@ With `dark` set to `true` the editor will use a default dark theme that's includ
 *Default: `auto`*
 
 Controls direction of the document. Possible values are:
-- `ltr`: Editor components are optimized for LTR documents and the content is explicitly marked as LTR.
-- `rtl`: Editor components are optimized for RTL documents and the content is explicitly marked as RTL.
-- `auto`: Editor components are optimized for LTR documents but the browser decides the direction of the content.
+- `ltr`: Editor layout is optimized for LTR documents and the content is explicitly marked as LTR.
+- `rtl`: Editor layout is optimized for RTL documents and the content is explicitly marked as RTL.
+- `auto`: Editor layout is decided by the browser based on document content.
 
 #### `tooltip`
 
