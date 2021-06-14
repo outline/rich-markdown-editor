@@ -1045,7 +1045,6 @@ const StyledEditor = styled("div")<{
 
   p {
     margin: 0;
-    unicode-bidi: plaintext;
   }
 
   a {
@@ -1207,7 +1206,20 @@ const StyledEditor = styled("div")<{
       padding: 2px;
       z-index: 1;
       top: 4px;
-      ${props => (props.rtl ? "left" : "right")}: 4px;
+    }
+
+    &.code-block {
+      select,
+      button {
+        right: 4px;
+      }
+    }
+
+    &.notice-block {
+      select,
+      button {
+        ${props => (props.rtl ? "left" : "right")}: 4px;
+      }
     }
 
     button {

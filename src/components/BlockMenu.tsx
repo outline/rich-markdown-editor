@@ -357,12 +357,12 @@ class BlockMenu extends React.Component<Props, State> {
     }
 
     const { left } = this.caretPosition;
-    const { top, bottom } = paragraph.node.getBoundingClientRect();
+    const { top, bottom, right } = paragraph.node.getBoundingClientRect();
     const margin = 24;
 
     let leftPos = left + window.scrollX;
     if (props.rtl && ref) {
-      leftPos -= ref.scrollWidth;
+      leftPos = right - ref.scrollWidth;
     }
 
     if (startPos.top - offsetHeight > margin) {
