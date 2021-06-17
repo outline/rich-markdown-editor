@@ -156,6 +156,12 @@ export default class SelectionToolbar extends React.Component<Props> {
       items = getFormattingMenuItems(state, isTemplate, dictionary);
     }
 
+    // Some extensions may be disabled, remove corresponding items
+    items = items.filter(item => {
+      if (item.name && !this.props.commands[item.name]) return false;
+      return true;
+    });
+
     if (!items.length) {
       return null;
     }
