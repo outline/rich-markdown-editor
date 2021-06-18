@@ -111,9 +111,9 @@ export default function blockMenuItems(
     },
     {
       name: "audiofile",
-      title: "Audio file",
+      title: "Upload audio/video",
       icon: ArchiveIcon,
-      keywords: "audio sound mp3",
+      keywords: "audio sound mp3 video movie film mp4",
     },
     {
       name: "link",

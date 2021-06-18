@@ -184,7 +184,7 @@ class LinkEditor extends React.Component<Props, State> {
         const { selectedIndex, value } = this.state;
         const results = this.state.results[value] || [];
 
-        const looksLikeUrl = value.match(/^https?:\/\//i);
+        const looksLikeUrl = value.match(/^https?:\/\/|^www./i);
         if (selectedIndex >= 0) {
           const result = results[selectedIndex];
           if (result) {
@@ -344,10 +344,17 @@ class LinkEditor extends React.Component<Props, State> {
   }
 
   render() {
-    const { dictionary, theme, Avatar, cardsInside, onMoveLink } = this.props;
+    const {
+      dictionary,
+      theme,
+      Avatar,
+      cardsInside,
+      onMoveLink,
+      onTurnIntoCards,
+    } = this.props;
     const { value, selectedIndex } = this.state;
-    const looksLikeUrl = value.match(/^https?:\/\//i);
-    const showTurnInto = !!looksLikeUrl;
+    const looksLikeUrl = value.match(/^https?:\/\/|^www./i);
+    const showTurnInto = !!looksLikeUrl && onTurnIntoCards;
     const initialIsCardLink =
       this.initialValue === value && value.startsWith("/");
     const results =

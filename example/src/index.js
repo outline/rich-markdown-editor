@@ -239,14 +239,14 @@ class Example extends React.Component {
               }, 1500);
             });
           }}
-          onTurnIntoCards={href => {
-            // Delay to simulate time taken for remote API request to complete
-            return new Promise((resolve, reject) => {
-              setTimeout(() => {
-                return resolve(`/doc/some_article`);
-              }, 1500);
-            });
-          }}
+          // onTurnIntoCards={href => {
+          //   // Delay to simulate time taken for remote API request to complete
+          //   return new Promise((resolve, reject) => {
+          //     setTimeout(() => {
+          //       return resolve(`/doc/some_article`);
+          //     }, 1500);
+          //   });
+          // }}
           onShowToast={message => window.alert(message)}
           onSearchLink={async (term, setter) => {
             console.log("Searched link: ", term);
