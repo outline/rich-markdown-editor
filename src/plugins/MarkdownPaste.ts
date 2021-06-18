@@ -5,6 +5,23 @@ import Extension from "../lib/Extension";
 import isUrl from "../lib/isUrl";
 import isInCode from "../queries/isInCode";
 
+/**
+ * Add support for additional syntax that users paste even though it isn't
+ * supported by the markdown parser directly by massaging the text content.
+ *
+ * @param text The incoming pasted plain text
+ */
+function normalizePastedMarkdown(text: string): string {
+  // find checkboxes not contained in a list and wrap them in list items
+  const CHECKBOX_REGEX = /^\s?(\[(X|\s|_|-)\]\s(.*)?)/gim;
+
+  while (text.match(CHECKBOX_REGEX)) {
+    text = text.replace(CHECKBOX_REGEX, match => `- ${match.trim()}`);
+  }
+
+  return text;
+}
+
 export default class MarkdownPaste extends Extension {
   get name() {
     return "markdown-paste";
@@ -83,7 +100,9 @@ export default class MarkdownPaste extends Extension {
 
             // If we've gotten this far then treat the plain text content of the
             // clipboard as possible markdown and use the parser
-            const paste = this.editor.parser.parse(text);
+            const paste = this.editor.parser.parse(
+              normalizePastedMarkdown(text)
+            );
             const slice = paste.slice(0);
 
             const transaction = view.state.tr.replaceSelection(slice);
