@@ -112,20 +112,26 @@ const download = (imageUrl, fileName) => {
 };
 
 const ImageComponent = props => {
+  const [error, setError] = React.useState();
   const [imageUrl, setImageUrl] = React.useState<string>();
   const [imageExtension, setImageExtension] = React.useState<string>();
-  const { theme, isSelected, onSelect, onKeyDown, onBlur } = props;
+  const { theme, dictionary, isSelected, onSelect, onKeyDown, onBlur } = props;
   const { alt, src, title, layoutClass } = props.node.attrs;
   const className = layoutClass ? `image image-${layoutClass}` : "image";
 
   React.useEffect(() => {
     const download = async function() {
-      const image = await fetch(src);
-      const imageBlob = await image.blob();
-      const imageUrl = URL.createObjectURL(imageBlob);
-      const extension = imageBlob.type.split("/")[1];
-      setImageUrl(imageUrl);
-      setImageExtension(extension);
+      try {
+        const image = await fetch(src);
+        const imageBlob = await image.blob();
+        const imageUrl = URL.createObjectURL(imageBlob);
+        const extension = imageBlob.type.split("/")[1];
+        setImageUrl(imageUrl);
+        setImageExtension(extension);
+      } catch (err) {
+        console.error(err);
+        setError(err);
+      }
     };
 
     download();
@@ -143,7 +149,7 @@ const ImageComponent = props => {
     [alt, imageExtension]
   );
 
-  if (!imageUrl) {
+  if (!imageUrl && !error) {
     return null;
   }
 
@@ -153,22 +159,29 @@ const ImageComponent = props => {
         className={isSelected ? "ProseMirror-selectednode" : ""}
         onClick={onSelect}
       >
-        <Button>
-          <DownloadIcon color="currentColor" onClick={handleDownload} />
-        </Button>
-        <ImageZoom
-          image={{
-            src: imageUrl,
-            alt,
-            title,
-          }}
-          defaultStyles={{
-            overlay: {
-              backgroundColor: theme.background,
-            },
-          }}
-          shouldRespectMaxDimension
-        />
+        {error ? (
+          <Error className="error">{dictionary.imageDownloadError}</Error>
+        ) : (
+          <>
+            <Button>
+              <DownloadIcon color="currentColor" onClick={handleDownload} />
+            </Button>
+            <ImageZoom
+              image={{
+                src: imageUrl,
+                alt,
+                title,
+                onError: setError,
+              }}
+              defaultStyles={{
+                overlay: {
+                  backgroundColor: theme.background,
+                },
+              }}
+              shouldRespectMaxDimension
+            />
+          </>
+        )}
       </ImageWrapper>
       <Caption
         onKeyDown={onKeyDown}
@@ -306,6 +319,7 @@ export default class Image extends Node {
         onKeyDown={this.handleKeyDown(props)}
         onBlur={this.handleBlur(props)}
         onSelect={this.handleSelect(props)}
+        dictionary={this.options.dictionary}
         {...props}
       />
     );
@@ -426,6 +440,19 @@ export default class Image extends Node {
     return [uploadPlaceholderPlugin, uploadPlugin(this.options)];
   }
 }
+
+const Error = styled.div`
+  user-select: none;
+  background: ${props => props.theme.imageErrorBackground};
+  color: ${props => props.theme.textSecondary};
+  height: 50px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+`;
 
 const Button = styled.button`
   position: absolute;
