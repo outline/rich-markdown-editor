@@ -87,33 +87,102 @@ const uploadPlugin = options =>
 const IMAGE_CLASSES = ["right-50", "left-50"];
 const getLayoutAndTitle = tokenTitle => {
   if (!tokenTitle) return {};
+
   if (IMAGE_CLASSES.includes(tokenTitle)) {
     return {
       layoutClass: tokenTitle,
     };
-  } else {
-    return {
-      title: tokenTitle,
-    };
   }
+
+  return {
+    title: tokenTitle,
+  };
 };
 
-const downloadImageNode = async node => {
-  const image = await fetch(node.attrs.src);
-  const imageBlob = await image.blob();
-  const imageURL = URL.createObjectURL(imageBlob);
-  const extension = imageBlob.type.split("/")[1];
-  const potentialName = node.attrs.alt || "image";
-
+const download = (imageUrl, fileName) => {
   // create a temporary link node and click it with our image data
   const link = document.createElement("a");
-  link.href = imageURL;
-  link.download = `${potentialName}.${extension}`;
+  link.href = imageUrl;
+  link.download = fileName;
   document.body.appendChild(link);
   link.click();
 
   // cleanup
   document.body.removeChild(link);
+};
+
+const ImageComponent = props => {
+  const [imageUrl, setImageUrl] = React.useState<string>();
+  const [imageExtension, setImageExtension] = React.useState<string>();
+  const { theme, isSelected, onSelect, onKeyDown, onBlur } = props;
+  const { alt, src, title, layoutClass } = props.node.attrs;
+  const className = layoutClass ? `image image-${layoutClass}` : "image";
+
+  React.useEffect(() => {
+    const download = async function() {
+      const image = await fetch(src);
+      const imageBlob = await image.blob();
+      const imageUrl = URL.createObjectURL(imageBlob);
+      const extension = imageBlob.type.split("/")[1];
+      setImageUrl(imageUrl);
+      setImageExtension(extension);
+    };
+
+    download();
+  }, [src]);
+
+  const handleDownload = React.useCallback(
+    event => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (!imageUrl) return;
+
+      const fileName = alt || "image";
+      download(imageUrl, `${fileName}.${imageExtension}`);
+    },
+    [alt, imageExtension]
+  );
+
+  if (!imageUrl) {
+    return null;
+  }
+
+  return (
+    <div contentEditable={false} className={className}>
+      <ImageWrapper
+        className={isSelected ? "ProseMirror-selectednode" : ""}
+        onClick={onSelect}
+      >
+        <Button>
+          <DownloadIcon color="currentColor" onClick={handleDownload} />
+        </Button>
+        <ImageZoom
+          image={{
+            src: imageUrl,
+            alt,
+            title,
+          }}
+          defaultStyles={{
+            overlay: {
+              backgroundColor: theme.background,
+            },
+          }}
+          shouldRespectMaxDimension
+        />
+      </ImageWrapper>
+      <Caption
+        onKeyDown={onKeyDown}
+        onBlur={onBlur}
+        className="caption"
+        tabIndex={-1}
+        role="textbox"
+        contentEditable
+        suppressContentEditableWarning
+      >
+        {alt}
+      </Caption>
+    </div>
+  );
 };
 
 export default class Image extends Node {
@@ -231,55 +300,14 @@ export default class Image extends Node {
     view.dispatch(transaction);
   };
 
-  handleDownload = ({ node }) => event => {
-    event.preventDefault();
-    event.stopPropagation();
-    downloadImageNode(node);
-  };
-
   component = props => {
-    const { theme, isSelected } = props;
-    const { alt, src, title, layoutClass } = props.node.attrs;
-    const className = layoutClass ? `image image-${layoutClass}` : "image";
-
     return (
-      <div contentEditable={false} className={className}>
-        <ImageWrapper
-          className={isSelected ? "ProseMirror-selectednode" : ""}
-          onClick={this.handleSelect(props)}
-        >
-          <Button>
-            <DownloadIcon
-              color="currentColor"
-              onClick={this.handleDownload(props)}
-            />
-          </Button>
-          <ImageZoom
-            image={{
-              src,
-              alt,
-              title,
-            }}
-            defaultStyles={{
-              overlay: {
-                backgroundColor: theme.background,
-              },
-            }}
-            shouldRespectMaxDimension
-          />
-        </ImageWrapper>
-        <Caption
-          onKeyDown={this.handleKeyDown(props)}
-          onBlur={this.handleBlur(props)}
-          className="caption"
-          tabIndex={-1}
-          role="textbox"
-          contentEditable
-          suppressContentEditableWarning
-        >
-          {alt}
-        </Caption>
-      </div>
+      <ImageComponent
+        onKeyDown={this.handleKeyDown(props)}
+        onBlur={this.handleBlur(props)}
+        onSelect={this.handleSelect(props)}
+        {...props}
+      />
     );
   };
 
@@ -320,8 +348,13 @@ export default class Image extends Node {
           return false;
         }
 
-        downloadImageNode(node);
+        const image = await fetch(node.attrs.src);
+        const imageBlob = await image.blob();
+        const imageUrl = URL.createObjectURL(imageBlob);
+        const extension = imageBlob.type.split("/")[1];
+        const fileName = node.attrs.alt || "image";
 
+        download(imageUrl, `${fileName}.${extension}`);
         return true;
       },
       deleteImage: () => (state, dispatch) => {
