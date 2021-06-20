@@ -38,7 +38,9 @@ export default function markdownItCheckbox(md: MarkdownIt): void {
 
     if (token.nesting === 1) {
       // opening tag
-      return `<li><span class="checkbox">${checked ? "[x]" : "[ ]"}</span>`;
+      return `<li class="checkbox-list-item"><span class="checkbox ${
+        checked ? "checked" : ""
+      }">${checked ? "[x]" : "[ ]"}</span>`;
     } else {
       // closing tag
       return "</li>\n";
