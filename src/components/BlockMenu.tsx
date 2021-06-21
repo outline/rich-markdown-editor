@@ -407,7 +407,13 @@ class BlockMenu extends React.Component<Props, State> {
       if (item.name === "separator") return true;
 
       // Some extensions may be disabled, remove corresponding menu items
-      if (item.name && !commands[item.name]) return false;
+      if (
+        item.name &&
+        !commands[item.name] &&
+        !commands[`create${capitalize(item.name)}`]
+      ) {
+        return false;
+      }
 
       // If no image upload callback has been passed, filter the image block out
       if (!uploadImage && item.name === "image") return false;
