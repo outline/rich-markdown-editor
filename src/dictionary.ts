@@ -32,8 +32,6 @@ export const base = {
   hr: "Divider",
   image: "Image",
   imageUploadError: "Sorry, an error occurred uploading the image",
-  imageDownloadError:
-    "Sorry, an error occurred downloading the image. Try refreshing the page?",
   info: "Info",
   infoNotice: "Info notice",
   link: "Link",
