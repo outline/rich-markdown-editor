@@ -94,6 +94,15 @@ Allows overriding the inbuilt copy dictionary, for example to internationalize t
 
 With `dark` set to `true` the editor will use a default dark theme that's included. See the [source here](/src/theme.ts).
 
+#### `dir`
+
+*Default: `auto`*
+
+Controls direction of the document. Possible values are:
+- `ltr`: Editor layout is optimized for LTR documents and the content is explicitly marked as LTR.
+- `rtl`: Editor layout is optimized for RTL documents and the content is explicitly marked as RTL.
+- `auto`: Editor layout is decided by the browser based on document content.
+
 #### `tooltip`
 
 A React component that will be wrapped around items that have an optional tooltip. You can use this to inject your own tooltip library into the editor – the component will be passed the following props:

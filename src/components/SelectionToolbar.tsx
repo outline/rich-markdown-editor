@@ -24,6 +24,7 @@ import baseDictionary from "../dictionary";
 type Props = {
   dictionary: typeof baseDictionary;
   tooltip: typeof React.Component | React.FC<any>;
+  rtl: boolean;
   isTemplate: boolean;
   commands: Record<string, any>;
   onOpen: () => void;
@@ -121,7 +122,7 @@ export default class SelectionToolbar extends React.Component<Props> {
   };
 
   render() {
-    const { dictionary, onCreateLink, isTemplate, ...rest } = this.props;
+    const { dictionary, onCreateLink, isTemplate, rtl, ...rest } = this.props;
     const { view } = rest;
     const { state } = view;
     const { selection }: { selection: any } = state;
@@ -145,7 +146,7 @@ export default class SelectionToolbar extends React.Component<Props> {
     if (isTableSelection) {
       items = getTableMenuItems(dictionary);
     } else if (colIndex !== undefined) {
-      items = getTableColMenuItems(state, colIndex, dictionary);
+      items = getTableColMenuItems(state, colIndex, rtl, dictionary);
     } else if (rowIndex !== undefined) {
       items = getTableRowMenuItems(state, rowIndex, dictionary);
     } else if (isImageSelection) {
