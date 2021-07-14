@@ -21,6 +21,7 @@ export default class Heading extends Node {
   get defaultOptions() {
     return {
       levels: [1, 2, 3, 4],
+      collapsed: false,
     };
   }
 
@@ -29,6 +30,9 @@ export default class Heading extends Node {
       attrs: {
         level: {
           default: 1,
+        },
+        collapsed: {
+          default: false,
         },
       },
       content: "inline*",
@@ -41,16 +45,33 @@ export default class Heading extends Node {
         contentElement: "span",
       })),
       toDOM: node => {
-        const button = document.createElement("button");
-        button.innerText = "#";
-        button.type = "button";
-        button.className = "heading-anchor";
-        button.addEventListener("click", this.handleCopyLink());
+        const anchor = document.createElement("button");
+        anchor.innerText = "#";
+        anchor.type = "button";
+        anchor.className = "heading-anchor";
+        anchor.contentEditable = "false";
+        anchor.addEventListener("click", event => this.handleCopyLink(event));
+
+        const fold = document.createElement("button");
+        fold.innerText = node.attrs.collapsed ? ">" : "v";
+        fold.type = "button";
+        fold.className = "heading-fold";
+        fold.contentEditable = "false";
+        fold.addEventListener("click", event => this.handleFold(event));
 
         return [
           `h${node.attrs.level + (this.options.offset || 0)}`,
-          button,
-          ["span", { class: "heading-content" }, 0],
+          anchor,
+          fold,
+          [
+            "span",
+            {
+              class: `heading-content ${
+                node.attrs.collapsed ? "collapsed" : ""
+              }`,
+            },
+            0,
+          ],
         ];
       },
     };
@@ -77,28 +98,47 @@ export default class Heading extends Node {
     };
   }
 
-  handleCopyLink = () => {
-    return event => {
-      // this is unfortunate but appears to be the best way to grab the anchor
-      // as it's added directly to the dom by a decoration.
-      const anchor = event.currentTarget.parentNode.previousSibling;
-      if (!anchor.className.includes(this.className)) {
-        throw new Error("Did not find anchor as previous sibling of heading");
-      }
-      const hash = `#${anchor.id}`;
+  handleFold = event => {
+    event.preventDefault();
 
-      // the existing url might contain a hash already, lets make sure to remove
-      // that rather than appending another one.
-      const urlWithoutHash = window.location.href.split("#")[0];
-      copy(urlWithoutHash + hash);
+    const { view } = this.editor;
+    const { tr } = view.state;
+    const { top, left } = event.target.getBoundingClientRect();
+    const result = view.posAtCoords({ top, left });
 
-      if (this.options.onShowToast) {
-        this.options.onShowToast(
-          this.options.dictionary.linkCopied,
-          ToastType.Info
-        );
+    if (result) {
+      const node = view.state.doc.nodeAt(result.inside);
+
+      if (node) {
+        const transaction = tr.setNodeMarkup(result.inside, undefined, {
+          level: node.attrs.level,
+          collapsed: !node.attrs.collapsed,
+        });
+        view.dispatch(transaction);
       }
-    };
+    }
+  };
+
+  handleCopyLink = event => {
+    // this is unfortunate but appears to be the best way to grab the anchor
+    // as it's added directly to the dom by a decoration.
+    const anchor = event.currentTarget.parentNode.previousSibling;
+    if (!anchor.className.includes(this.className)) {
+      throw new Error("Did not find anchor as previous sibling of heading");
+    }
+    const hash = `#${anchor.id}`;
+
+    // the existing url might contain a hash already, lets make sure to remove
+    // that rather than appending another one.
+    const urlWithoutHash = window.location.href.split("#")[0];
+    copy(urlWithoutHash + hash);
+
+    if (this.options.onShowToast) {
+      this.options.onShowToast(
+        this.options.dictionary.linkCopied,
+        ToastType.Info
+      );
+    }
   };
 
   keys({ type }: { type: NodeType }) {
