@@ -146,9 +146,9 @@ export default class SelectionToolbar extends React.Component<Props> {
     if (isTableSelection) {
       items = getTableMenuItems(dictionary);
     } else if (colIndex !== undefined) {
-      items = getTableColMenuItems(state, colIndex, rtl, dictionary);
+      items = getTableColMenuItems(state, colIndex, rtl, dictionary).concat(getFormattingMenuItems(state, isTemplate, dictionary));
     } else if (rowIndex !== undefined) {
-      items = getTableRowMenuItems(state, rowIndex, dictionary);
+      items = getTableRowMenuItems(state, rowIndex, dictionary).concat(getFormattingMenuItems(state, isTemplate, dictionary));
     } else if (isImageSelection) {
       items = getImageMenuItems(state, dictionary);
     } else if (isDividerSelection) {
