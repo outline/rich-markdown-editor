@@ -16,7 +16,7 @@ type AlignValues =
   | "flex-end";
 
 type Props = {
-  style?: Record<string, string>;
+  style?: React.CSSProperties;
   column?: boolean;
   align?: AlignValues;
   justify?: JustifyValues;
