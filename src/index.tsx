@@ -500,35 +500,37 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       );
     };
 
+    const self = this; // eslint-disable-line
     const view = new EditorView(this.element, {
       state: this.createState(),
       editable: () => !this.props.readOnly,
       nodeViews: this.nodeViews,
       handleDOMEvents: this.props.handleDOMEvents,
-      dispatchTransaction: transaction => {
-        const { state, transactions } = this.view.state.applyTransaction(
+      dispatchTransaction: function(transaction) {
+        // callback is bound to have the view instance as its this binding
+        const { state, transactions } = this.state.applyTransaction(
           transaction
         );
 
-        this.view.updateState(state);
+        this.updateState(state);
 
         // If any of the transactions being dispatched resulted in the doc
         // changing then call our own change handler to let the outside world
         // know
         if (
           transactions.some(tr => tr.docChanged) &&
-          (!this.props.readOnly ||
-            (this.props.readOnlyWriteCheckboxes &&
+          (!self.props.readOnly ||
+            (self.props.readOnlyWriteCheckboxes &&
               transactions.some(isEditingCheckbox)))
         ) {
-          this.handleChange();
+          self.handleChange();
         }
 
-        this.calculateDir();
+        self.calculateDir();
 
         // Because Prosemirror and React are not linked we must tell React that
         // a render is needed whenever the Prosemirror state changes.
-        this.forceUpdate();
+        self.forceUpdate();
       },
     });
 
@@ -905,7 +907,8 @@ const StyledEditor = styled("div")<{
     }
 
     &:hover {
-      .heading-anchor {
+      .heading-anchor,
+      .heading-fold {
         opacity: 1;
       }
     }
@@ -961,9 +964,10 @@ const StyledEditor = styled("div")<{
     margin-${props => (props.rtl ? "right" : "left")}: -1em;
   }
 
-  .heading-anchor {
+  .heading-anchor,
+  .heading-fold {
     opacity: 0;
-    display: ${props => (props.readOnly ? "inline-block" : "none")};
+    display: inline-block;
     color: ${props => props.theme.textSecondary};
     cursor: pointer;
     background: none;
@@ -973,7 +977,7 @@ const StyledEditor = styled("div")<{
     margin: 0;
     transition: opacity 100ms ease-in-out;
     font-family: ${props => props.theme.fontFamilyMono};
-    font-size: 22px;
+    font-size: 14px;
     line-height: 0;
     margin-${props => (props.rtl ? "right" : "left")}: -24px;
     width: 24px;
@@ -982,6 +986,25 @@ const StyledEditor = styled("div")<{
     &:hover {
       color: ${props => props.theme.text};
     }
+  }
+
+  .heading-fold {
+    display: inline-block;
+    background-color: ${props => props.theme.background};
+    background-image: url("data:image/svg+xml;base64,PHN2ZwogICAgICBmaWxsPSJjdXJyZW50Q29sb3IiCiAgICAgIHdpZHRoPSIyNCIKICAgICAgaGVpZ2h0PSIyNCIKICAgICAgdmlld0JveD0iMCAwIDI0IDI0IgogICAgICB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiAgICA+CiAgICAgIDxwYXRoIGQ9Ik04LjIzODIzOTA1LDEwLjYwOTcxMDggTDExLjIwNzM3NiwxNC40Njk1ODg4IEwxMS4yMDczNzYsMTQuNDY5NTg4OCBDMTEuNTQ0MTEsMTQuOTA3MzQzIDEyLjE3MTk1NjYsMTQuOTg5MjM2IDEyLjYwOTcxMDgsMTQuNjUyNTAyIEMxMi42NzgzNDM5LDE0LjU5OTcwNzMgMTIuNzM5ODI5MywxNC41MzgyMjIgMTIuNzkyNjI0LDE0LjQ2OTU4ODggTDE1Ljc2MTc2MSwxMC42MDk3MTA4IEwxNS43NjE3NjEsMTAuNjA5NzEwOCBDMTYuMDk4NDk0OSwxMC4xNzE5NTY2IDE2LjAxNjYwMTksOS41NDQxMDk5NyAxNS41Nzg4NDc3LDkuMjA3Mzc2MDEgQzE1LjQwNDAzOTEsOS4wNzI5MDc4NSAxNS4xODk2ODExLDkgMTQuOTY5MTM3LDkgTDkuMDMwODYzMDQsOSBMOS4wMzA4NjMwNCw5IEM4LjQ3ODU3ODI5LDkgOC4wMzA4NjMwNCw5LjQ0NzcxNTI1IDguMDMwODYzMDQsMTAgQzguMDMwODYzMDQsMTAuMjIwNTQ0MiA4LjEwMzc3MDg5LDEwLjQzNDkwMjIgOC4yMzgyMzkwNSwxMC42MDk3MTA4IFoiIC8+CiAgICA8L3N2Zz4=");
+    width: 24px;
+    height: 24px;
+    margin-${props => (props.rtl ? "right" : "left")}: -24px;
+    padding: 0;
+
+    position: relative;
+    top: 4px;
+  }
+
+  .heading-fold.collapsed {
+    transform: rotate(${props => (props.rtl ? "90deg" : "-90deg")});
+    transition-delay: 0.1s;
+    opacity: 1;
   }
 
   .placeholder {

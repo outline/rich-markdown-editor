@@ -7,7 +7,7 @@ import { setBlockType } from "prosemirror-commands";
 import { MarkdownSerializerState } from "prosemirror-markdown";
 import backspaceToParagraph from "../commands/backspaceToParagraph";
 import toggleBlockType from "../commands/toggleBlockType";
-import headingToSlug from "../lib/headingToSlug";
+import headingToSlug, { headingToPersistenceKey } from "../lib/headingToSlug";
 import Node from "./Node";
 import { ToastType } from "../types";
 
@@ -21,7 +21,7 @@ export default class Heading extends Node {
   get defaultOptions() {
     return {
       levels: [1, 2, 3, 4],
-      collapsed: false,
+      collapsed: undefined,
     };
   }
 
@@ -32,7 +32,7 @@ export default class Heading extends Node {
           default: 1,
         },
         collapsed: {
-          default: false,
+          default: undefined,
         },
       },
       content: "inline*",
@@ -53,22 +53,28 @@ export default class Heading extends Node {
         anchor.addEventListener("click", event => this.handleCopyLink(event));
 
         const fold = document.createElement("button");
-        fold.innerText = node.attrs.collapsed ? ">" : "v";
+        fold.innerText = "";
         fold.type = "button";
-        fold.className = "heading-fold";
+        fold.className = `heading-fold ${
+          node.attrs.collapsed ? "collapsed" : ""
+        }`;
         fold.contentEditable = "false";
-        fold.addEventListener("click", event => this.handleFold(event));
+        fold.addEventListener("click", event => this.handleFoldContent(event));
 
         return [
           `h${node.attrs.level + (this.options.offset || 0)}`,
-          anchor,
-          fold,
           [
             "span",
             {
-              class: `heading-content ${
-                node.attrs.collapsed ? "collapsed" : ""
-              }`,
+              class: "heading-actions",
+            },
+            anchor,
+            fold,
+          ],
+          [
+            "span",
+            {
+              class: "heading-content",
             },
             0,
           ],
@@ -98,7 +104,7 @@ export default class Heading extends Node {
     };
   }
 
-  handleFold = event => {
+  handleFoldContent = event => {
     event.preventDefault();
 
     const { view } = this.editor;
@@ -110,10 +116,14 @@ export default class Heading extends Node {
       const node = view.state.doc.nodeAt(result.inside);
 
       if (node) {
+        const collapsed = !node.attrs.collapsed;
         const transaction = tr.setNodeMarkup(result.inside, undefined, {
-          level: node.attrs.level,
-          collapsed: !node.attrs.collapsed,
+          ...node.attrs,
+          collapsed,
         });
+
+        const persistKey = headingToPersistenceKey(node, this.editor.props.id);
+        localStorage?.setItem(persistKey, collapsed ? "collapsed" : "");
         view.dispatch(transaction);
       }
     }
