@@ -33,5 +33,8 @@ export default function tableRowMenuItems(
       icon: TrashIcon,
       active: () => false,
     },
+    {
+      name: "separator",
+    },
   ];
 }

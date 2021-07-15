@@ -77,5 +77,8 @@ export default function tableColMenuItems(
       icon: TrashIcon,
       active: () => false,
     },
+    {
+      name: "separator",
+    },
   ];
 }
