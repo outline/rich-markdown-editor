@@ -787,6 +787,7 @@ const StyledEditor = styled("div")<{
   font-size: 1em;
   line-height: 1.7em;
   width: 100%;
+
   .ProseMirror {
     position: relative;
     outline: none;
@@ -906,9 +907,9 @@ const StyledEditor = styled("div")<{
       width: 24px;
     }
 
-    &:hover {
-      .heading-anchor,
-      .heading-fold {
+    &:hover,
+    &:focus-within {
+      .heading-actions {
         opacity: 1;
       }
     }
@@ -966,39 +967,44 @@ const StyledEditor = styled("div")<{
 
   .heading-anchor,
   .heading-fold {
-    opacity: 0;
     display: inline-block;
-    color: ${props => props.theme.textSecondary};
+    color: ${props => props.theme.text};
+    opacity: .75;
     cursor: pointer;
     background: none;
-    border: 0;
     outline: none;
-    padding: ${props => (props.rtl ? "2px 2px 12px 4px" : "2px 12px 2px 4px")};
+    border: 0;
     margin: 0;
-    transition: opacity 100ms ease-in-out;
+    padding: 0;
+    text-align: left;
     font-family: ${props => props.theme.fontFamilyMono};
     font-size: 14px;
     line-height: 0;
-    margin-${props => (props.rtl ? "right" : "left")}: -24px;
-    width: 24px;
+    width: 12px;
+    height: 24px;
 
     &:focus,
     &:hover {
-      color: ${props => props.theme.text};
+      opacity: 1;
     }
+  }
+
+  .heading-actions {
+    opacity: 0;
+    background: ${props => props.theme.background};
+    margin-${props => (props.rtl ? "right" : "left")}: -26px;
+    flex-direction: ${props => (props.rtl ? "row-reverse" : "row")};
+    display: inline-flex;
+    position: relative;
+    top: -2px;
+    width: 26px;
+    height: 24px;
   }
 
   .heading-fold {
     display: inline-block;
-    background-color: ${props => props.theme.background};
-    background-image: url("data:image/svg+xml;base64,PHN2ZwogICAgICBmaWxsPSJjdXJyZW50Q29sb3IiCiAgICAgIHdpZHRoPSIyNCIKICAgICAgaGVpZ2h0PSIyNCIKICAgICAgdmlld0JveD0iMCAwIDI0IDI0IgogICAgICB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiAgICA+CiAgICAgIDxwYXRoIGQ9Ik04LjIzODIzOTA1LDEwLjYwOTcxMDggTDExLjIwNzM3NiwxNC40Njk1ODg4IEwxMS4yMDczNzYsMTQuNDY5NTg4OCBDMTEuNTQ0MTEsMTQuOTA3MzQzIDEyLjE3MTk1NjYsMTQuOTg5MjM2IDEyLjYwOTcxMDgsMTQuNjUyNTAyIEMxMi42NzgzNDM5LDE0LjU5OTcwNzMgMTIuNzM5ODI5MywxNC41MzgyMjIgMTIuNzkyNjI0LDE0LjQ2OTU4ODggTDE1Ljc2MTc2MSwxMC42MDk3MTA4IEwxNS43NjE3NjEsMTAuNjA5NzEwOCBDMTYuMDk4NDk0OSwxMC4xNzE5NTY2IDE2LjAxNjYwMTksOS41NDQxMDk5NyAxNS41Nzg4NDc3LDkuMjA3Mzc2MDEgQzE1LjQwNDAzOTEsOS4wNzI5MDc4NSAxNS4xODk2ODExLDkgMTQuOTY5MTM3LDkgTDkuMDMwODYzMDQsOSBMOS4wMzA4NjMwNCw5IEM4LjQ3ODU3ODI5LDkgOC4wMzA4NjMwNCw5LjQ0NzcxNTI1IDguMDMwODYzMDQsMTAgQzguMDMwODYzMDQsMTAuMjIwNTQ0MiA4LjEwMzc3MDg5LDEwLjQzNDkwMjIgOC4yMzgyMzkwNSwxMC42MDk3MTA4IFoiIC8+CiAgICA8L3N2Zz4=");
-    width: 24px;
-    height: 24px;
-    margin-${props => (props.rtl ? "right" : "left")}: -24px;
+    transform-origin: center;
     padding: 0;
-
-    position: relative;
-    top: 4px;
   }
 
   .heading-fold.collapsed {
