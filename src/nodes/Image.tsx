@@ -438,6 +438,7 @@ const Caption = styled.p`
   display: block;
   font-size: 13px;
   font-style: italic;
+  font-weight: normal;
   color: ${props => props.theme.textSecondary};
   padding: 2px 0;
   line-height: 16px;
