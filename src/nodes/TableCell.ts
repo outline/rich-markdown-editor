@@ -35,7 +35,7 @@ export default class TableCell extends Node {
     };
   }
 
-  toMarkdown(state, node) {
+  toMarkdown() {
     // see: renderTable
   }
 
