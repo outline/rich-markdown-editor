@@ -131,7 +131,7 @@ export type Props = {
   onFocus?: () => void;
   onSave?: ({ done: boolean }) => void;
   onCancel?: () => void;
-  onChange: (value: () => string) => void;
+  onChange?: (value: () => string) => void;
   onImageUploadStart?: () => void;
   onImageUploadStop?: () => void;
   onCreateLink?: (title: string) => Promise<string>;
@@ -144,7 +144,7 @@ export type Props = {
   onShowToast?: (message: string, code: ToastType) => void;
   tooltip: typeof React.Component | React.FC<any>;
   className?: string;
-  style?: Record<string, string>;
+  style?: React.CSSProperties;
 };
 
 type State = {
@@ -502,7 +502,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
     const self = this; // eslint-disable-line
     const view = new EditorView(this.element, {
-      state: this.createState(),
+      state: this.createState(this.props.value),
       editable: () => !this.props.readOnly,
       nodeViews: this.nodeViews,
       handleDOMEvents: this.props.handleDOMEvents,
