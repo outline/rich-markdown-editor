@@ -68,7 +68,9 @@ export default class Heading extends Node {
           [
             "span",
             {
-              class: "heading-actions",
+              class: `heading-actions ${
+                node.attrs.collapsed ? "collapsed" : ""
+              }`,
             },
             anchor,
             fold,

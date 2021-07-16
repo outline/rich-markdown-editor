@@ -914,12 +914,14 @@ const StyledEditor = styled("div")<{
       }
     }
   }
+
   .heading-content {
     &:before {
       content: "​";
       display: inline;
     }
   }
+
   .heading-name {
     color: ${props => props.theme.text};
 
@@ -927,6 +929,7 @@ const StyledEditor = styled("div")<{
       text-decoration: none;
     }
   }
+
   .folded-content {
     display: none;
   }
@@ -999,18 +1002,46 @@ const StyledEditor = styled("div")<{
     top: -2px;
     width: 26px;
     height: 24px;
+
+    &.collapsed {
+      opacity: 1;
+    }
+
+    &.collapsed .heading-anchor {
+      opacity: 0;
+    }
+
+    &.collapsed .heading-fold {
+      opacity: 1;
+    }
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    &:hover {
+      .heading-anchor {
+        opacity: 0.75 !important;
+      }
+      .heading-anchor:hover {
+        opacity: 1 !important;
+      }
+    }
   }
 
   .heading-fold {
     display: inline-block;
     transform-origin: center;
     padding: 0;
-  }
 
-  .heading-fold.collapsed {
-    transform: rotate(${props => (props.rtl ? "90deg" : "-90deg")});
-    transition-delay: 0.1s;
-    opacity: 1;
+    &.collapsed {
+      transform: rotate(${props => (props.rtl ? "90deg" : "-90deg")});
+      transition-delay: 0.1s;
+      opacity: 1;
+    }
   }
 
   .placeholder {
