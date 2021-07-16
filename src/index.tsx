@@ -499,7 +499,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     };
 
     const view = new EditorView(this.element, {
-      state: this.createState(),
+      state: this.createState(this.props.value),
       editable: () => !this.props.readOnly,
       nodeViews: this.nodeViews,
       handleDOMEvents: this.props.handleDOMEvents,
