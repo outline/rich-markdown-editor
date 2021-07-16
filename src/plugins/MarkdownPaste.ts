@@ -84,8 +84,12 @@ export default class MarkdownPaste extends Extension {
             }
 
             // otherwise, if we have html on the clipboard that looks like it
-            // came from Prosemirror then use the default HTML parser behavior
-            if (text.length === 0 || (html && html.includes("data-pm-slice"))) {
+            // came from a reputable source then use the default HTML parser
+            if (
+              text.length === 0 ||
+              html?.includes("data-pm-slice") || // Outline
+              html?.includes("docs-internal-guid") // Google Docs
+            ) {
               return false;
             }
 
