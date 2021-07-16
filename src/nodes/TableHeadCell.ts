@@ -32,7 +32,7 @@ export default class TableHeadCell extends Node {
   }
 
   toMarkdown(state, node) {
-    state.renderContent(node);
+    // see: renderTable
   }
 
   parseMarkdown() {

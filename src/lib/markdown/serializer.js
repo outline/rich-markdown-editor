@@ -326,7 +326,7 @@ export class MarkdownSerializerState {
           // as headings.
           // TODO: Ideally we'd calc the longest cell length and use that
           // to pad all the others.
-          if (para.textContent === "") {
+          if (para.textContent === "" && para.content.size === 0) {
             this.out += "  ";
           } else {
             this.closed = false;
