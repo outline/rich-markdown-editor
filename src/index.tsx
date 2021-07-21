@@ -689,7 +689,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     }
   );
 
-  render = () => {
+  render() {
     const {
       dir,
       readOnly,
@@ -768,7 +768,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         </ThemeProvider>
       </Flex>
     );
-  };
+  }
 }
 
 const StyledEditor = styled("div")<{
