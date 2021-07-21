@@ -104,6 +104,7 @@
     "tsc-watch": "^4.2.9"
   },
   "resolutions": {
+    "prosemirror-transform": "1.2.5",
     "yargs-parser": "^15.0.1"
   },
   "repository": {
