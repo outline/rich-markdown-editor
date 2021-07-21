@@ -768,7 +768,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         </ThemeProvider>
       </Flex>
     );
-  };
+  }
 }
 
 const StyledEditor = styled("div")<{
