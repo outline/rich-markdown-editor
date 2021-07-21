@@ -62,6 +62,7 @@ import Underline from "./marks/Underline";
 
 // plugins
 import BlockMenuTrigger from "./plugins/BlockMenuTrigger";
+import Folding from "./plugins/Folding";
 import History from "./plugins/History";
 import Keys from "./plugins/Keys";
 import MaxLength from "./plugins/MaxLength";
@@ -356,6 +357,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           new Strikethrough(),
           new OrderedList(),
           new History(),
+          new Folding(),
           new SmartText(),
           new TrailingNode(),
           new MarkdownPaste(),
@@ -498,35 +500,37 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       );
     };
 
+    const self = this; // eslint-disable-line
     const view = new EditorView(this.element, {
       state: this.createState(this.props.value),
       editable: () => !this.props.readOnly,
       nodeViews: this.nodeViews,
       handleDOMEvents: this.props.handleDOMEvents,
-      dispatchTransaction: transaction => {
-        const { state, transactions } = this.view.state.applyTransaction(
+      dispatchTransaction: function(transaction) {
+        // callback is bound to have the view instance as its this binding
+        const { state, transactions } = this.state.applyTransaction(
           transaction
         );
 
-        this.view.updateState(state);
+        this.updateState(state);
 
         // If any of the transactions being dispatched resulted in the doc
         // changing then call our own change handler to let the outside world
         // know
         if (
           transactions.some(tr => tr.docChanged) &&
-          (!this.props.readOnly ||
-            (this.props.readOnlyWriteCheckboxes &&
+          (!self.props.readOnly ||
+            (self.props.readOnlyWriteCheckboxes &&
               transactions.some(isEditingCheckbox)))
         ) {
-          this.handleChange();
+          self.handleChange();
         }
 
-        this.calculateDir();
+        self.calculateDir();
 
         // Because Prosemirror and React are not linked we must tell React that
         // a render is needed whenever the Prosemirror state changes.
-        this.forceUpdate();
+        self.forceUpdate();
       },
     });
 
@@ -783,6 +787,7 @@ const StyledEditor = styled("div")<{
   font-size: 1em;
   line-height: 1.7em;
   width: 100%;
+
   .ProseMirror {
     position: relative;
     outline: none;
@@ -902,24 +907,31 @@ const StyledEditor = styled("div")<{
       width: 24px;
     }
 
-    &:hover {
-      .heading-anchor {
+    &:hover,
+    &:focus-within {
+      .heading-actions {
         opacity: 1;
       }
     }
   }
+
   .heading-content {
     &:before {
       content: "​";
       display: inline;
     }
   }
+
   .heading-name {
     color: ${props => props.theme.text};
 
     &:hover {
       text-decoration: none;
     }
+  }
+
+  .folded-content {
+    display: none;
   }
 
   a:first-child {
@@ -956,26 +968,79 @@ const StyledEditor = styled("div")<{
     margin-${props => (props.rtl ? "right" : "left")}: -1em;
   }
 
-  .heading-anchor {
-    opacity: 0;
-    display: ${props => (props.readOnly ? "inline-block" : "none")};
-    color: ${props => props.theme.textSecondary};
+  .heading-anchor,
+  .heading-fold {
+    display: inline-block;
+    color: ${props => props.theme.text};
+    opacity: .75;
     cursor: pointer;
     background: none;
-    border: 0;
     outline: none;
-    padding: ${props => (props.rtl ? "2px 2px 12px 4px" : "2px 12px 2px 4px")};
+    border: 0;
     margin: 0;
-    transition: opacity 100ms ease-in-out;
+    padding: 0;
+    text-align: left;
     font-family: ${props => props.theme.fontFamilyMono};
-    font-size: 22px;
+    font-size: 14px;
     line-height: 0;
-    margin-${props => (props.rtl ? "right" : "left")}: -24px;
-    width: 24px;
+    width: 12px;
+    height: 24px;
 
     &:focus,
     &:hover {
-      color: ${props => props.theme.text};
+      opacity: 1;
+    }
+  }
+
+  .heading-actions {
+    opacity: 0;
+    background: ${props => props.theme.background};
+    margin-${props => (props.rtl ? "right" : "left")}: -26px;
+    flex-direction: ${props => (props.rtl ? "row-reverse" : "row")};
+    display: inline-flex;
+    position: relative;
+    top: -2px;
+    width: 26px;
+    height: 24px;
+
+    &.collapsed {
+      opacity: 1;
+    }
+
+    &.collapsed .heading-anchor {
+      opacity: 0;
+    }
+
+    &.collapsed .heading-fold {
+      opacity: 1;
+    }
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    &:hover {
+      .heading-anchor {
+        opacity: 0.75 !important;
+      }
+      .heading-anchor:hover {
+        opacity: 1 !important;
+      }
+    }
+  }
+
+  .heading-fold {
+    display: inline-block;
+    transform-origin: center;
+    padding: 0;
+
+    &.collapsed {
+      transform: rotate(${props => (props.rtl ? "90deg" : "-90deg")});
+      transition-delay: 0.1s;
+      opacity: 1;
     }
   }
 

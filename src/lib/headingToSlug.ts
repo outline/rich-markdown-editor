@@ -21,3 +21,8 @@ export default function headingToSlug(node: Node, index = 0) {
   if (index === 0) return slugified;
   return `${slugified}-${index}`;
 }
+
+export function headingToPersistenceKey(node: Node, id?: string) {
+  const slug = headingToSlug(node);
+  return `rme-${id || window?.location.pathname}–${slug}`;
+}
