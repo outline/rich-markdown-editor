@@ -6,6 +6,9 @@ import breakPlugin from "./breaks";
 import tablesPlugin from "./tables";
 import noticesPlugin from "./notices";
 import underlinesPlugin from "./underlines";
+// import emojiPlugin from './emoji'
+import emojiPlugin from './emoji2'
+// import emojiPlugin from 'markdown-it-emoji'
 
 export default function rules({ embeds, rules = {} }) {
   return markdownit("default", {
@@ -21,5 +24,7 @@ export default function rules({ embeds, rules = {} }) {
     .use(markPlugin({ delim: "!!", mark: "placeholder" }))
     .use(underlinesPlugin)
     .use(tablesPlugin)
-    .use(noticesPlugin);
+    .use(noticesPlugin)
+    .use(emojiPlugin);
+    // .use(emojiPlugin)
 }

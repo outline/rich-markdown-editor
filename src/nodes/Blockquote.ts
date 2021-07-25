@@ -23,7 +23,10 @@ export default class Blockquote extends Node {
   }
 
   commands({ type }) {
-    return () => toggleWrap(type);
+    return () => {
+      console.log(type)
+      return toggleWrap(type)
+    };
   }
 
   keys({ type }) {

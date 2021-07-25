@@ -34,6 +34,20 @@ Default.args = {
 Just an easy to use **Markdown** editor with \`slash commands\``,
 };
 
+export const Emoji = Template.bind({});
+Emoji.args = {
+  defaultValue: `# Notices
+
+There are three types of editable notice blocks that can be used to callout information:
+
+\\
+:1st_place_medal:
+`,
+// onChange: (v) => {
+//   console.log(v())
+// }
+};
+
 export const TemplateDoc = Template.bind({});
 TemplateDoc.args = {
   template: true,

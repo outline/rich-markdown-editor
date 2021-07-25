@@ -6,6 +6,7 @@ import render from "./lib/renderToHtml";
 import Doc from "./nodes/Doc";
 import Text from "./nodes/Text";
 import Blockquote from "./nodes/Blockquote";
+import Emoji from "./nodes/Emoji";
 import BulletList from "./nodes/BulletList";
 import CodeBlock from "./nodes/CodeBlock";
 import CodeFence from "./nodes/CodeFence";
@@ -40,7 +41,8 @@ const extensions = new ExtensionManager([
   new Text(),
   new HardBreak(),
   new Paragraph(),
-  new Blockquote(),
+  // new Blockquote(),
+  new Emoji(),
   new BulletList(),
   new CodeBlock(),
   new CodeFence(),

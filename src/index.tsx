@@ -19,6 +19,7 @@ import { SearchResult } from "./components/LinkEditor";
 import { EmbedDescriptor, ToastType } from "./types";
 import SelectionToolbar from "./components/SelectionToolbar";
 import BlockMenu from "./components/BlockMenu";
+import EmojiMenu from "./components/EmojiMenu";
 import LinkToolbar from "./components/LinkToolbar";
 import Tooltip from "./components/Tooltip";
 import Extension from "./lib/Extension";
@@ -35,6 +36,7 @@ import BulletList from "./nodes/BulletList";
 import CodeBlock from "./nodes/CodeBlock";
 import CodeFence from "./nodes/CodeFence";
 import CheckboxList from "./nodes/CheckboxList";
+import Emoji from "./nodes/Emoji";
 import CheckboxItem from "./nodes/CheckboxItem";
 import Embed from "./nodes/Embed";
 import HardBreak from "./nodes/HardBreak";
@@ -62,6 +64,7 @@ import Underline from "./marks/Underline";
 
 // plugins
 import BlockMenuTrigger from "./plugins/BlockMenuTrigger";
+import EmojiTrigger from "./plugins/EmojiTrigger";
 import Folding from "./plugins/Folding";
 import History from "./plugins/History";
 import Keys from "./plugins/Keys";
@@ -154,6 +157,7 @@ type State = {
   blockMenuOpen: boolean;
   linkMenuOpen: boolean;
   blockMenuSearch: string;
+  emojiMenuOpen: boolean
 };
 
 type Step = {
@@ -186,6 +190,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     blockMenuOpen: false,
     linkMenuOpen: false,
     blockMenuSearch: "",
+    emojiMenuOpen: false,
   };
 
   isBlurred: boolean;
@@ -302,10 +307,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       [
         ...[
           new Doc(),
-          new Text(),
           new HardBreak(),
           new Paragraph(),
-          new Blockquote(),
+          // new Blockquote(),
           new CodeBlock({
             dictionary,
             onShowToast: this.props.onShowToast,
@@ -314,6 +318,10 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
             dictionary,
             onShowToast: this.props.onShowToast,
           }),
+          new Emoji({
+            dictionary,
+          }),
+          new Text(),
           new CheckboxList(),
           new CheckboxItem(),
           new BulletList(),
@@ -374,6 +382,15 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
             dictionary,
             onOpen: this.handleOpenBlockMenu,
             onClose: this.handleCloseBlockMenu,
+          }),
+          new EmojiTrigger({
+            dictionary,
+            onOpen: (search: string) => {
+              this.setState({ emojiMenuOpen: true, blockMenuSearch: search });
+            },
+            onClose: () => {
+              this.setState({ emojiMenuOpen: false });
+            },
           }),
           new Placeholder({
             placeholder: this.props.placeholder,
@@ -759,6 +776,15 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   onShowToast={this.props.onShowToast}
                   onClose={this.handleCloseLinkMenu}
                   tooltip={tooltip}
+                />
+                <EmojiMenu
+                  view={this.view}
+                  commands={this.commands}
+                  dictionary={dictionary}
+                  rtl={isRTL}
+                  isActive={this.state.emojiMenuOpen}
+                  search={this.state.blockMenuSearch}
+                  onClose={() => this.setState({ emojiMenuOpen: false })}
                 />
                 <BlockMenu
                   view={this.view}

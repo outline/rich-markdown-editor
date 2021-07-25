@@ -80,6 +80,12 @@ export default class ExtensionManager {
         };
       }, {});
 
+    console.log(new MarkdownParser(
+      schema,
+      makeRules({ embeds: this.embeds }),
+      tokens
+    ))
+
     return new MarkdownParser(
       schema,
       makeRules({ embeds: this.embeds, rules }),
@@ -142,6 +148,8 @@ export default class ExtensionManager {
           schema,
         })
       );
+    
+    console.log(nodeMarkInputRules, schema)
 
     return [...extensionInputRules, ...nodeMarkInputRules].reduce(
       (allInputRules, inputRules) => [...allInputRules, ...inputRules],
@@ -155,6 +163,7 @@ export default class ExtensionManager {
       .reduce((allCommands, extension) => {
         const { name, type } = extension;
         const commands = {};
+        console.log(name, type)
         const value = extension.commands({
           schema,
           ...(["node", "mark"].includes(type)
