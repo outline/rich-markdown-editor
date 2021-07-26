@@ -56,8 +56,15 @@ function usePosition({ menuRef, isSelectingText, props }) {
 
   // based on the start and end of the selection calculate the position at
   // the center top
-  const fromPos = view.coordsAtPos(selection.$from.pos);
-  const toPos = view.coordsAtPos(selection.$to.pos);
+  let fromPos;
+  let toPos;
+  try {
+    fromPos = view.coordsAtPos(selection.from);
+    toPos = view.coordsAtPos(selection.to, -1);
+  } catch (err) {
+    console.warn(err);
+    return defaultPosition;
+  }
 
   // ensure that start < end for the menu to be positioned correctly
   const selectionBounds = {
@@ -72,7 +79,7 @@ function usePosition({ menuRef, isSelectingText, props }) {
   const isRowSelection = selection.isRowSelection && selection.isRowSelection();
 
   if (isColSelection) {
-    const { node: element } = view.domAtPos(selection.$from.pos);
+    const { node: element } = view.domAtPos(selection.from);
     const { width } = element.getBoundingClientRect();
     selectionBounds.top -= 20;
     selectionBounds.right = selectionBounds.left + width;
@@ -228,6 +235,21 @@ const Wrapper = styled.div<{
 
   @media print {
     display: none;
+  }
+
+  @media (hover: none) and (pointer: coarse) {
+    &:before {
+      display: none;
+    }
+
+    transition: opacity 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform: scale(1);
+    border-radius: 0;
+    position: fixed;
+    top: auto !important;
+    bottom: 0;
+    left: 0 !important;
+    right: 0 !important;
   }
 `;
 

@@ -31,8 +31,8 @@ export default class TableHeadCell extends Node {
     };
   }
 
-  toMarkdown(state, node) {
-    state.renderContent(node);
+  toMarkdown() {
+    // see: renderTable
   }
 
   parseMarkdown() {

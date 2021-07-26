@@ -78,6 +78,10 @@ When set enforces a maximum character length on the document, not including mark
 
 Allows additional [Prosemirror plugins](https://prosemirror.net/docs/ref/#state.Plugin_System) to be passed to the underlying Prosemirror instance.
 
+#### `disableExtensions`
+
+List of included extension names to disable. Removes corresponding menu items and commands. E.g. set to `["em", "blockquote"]` to disable italic text and blockquotes.
+
 #### `theme`
 
 Allows overriding the inbuilt theme to brand the editor, for example use your own font face and brand colors to have the editor fit within your application. See the [inbuilt theme](/src/theme.ts) for an example of the keys that should be provided.
@@ -89,6 +93,15 @@ Allows overriding the inbuilt copy dictionary, for example to internationalize t
 #### `dark`
 
 With `dark` set to `true` the editor will use a default dark theme that's included. See the [source here](/src/theme.ts).
+
+#### `dir`
+
+*Default: `auto`*
+
+Controls direction of the document. Possible values are:
+- `ltr`: Editor layout is optimized for LTR documents and the content is explicitly marked as LTR.
+- `rtl`: Editor layout is optimized for RTL documents and the content is explicitly marked as RTL.
+- `auto`: Editor layout is decided by the browser based on document content.
 
 #### `tooltip`
 

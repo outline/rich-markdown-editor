@@ -1,5 +1,6 @@
 import {
   TrashIcon,
+  DownloadIcon,
   AlignImageLeftIcon,
   AlignImageRightIcon,
   AlignImageCenterIcon,
@@ -49,6 +50,13 @@ export default function imageMenuItems(
     {
       name: "separator",
       visible: true,
+    },
+    {
+      name: "downloadImage",
+      tooltip: dictionary.downloadImage,
+      icon: DownloadIcon,
+      visible: !!fetch,
+      active: () => false,
     },
     {
       name: "deleteImage",

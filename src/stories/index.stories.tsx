@@ -1,5 +1,5 @@
 import Editor from "./index";
-import { debounce } from "lodash";
+import debounce from "lodash/debounce";
 import { Props } from "..";
 import React from "react";
 import { Story, Meta } from "@storybook/react/types-6-0";
@@ -16,6 +16,10 @@ export default {
     onShowToast: { action: "toast" },
     onFocus: { action: "focused" },
     onBlur: { action: "blurred" },
+    disableExtensions: { control: "array" },
+  },
+  args: {
+    disableExtensions: [],
   },
 } as Meta;
 
@@ -206,4 +210,16 @@ Dark.args = {
   defaultValue: `# Dark
 
 There's a customizable dark theme too`,
+};
+
+export const RTL = Template.bind({});
+RTL.args = {
+  dir: "rtl",
+  defaultValue: `# خوش آمدید
+
+متن نمونه برای نمایش پشتیبانی از زبان‌های RTL نظیر فارسی، عربی، عبری و ...
+
+\\
+- [x] آیتم اول
+- [ ] آیتم دوم`,
 };

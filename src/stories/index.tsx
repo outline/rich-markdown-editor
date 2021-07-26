@@ -71,7 +71,7 @@ const embeds = [
       />
     ),
     matcher: url => {
-      return !!url.match(
+      return url.match(
         /(?:https?:\/\/)?(?:www\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([a-zA-Z0-9_-]{11})$/i
       );
     },
@@ -122,7 +122,7 @@ export default function Example(props) {
 
           // Delay to simulate time taken to upload
           return new Promise(resolve => {
-            setTimeout(() => resolve("https://picsum.photos/600/600"), 1500);
+            setTimeout(() => resolve(URL.createObjectURL(file)), 1500);
           });
         }}
         embeds={embeds}

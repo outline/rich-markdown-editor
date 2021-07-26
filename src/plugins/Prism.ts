@@ -77,11 +77,12 @@ function getDecorations({ doc, name }: { doc: Node; name: string }) {
             to,
           };
         })
-        .map(node => {
-          return Decoration.inline(node.from, node.to, {
-            class: (node.classes || []).join(" "),
-          });
-        });
+        .filter(node => node.classes && node.classes.length)
+        .map(node =>
+          Decoration.inline(node.from, node.to, {
+            class: node.classes.join(" "),
+          })
+        );
 
       cache[block.pos] = {
         node: block.node,
