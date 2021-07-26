@@ -199,7 +199,7 @@ class MarkdownSerializerState {
             row.forEach((cell, _, j) => {
                 this.out += j === 0 ? "| " : " | ";
                 cell.forEach(para => {
-                    if (para.textContent === "") {
+                    if (para.textContent === "" && para.content.size === 0) {
                         this.out += "  ";
                     }
                     else {
@@ -226,7 +226,7 @@ class MarkdownSerializerState {
         });
         this.inTable = prevTable;
     }
-    esc(str, startOfLine) {
+    esc(str = "", startOfLine) {
         str = str.replace(/[`*\\~\[\]]/g, "\\$&");
         if (startOfLine) {
             str = str.replace(/^[:#\-*+]/, "\\$&").replace(/^(\d+)\./, "$1\\.");

@@ -19,4 +19,5 @@ export declare const Placeholder: any;
 export declare const Images: any;
 export declare const Focused: any;
 export declare const Dark: any;
+export declare const RTL: any;
 //# sourceMappingURL=index.stories.d.ts.map

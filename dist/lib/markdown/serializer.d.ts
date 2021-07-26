@@ -27,7 +27,7 @@ export class MarkdownSerializerState {
     inList: any;
     renderTable(node: any): void;
     inTable: any;
-    esc(str: any, startOfLine: any): any;
+    esc(str: string | undefined, startOfLine: any): string;
     quote(str: any): string;
     repeat(str: any, n: any): string;
     markString(mark: any, open: any, parent: any, index: any): any;

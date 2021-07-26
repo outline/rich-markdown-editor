@@ -1,1 +1,1 @@
-{"version":3,"file":"isModKey.d.ts","sourceRoot":"","sources":["../../src/lib/isModKey.ts"],"names":[],"mappings":"AAGA,MAAM,CAAC,OAAO,UAAU,QAAQ,CAAC,KAAK,EAAE,aAAa,GAAG,OAAO,CAE9D"}
+{"version":3,"file":"isModKey.d.ts","sourceRoot":"","sources":["../../src/lib/isModKey.ts"],"names":[],"mappings":"AAGA,MAAM,CAAC,OAAO,UAAU,QAAQ,CAAC,KAAK,EAAE,aAAa,GAAG,UAAU,GAAG,OAAO,CAE3E"}

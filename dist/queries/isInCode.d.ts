@@ -1,2 +1,3 @@
-export default function isInCode(state: any): boolean;
+import { EditorState } from "prosemirror-state";
+export default function isInCode(state: EditorState): boolean;
 //# sourceMappingURL=isInCode.d.ts.map

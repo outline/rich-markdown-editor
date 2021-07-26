@@ -1,0 +1,1 @@
+{"version":3,"file":"divider.d.ts","sourceRoot":"","sources":["../../src/menus/divider.tsx"],"names":[],"mappings":"AAAA,OAAO,EAAE,WAAW,EAAE,MAAM,mBAAmB,CAAC;AAGhD,OAAO,EAAE,QAAQ,EAAE,MAAM,UAAU,CAAC;AACpC,OAAO,cAAc,MAAM,eAAe,CAAC;AAE3C,MAAM,CAAC,OAAO,UAAU,gBAAgB,CACtC,KAAK,EAAE,WAAW,EAClB,UAAU,EAAE,OAAO,cAAc,GAChC,QAAQ,EAAE,CAmBZ"}

@@ -89,6 +89,13 @@ function blockMenuItems(dictionary) {
             keywords: "horizontal rule break line",
         },
         {
+            name: "hr",
+            title: dictionary.pageBreak,
+            icon: outline_icons_1.PageBreakIcon,
+            keywords: "page print break line",
+            attrs: { markup: "***" },
+        },
+        {
             name: "image",
             title: dictionary.image,
             icon: outline_icons_1.ImageIcon,

@@ -21,6 +21,7 @@ export default class Blockquote extends Node {
     }): {
         "Ctrl->": (state: any, dispatch: any) => boolean;
         "Mod-]": (state: any, dispatch: any) => boolean;
+        "Shift-Enter": (state: any, dispatch: any) => boolean;
     };
     toMarkdown(state: any, node: any): void;
     parseMarkdown(): {

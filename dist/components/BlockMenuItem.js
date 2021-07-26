@@ -40,7 +40,7 @@ function BlockMenuItem({ selected, disabled, onClick, title, shortcut, icon, }) 
         }
     }, [selected]);
     return (React.createElement(MenuItem, { selected: selected, onClick: disabled ? undefined : onClick, ref: ref },
-        React.createElement(Icon, { color: selected ? theme_1.default.black : undefined }),
+        React.createElement(Icon, { color: selected ? theme_1.default.blockToolbarIconSelected : theme_1.default.blockToolbarIcon }),
         "\u00A0\u00A0",
         title,
         React.createElement(Shortcut, null, shortcut)));
@@ -57,14 +57,16 @@ const MenuItem = styled_components_1.default.button `
   cursor: pointer;
   border: none;
   opacity: ${props => (props.disabled ? ".5" : "1")};
-  color: ${props => props.selected ? props.theme.black : props.theme.blockToolbarText};
+  color: ${props => props.selected
+    ? props.theme.blockToolbarTextSelected
+    : props.theme.blockToolbarText};
   background: ${props => props.selected ? props.theme.blockToolbarTrigger : "none"};
   padding: 0 16px;
   outline: none;
 
   &:hover,
   &:active {
-    color: ${props => props.theme.black};
+    color: ${props => props.theme.blockToolbarTextSelected};
     background: ${props => props.selected
     ? props.theme.blockToolbarTrigger
     : props.theme.blockToolbarHoverBackground};

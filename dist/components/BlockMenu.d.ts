@@ -3,6 +3,7 @@ import { EditorView } from "prosemirror-view";
 import { EmbedDescriptor, MenuItem } from "../types";
 import baseDictionary from "../dictionary";
 declare type Props = {
+    rtl: boolean;
     isActive: boolean;
     commands: Record<string, any>;
     dictionary: typeof baseDictionary;

@@ -4,10 +4,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const prosemirror_state_1 = require("prosemirror-state");
+const prosemirror_tables_1 = require("prosemirror-tables");
 const prosemirror_commands_1 = require("prosemirror-commands");
 const Extension_1 = __importDefault(require("../lib/Extension"));
 const isUrl_1 = __importDefault(require("../lib/isUrl"));
 const isInCode_1 = __importDefault(require("../queries/isInCode"));
+function normalizePastedMarkdown(text) {
+    const CHECKBOX_REGEX = /^\s?(\[(X|\s|_|-)\]\s(.*)?)/gim;
+    while (text.match(CHECKBOX_REGEX)) {
+        text = text.replace(CHECKBOX_REGEX, match => `- ${match.trim()}`);
+    }
+    return text;
+}
 class MarkdownPaste extends Extension_1.default {
     get name() {
         return "markdown-paste";
@@ -31,7 +39,7 @@ class MarkdownPaste extends Extension_1.default {
                                 return true;
                             }
                             const { embeds } = this.editor.props;
-                            if (embeds) {
+                            if (embeds && !prosemirror_tables_1.isInTable(state)) {
                                 for (const embed of embeds) {
                                     const matches = embed.matcher(text);
                                     if (matches) {
@@ -50,7 +58,7 @@ class MarkdownPaste extends Extension_1.default {
                             view.dispatch(transaction);
                             return true;
                         }
-                        if (text.length === 0 || (html && html.includes("data-pm-slice"))) {
+                        if (text.length === 0 || (html === null || html === void 0 ? void 0 : html.includes("data-pm-slice")) || (html === null || html === void 0 ? void 0 : html.includes("docs-internal-guid"))) {
                             return false;
                         }
                         event.preventDefault();
@@ -58,7 +66,7 @@ class MarkdownPaste extends Extension_1.default {
                             view.dispatch(view.state.tr.insertText(text));
                             return true;
                         }
-                        const paste = this.editor.parser.parse(text);
+                        const paste = this.editor.parser.parse(normalizePastedMarkdown(text));
                         const slice = paste.slice(0);
                         const transaction = view.state.tr.replaceSelection(slice);
                         view.dispatch(transaction);

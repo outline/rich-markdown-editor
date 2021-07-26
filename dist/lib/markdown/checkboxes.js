@@ -2,16 +2,21 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const CHECKBOX_REGEX = /\[(X|\s|_|-)\]\s(.*)?/i;
 function matches(token) {
-    return token.content.match(CHECKBOX_REGEX);
+    return token && token.content.match(CHECKBOX_REGEX);
 }
 function isInline(token) {
-    return token.type === "inline";
+    return !!token && token.type === "inline";
 }
 function isParagraph(token) {
-    return token.type === "paragraph_open";
+    return !!token && token.type === "paragraph_open";
+}
+function isListItem(token) {
+    return (!!token &&
+        (token.type === "list_item_open" || token.type === "checkbox_item_open"));
 }
 function looksLikeChecklist(tokens, index) {
     return (isInline(tokens[index]) &&
+        isListItem(tokens[index - 2]) &&
         isParagraph(tokens[index - 1]) &&
         matches(tokens[index]));
 }
@@ -20,7 +25,7 @@ function markdownItCheckbox(md) {
         const token = tokens[idx];
         const checked = !!token.attrGet("checked");
         if (token.nesting === 1) {
-            return `<li><span class="checkbox">${checked ? "[x]" : "[ ]"}</span>`;
+            return `<li class="checkbox-list-item"><span class="checkbox ${checked ? "checked" : ""}">${checked ? "[x]" : "[ ]"}</span>`;
         }
         else {
             return "</li>\n";

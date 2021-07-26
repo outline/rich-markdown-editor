@@ -5,6 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const prosemirror_commands_1 = require("prosemirror-commands");
 const markInputRule_1 = __importDefault(require("../lib/markInputRule"));
+const moveLeft_1 = __importDefault(require("../commands/moveLeft"));
+const moveRight_1 = __importDefault(require("../commands/moveRight"));
 const Mark_1 = __importDefault(require("./Mark"));
 function backticksFor(node, side) {
     const ticks = /`+/g;
@@ -31,7 +33,7 @@ class Code extends Mark_1.default {
     get schema() {
         return {
             excludes: "_",
-            parseDOM: [{ tag: "code" }],
+            parseDOM: [{ tag: "code", preserveWhitespace: true }],
             toDOM: () => ["code", { spellCheck: false }],
         };
     }
@@ -41,6 +43,8 @@ class Code extends Mark_1.default {
     keys({ type }) {
         return {
             "Mod`": prosemirror_commands_1.toggleMark(type),
+            ArrowLeft: moveLeft_1.default(),
+            ArrowRight: moveRight_1.default(),
         };
     }
     get toMarkdown() {

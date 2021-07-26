@@ -5,6 +5,7 @@ import baseDictionary from "../dictionary";
 declare type Props = {
     dictionary: typeof baseDictionary;
     tooltip: typeof React.Component | React.FC<any>;
+    rtl: boolean;
     isTemplate: boolean;
     commands: Record<string, any>;
     onOpen: () => void;

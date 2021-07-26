@@ -6,11 +6,15 @@ export default class Heading extends Node {
     get name(): string;
     get defaultOptions(): {
         levels: number[];
+        collapsed: undefined;
     };
     get schema(): {
         attrs: {
             level: {
                 default: number;
+            };
+            collapsed: {
+                default: undefined;
             };
         };
         content: string;
@@ -18,7 +22,9 @@ export default class Heading extends Node {
         defining: boolean;
         draggable: boolean;
         parseDOM: any;
-        toDOM: (node: any) => (string | HTMLButtonElement | (string | number | {
+        toDOM: (node: any) => (string | (string | HTMLButtonElement | {
+            class: string;
+        })[] | (string | number | {
             class: string;
         })[])[];
     };
@@ -33,7 +39,8 @@ export default class Heading extends Node {
         type: any;
         schema: any;
     }): (attrs: Record<string, any>) => (state: any, dispatch: any) => boolean;
-    handleCopyLink: () => (event: any) => void;
+    handleFoldContent: (event: any) => void;
+    handleCopyLink: (event: any) => void;
     keys({ type }: {
         type: NodeType;
     }): any;

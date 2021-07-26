@@ -11,16 +11,24 @@ class HorizontalRule extends Node_1.default {
     }
     get schema() {
         return {
+            attrs: {
+                markup: {
+                    default: "---",
+                },
+            },
             group: "block",
             parseDOM: [{ tag: "hr" }],
-            toDOM() {
-                return ["hr"];
+            toDOM: node => {
+                return [
+                    "hr",
+                    { class: node.attrs.markup === "***" ? "page-break" : "" },
+                ];
             },
         };
     }
     commands({ type }) {
-        return () => (state, dispatch) => {
-            dispatch(state.tr.replaceSelectionWith(type.create()).scrollIntoView());
+        return attrs => (state, dispatch) => {
+            dispatch(state.tr.replaceSelectionWith(type.create(attrs)).scrollIntoView());
             return true;
         };
     }
@@ -37,18 +45,24 @@ class HorizontalRule extends Node_1.default {
             new prosemirror_inputrules_1.InputRule(/^(?:---|___\s|\*\*\*\s)$/, (state, match, start, end) => {
                 const { tr } = state;
                 if (match[0]) {
-                    tr.replaceWith(start - 1, end, type.create({}));
+                    const markup = match[0].trim();
+                    tr.replaceWith(start - 1, end, type.create({ markup }));
                 }
                 return tr;
             }),
         ];
     }
     toMarkdown(state, node) {
-        state.write(node.attrs.markup || "\n---");
+        state.write(`\n${node.attrs.markup}`);
         state.closeBlock(node);
     }
     parseMarkdown() {
-        return { node: "hr" };
+        return {
+            node: "hr",
+            getAttrs: tok => ({
+                markup: tok.markup,
+            }),
+        };
     }
 }
 exports.default = HorizontalRule;

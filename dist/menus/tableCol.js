@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const outline_icons_1 = require("outline-icons");
 const isNodeActive_1 = __importDefault(require("../queries/isNodeActive"));
-function tableColMenuItems(state, index, dictionary) {
+function tableColMenuItems(state, index, rtl, dictionary) {
     const { schema } = state;
     return [
         {
@@ -45,14 +45,14 @@ function tableColMenuItems(state, index, dictionary) {
             name: "separator",
         },
         {
-            name: "addColumnBefore",
-            tooltip: dictionary.addColumnBefore,
+            name: rtl ? "addColumnAfter" : "addColumnBefore",
+            tooltip: rtl ? dictionary.addColumnAfter : dictionary.addColumnBefore,
             icon: outline_icons_1.InsertLeftIcon,
             active: () => false,
         },
         {
-            name: "addColumnAfter",
-            tooltip: dictionary.addColumnAfter,
+            name: rtl ? "addColumnBefore" : "addColumnAfter",
+            tooltip: rtl ? dictionary.addColumnBefore : dictionary.addColumnAfter,
             icon: outline_icons_1.InsertRightIcon,
             active: () => false,
         },

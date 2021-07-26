@@ -60,11 +60,10 @@ function getDecorations({ doc, name }) {
                 return Object.assign(Object.assign({}, node), { from,
                     to });
             })
-                .map(node => {
-                return prosemirror_view_1.Decoration.inline(node.from, node.to, {
-                    class: (node.classes || []).join(" "),
-                });
-            });
+                .filter(node => node.classes && node.classes.length)
+                .map(node => prosemirror_view_1.Decoration.inline(node.from, node.to, {
+                class: node.classes.join(" "),
+            }));
             cache[block.pos] = {
                 node: block.node,
                 decorations: _decorations,

@@ -46,6 +46,8 @@ const Prism_1 = __importStar(require("../plugins/Prism"));
 const isInCode_1 = __importDefault(require("../queries/isInCode"));
 const Node_1 = __importDefault(require("./Node"));
 const types_1 = require("../types");
+const PERSISTENCE_KEY = "rme-code-language";
+const DEFAULT_LANGUAGE = "sql";
 [
     bash_1.default,
     css_1.default,
@@ -89,10 +91,12 @@ class CodeFence extends Node_1.default {
             const { top, left } = element.getBoundingClientRect();
             const result = view.posAtCoords({ top, left });
             if (result) {
+                const language = element.value;
                 const transaction = tr.setNodeMarkup(result.inside, undefined, {
-                    language: element.value,
+                    language,
                 });
                 view.dispatch(transaction);
+                localStorage === null || localStorage === void 0 ? void 0 : localStorage.setItem(PERSISTENCE_KEY, language);
             }
         };
     }
@@ -106,7 +110,7 @@ class CodeFence extends Node_1.default {
         return {
             attrs: {
                 language: {
-                    default: "sql",
+                    default: DEFAULT_LANGUAGE,
                 },
             },
             content: "text*",
@@ -153,7 +157,9 @@ class CodeFence extends Node_1.default {
         };
     }
     commands({ type }) {
-        return () => prosemirror_commands_1.setBlockType(type);
+        return () => prosemirror_commands_1.setBlockType(type, {
+            language: (localStorage === null || localStorage === void 0 ? void 0 : localStorage.getItem(PERSISTENCE_KEY)) || DEFAULT_LANGUAGE,
+        });
     }
     keys({ type }) {
         return {

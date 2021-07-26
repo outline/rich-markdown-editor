@@ -33,8 +33,7 @@ class TableHeadCell extends Node_1.default {
             },
         };
     }
-    toMarkdown(state, node) {
-        state.renderContent(node);
+    toMarkdown() {
     }
     parseMarkdown() {
         return {

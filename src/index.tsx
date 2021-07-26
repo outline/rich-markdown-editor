@@ -1,7 +1,7 @@
 /* global window File Promise */
 import * as React from "react";
 import memoize from "lodash/memoize";
-import { EditorState, Selection, Plugin } from "prosemirror-state";
+import { EditorState, Selection, Plugin, TextSelection } from "prosemirror-state";
 import { dropCursor } from "prosemirror-dropcursor";
 import { gapCursor } from "prosemirror-gapcursor";
 import { MarkdownParser, MarkdownSerializer } from "prosemirror-markdown";
@@ -123,6 +123,7 @@ export type Props = {
   headingsOffset?: number;
   maxLength?: number;
   scrollTo?: string;
+  highlightTerm?: string;
   handleDOMEvents?: {
     [name: string]: (view: EditorView, event: Event) => boolean;
   };
@@ -212,6 +213,14 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       this.scrollToAnchor(this.props.scrollTo);
     }
 
+    const { highlightTerm } = this.props;
+    if (highlightTerm) {
+      // Waiting for query block to be available
+      setTimeout(() => {
+        this.scrollToTerm(highlightTerm);
+      }, 500);
+    }
+
     this.calculateDir();
 
     if (this.props.readOnly) return;
@@ -238,6 +247,13 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
     if (this.props.scrollTo && this.props.scrollTo !== prevProps.scrollTo) {
       this.scrollToAnchor(this.props.scrollTo);
+    }
+
+    if (
+      this.props.highlightTerm &&
+      this.props.highlightTerm !== prevProps.highlightTerm
+    ) {
+      this.scrollToTerm(this.props.highlightTerm);
     }
 
     // Focus at the end of the document if switching from readOnly and autoFocus
@@ -554,6 +570,55 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     }
   }
 
+  scrollToTerm(term: string) {
+    if (!term || !this.props.id) return;
+
+    try {
+      const elementList = document.querySelectorAll(
+        `#${this.props.id} > div > div > *`
+      );
+      let firstFound, nodeIndex, startSelection;
+      for (let i = 0; i < elementList.length; i++) {
+        const firstIndex = elementList[i].textContent?.search(
+          new RegExp(term, "i")
+        );
+        if (firstIndex !== undefined && firstIndex > -1) {
+          firstFound = elementList[i];
+          nodeIndex = i;
+          // TODO: Select search term only. It's not correct for all kind of component
+          startSelection = firstIndex;
+          break;
+        }
+      }
+      if (firstFound) {
+        firstFound.scrollIntoView({ behavior: "smooth" });
+        // Waiting for scrolling to be done
+        setTimeout(() => {
+          this.view.focus();
+          this.view.dispatch(
+            this.view.state.tr.setSelection(
+              TextSelection.create(
+                this.view.state.tr.doc,
+                this.view.posAtDOM(firstFound, 0),
+                this.view.posAtDOM(firstFound, 0) +
+                  this.view.state.doc.content.child(nodeIndex).nodeSize -
+                  2
+              )
+              // TODO: Select search term only. It's not correct for all kind of component
+              // TextSelection.create(
+              //   this.view.state.tr.doc,
+              //   this.view.posAtDOM(firstFound, 0) + startSelection,
+              //   this.view.posAtDOM(firstFound, 0) + startSelection + term.length
+              // )
+            )
+          );
+        }, 500);
+      }
+    } catch (err) {
+      console.warn(`Attempted to scroll to invalid term: ${term}`, err);
+    }
+  }
+
   calculateDir = () => {
     if (!this.element) return;
 
@@ -695,6 +760,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
   render() {
     const {
+      id,
       dir,
       readOnly,
       readOnlyWriteCheckboxes,
@@ -708,6 +774,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
     return (
       <Flex
+        id={id}
         onKeyDown={onKeyDown}
         style={style}
         className={className}

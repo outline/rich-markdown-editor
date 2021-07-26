@@ -47,10 +47,17 @@ const insertFiles = function (view, event, pos, files, options) {
             const pos = uploadPlaceholder_1.findPlaceholder(view.state, id);
             if (pos === null)
                 return;
-            const transaction = view.state.tr
-                .replaceWith(pos, pos, schema.nodes.image.create({ src }))
-                .setMeta(uploadPlaceholder_1.default, { remove: { id } });
-            view.dispatch(transaction);
+            const newImg = new Image();
+            newImg.onload = () => {
+                const transaction = view.state.tr
+                    .replaceWith(pos, pos, schema.nodes.image.create({ src }))
+                    .setMeta(uploadPlaceholder_1.default, { remove: { id } });
+                view.dispatch(transaction);
+            };
+            newImg.onerror = error => {
+                throw error;
+            };
+            newImg.src = src;
         })
             .catch(error => {
             console.error(error);

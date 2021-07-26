@@ -26,7 +26,7 @@ export default class TableHeadCell extends Node {
             };
         };
     };
-    toMarkdown(state: any, node: any): void;
+    toMarkdown(): void;
     parseMarkdown(): {
         block: string;
         getAttrs: (tok: any) => {

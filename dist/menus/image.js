@@ -42,6 +42,13 @@ function imageMenuItems(state, dictionary) {
             visible: true,
         },
         {
+            name: "downloadImage",
+            tooltip: dictionary.downloadImage,
+            icon: outline_icons_1.DownloadIcon,
+            visible: !!fetch,
+            active: () => false,
+        },
+        {
             name: "deleteImage",
             tooltip: dictionary.deleteImage,
             icon: outline_icons_1.TrashIcon,

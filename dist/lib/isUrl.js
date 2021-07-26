@@ -5,8 +5,8 @@ function isUrl(text) {
         return false;
     }
     try {
-        new URL(text);
-        return true;
+        const url = new URL(text);
+        return url.hostname !== "";
     }
     catch (err) {
         return false;

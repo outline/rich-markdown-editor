@@ -1,1 +1,1 @@
-{"version":3,"file":"dictionary.d.ts","sourceRoot":"","sources":["../src/dictionary.ts"],"names":[],"mappings":"AAAA,eAAO,MAAM,IAAI;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;gCA4Ca,MAAM;;;;;;;;;;;;;;CAcnC,CAAC;AAEF,eAAe,IAAI,CAAC"}
+{"version":3,"file":"dictionary.d.ts","sourceRoot":"","sources":["../src/dictionary.ts"],"names":[],"mappings":"AAAA,eAAO,MAAM,IAAI;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;gCA8Ca,MAAM,KAAG,MAAM;;;;;;;;;;;;;;CAc5C,CAAC;AAEF,eAAe,IAAI,CAAC"}

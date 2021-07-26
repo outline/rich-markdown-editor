@@ -1,2 +1,2 @@
-export default function isModKey(event: KeyboardEvent): boolean;
+export default function isModKey(event: KeyboardEvent | MouseEvent): boolean;
 //# sourceMappingURL=isModKey.d.ts.map
