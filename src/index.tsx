@@ -34,6 +34,7 @@ import Blockquote from "./nodes/Blockquote";
 import BulletList from "./nodes/BulletList";
 import CodeBlock from "./nodes/CodeBlock";
 import CodeFence from "./nodes/CodeFence";
+import MathFence from "./nodes/MathFence";
 import CheckboxList from "./nodes/CheckboxList";
 import CheckboxItem from "./nodes/CheckboxItem";
 import Embed from "./nodes/Embed";
@@ -299,6 +300,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     return new ExtensionManager(
       [
         ...[
+          new MathFence(),
           new Doc(),
           new Text(),
           new HardBreak(),

@@ -25,6 +25,7 @@
     ]
   },
   "dependencies": {
+    "@benrbray/prosemirror-math": "^0.2.2",
     "copy-to-clipboard": "^3.0.8",
     "lodash": "^4.17.11",
     "markdown-it-container": "^3.0.0",
@@ -56,14 +57,14 @@
     "styled-components": "^5.0.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.12.16",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-typescript": "^7.12.7",
-    "@types/jest": "^26.0.20",
-    "@babel/core": "^7.12.16",
     "@storybook/addon-actions": "^6.2.9",
     "@storybook/addon-essentials": "^6.2.9",
     "@storybook/addon-links": "^6.2.9",
     "@storybook/react": "^6.2.9",
+    "@types/jest": "^26.0.20",
     "@types/lodash": "^4.14.149",
     "@types/markdown-it": "^10.0.1",
     "@types/prosemirror-commands": "^1.0.1",
@@ -99,9 +100,9 @@
     "react-dom": "^17.0.0",
     "source-map-loader": "^0.2.4",
     "styled-components": "^5.2.1",
-    "typescript": "3.9.7",
     "ts-loader": "^6.2.1",
-    "tsc-watch": "^4.2.9"
+    "tsc-watch": "^4.2.9",
+    "typescript": "3.9.7"
   },
   "resolutions": {
     "prosemirror-transform": "1.2.5",
