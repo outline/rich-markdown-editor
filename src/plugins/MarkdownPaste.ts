@@ -3,7 +3,9 @@ import { isInTable } from "prosemirror-tables";
 import { toggleMark } from "prosemirror-commands";
 import Extension from "../lib/Extension";
 import isUrl from "../lib/isUrl";
-import isInCode from "../queries/isInCode";
+import isMarkdown from "../lib/isMarkdown";
+import selectionIsInCode from "../queries/isInCode";
+import { LANGUAGES } from "../plugins/Prism";
 
 /**
  * Add support for additional syntax that users paste even though it isn't
@@ -39,6 +41,7 @@ export default class MarkdownPaste extends Extension {
 
             const text = event.clipboardData.getData("text/plain");
             const html = event.clipboardData.getData("text/html");
+            const vscode = event.clipboardData.getData("vscode-editor-data");
             const { state, dispatch } = view;
 
             // first check if the clipboard contents can be parsed as a single
@@ -83,35 +86,62 @@ export default class MarkdownPaste extends Extension {
               return true;
             }
 
-            // otherwise, if we have html on the clipboard that looks like it
-            // came from a reputable source then use the default HTML parser
-            if (
-              text.length === 0 ||
-              html?.includes("data-pm-slice") || // Outline
-              html?.includes("docs-internal-guid") // Google Docs
-            ) {
-              return false;
-            }
-
-            event.preventDefault();
-
             // If the users selection is currently in a code block then paste
             // as plain text, ignore all formatting.
-            if (isInCode(view.state)) {
+            if (selectionIsInCode(view.state)) {
+              event.preventDefault();
+
               view.dispatch(view.state.tr.insertText(text));
               return true;
             }
 
-            // If we've gotten this far then treat the plain text content of the
-            // clipboard as possible markdown and use the parser
-            const paste = this.editor.parser.parse(
-              normalizePastedMarkdown(text)
-            );
-            const slice = paste.slice(0);
+            // Because VSCode is an especially popular editor that places metadata
+            // on the clipboard, we can parse it to find out what kind of content
+            // was pasted.
+            const vscodeMeta = vscode ? JSON.parse(vscode) : undefined;
+            const pasteIsCode =
+              vscodeMeta &&
+              vscodeMeta.mode !== null &&
+              vscodeMeta.mode !== "markdown";
 
-            const transaction = view.state.tr.replaceSelection(slice);
-            view.dispatch(transaction);
-            return true;
+            if (pasteIsCode) {
+              event.preventDefault();
+              view.dispatch(
+                view.state.tr
+                  .replaceSelectionWith(
+                    view.state.schema.nodes.code_fence.create({
+                      language: Object.keys(LANGUAGES).includes(vscodeMeta.mode)
+                        ? vscodeMeta.mode
+                        : null,
+                    })
+                  )
+                  .insertText(text)
+              );
+              return true;
+            }
+
+            // If the text on the clipboard looks like Markdown OR there is no
+            // html on the clipboard at all then try to parse content as Markdown
+            if (
+              isMarkdown(text) ||
+              html.length === 0 ||
+              vscodeMeta?.mode === "markdown"
+            ) {
+              event.preventDefault();
+
+              const paste = this.editor.parser.parse(
+                normalizePastedMarkdown(text)
+              );
+              const slice = paste.slice(0);
+
+              const transaction = view.state.tr.replaceSelection(slice);
+              view.dispatch(transaction);
+              return true;
+            }
+
+            // otherwise use the default HTML parser which will handle all paste
+            // "from the web" events
+            return false;
           },
         },
       }),
