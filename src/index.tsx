@@ -69,7 +69,7 @@ import MaxLength from "./plugins/MaxLength";
 import Placeholder from "./plugins/Placeholder";
 import SmartText from "./plugins/SmartText";
 import TrailingNode from "./plugins/TrailingNode";
-import MarkdownPaste from "./plugins/MarkdownPaste";
+import PasteHandler from "./plugins/PasteHandler";
 
 export { schema, parser, serializer, renderToHtml } from "./server";
 
@@ -360,7 +360,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           new Folding(),
           new SmartText(),
           new TrailingNode(),
-          new MarkdownPaste(),
+          new PasteHandler(),
           new Keys({
             onBlur: this.handleEditorBlur,
             onFocus: this.handleEditorFocus,

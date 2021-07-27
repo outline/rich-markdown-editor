@@ -162,7 +162,7 @@ export default class Image extends Node {
         },
         {
           tag: "img",
-          getAttrs: (dom: HTMLDivElement) => {
+          getAttrs: (dom: HTMLImageElement) => {
             return {
               src: dom.getAttribute("src"),
               alt: dom.getAttribute("alt"),

@@ -5,7 +5,7 @@ import Extension from "../lib/Extension";
 import isUrl from "../lib/isUrl";
 import isMarkdown from "../lib/isMarkdown";
 import selectionIsInCode from "../queries/isInCode";
-import { LANGUAGES } from "../plugins/Prism";
+import { LANGUAGES } from "./Prism";
 
 /**
  * Add support for additional syntax that users paste even though it isn't
@@ -24,7 +24,7 @@ function normalizePastedMarkdown(text: string): string {
   return text;
 }
 
-export default class MarkdownPaste extends Extension {
+export default class PasteHandler extends Extension {
   get name() {
     return "markdown-paste";
   }
@@ -87,7 +87,7 @@ export default class MarkdownPaste extends Extension {
             }
 
             // If the users selection is currently in a code block then paste
-            // as plain text, ignore all formatting.
+            // as plain text, ignore all formatting and HTML content.
             if (selectionIsInCode(view.state)) {
               event.preventDefault();
 
@@ -99,12 +99,9 @@ export default class MarkdownPaste extends Extension {
             // on the clipboard, we can parse it to find out what kind of content
             // was pasted.
             const vscodeMeta = vscode ? JSON.parse(vscode) : undefined;
-            const pasteIsCode =
-              vscodeMeta &&
-              vscodeMeta.mode !== null &&
-              vscodeMeta.mode !== "markdown";
+            const pasteCodeLanguage = vscodeMeta?.mode;
 
-            if (pasteIsCode) {
+            if (pasteCodeLanguage && pasteCodeLanguage !== "markdown") {
               event.preventDefault();
               view.dispatch(
                 view.state.tr
@@ -125,7 +122,7 @@ export default class MarkdownPaste extends Extension {
             if (
               isMarkdown(text) ||
               html.length === 0 ||
-              vscodeMeta?.mode === "markdown"
+              pasteCodeLanguage === "markdown"
             ) {
               event.preventDefault();
 
