@@ -153,10 +153,20 @@ export default class Image extends Node {
               ? layoutClassMatched[1]
               : null;
             return {
-              src: img.getAttribute("src"),
-              alt: img.getAttribute("alt"),
-              title: img.getAttribute("title"),
+              src: img?.getAttribute("src"),
+              alt: img?.getAttribute("alt"),
+              title: img?.getAttribute("title"),
               layoutClass: layoutClass,
+            };
+          },
+        },
+        {
+          tag: "img",
+          getAttrs: (dom: HTMLImageElement) => {
+            return {
+              src: dom.getAttribute("src"),
+              alt: dom.getAttribute("alt"),
+              title: dom.getAttribute("title"),
             };
           },
         },
