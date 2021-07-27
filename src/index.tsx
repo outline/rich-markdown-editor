@@ -930,10 +930,6 @@ const StyledEditor = styled("div")<{
     }
   }
 
-  .folded-content {
-    display: none;
-  }
-
   a:first-child {
     h1,
     h2,
@@ -1716,6 +1712,10 @@ const StyledEditor = styled("div")<{
     width: 20px;
     border-top: 1px solid ${props => props.theme.cursor};
     animation: ProseMirror-cursor-blink 1.1s steps(2, start) infinite;
+  }
+
+  .folded-content {
+    display: none;
   }
 
   @keyframes ProseMirror-cursor-blink {
