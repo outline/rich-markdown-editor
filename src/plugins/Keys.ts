@@ -1,4 +1,10 @@
-import { Plugin, Selection, AllSelection } from "prosemirror-state";
+import {
+  Plugin,
+  Selection,
+  AllSelection,
+  TextSelection,
+} from "prosemirror-state";
+import { GapCursor } from "prosemirror-gapcursor";
 import Extension from "../lib/Extension";
 import isModKey from "../lib/isModKey";
 export default class Keys extends Extension {
@@ -26,6 +32,28 @@ export default class Keys extends Extension {
               if (event.key === "ArrowDown") {
                 const selection = Selection.atEnd(view.state.doc);
                 view.dispatch(view.state.tr.setSelection(selection));
+                return true;
+              }
+            }
+
+            // edge case where horizontal gap cursor does nothing if Enter key
+            // is pressed. Insert a newline and then move the cursor into it.
+            if (view.state.selection instanceof GapCursor) {
+              if (event.key === "Enter") {
+                view.dispatch(
+                  view.state.tr.insert(
+                    view.state.selection.from,
+                    view.state.schema.nodes.paragraph.create({})
+                  )
+                );
+                view.dispatch(
+                  view.state.tr.setSelection(
+                    TextSelection.near(
+                      view.state.doc.resolve(view.state.selection.from),
+                      -1
+                    )
+                  )
+                );
                 return true;
               }
             }
