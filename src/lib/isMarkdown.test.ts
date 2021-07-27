@@ -8,11 +8,22 @@ test("returns false for plain text", () => {
   expect(isMarkdown("plain text")).toBe(false);
 });
 
-test("returns true for list", () => {
+test("returns true for bullet list", () => {
   expect(
     isMarkdown(`- item one
 - item two
   - nested item`)
+  ).toBe(true);
+});
+
+test("returns true for numbered list", () => {
+  expect(
+    isMarkdown(`1. item one
+1. item two`)
+  ).toBe(true);
+  expect(
+    isMarkdown(`1. item one
+2. item two`)
   ).toBe(true);
 });
 
@@ -30,6 +41,17 @@ test("returns false for non-closed fence", () => {
 this is not code
 `)
   ).toBe(false);
+});
+
+test("returns true for heading", () => {
+  expect(isMarkdown(`# Heading 1`)).toBe(true);
+  expect(isMarkdown(`## Heading 2`)).toBe(true);
+  expect(isMarkdown(`### Heading 3`)).toBe(true);
+});
+
+test("returns false for hashtag", () => {
+  expect(isMarkdown(`Test #hashtag`)).toBe(false);
+  expect(isMarkdown(` #hashtag`)).toBe(false);
 });
 
 test("returns true for absolute link", () => {
