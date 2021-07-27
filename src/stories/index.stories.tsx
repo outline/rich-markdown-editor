@@ -8,6 +8,7 @@ export default {
   title: "Editor",
   component: Editor,
   argTypes: {
+    value: { control: "text" },
     readOnly: { control: "boolean" },
     onSave: { action: "save" },
     onCancel: { action: "cancel" },

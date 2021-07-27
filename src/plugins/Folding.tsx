@@ -15,6 +15,7 @@ export default class Folding extends Extension {
     return [
       new Plugin({
         view: view => {
+          loaded = false;
           view.dispatch(view.state.tr.setMeta("folding", { loaded: true }));
           return {};
         },
