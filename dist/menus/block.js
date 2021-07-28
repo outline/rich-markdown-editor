@@ -71,7 +71,6 @@ function blockMenuItems(dictionary) {
             name: "container_query_block",
             title: dictionary.queryBlock,
             icon: outline_icons_1.CodeIcon,
-            shortcut: "^ ⇧ ]",
             keywords: "query sql script runs results",
         },
         {
