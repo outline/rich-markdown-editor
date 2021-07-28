@@ -10,6 +10,10 @@ const Input = styled.input`
   margin: 0;
   outline: none;
   flex-grow: 1;
+
+  @media (hover: none) and (pointer: coarse) {
+    font-size: 16px;
+  }
 `;
 
 export default Input;

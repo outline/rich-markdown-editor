@@ -1,7 +1,9 @@
-import ResizeObserver from "resize-observer-polyfill";
 import * as React from "react";
 import { Portal } from "react-portal";
 import { EditorView } from "prosemirror-view";
+import useComponentSize from "../hooks/useComponentSize";
+import useMediaQuery from "../hooks/useMediaQuery";
+import useViewportHeight from "../hooks/useViewportHeight";
 import styled from "styled-components";
 
 const SSR = typeof window === "undefined";
@@ -20,38 +22,27 @@ const defaultPosition = {
   visible: false,
 };
 
-const useComponentSize = ref => {
-  const [size, setSize] = React.useState({
-    width: 0,
-    height: 0,
-  });
-
-  React.useEffect(() => {
-    const sizeObserver = new ResizeObserver(entries => {
-      entries.forEach(({ target }) => {
-        if (
-          size.width !== target.clientWidth ||
-          size.height !== target.clientHeight
-        ) {
-          setSize({ width: target.clientWidth, height: target.clientHeight });
-        }
-      });
-    });
-    sizeObserver.observe(ref.current);
-
-    return () => sizeObserver.disconnect();
-  }, [ref]);
-
-  return size;
-};
-
 function usePosition({ menuRef, isSelectingText, props }) {
   const { view, active } = props;
   const { selection } = view.state;
   const { width: menuWidth, height: menuHeight } = useComponentSize(menuRef);
+  const viewportHeight = useViewportHeight();
+  const isTouchDevice = useMediaQuery("(hover: none) and (pointer: coarse)");
 
   if (!active || !menuWidth || !menuHeight || SSR || isSelectingText) {
     return defaultPosition;
+  }
+
+  // If we're on a mobile device then stick the floating toolbar to the bottom
+  // of the screen above the virtual keyboard.
+  if (isTouchDevice && viewportHeight) {
+    return {
+      left: 0,
+      right: 0,
+      top: viewportHeight - menuHeight,
+      offset: 0,
+      visible: true,
+    };
   }
 
   // based on the start and end of the selection calculate the position at
@@ -141,6 +132,7 @@ function usePosition({ menuRef, isSelectingText, props }) {
 function FloatingToolbar(props) {
   const menuRef = props.forwardedRef || React.createRef<HTMLDivElement>();
   const [isSelectingText, setSelectingText] = React.useState(false);
+
   const position = usePosition({
     menuRef,
     isSelectingText,
@@ -245,11 +237,8 @@ const Wrapper = styled.div<{
     transition: opacity 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
     transform: scale(1);
     border-radius: 0;
+    width: 100vw;
     position: fixed;
-    top: auto !important;
-    bottom: 0;
-    left: 0 !important;
-    right: 0 !important;
   }
 `;
 
