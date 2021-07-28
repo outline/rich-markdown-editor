@@ -286,6 +286,7 @@ export default class Image extends Node {
           role="textbox"
           contentEditable
           suppressContentEditableWarning
+          data-caption={this.options.dictionary.imageCaptionPlaceholder}
         >
           {alt}
         </Caption>
@@ -462,7 +463,7 @@ const Caption = styled.p`
 
   &:empty:before {
     color: ${props => props.theme.placeholder};
-    content: "Write a caption";
+    content: attr(data-caption);
     pointer-events: none;
   }
 `;
