@@ -117,8 +117,15 @@ export default class PasteHandler extends Extension {
               return true;
             }
 
+            // If the HTML on the clipboard is from Prosemirror then the best
+            // compatability is to just use the HTML parser, regardless of
+            // whether it "looks" like Markdown, see: outline/outline#2416
+            if (html?.includes("data-pm-slice")) {
+              return false;
+            }
+
             // If the text on the clipboard looks like Markdown OR there is no
-            // html on the clipboard at all then try to parse content as Markdown
+            // html on the clipboard then try to parse content as Markdown
             if (
               isMarkdown(text) ||
               html.length === 0 ||
