@@ -27,9 +27,9 @@ function BlockMenuItem({
           block: "center",
           boundary: parent => {
             // All the parent elements of your target are checked until they
-            // reach the #block-menu-container. Prevents body and other parent
+            // reach the #at-menu-container. Prevents body and other parent
             // elements from being scrolled
-            return parent.id !== "block-menu-container";
+            return parent.id !== "at-menu-container";
           },
         });
       }
@@ -79,12 +79,6 @@ const MenuItem = styled.button<{
         ? props.theme.blockToolbarTrigger
         : props.theme.blockToolbarHoverBackground};
   }
-`;
-
-const Shortcut = styled.span`
-  color: ${props => props.theme.textSecondary};
-  flex-grow: 1;
-  text-align: right;
 `;
 
 export default withTheme(BlockMenuItem);

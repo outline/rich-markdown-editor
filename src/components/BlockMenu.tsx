@@ -288,7 +288,6 @@ class BlockMenu extends React.Component<Props, State> {
     this.clearSearch();
 
     const command = this.props.commands[item.name];
-    console.log(item.attrs, command)
     if (command) {
       command(item.attrs);
     } else {
@@ -455,7 +454,6 @@ class BlockMenu extends React.Component<Props, State> {
   render() {
     const { dictionary, isActive, uploadImage } = this.props;
     const items = this.filtered;
-    console.log(this.filtered)
     const { insertItem, ...positioning } = this.state;
 
     return (

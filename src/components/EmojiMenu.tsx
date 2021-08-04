@@ -2,10 +2,11 @@ import * as React from "react";
 import capitalize from "lodash/capitalize";
 import { Portal } from "react-portal";
 import { EditorView } from "prosemirror-view";
+import { findParentDomRefOfType } from 'prosemirror-utils'
 import styled from "styled-components";
 import EmojiMenuItem from "./EmojiMenuItem";
 import baseDictionary from "../dictionary";
-import { gemoji as gemojies } from 'gemoji'
+import { gemoji as gemojies } from "gemoji";
 import FuzzySearch from "fuzzy-search";
 
 const SSR = typeof window === "undefined";
@@ -62,7 +63,7 @@ class EmojiMenu extends React.Component<Props, State> {
 
   componentDidMount() {
     if (!SSR) {
-      // window.addEventListener("keydown", this.handleKeyDown);
+      window.addEventListener("keydown", this.handleKeyDown);
     }
   }
 
@@ -173,7 +174,7 @@ class EmojiMenu extends React.Component<Props, State> {
     dispatch(
       state.tr.insertText(
         "",
-        state.selection.$from.pos - this.props.search.length - 1,
+        state.selection.$from.pos - (this.props.search ?? "").length - 1,
         state.selection.to
       )
     );
@@ -184,7 +185,6 @@ class EmojiMenu extends React.Component<Props, State> {
 
     const command = this.props.commands.emoji;
     if (command) {
-      console.log(item.attrs)
       command(item.attrs);
     } else {
       this.props.commands[`create${capitalize(item.name)}`](item.attrs);
@@ -235,9 +235,14 @@ class EmojiMenu extends React.Component<Props, State> {
       return defaultPosition;
     }
 
+    const domAtPos = view.domAtPos.bind(view);
+
     const ref = this.menuRef.current;
     const offsetHeight = ref ? ref.offsetHeight : 0;
-    const paragraph = view.domAtPos(selection.from);
+    const node = findParentDomRefOfType(view.state.schema.nodes.paragraph, domAtPos)(selection)
+    const paragraph = { node } //view.domAtPos(selection.from);
+
+    console.log(findParentDomRefOfType(view.state.schema.nodes.paragraph, domAtPos)(selection))
 
     if (
       !props.isActive ||
@@ -296,10 +301,12 @@ class EmojiMenu extends React.Component<Props, State> {
     const items = this.filtered;
     const { ...positioning } = this.state;
 
+    console.log(isActive, positioning)
+
     return (
       <Portal>
         <Wrapper
-          id="block-menu-container"
+          id="at-menu-container"
           active={isActive}
           ref={this.menuRef}
           {...positioning}

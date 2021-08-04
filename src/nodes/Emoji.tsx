@@ -1,8 +1,6 @@
-import { InputRule, wrappingInputRule } from "prosemirror-inputrules";
+import { InputRule } from "prosemirror-inputrules";
 import { nameToEmoji } from 'gemoji'
 import Node from "./Node";
-import markInputRule from "../lib/markInputRule";
-
 export default class Emoji extends Node {
   get name() {
     return "emoji";
@@ -53,13 +51,9 @@ export default class Emoji extends Node {
   }
 
   inputRules({ type }) {
-    console.log(type)
-    // return [markInputRule(/(?:%%)([^*]+)(?:%%)$/, type)];
-    // return [wrappingInputRule(/^\:([a-zA-Z]+)\:$/, type)];
     return [
       new InputRule(/^\:([a-zA-Z]+)\:$/, (state, match, start, end) => {
         const [okay, markup,] = match;
-        console.log(markup)
         const { tr } = state;
         if (okay) {
           tr.replaceWith(
@@ -85,7 +79,6 @@ export default class Emoji extends Node {
     return {
       node: "emoji",
       getAttrs: tok => {
-        console.log(tok)
         return { style: tok.markup.trim() }
       },
     };

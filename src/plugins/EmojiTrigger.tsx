@@ -1,15 +1,11 @@
 import { InputRule } from "prosemirror-inputrules";
-import ReactDOM from "react-dom";
-import * as React from "react";
 import { Plugin } from "prosemirror-state";
 import { isInTable } from "prosemirror-tables";
-import { findParentNode } from "prosemirror-utils";
-import { Decoration, DecorationSet } from "prosemirror-view";
 import Extension from "../lib/Extension";
 
 const MAX_MATCH = 500;
-const OPEN_REGEX = /^\:([0-9a-zA-Z]+)?$/;
-const CLOSE_REGEX = /^:([a-zA-Z]*)(:[\w\s]*)$|^:(\s+)([a-zA-Z]*)|^:([a-zA-Z]*)([\s+])/;
+const OPEN_REGEX = /:([0-9a-zA-Z]+)?$/;
+const CLOSE_REGEX = /:([a-zA-Z]*)(:[\w\s]*)$|^:(\s+)([a-zA-Z]*)|^:([a-zA-Z]*)([\s+])/;
 
 // based on the input rules code in Prosemirror, here:
 // https://github.com/ProseMirror/prosemirror-inputrules/blob/master/src/inputrules.js
@@ -87,55 +83,6 @@ export default class EmojiTrigger extends Extension {
 
             return false;
           },
-          decorations: state => {
-            const parent = findParentNode(
-              node => node.type.name === "paragraph"
-            )(state.selection);
-
-            if (!parent) {
-              return;
-            }
-
-            // console.log(parent)
-
-            const decorations: Decoration[] = [];
-            const isEmpty = parent && parent.node.content.size === 0;
-            const isSlash = parent && parent.node.textContent === "/";
-            const isTopLevel = state.selection.$from.depth === 1;
-
-            if (isTopLevel) {
-              if (isEmpty) {
-
-                decorations.push(
-                  Decoration.node(
-                    parent.pos,
-                    parent.pos + parent.node.nodeSize,
-                    {
-                      class: "placeholder",
-                      "data-empty-text": this.options.dictionary.newLineEmpty,
-                    }
-                  )
-                );
-              }
-
-              if (isSlash) {
-                decorations.push(
-                  Decoration.node(
-                    parent.pos,
-                    parent.pos + parent.node.nodeSize,
-                    {
-                      class: "placeholder",
-                      "data-empty-text": `  ${this.options.dictionary.newLineWithSlash}`,
-                    }
-                  )
-                );
-              }
-
-              return DecorationSet.create(state.doc, decorations);
-            }
-
-            return;
-          },
         },
       }),
     ];
@@ -146,6 +93,9 @@ export default class EmojiTrigger extends Extension {
       // main regex should match only:
       // /word
       new InputRule(OPEN_REGEX, (state, match) => {
+        console.log(match &&
+          state.selection.$from.parent.type.name === "paragraph" &&
+          !isInTable(state), match)
         if (
           match &&
           state.selection.$from.parent.type.name === "paragraph" &&
