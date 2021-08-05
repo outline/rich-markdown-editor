@@ -133,7 +133,7 @@ export default class PasteHandler extends Extension {
             ) {
               event.preventDefault();
 
-              const paste = this.editor.parser.parse(
+              const paste = this.editor.pasteParser.parse(
                 normalizePastedMarkdown(text)
               );
               const slice = paste.slice(0);
