@@ -463,7 +463,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   createParser() {
     return this.extensions.parser({
       schema: this.schema,
-      rules: {},
     });
   }
 
