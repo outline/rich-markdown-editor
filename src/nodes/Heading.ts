@@ -42,7 +42,7 @@ export default class Heading extends Node {
       parseDOM: this.options.levels.map(level => ({
         tag: `h${level}`,
         attrs: { level },
-        contentElement: "span",
+        contentElement: ".heading-content",
       })),
       toDOM: node => {
         const anchor = document.createElement("button");
