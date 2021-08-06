@@ -59,7 +59,13 @@ export default class ExtensionManager {
     return new MarkdownSerializer(nodes, marks);
   }
 
-  parser({ schema }) {
+  parser({
+    schema,
+    rules,
+  }: {
+    schema: any;
+    rules?: Record<string, any>;
+  }): MarkdownParser {
     const tokens: Record<string, any> = this.extensions
       .filter(
         extension => extension.type === "mark" || extension.type === "node"
@@ -76,7 +82,7 @@ export default class ExtensionManager {
 
     return new MarkdownParser(
       schema,
-      makeRules({ embeds: this.embeds }),
+      makeRules({ embeds: this.embeds, rules }),
       tokens
     );
   }

@@ -7,11 +7,12 @@ import tablesPlugin from "./tables";
 import noticesPlugin from "./notices";
 import underlinesPlugin from "./underlines";
 
-export default function rules({ embeds }) {
+export default function rules({ embeds, rules = {} }) {
   return markdownit("default", {
     breaks: false,
     html: false,
-    linkify: true,
+    linkify: false,
+    ...rules,
   })
     .use(embedsPlugin(embeds))
     .use(breakPlugin)

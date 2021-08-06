@@ -195,6 +195,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   schema: Schema;
   serializer: MarkdownSerializer;
   parser: MarkdownParser;
+  pasteParser: MarkdownParser;
   plugins: Plugin[];
   keymaps: Plugin[];
   inputRules: InputRule[];
@@ -286,6 +287,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     this.keymaps = this.createKeymaps();
     this.serializer = this.createSerializer();
     this.parser = this.createParser();
+    this.pasteParser = this.createPasteParser();
     this.inputRules = this.createInputRules();
     this.nodeViews = this.createNodeViews();
     this.view = this.createView();
@@ -461,6 +463,13 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   createParser() {
     return this.extensions.parser({
       schema: this.schema,
+    });
+  }
+
+  createPasteParser() {
+    return this.extensions.parser({
+      schema: this.schema,
+      rules: { linkify: true },
     });
   }
 
