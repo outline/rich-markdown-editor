@@ -12,13 +12,7 @@ type Props = {
   shortcut?: string;
 };
 
-function BlockMenuItem({
-  selected,
-  disabled,
-  onClick,
-  title,
-}: Props) {
-
+function BlockMenuItem({ selected, disabled, onClick, title }: Props) {
   const ref = React.useCallback(
     node => {
       if (selected && node) {

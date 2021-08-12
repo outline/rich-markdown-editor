@@ -93,9 +93,12 @@ export default class EmojiTrigger extends Extension {
       // main regex should match only:
       // /word
       new InputRule(OPEN_REGEX, (state, match) => {
-        console.log(match &&
-          state.selection.$from.parent.type.name === "paragraph" &&
-          !isInTable(state), match)
+        console.log(
+          match &&
+            state.selection.$from.parent.type.name === "paragraph" &&
+            !isInTable(state),
+          match
+        );
         if (
           match &&
           state.selection.$from.parent.type.name === "paragraph" &&

@@ -1,5 +1,5 @@
 import { InputRule } from "prosemirror-inputrules";
-import { nameToEmoji } from 'gemoji'
+import { nameToEmoji } from "gemoji";
 import Node from "./Node";
 export default class Emoji extends Node {
   get name() {
@@ -12,6 +12,9 @@ export default class Emoji extends Node {
         style: {
           default: "",
         },
+        "data-name": {
+          default: undefined,
+        },
       },
       inline: true,
       content: "text*",
@@ -23,22 +26,22 @@ export default class Emoji extends Node {
         {
           tag: "span.emoji",
           preserveWhitespace: "full",
-          // TODO:
           getAttrs: (dom: HTMLDivElement) => ({
-            style: "dog"
+            "data-name": dom.dataset.name,
           }),
         },
       ],
       toDOM: node => {
-        const text = document.createTextNode(nameToEmoji[node.attrs.style])
-        return ["span", { class: `emoji ${node.attrs.style}` }, text];
+        const text = document.createTextNode(
+          nameToEmoji[node.attrs["data-name"]]
+        );
+        return ["span", { class: `emoji ${node.attrs["data-name"]}` }, text];
       },
     };
   }
 
   commands({ type }) {
     return attrs => (state, dispatch) => {
-      console.log(dispatch)
       const { selection } = state;
       const position = selection.$cursor
         ? selection.$cursor.pos
@@ -47,20 +50,20 @@ export default class Emoji extends Node {
       const transaction = state.tr.insert(position, node);
       dispatch(transaction);
       return true;
-    }
+    };
   }
 
   inputRules({ type }) {
     return [
       new InputRule(/^\:([a-zA-Z]+)\:$/, (state, match, start, end) => {
-        const [okay, markup,] = match;
+        const [okay, markup] = match;
         const { tr } = state;
         if (okay) {
           tr.replaceWith(
             start - 1,
             end,
             type.create({
-              style: markup,
+              "data-name": markup,
               markup,
             })
           );
@@ -68,18 +71,18 @@ export default class Emoji extends Node {
 
         return tr;
       }),
-    ]
+    ];
   }
 
   toMarkdown(state, node) {
-    state.write(":" + (node.attrs.style || "dog") + ":");
+    state.write(":" + (node.attrs["data-name"] || "dog") + ":");
   }
 
   parseMarkdown() {
     return {
       node: "emoji",
       getAttrs: tok => {
-        return { style: tok.markup.trim() }
+        return { "data-name": tok.markup.trim() };
       },
     };
   }

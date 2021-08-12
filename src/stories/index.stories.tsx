@@ -43,9 +43,9 @@ There are three types of editable notice blocks that can be used to callout info
 \\
 :1st_place_medal:
 `,
-// onChange: (v) => {
-//   console.log(v())
-// }
+  // onChange: (v) => {
+  //   console.log(v())
+  // }
 };
 
 export const TemplateDoc = Template.bind({});

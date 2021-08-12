@@ -157,7 +157,7 @@ type State = {
   blockMenuOpen: boolean;
   linkMenuOpen: boolean;
   blockMenuSearch: string;
-  emojiMenuOpen: boolean
+  emojiMenuOpen: boolean;
 };
 
 type Step = {
@@ -309,7 +309,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           new Doc(),
           new HardBreak(),
           new Paragraph(),
-          // new Blockquote(),
+          new Blockquote(),
           new CodeBlock({
             dictionary,
             onShowToast: this.props.onShowToast,

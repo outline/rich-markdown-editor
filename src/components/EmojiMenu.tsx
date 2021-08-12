@@ -2,7 +2,7 @@ import * as React from "react";
 import capitalize from "lodash/capitalize";
 import { Portal } from "react-portal";
 import { EditorView } from "prosemirror-view";
-import { findParentDomRefOfType } from 'prosemirror-utils'
+import { findDomRefAtPos } from "prosemirror-utils";
 import styled from "styled-components";
 import EmojiMenuItem from "./EmojiMenuItem";
 import baseDictionary from "../dictionary";
@@ -13,7 +13,7 @@ const SSR = typeof window === "undefined";
 
 const searcher = new FuzzySearch(gemojies, ["names", "description"], {
   caseSensitive: true,
-  sort: true
+  sort: true,
 });
 
 const defaultPosition = {
@@ -24,11 +24,11 @@ const defaultPosition = {
 };
 
 type Emoji = {
-  name: string
-  title: string
-  emoji: string
-  attrs: { markup: string, style: string }
-}
+  name: string;
+  title: string;
+  emoji: string;
+  attrs: { markup: string; "data-name": string };
+};
 
 type Props = {
   rtl: boolean;
@@ -37,7 +37,6 @@ type Props = {
   dictionary: typeof baseDictionary;
   view: EditorView;
   search: string;
-  onShowToast?: (message: string, id: string) => void;
   onClose: () => void;
 };
 
@@ -239,10 +238,8 @@ class EmojiMenu extends React.Component<Props, State> {
 
     const ref = this.menuRef.current;
     const offsetHeight = ref ? ref.offsetHeight : 0;
-    const node = findParentDomRefOfType(view.state.schema.nodes.paragraph, domAtPos)(selection)
-    const paragraph = { node } //view.domAtPos(selection.from);
-
-    console.log(findParentDomRefOfType(view.state.schema.nodes.paragraph, domAtPos)(selection))
+    const node = findDomRefAtPos(selection.from, domAtPos);
+    const paragraph: any = { node };
 
     if (
       !props.isActive ||
@@ -284,14 +281,14 @@ class EmojiMenu extends React.Component<Props, State> {
 
     const n = search.toLowerCase();
     const result = searcher.search(n).map(item => {
-      const name = item.names[0]
+      const name = item.names[0];
       return {
         ...item,
         name,
         title: name,
-        attrs: { markup: name, style: name }
-      }
-    })
+        attrs: { markup: name, "data-name": name },
+      };
+    });
 
     return result.slice(0, 10);
   }
@@ -300,8 +297,6 @@ class EmojiMenu extends React.Component<Props, State> {
     const { dictionary, isActive } = this.props;
     const items = this.filtered;
     const { ...positioning } = this.state;
-
-    console.log(isActive, positioning)
 
     return (
       <Portal>

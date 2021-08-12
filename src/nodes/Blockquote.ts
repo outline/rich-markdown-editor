@@ -24,8 +24,8 @@ export default class Blockquote extends Node {
 
   commands({ type }) {
     return () => {
-      console.log(type)
-      return toggleWrap(type)
+      console.log(type);
+      return toggleWrap(type);
     };
   }
 
