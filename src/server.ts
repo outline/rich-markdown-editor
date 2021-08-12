@@ -41,7 +41,7 @@ const extensions = new ExtensionManager([
   new Text(),
   new HardBreak(),
   new Paragraph(),
-  // new Blockquote(),
+  new Blockquote(),
   new Emoji(),
   new BulletList(),
   new CodeBlock(),
