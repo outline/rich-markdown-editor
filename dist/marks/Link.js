@@ -71,7 +71,8 @@ class Link extends Mark_1.default {
         return {
             "Mod-k": (state, dispatch) => {
                 if (state.selection.empty) {
-                    return false;
+                    this.options.onKeyboardShortcut();
+                    return true;
                 }
                 return prosemirror_commands_1.toggleMark(type, { href: "" })(state, dispatch);
             },
