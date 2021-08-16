@@ -45,7 +45,7 @@ class Link extends Mark_1.default {
                     }),
                 },
             ],
-            toDOM: node => [
+            toDOM: (node) => [
                 "a",
                 Object.assign(Object.assign({}, node.attrs), { rel: "noopener noreferrer nofollow" }),
                 0,
@@ -142,7 +142,7 @@ class Link extends Mark_1.default {
     parseMarkdown() {
         return {
             mark: "link",
-            getAttrs: tok => ({
+            getAttrs: (tok) => ({
                 href: tok.attrGet("href"),
                 title: tok.attrGet("title") || null,
             }),
