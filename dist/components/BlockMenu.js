@@ -33,7 +33,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Wrapper = void 0;
+exports.Overlay = exports.Wrapper = void 0;
 const React = __importStar(require("react"));
 const capitalize_1 = __importDefault(require("lodash/capitalize"));
 const react_portal_1 = require("react-portal");
@@ -279,6 +279,7 @@ class BlockMenu extends React.Component {
     }
     calculatePosition(props) {
         const { view } = props;
+        view.focus();
         const { selection } = view.state;
         let startPos;
         try {
@@ -371,6 +372,7 @@ class BlockMenu extends React.Component {
         const items = this.filtered;
         const _a = this.state, { insertItem } = _a, positioning = __rest(_a, ["insertItem"]);
         return (React.createElement(react_portal_1.Portal, null,
+            isActive && React.createElement(exports.Overlay, { onClick: this.close }),
             React.createElement(exports.Wrapper, Object.assign({ id: "block-menu-container", active: isActive, ref: this.menuRef }, positioning),
                 insertItem ? (React.createElement(LinkInputWrapper, null,
                     React.createElement(LinkInput, { type: "text", placeholder: insertItem.title
@@ -470,6 +472,16 @@ exports.Wrapper = styled_components_1.default.div `
   @media print {
     display: none;
   }
+`;
+exports.Overlay = styled_components_1.default.div `
+  z-index: ${props => {
+    return props.theme.zIndex + 99;
+}};
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 `;
 exports.default = BlockMenu;
 //# sourceMappingURL=BlockMenu.js.map

@@ -68,5 +68,6 @@ export declare const Wrapper: import("styled-components").StyledComponent<"div",
     left?: number | undefined;
     isAbove: boolean;
 }, never>;
+export declare const Overlay: import("styled-components").StyledComponent<"div", any, {}, never>;
 export default BlockMenu;
 //# sourceMappingURL=BlockMenu.d.ts.map

@@ -334,6 +334,7 @@ class BlockMenu extends React.Component<Props, State> {
 
   calculatePosition(props) {
     const { view } = props;
+    view.focus();
     const { selection } = view.state;
     let startPos;
     try {
@@ -462,6 +463,7 @@ class BlockMenu extends React.Component<Props, State> {
 
     return (
       <Portal>
+        {isActive && <Overlay onClick={this.close} />}
         <Wrapper
           id="block-menu-container"
           active={isActive}
@@ -621,6 +623,17 @@ export const Wrapper = styled.div<{
   @media print {
     display: none;
   }
+`;
+
+export const Overlay = styled.div`
+  z-index: ${props => {
+    return props.theme.zIndex + 99;
+  }};
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 `;
 
 export default BlockMenu;
