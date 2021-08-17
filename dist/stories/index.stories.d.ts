@@ -20,4 +20,5 @@ export declare const Images: any;
 export declare const Focused: any;
 export declare const Dark: any;
 export declare const RTL: any;
+export declare const Link: any;
 //# sourceMappingURL=index.stories.d.ts.map

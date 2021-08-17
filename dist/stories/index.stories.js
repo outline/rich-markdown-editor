@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RTL = exports.Dark = exports.Focused = exports.Images = exports.Placeholder = exports.Persisted = exports.ReadOnlyWriteCheckboxes = exports.Checkboxes = exports.MaxLength = exports.ReadOnly = exports.Notices = exports.Code = exports.Marks = exports.Tables = exports.Blockquotes = exports.Lists = exports.Headings = exports.TemplateDoc = exports.Default = void 0;
+exports.Link = exports.RTL = exports.Dark = exports.Focused = exports.Images = exports.Placeholder = exports.Persisted = exports.ReadOnlyWriteCheckboxes = exports.Checkboxes = exports.MaxLength = exports.ReadOnly = exports.Notices = exports.Code = exports.Marks = exports.Tables = exports.Blockquotes = exports.Lists = exports.Headings = exports.TemplateDoc = exports.Default = void 0;
 const index_1 = __importDefault(require("./index"));
 const debounce_1 = __importDefault(require("lodash/debounce"));
 const react_1 = __importDefault(require("react"));
@@ -135,7 +135,7 @@ exports.ReadOnly = Template.bind({});
 exports.ReadOnly.args = {
     readOnly: true,
     defaultValue: `# Read Only
-  
+
 The content of this editor cannot be edited`,
 };
 exports.MaxLength = Template.bind({});
@@ -163,7 +163,7 @@ exports.Persisted = Template.bind({});
 exports.Persisted.args = {
     defaultValue: localStorage.getItem("saved") ||
         `# Persisted
-  
+
 The contents of this editor are persisted to local storage on change (edit and reload)`,
     onChange: debounce_1.default(value => {
         const text = value();
@@ -184,7 +184,7 @@ exports.Focused = Template.bind({});
 exports.Focused.args = {
     autoFocus: true,
     defaultValue: `# Focused
-  
+
   This editor starts in focus`,
 };
 exports.Dark = Template.bind({});
@@ -204,5 +204,14 @@ exports.RTL.args = {
 \\
 - [x] آیتم اول
 - [ ] آیتم دوم`,
+};
+exports.Link = Template.bind({});
+exports.Link.args = {
+    defaultValue: `# Links
+
+[https://example.com](https://example.com)`,
+    onClickLink: (href) => {
+        window.open(href, "_blank");
+    },
 };
 //# sourceMappingURL=index.stories.js.map

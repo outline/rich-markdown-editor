@@ -143,7 +143,7 @@ export const ReadOnly = Template.bind({});
 ReadOnly.args = {
   readOnly: true,
   defaultValue: `# Read Only
-  
+
 The content of this editor cannot be edited`,
 };
 
@@ -176,7 +176,7 @@ Persisted.args = {
   defaultValue:
     localStorage.getItem("saved") ||
     `# Persisted
-  
+
 The contents of this editor are persisted to local storage on change (edit and reload)`,
   onChange: debounce(value => {
     const text = value();
@@ -200,7 +200,7 @@ export const Focused = Template.bind({});
 Focused.args = {
   autoFocus: true,
   defaultValue: `# Focused
-  
+
   This editor starts in focus`,
 };
 
@@ -222,4 +222,14 @@ RTL.args = {
 \\
 - [x] آیتم اول
 - [ ] آیتم دوم`,
+};
+
+export const Link = Template.bind({});
+Link.args = {
+  defaultValue: `# Links
+
+[https://example.com](https://example.com)`,
+  onClickLink: (href: string) => {
+    window.open(href, "_blank");
+  },
 };
