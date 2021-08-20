@@ -259,6 +259,7 @@ class BlockMenu extends React.Component<Props, State> {
       onImageUploadStart,
       onImageUploadStop,
       onShowToast,
+      embeds,
     } = this.props;
     const { state, dispatch } = view;
     const parent = findParentNode(node => !!node)(state.selection);
@@ -278,6 +279,7 @@ class BlockMenu extends React.Component<Props, State> {
         onShowToast,
         dictionary: this.props.dictionary,
         isImage: false,
+        embeds,
       });
     }
 
@@ -297,6 +299,7 @@ class BlockMenu extends React.Component<Props, State> {
       onImageUploadStart,
       onImageUploadStop,
       onShowToast,
+      embeds,
     } = this.props;
     const { state, dispatch } = view;
     const parent = findParentNode(node => !!node)(state.selection);
@@ -316,6 +319,7 @@ class BlockMenu extends React.Component<Props, State> {
         onImageUploadStop,
         onShowToast,
         dictionary: this.props.dictionary,
+        embeds,
       });
     }
 

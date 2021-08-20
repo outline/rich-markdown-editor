@@ -14,6 +14,7 @@ const insertFiles = function(view, event, pos, files, options) {
     onImageUploadStop,
     onShowToast,
     isImage = true,
+    embeds,
   } = options;
 
   if (!uploadImage) {
@@ -61,12 +62,29 @@ const insertFiles = function(view, event, pos, files, options) {
 
         // otherwise, insert it at the placeholder's position, and remove
         // the placeholder itself
-        const transaction = isImage
-          ? view.state.tr
-              .replaceWith(pos, pos, schema.nodes.image.create({ src }))
-              .setMeta(uploadPlaceholderPlugin, { remove: { id } })
-          : view.state.tr.insertText(`\n<${src}>\n\\\n`);
-
+        let transaction;
+        if (isImage) {
+          transaction = view.state.tr
+            .replaceWith(pos, pos, schema.nodes.image.create({ src }))
+            .setMeta(uploadPlaceholderPlugin, { remove: { id } });
+        } else {
+          let component;
+          if (embeds) {
+            for (const embed of embeds) {
+              const matches = embed.matcher(src);
+              if (matches) {
+                component = embed.component;
+              }
+            }
+          }
+          transaction = view.state.tr
+            .replaceWith(
+              pos,
+              pos,
+              schema.nodes.embed.create({ href: src, component, matches: {} })
+            )
+            .setMeta(uploadPlaceholderPlugin, { remove: { id } });
+        }
         view.dispatch(transaction);
       })
       .catch(error => {

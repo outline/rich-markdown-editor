@@ -133,6 +133,14 @@ class YoutubeEmbed extends React.Component {
   }
 }
 
+class AudioEmbed extends React.Component {
+  render() {
+    const { attrs } = this.props;
+    const mp3 = attrs.href;
+    return <audio src={mp3} id={mp3} controls />;
+  }
+}
+
 class Example extends React.Component {
   state = {
     readOnly: false,
@@ -301,6 +309,25 @@ class Example extends React.Component {
                 );
               },
               component: YoutubeEmbed,
+            },
+            {
+              title: "Audio link",
+              keywords: "audio mp3",
+              icon: () => (
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/7/75/YouTube_social_white_squircle_%282017%29.svg"
+                  width={24}
+                  height={24}
+                />
+              ),
+              matcher: url => {
+                // FIXME support audio commonly used in language learning, like google translate, baidu in general
+                const isAudio = url.match(
+                  /(?:https?:\/\/)?.*.(?:wav|mp3|ogg|m4a|&spd=2|mp3)(\?alt.*|)$/i
+                );
+                return isAudio;
+              },
+              component: AudioEmbed,
             },
           ]}
           dark={this.state.dark}
