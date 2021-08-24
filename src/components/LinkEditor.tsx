@@ -216,6 +216,10 @@ class LinkEditor extends React.Component<Props, State> {
     }
   };
 
+  handlePaste = (): void => {
+    setTimeout(() => this.save(this.state.value, this.state.value), 0);
+  };
+
   handleOpenLink = (event): void => {
     event.preventDefault();
     this.props.onClickLink(this.href, event);
@@ -296,6 +300,7 @@ class LinkEditor extends React.Component<Props, State> {
               : dictionary.searchOrPasteLink
           }
           onKeyDown={this.handleKeyDown}
+          onPaste={this.handlePaste}
           onChange={this.handleChange}
           autoFocus={this.href === ""}
         />
