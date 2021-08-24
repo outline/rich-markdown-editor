@@ -312,11 +312,6 @@ export class MarkdownSerializerState {
 
     // rows
     node.forEach((row, _, i) => {
-      if (headerBuffer) {
-        this.out += `${headerBuffer}|\n`;
-        headerBuffer = undefined;
-      }
-
       // cols
       row.forEach((cell, _, j) => {
         this.out += j === 0 ? "| " : " | ";
@@ -348,6 +343,11 @@ export class MarkdownSerializerState {
       });
 
       this.out += " |\n";
+
+      if (headerBuffer) {
+        this.out += `${headerBuffer}|\n`;
+        headerBuffer = undefined;
+      }
     });
 
     this.inTable = prevTable;

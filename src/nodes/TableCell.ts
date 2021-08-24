@@ -85,7 +85,8 @@ export default class TableCell extends Node {
                     }
                     if (index === 0) {
                       className += " first";
-                    } else if (index === cells.length - 1) {
+                    }
+                    if (index === cells.length - 1) {
                       className += " last";
                     }
                     const grip = document.createElement("a");

@@ -3,7 +3,7 @@ import Token from "markdown-it/lib/token";
 
 const BREAK_REGEX = /(?:^|[^\\])\\n/;
 
-export default function markdownTables(md: MarkdownIt) {
+export default function markdownTables(md: MarkdownIt): void {
   // insert a new rule after the "inline" rules are parsed
   md.core.ruler.after("inline", "tables-pm", state => {
     const tokens = state.tokens;
