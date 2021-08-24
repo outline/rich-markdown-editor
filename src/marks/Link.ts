@@ -4,7 +4,7 @@ import { InputRule } from "prosemirror-inputrules";
 import Mark from "./Mark";
 import isModKey from "../lib/isModKey";
 
-const LINK_INPUT_REGEX = /\[(.+)]\((\S+)\)/;
+const LINK_INPUT_REGEX = /\[([^[]+)]\((\S+)\)$/;
 
 function isPlainURL(link, parent, index, side) {
   if (link.attrs.title || !/^\w+:/.test(link.attrs.href)) {
