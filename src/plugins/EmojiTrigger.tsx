@@ -2,35 +2,10 @@ import { InputRule } from "prosemirror-inputrules";
 import { Plugin } from "prosemirror-state";
 import { isInTable } from "prosemirror-tables";
 import Extension from "../lib/Extension";
+import { run } from "./BlockMenuTrigger";
 
-const MAX_MATCH = 500;
 const OPEN_REGEX = /:([0-9a-zA-Z_]+)?$/;
 const CLOSE_REGEX = /:([0-9a-zA-Z_]*)(:[\w\s]*)$|^:(\s+)([0-9a-zA-Z_]*)|^:([0-9a-zA-Z_]*)([\s+])/;
-
-// based on the input rules code in Prosemirror, here:
-// https://github.com/ProseMirror/prosemirror-inputrules/blob/master/src/inputrules.js
-function run(view, from, to, regex, handler) {
-  if (view.composing) {
-    return false;
-  }
-  const state = view.state;
-  const $from = state.doc.resolve(from);
-  if ($from.parent.type.spec.code) {
-    return false;
-  }
-
-  const textBefore = $from.parent.textBetween(
-    Math.max(0, $from.parentOffset - MAX_MATCH),
-    $from.parentOffset,
-    null,
-    "\ufffc"
-  );
-
-  const match = regex.exec(textBefore);
-  const tr = handler(state, match, match ? from - match[0].length : from, to);
-  if (!tr) return false;
-  return true;
-}
 
 export default class EmojiTrigger extends Extension {
   get name() {

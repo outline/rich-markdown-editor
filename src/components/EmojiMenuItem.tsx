@@ -1,79 +1,41 @@
 import * as React from "react";
-import scrollIntoView from "smooth-scroll-into-view-if-needed";
+import BlockMenuItem, { Props as BlockMenuItemProps } from "./BlockMenuItem";
 import styled, { withTheme } from "styled-components";
-import theme from "../theme";
 
-type Props = {
-  selected: boolean;
-  disabled?: boolean;
-  onClick: () => void;
-  theme: typeof theme;
-  title: string;
-  emoji: string
-  shortcut?: string;
+const Title = styled.p`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 16px;
+`;
+
+const EmojiTitle = ({
+  emoji,
+  title,
+}: {
+  emoji: React.ReactNode;
+  title: React.ReactNode;
+}) => {
+  return (
+    <Title>
+      {emoji}
+      &nbsp;&nbsp;
+      {title}
+    </Title>
+  );
 };
 
-function BlockMenuItem({ selected, disabled, onClick, title, emoji }: Props) {
-  const ref = React.useCallback(
-    node => {
-      if (selected && node) {
-        scrollIntoView(node, {
-          scrollMode: "if-needed",
-          block: "center",
-          boundary: parent => {
-            // All the parent elements of your target are checked until they
-            // reach the #at-menu-container. Prevents body and other parent
-            // elements from being scrolled
-            return parent.id !== "emoji-menu-container";
-          },
-        });
-      }
-    },
-    [selected]
-  );
+type EmojiMenuItemProps = Omit<BlockMenuItemProps, "shortcut"> & {
+  emoji: string;
+};
 
+function EmojiMenuItem(props: EmojiMenuItemProps) {
   return (
-    <MenuItem
-      selected={selected}
-      onClick={disabled ? undefined : onClick}
-      ref={ref}
-    >
-      &nbsp;&nbsp;{emoji}{title}
-    </MenuItem>
+    <BlockMenuItem
+      {...props}
+      title={<EmojiTitle emoji={props.emoji} title={props.title} />}
+    />
   );
 }
 
-const MenuItem = styled.button<{
-  selected: boolean;
-}>`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 1;
-  width: 100%;
-  height: 36px;
-  cursor: pointer;
-  border: none;
-  opacity: ${props => (props.disabled ? ".5" : "1")};
-  color: ${props =>
-    props.selected
-      ? props.theme.blockToolbarTextSelected
-      : props.theme.blockToolbarText};
-  background: ${props =>
-    props.selected ? props.theme.blockToolbarTrigger : "none"};
-  padding: 0 16px;
-  outline: none;
-
-  &:hover,
-  &:active {
-    color: ${props => props.theme.blockToolbarTextSelected};
-    background: ${props =>
-      props.selected
-        ? props.theme.blockToolbarTrigger
-        : props.theme.blockToolbarHoverBackground};
-  }
-`;
-
-export default withTheme(BlockMenuItem);
+export default withTheme(EmojiMenuItem);
