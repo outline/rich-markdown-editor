@@ -1,5 +1,4 @@
 import * as React from "react";
-import capitalize from "lodash/capitalize";
 import { Portal } from "react-portal";
 import { EditorView } from "prosemirror-view";
 import { findDomRefAtPos } from "prosemirror-utils";
@@ -103,7 +102,7 @@ class EmojiMenu extends React.Component<Props, State> {
       const item = this.filtered[this.state.selectedIndex];
 
       if (item) {
-        this.insertItem(item);
+        this.insertEmoji(item);
       } else {
         this.props.onClose();
       }
@@ -157,8 +156,15 @@ class EmojiMenu extends React.Component<Props, State> {
     }
   };
 
-  insertItem = item => {
-    this.insertBlock(item);
+  insertEmoji = item => {
+    this.clearSearch();
+
+    const command = this.props.commands.emoji;
+    if (command) {
+      command(item.attrs);
+    }
+
+    this.props.onClose();
   };
 
   close = () => {
@@ -177,19 +183,6 @@ class EmojiMenu extends React.Component<Props, State> {
         state.selection.to
       )
     );
-  }
-
-  insertBlock(item) {
-    this.clearSearch();
-
-    const command = this.props.commands.emoji;
-    if (command) {
-      command(item.attrs);
-    } else {
-      this.props.commands[`create${capitalize(item.name)}`](item.attrs);
-    }
-
-    this.props.onClose();
   }
 
   get caretPosition(): { top: number; left: number } {
@@ -301,7 +294,7 @@ class EmojiMenu extends React.Component<Props, State> {
     return (
       <Portal>
         <Wrapper
-          id="at-menu-container"
+          id="emoji-menu-container"
           active={isActive}
           ref={this.menuRef}
           {...positioning}
@@ -324,9 +317,10 @@ class EmojiMenu extends React.Component<Props, State> {
               return (
                 <ListItem key={index}>
                   <EmojiMenuItem
-                    onClick={() => this.insertItem(item)}
+                    onClick={() => this.insertEmoji(item)}
                     selected={selected}
-                    title={item.emoji}
+                    title={item.name}
+                    emoji={item.emoji}
                   />
                 </ListItem>
               );

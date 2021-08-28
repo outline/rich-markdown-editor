@@ -9,10 +9,11 @@ type Props = {
   onClick: () => void;
   theme: typeof theme;
   title: string;
+  emoji: string
   shortcut?: string;
 };
 
-function BlockMenuItem({ selected, disabled, onClick, title }: Props) {
+function BlockMenuItem({ selected, disabled, onClick, title, emoji }: Props) {
   const ref = React.useCallback(
     node => {
       if (selected && node) {
@@ -23,7 +24,7 @@ function BlockMenuItem({ selected, disabled, onClick, title }: Props) {
             // All the parent elements of your target are checked until they
             // reach the #at-menu-container. Prevents body and other parent
             // elements from being scrolled
-            return parent.id !== "at-menu-container";
+            return parent.id !== "emoji-menu-container";
           },
         });
       }
@@ -37,7 +38,7 @@ function BlockMenuItem({ selected, disabled, onClick, title }: Props) {
       onClick={disabled ? undefined : onClick}
       ref={ref}
     >
-      &nbsp;&nbsp;{title}
+      &nbsp;&nbsp;{emoji}{title}
     </MenuItem>
   );
 }
