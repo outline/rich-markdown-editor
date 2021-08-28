@@ -157,6 +157,7 @@ class EmojiMenu extends React.Component<Props, State> {
   };
 
   insertEmoji = item => {
+    console.log(this.props.search);
     this.clearSearch();
 
     const command = this.props.commands.emoji;

@@ -4,8 +4,8 @@ import { isInTable } from "prosemirror-tables";
 import Extension from "../lib/Extension";
 
 const MAX_MATCH = 500;
-const OPEN_REGEX = /:([0-9a-zA-Z]+)?$/;
-const CLOSE_REGEX = /:([a-zA-Z]*)(:[\w\s]*)$|^:(\s+)([a-zA-Z]*)|^:([a-zA-Z]*)([\s+])/;
+const OPEN_REGEX = /:([0-9a-zA-Z_]+)?$/;
+const CLOSE_REGEX = /:([0-9a-zA-Z_]*)(:[\w\s]*)$|^:(\s+)([0-9a-zA-Z_]*)|^:([0-9a-zA-Z_]*)([\s+])/;
 
 // based on the input rules code in Prosemirror, here:
 // https://github.com/ProseMirror/prosemirror-inputrules/blob/master/src/inputrules.js
@@ -91,14 +91,8 @@ export default class EmojiTrigger extends Extension {
   inputRules() {
     return [
       // main regex should match only:
-      // /word
+      // :word
       new InputRule(OPEN_REGEX, (state, match) => {
-        console.log(
-          match &&
-            state.selection.$from.parent.type.name === "paragraph" &&
-            !isInTable(state),
-          match
-        );
         if (
           match &&
           state.selection.$from.parent.type.name === "paragraph" &&
@@ -109,9 +103,9 @@ export default class EmojiTrigger extends Extension {
         return null;
       }),
       // invert regex should match some of these scenarios:
-      // /<space>word
-      // /<space>
-      // /word<space>
+      // :<space>word
+      // :<space>
+      // :word<space>
       new InputRule(CLOSE_REGEX, (state, match) => {
         if (match) {
           this.options.onClose();
