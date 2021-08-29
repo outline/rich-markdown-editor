@@ -5,7 +5,7 @@ import CommonBlockMenu, { Props } from "./CommonBlockMenu";
 import BlockMenuItem from "./BlockMenuItem";
 import getMenuItems from "../menus/block";
 
-type BlockMenuProps = Omit<Props, "renderMenuItem" | "items"> &
+type BlockMenuProps = Omit<Props, "renderMenuItem" | "items" | "onClearSearch"> &
   Required<Pick<Props, "onLinkToolbarOpen" | "embeds">>;
 
 class BlockMenu extends React.Component<BlockMenuProps> {

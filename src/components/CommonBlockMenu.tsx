@@ -2,7 +2,7 @@ import * as React from "react";
 import capitalize from "lodash/capitalize";
 import { Portal } from "react-portal";
 import { EditorView } from "prosemirror-view";
-import { findParentNode } from "prosemirror-utils";
+import { findDomRefAtPos, findParentNode } from "prosemirror-utils";
 import styled from "styled-components";
 import { EmbedDescriptor, MenuItem, ToastType } from "../types";
 import Input from "./Input";
@@ -45,6 +45,7 @@ export type Props<T extends MenuItem = MenuItem> = {
   ) => React.ReactNode;
   filterable?: boolean;
   items: T[];
+  id?: string;
 };
 
 type State = {
@@ -347,9 +348,12 @@ class BlockMenu<T = MenuItem> extends React.Component<Props<T>, State> {
       return defaultPosition;
     }
 
+    const domAtPos = view.domAtPos.bind(view);
+
     const ref = this.menuRef.current;
     const offsetHeight = ref ? ref.offsetHeight : 0;
-    const paragraph = view.domAtPos(selection.from);
+    const node = findDomRefAtPos(selection.from, domAtPos);
+    const paragraph: any = { node };
 
     if (
       !props.isActive ||
@@ -466,11 +470,12 @@ class BlockMenu<T = MenuItem> extends React.Component<Props<T>, State> {
     const { dictionary, isActive, uploadImage } = this.props;
     const items = this.filtered;
     const { insertItem, ...positioning } = this.state;
+    console.log(isActive, positioning)
 
     return (
       <Portal>
         <Wrapper
-          id="block-menu-container"
+          id={this.props.id || "block-menu-container"}
           active={isActive}
           ref={this.menuRef}
           {...positioning}

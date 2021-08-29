@@ -20,7 +20,11 @@ type Emoji = {
 class EmojiMenu extends React.Component<
   Omit<
     Props<Emoji>,
-    "renderMenuItem" | "items" | "onLinkToolbarOpen" | "embeds"
+    | "renderMenuItem"
+    | "items"
+    | "onLinkToolbarOpen"
+    | "embeds"
+    | "onClearSearch"
   >
 > {
   get items(): Emoji[] {
@@ -57,6 +61,7 @@ class EmojiMenu extends React.Component<
     return (
       <BlockMenu
         {...this.props}
+        id="emoji-menu-container"
         filterable={false}
         onClearSearch={this.clearSearch}
         renderMenuItem={(item, _index, options) => {
@@ -66,6 +71,7 @@ class EmojiMenu extends React.Component<
               selected={options.selected}
               title={item.title}
               emoji={item.emoji}
+              containerId="emoji-menu-container"
             />
           );
         }}
