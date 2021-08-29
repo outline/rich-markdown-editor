@@ -114,6 +114,7 @@ export type Props = {
     | "td"
     | "th"
     | "tr"
+    | "emoji"
   )[];
   autoFocus?: boolean;
   readOnly?: boolean;
@@ -318,9 +319,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
             dictionary,
             onShowToast: this.props.onShowToast,
           }),
-          new Emoji({
-            dictionary,
-          }),
+          new Emoji(),
           new Text(),
           new CheckboxList(),
           new CheckboxItem(),
@@ -384,7 +383,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
             onClose: this.handleCloseBlockMenu,
           }),
           new EmojiTrigger({
-            dictionary,
             onOpen: (search: string) => {
               this.setState({ emojiMenuOpen: true, blockMenuSearch: search });
             },

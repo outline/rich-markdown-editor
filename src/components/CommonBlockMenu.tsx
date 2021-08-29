@@ -93,7 +93,10 @@ class BlockMenu<T = MenuItem> extends React.Component<Props<T>, State> {
         selectedIndex: 0,
         ...position,
       });
-    } else if (prevProps.search !== this.props.search) {
+    } else if (
+      prevProps.search !== this.props.search ||
+      (prevProps.isActive && !this.props.isActive)
+    ) {
       this.setState({ selectedIndex: 0 });
     }
   }
@@ -470,7 +473,6 @@ class BlockMenu<T = MenuItem> extends React.Component<Props<T>, State> {
     const { dictionary, isActive, uploadImage } = this.props;
     const items = this.filtered;
     const { insertItem, ...positioning } = this.state;
-    console.log(isActive, positioning)
 
     return (
       <Portal>
