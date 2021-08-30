@@ -203,8 +203,6 @@ class BlockMenu extends React.Component<Props, State> {
         name: "embed",
         attrs: {
           href,
-          component: this.state.insertItem.component,
-          matches,
         },
       });
     }
@@ -230,8 +228,6 @@ class BlockMenu extends React.Component<Props, State> {
         name: "embed",
         attrs: {
           href,
-          component: this.state.insertItem.component,
-          matches,
         },
       });
     }
