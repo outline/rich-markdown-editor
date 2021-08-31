@@ -56,7 +56,7 @@ export default class Emoji extends Node {
 
   inputRules({ type }) {
     return [
-      new InputRule(/^\:([a-zA-Z]+)\:$/, (state, match, start, end) => {
+      new InputRule(/^\:([a-zA-Z0-9_+-]+)\:$/, (state, match, start, end) => {
         const [okay, markup] = match;
         const { tr } = state;
         if (okay) {
