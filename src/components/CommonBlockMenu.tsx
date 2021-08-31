@@ -93,10 +93,7 @@ class BlockMenu<T = MenuItem> extends React.Component<Props<T>, State> {
         selectedIndex: 0,
         ...position,
       });
-    } else if (
-      prevProps.search !== this.props.search ||
-      (prevProps.isActive && !this.props.isActive)
-    ) {
+    } else if (prevProps.search !== this.props.search) {
       this.setState({ selectedIndex: 0 });
     }
   }

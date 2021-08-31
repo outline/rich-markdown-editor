@@ -8,7 +8,7 @@
   "funding": "https://github.com/sponsors/outline",
   "scripts": {
     "test": "jest",
-    "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet",
+    "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
     "start": "start-storybook -p 6006",
     "build": "tsc",
     "preversion": "yarn build",

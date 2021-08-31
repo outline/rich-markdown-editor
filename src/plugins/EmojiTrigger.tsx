@@ -1,6 +1,5 @@
 import { InputRule } from "prosemirror-inputrules";
 import { Plugin } from "prosemirror-state";
-import { isInTable } from "prosemirror-tables";
 import Extension from "../lib/Extension";
 import { run } from "./BlockMenuTrigger";
 
@@ -68,11 +67,7 @@ export default class EmojiTrigger extends Extension {
       // main regex should match only:
       // :word
       new InputRule(OPEN_REGEX, (state, match) => {
-        if (
-          match &&
-          state.selection.$from.parent.type.name === "paragraph" &&
-          !isInTable(state)
-        ) {
+        if (match && state.selection.$from.parent.type.name === "paragraph") {
           this.options.onOpen(match[1]);
         }
         return null;
