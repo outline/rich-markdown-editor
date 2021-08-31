@@ -76,7 +76,10 @@ export default class Emoji extends Node {
   }
 
   toMarkdown(state, node) {
-    state.write(":" + (node.attrs["data-name"] || "dog") + ":");
+    const name = node.attrs["data-name"];
+    if (name) {
+      state.write(`:${name}:`);
+    }
   }
 
   parseMarkdown() {
