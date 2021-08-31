@@ -8,7 +8,7 @@
   "funding": "https://github.com/sponsors/outline",
   "scripts": {
     "test": "jest",
-    "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
+    "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet",
     "start": "start-storybook -p 6006",
     "build": "tsc",
     "preversion": "yarn build",
@@ -28,7 +28,6 @@
     "copy-to-clipboard": "^3.0.8",
     "fuzzy-search": "^3.2.1",
     "gemoji": "^7.0.0",
-    "install": "^0.13.0",
     "lodash": "^4.17.11",
     "markdown-it": "^12.2.0",
     "markdown-it-container": "^3.0.0",

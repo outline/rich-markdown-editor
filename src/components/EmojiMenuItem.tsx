@@ -1,11 +1,8 @@
 import * as React from "react";
 import BlockMenuItem, { Props as BlockMenuItemProps } from "./BlockMenuItem";
-import styled, { withTheme } from "styled-components";
+import styled from "styled-components";
 
-const Title = styled.p`
-  display: flex;
-  align-items: center;
-  gap: 4px;
+const Emoji = styled.span`
   font-size: 16px;
 `;
 
@@ -17,19 +14,19 @@ const EmojiTitle = ({
   title: React.ReactNode;
 }) => {
   return (
-    <Title>
-      {emoji}
+    <p>
+      <Emoji className="emoji">{emoji}</Emoji>
       &nbsp;&nbsp;
       {title}
-    </Title>
+    </p>
   );
 };
 
-type EmojiMenuItemProps = Omit<BlockMenuItemProps, "shortcut"> & {
+type EmojiMenuItemProps = Omit<BlockMenuItemProps, "shortcut" | "theme"> & {
   emoji: string;
 };
 
-function EmojiMenuItem(props: EmojiMenuItemProps) {
+export default function EmojiMenuItem(props: EmojiMenuItemProps) {
   return (
     <BlockMenuItem
       {...props}
@@ -37,5 +34,3 @@ function EmojiMenuItem(props: EmojiMenuItemProps) {
     />
   );
 }
-
-export default withTheme(EmojiMenuItem);

@@ -50,13 +50,16 @@ function BlockMenuItem({
       ref={ref}
     >
       {Icon && (
-        <Icon
-          color={
-            selected ? theme.blockToolbarIconSelected : theme.blockToolbarIcon
-          }
-        />
+        <>
+          <Icon
+            color={
+              selected ? theme.blockToolbarIconSelected : theme.blockToolbarIcon
+            }
+          />
+          &nbsp;&nbsp;
+        </>
       )}
-      &nbsp;&nbsp;{title}
+      {title}
       {shortcut && <Shortcut>{shortcut}</Shortcut>}
     </MenuItem>
   );

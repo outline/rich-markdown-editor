@@ -3,8 +3,8 @@ import { Plugin } from "prosemirror-state";
 import Extension from "../lib/Extension";
 import { run } from "./BlockMenuTrigger";
 
-const OPEN_REGEX = /:([0-9a-zA-Z_]+)?$/;
-const CLOSE_REGEX = /:([0-9a-zA-Z_]*)(:[\w\s]*)$|^:(\s+)([0-9a-zA-Z_]*)|^:([0-9a-zA-Z_]*)([\s+])/;
+const OPEN_REGEX = /:([0-9a-zA-Z_+-]+)?$/;
+const CLOSE_REGEX = /:([0-9a-zA-Z_+-]*)(:[\w\s]*)$|^:(\s+)([0-9a-zA-Z_+-]*)|^:([0-9a-zA-Z_+-]*)([\s]+)/;
 
 export default class EmojiTrigger extends Extension {
   get name() {

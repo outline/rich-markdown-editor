@@ -22,6 +22,10 @@ export default class Blockquote extends Node {
     return [wrappingInputRule(/^\s*>\s$/, type)];
   }
 
+  commands({ type }) {
+    return () => toggleWrap(type);
+  }
+
   keys({ type }) {
     return {
       "Ctrl->": toggleWrap(type),
