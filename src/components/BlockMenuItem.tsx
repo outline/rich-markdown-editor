@@ -40,7 +40,7 @@ function BlockMenuItem({
         });
       }
     },
-    [selected]
+    [selected, containerId]
   );
 
   return (
