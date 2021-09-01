@@ -218,7 +218,7 @@ class LinkEditor extends React.Component<Props, State> {
 
   handleOpenLink = (event): void => {
     event.preventDefault();
-    this.props.onClickLink(this.href, event);
+    this.props.onClickLink(this.state.value, event);
   };
 
   handleCreateLink = (value: string) => {
