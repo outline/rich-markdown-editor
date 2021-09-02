@@ -32,7 +32,7 @@ class EmojiMenu extends React.Component<
 
     const n = search.toLowerCase();
     const result = searcher.search(n).map(item => {
-      const name = item.names[0];
+      const name = item.description;
       return {
         ...item,
         name: "emoji",
