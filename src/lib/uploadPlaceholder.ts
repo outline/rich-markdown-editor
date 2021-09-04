@@ -19,7 +19,9 @@ const uploadPlaceholder = new Plugin({
         element.className = "image placeholder";
 
         const img = document.createElement("img");
-        img.src = URL.createObjectURL(action.add.file);
+        img.src = action.add.file.type.startsWith("image")
+          ? URL.createObjectURL(action.add.file)
+          : "http://www.professionalservicesllc.com/clients/stoneledge/images/loaders/uploading.gif";
 
         element.appendChild(img);
 
