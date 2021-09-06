@@ -39,6 +39,9 @@ class ComponentView {
         this.dom = node.type.spec.inline
             ? document.createElement("span")
             : document.createElement("div");
+        if (this.extension.extendComponentView) {
+            this.extension.extendComponentView(this);
+        }
         this.renderElement();
     }
     renderElement() {
@@ -50,6 +53,7 @@ class ComponentView {
             isSelected: this.isSelected,
             isEditable: this.view.editable,
             getPos: this.getPos,
+            componentView: this,
         });
         react_dom_1.default.render(React.createElement(styled_components_1.ThemeProvider, { theme: theme }, children), this.dom);
     }

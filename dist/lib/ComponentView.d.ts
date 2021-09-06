@@ -10,11 +10,15 @@ declare type Component = (options: {
     isSelected: boolean;
     isEditable: boolean;
     getPos: () => number;
+    componentView: ComponentView;
 }) => React.ReactElement;
+export interface ISyncExtension {
+    extendComponentView?: (instance: ComponentView) => void;
+}
 export default class ComponentView {
     component: Component;
     editor: Editor;
-    extension: Extension;
+    extension: Extension & ISyncExtension;
     node: Node;
     view: EditorView;
     getPos: () => number;

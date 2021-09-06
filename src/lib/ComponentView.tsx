@@ -13,12 +13,17 @@ type Component = (options: {
   isSelected: boolean;
   isEditable: boolean;
   getPos: () => number;
+  componentView: ComponentView;
 }) => React.ReactElement;
+
+export interface ISyncExtension {
+  extendComponentView?: (instance: ComponentView) => void;
+}
 
 export default class ComponentView {
   component: Component;
   editor: Editor;
-  extension: Extension;
+  extension: Extension & ISyncExtension;
   node: Node;
   view: EditorView;
   getPos: () => number;
@@ -42,6 +47,9 @@ export default class ComponentView {
       ? document.createElement("span")
       : document.createElement("div");
 
+    if (this.extension.extendComponentView) {
+      this.extension.extendComponentView(this);
+    }
     this.renderElement();
   }
 
@@ -55,6 +63,7 @@ export default class ComponentView {
       isSelected: this.isSelected,
       isEditable: this.view.editable,
       getPos: this.getPos,
+      componentView: this,
     });
 
     ReactDOM.render(
@@ -69,6 +78,7 @@ export default class ComponentView {
     }
 
     this.node = node;
+
     this.renderElement();
     return true;
   }
