@@ -10,7 +10,25 @@ import toggleBlockType from "../commands/toggleBlockType";
 import headingToSlug, { headingToPersistenceKey } from "../lib/headingToSlug";
 import Node from "./Node";
 import { ToastType } from "../types";
+import { findParentNode, findSelectedNodeOfType } from "prosemirror-utils";
 
+const newLineWhenFold = type => (state, dispatch) => {
+  const { tr } = state;
+  const node =
+    findSelectedNodeOfType(type)(state.selection) ||
+    findParentNode(node => node.type === type)(state.selection);
+
+  if (node && node.node.attrs.collapsed) {
+    const collapsed = !node.node.attrs.collapsed;
+    const transaction = tr.setNodeMarkup(node.pos, undefined, {
+      ...node.node.attrs,
+      collapsed,
+    });
+    dispatch(transaction);
+  }
+
+  return false;
+};
 export default class Heading extends Node {
   className = "heading-name";
 
@@ -174,6 +192,7 @@ export default class Heading extends Node {
 
     return {
       ...options,
+      Enter: newLineWhenFold(type),
       Backspace: backspaceToParagraph(type),
     };
   }

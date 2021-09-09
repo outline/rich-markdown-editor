@@ -32,6 +32,18 @@ const toggleBlockType_1 = __importDefault(require("../commands/toggleBlockType")
 const headingToSlug_1 = __importStar(require("../lib/headingToSlug"));
 const Node_1 = __importDefault(require("./Node"));
 const types_1 = require("../types");
+const prosemirror_utils_1 = require("prosemirror-utils");
+const newLineWhenFold = type => (state, dispatch) => {
+    const { tr } = state;
+    const node = prosemirror_utils_1.findSelectedNodeOfType(type)(state.selection) ||
+        prosemirror_utils_1.findParentNode(node => node.type === type)(state.selection);
+    if (node && node.node.attrs.collapsed) {
+        const collapsed = !node.node.attrs.collapsed;
+        const transaction = tr.setNodeMarkup(node.pos, undefined, Object.assign(Object.assign({}, node.node.attrs), { collapsed }));
+        dispatch(transaction);
+    }
+    return false;
+};
 class Heading extends Node_1.default {
     constructor() {
         super(...arguments);
@@ -157,7 +169,7 @@ class Heading extends Node_1.default {
         const options = this.options.levels.reduce((items, level) => (Object.assign(Object.assign({}, items), {
             [`Shift-Ctrl-${level}`]: prosemirror_commands_1.setBlockType(type, { level }),
         })), {});
-        return Object.assign(Object.assign({}, options), { Backspace: backspaceToParagraph_1.default(type) });
+        return Object.assign(Object.assign({}, options), { Enter: newLineWhenFold(type), Backspace: backspaceToParagraph_1.default(type) });
     }
     get plugins() {
         const getAnchors = doc => {

@@ -706,7 +706,7 @@ const StyledEditor = styled_components_1.default("div") `
     }
   }
 
-  .folded-content {
+  .folded-content:not(.placeholder) {
     display: none;
   }
 

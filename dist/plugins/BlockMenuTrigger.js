@@ -34,6 +34,31 @@ const Extension_1 = __importDefault(require("../lib/Extension"));
 const MAX_MATCH = 500;
 const OPEN_REGEX = /^\/(\w+)?$/;
 const CLOSE_REGEX = /(^(?!\/(\w+)?)(.*)$|^\/((\w+)\s.*|\s)$)/;
+function isFolded(state, node) {
+    const { doc } = state;
+    const blocks = prosemirror_utils_1.findBlockNodes(doc);
+    let withinCollapsedHeading;
+    for (const block of blocks) {
+        if (block.node.type.name === "heading") {
+            if (!withinCollapsedHeading ||
+                block.node.attrs.level <= withinCollapsedHeading) {
+                if (block.node.attrs.collapsed) {
+                    if (!withinCollapsedHeading) {
+                        withinCollapsedHeading = block.node.attrs.level;
+                    }
+                }
+                else {
+                    withinCollapsedHeading = undefined;
+                }
+                continue;
+            }
+        }
+        if (withinCollapsedHeading && node.node === block.node) {
+            return true;
+        }
+    }
+    return false;
+}
 function run(view, from, to, regex, handler) {
     if (view.composing) {
         return false;
@@ -94,7 +119,7 @@ class BlockMenuTrigger extends Extension_1.default {
                     },
                     decorations: state => {
                         const parent = prosemirror_utils_1.findParentNode(node => node.type.name === "paragraph")(state.selection);
-                        if (!parent) {
+                        if (!parent || isFolded(state, parent)) {
                             return;
                         }
                         const decorations = [];

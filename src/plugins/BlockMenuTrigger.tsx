@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import * as React from "react";
 import { Plugin } from "prosemirror-state";
 import { isInTable } from "prosemirror-tables";
-import { findParentNode } from "prosemirror-utils";
+import { findBlockNodes, findParentNode } from "prosemirror-utils";
 import { PlusIcon } from "outline-icons";
 import { Decoration, DecorationSet } from "prosemirror-view";
 import Extension from "../lib/Extension";
@@ -11,6 +11,36 @@ import Extension from "../lib/Extension";
 const MAX_MATCH = 500;
 const OPEN_REGEX = /^\/(\w+)?$/;
 const CLOSE_REGEX = /(^(?!\/(\w+)?)(.*)$|^\/((\w+)\s.*|\s)$)/;
+
+function isFolded(state, node) {
+  const { doc } = state;
+  const blocks = findBlockNodes(doc);
+
+  let withinCollapsedHeading;
+
+  for (const block of blocks) {
+    if (block.node.type.name === "heading") {
+      if (
+        !withinCollapsedHeading ||
+        block.node.attrs.level <= withinCollapsedHeading
+      ) {
+        if (block.node.attrs.collapsed) {
+          if (!withinCollapsedHeading) {
+            withinCollapsedHeading = block.node.attrs.level;
+          }
+        } else {
+          withinCollapsedHeading = undefined;
+        }
+        continue;
+      }
+    }
+
+    if (withinCollapsedHeading && node.node === block.node) {
+      return true;
+    }
+  }
+  return false;
+}
 
 // based on the input rules code in Prosemirror, here:
 // https://github.com/ProseMirror/prosemirror-inputrules/blob/master/src/inputrules.js
@@ -98,7 +128,7 @@ export default class BlockMenuTrigger extends Extension {
               node => node.type.name === "paragraph"
             )(state.selection);
 
-            if (!parent) {
+            if (!parent || isFolded(state, parent)) {
               return;
             }
 
