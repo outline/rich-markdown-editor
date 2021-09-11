@@ -55,7 +55,9 @@ export default class OrderedList extends Node {
   }
 
   toMarkdown(state, node) {
-    const start = node.attrs.order || 1;
+    state.write("\n");
+
+    const start = node.attrs.order !== undefined ? node.attrs.order : 1;
     const maxW = `${start + node.childCount - 1}`.length;
     const space = state.repeat(" ", maxW + 2);
 
@@ -66,6 +68,11 @@ export default class OrderedList extends Node {
   }
 
   parseMarkdown() {
-    return { block: "ordered_list" };
+    return {
+      block: "ordered_list",
+      getAttrs: tok => ({
+        order: tok.attrGet("start"),
+      }),
+    };
   }
 }
