@@ -39,7 +39,7 @@ export const base = {
   link: "Link",
   linkCopied: "Link copied to clipboard",
   mark: "Highlight",
-  newLineEmpty: "Start writing, or type '/' to insert block or '[[' to add link",
+  newLineEmpty: "Start writing or use + button to insert block",
   newLineWithSlash: "Keep typing to filter…",
   noResults: "No results",
   openLink: "Open link",

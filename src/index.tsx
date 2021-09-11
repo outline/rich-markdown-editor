@@ -177,7 +177,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     newLinePlaceholder: "",
     childCards: [],
     fixedToolbar: false,
-    cardsInside: []
+    cardsInside: [],
   };
 
   state = {
