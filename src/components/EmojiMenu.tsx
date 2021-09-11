@@ -14,6 +14,7 @@ type Emoji = {
   name: string;
   title: string;
   emoji: string;
+  description: string;
   attrs: { markup: string; "data-name": string };
 };
 
@@ -32,11 +33,13 @@ class EmojiMenu extends React.Component<
 
     const n = search.toLowerCase();
     const result = searcher.search(n).map(item => {
-      const name = item.description;
+      const description = item.description;
+      const name = item.names[0];
       return {
         ...item,
         name: "emoji",
         title: name,
+        description,
         attrs: { markup: name, "data-name": name },
       };
     });
@@ -69,7 +72,7 @@ class EmojiMenu extends React.Component<
             <EmojiMenuItem
               onClick={options.onClick}
               selected={options.selected}
-              title={item.title}
+              title={item.description}
               emoji={item.emoji}
               containerId="emoji-menu-container"
             />
