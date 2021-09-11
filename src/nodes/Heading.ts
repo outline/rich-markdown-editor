@@ -1,10 +1,12 @@
-import { Plugin } from "prosemirror-state";
+import { Plugin, Selection } from "prosemirror-state";
 import copy from "copy-to-clipboard";
 import { Decoration, DecorationSet } from "prosemirror-view";
 import { Node as ProsemirrorNode, NodeType } from "prosemirror-model";
 import { textblockTypeInputRule } from "prosemirror-inputrules";
 import { setBlockType } from "prosemirror-commands";
 import { MarkdownSerializerState } from "prosemirror-markdown";
+import { findBlockNodes } from "prosemirror-utils";
+import findCollapsedNodes from "../queries/findCollapsedNodes";
 import backspaceToParagraph from "../commands/backspaceToParagraph";
 import toggleBlockType from "../commands/toggleBlockType";
 import headingToSlug, { headingToPersistenceKey } from "../lib/headingToSlug";
@@ -175,6 +177,42 @@ export default class Heading extends Node {
     return {
       ...options,
       Backspace: backspaceToParagraph(type),
+      Enter: (state, dispatch) => {
+        const { $from, from } = state.selection;
+
+        // check we're in a matching node
+        if ($from.parent.type !== type) return null;
+
+        // check if we're at the end of the heading
+        // const $pos = state.doc.resolve(from - 1);
+        //if ($pos.pos + $pos.parent.nodeSize !== from) return null;
+
+        const allBlocks = findBlockNodes(state.doc);
+        const collapsedBlocks = findCollapsedNodes(state.doc);
+        const visibleBlocks = allBlocks.filter(
+          a => !collapsedBlocks.find(b => b.pos === a.pos)
+        );
+        const nextVisibleBlock = visibleBlocks.find(a => a.pos > from);
+        if (!nextVisibleBlock) {
+          return false;
+        }
+
+        dispatch(
+          state.tr.setSelection(
+            Selection.near(state.doc.resolve(nextVisibleBlock.pos))
+          )
+        );
+
+        console.log({ nextVisibleBlock });
+
+        // okay, replace it with a paragraph
+        // dispatch(
+        //   state.tr
+        //     .setBlockType(from, to, type.schema.nodes.paragraph)
+        //     .scrollIntoView()
+        // );
+        return false;
+      },
     };
   }
 
