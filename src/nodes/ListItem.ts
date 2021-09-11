@@ -13,6 +13,7 @@ import { DecorationSet, Decoration } from "prosemirror-view";
 import { findParentNodeClosestToPos } from "prosemirror-utils";
 
 import Node from "./Node";
+import isList from "../queries/isList";
 import isInList from "../queries/isInList";
 import getParentListItem from "../queries/getParentListItem";
 
@@ -65,12 +66,42 @@ export default class ListItem extends Node {
                   return set;
                 }
 
-                return DecorationSet.create(tr.doc, [
+                const list = findParentNodeClosestToPos(
+                  newState.doc.resolve(action.pos),
+                  node => isList(node, this.editor.schema)
+                );
+
+                if (!list) {
+                  return set;
+                }
+
+                const start = list.node.attrs.order || 1;
+
+                let listItemNumber = 0;
+                list.node.content.forEach((li, _, index) => {
+                  if (li === result.node) {
+                    listItemNumber = index;
+                  }
+                });
+
+                const counterLength = String(start + listItemNumber).length;
+
+                return set.add(tr.doc, [
                   Decoration.node(
                     result.pos,
                     result.pos + result.node.nodeSize,
                     {
-                      class: "hovering",
+                      class: `hovering`,
+                    },
+                    {
+                      hover: true,
+                    }
+                  ),
+                  Decoration.node(
+                    result.pos,
+                    result.pos + result.node.nodeSize,
+                    {
+                      class: `counter-${counterLength}`,
                     }
                   ),
                 ]);
@@ -88,7 +119,11 @@ export default class ListItem extends Node {
                 }
 
                 return set.remove(
-                  set.find(result.pos, result.pos + result.node.nodeSize)
+                  set.find(
+                    result.pos,
+                    result.pos + result.node.nodeSize,
+                    spec => spec.hover
+                  )
                 );
               }
               default:
