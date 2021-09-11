@@ -70,7 +70,6 @@ export default function(embeds) {
                 // convert to embed token
                 const token = new Token("embed", "iframe", 0);
                 token.attrSet("href", content);
-                token.attrSet("matches", result.matches);
 
                 // delete the inline link – this makes the assumption that the
                 // embed is the only thing in the para.
