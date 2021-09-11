@@ -33,10 +33,14 @@ export default class Emoji extends Node {
         },
       ],
       toDOM: node => {
-        const text = document.createTextNode(
-          nameToEmoji[node.attrs["data-name"]]
-        );
-        return ["span", { class: `emoji ${node.attrs["data-name"]}` }, text];
+        if (nameToEmoji[node.attrs["data-name"]]) {
+          const text = document.createTextNode(
+            nameToEmoji[node.attrs["data-name"]]
+          );
+          return ["span", { class: `emoji ${node.attrs["data-name"]}` }, text];
+        }
+        const text = document.createTextNode(`:${node.attrs["data-name"]}:`);
+        return ["span", { class: "emoji" }, text];
       },
     };
   }
