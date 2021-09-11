@@ -904,7 +904,7 @@ const StyledEditor = styled("div")<{
   h6 {
     margin: 1em 0 0.5em;
     font-weight: 500;
-    cursor: default;
+    cursor: text;
 
     &:not(.placeholder):before {
       display: ${props => (props.readOnly ? "none" : "inline-block")};
