@@ -395,12 +395,12 @@ class LinkEditor extends React.Component<Props, State> {
           autoFocus={this.href === ""}
         />
 
-        <ToolbarButton onClick={this.handleOpenLink} disabled={!value}>
+        {/* <ToolbarButton onClick={this.handleOpenLink} disabled={!value}>
           <Tooltip tooltip={dictionary.openLink} placement="top">
             <OpenIcon color={theme.toolbarItem} />
           </Tooltip>
-        </ToolbarButton>
-        <ToolbarButton onClick={this.handleRemoveLink}>
+        </ToolbarButton> */}
+        {/* <ToolbarButton onClick={this.handleRemoveLink}>
           <Tooltip tooltip={dictionary.removeLink} placement="top">
             {this.initialValue ? (
               <TrashIcon color={theme.toolbarItem} />
@@ -408,7 +408,7 @@ class LinkEditor extends React.Component<Props, State> {
               <CloseIcon color={theme.toolbarItem} />
             )}
           </Tooltip>
-        </ToolbarButton>
+        </ToolbarButton> */}
         {cardsInside && onMoveLink && (
           <ToolbarButton onClick={() => onMoveLink(value)} disabled={!value}>
             <Tooltip

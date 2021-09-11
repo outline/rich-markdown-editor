@@ -203,11 +203,10 @@ class Example extends React.Component {
         <Editor
           id="example"
           cardsInside={cardsInside}
-          onMoveLink={lnk =>
-            console.log(cardsInside.includes(lnk) ? "move out" : "move in")
-          }
+          // onMoveLink={lnk =>
+          //   console.log(cardsInside.includes(lnk) ? "move out" : "move in")
+          // }
           editorMinHeight="400px"
-          fixedToolbar={true}
           readOnly={this.state.readOnly}
           newLinePlaceholder={"Hello"}
           // limitBlockMenuItems={["Big heading", "Image", "Link", "YouTube"]}
@@ -334,8 +333,6 @@ class Example extends React.Component {
           autoFocus
           placeholders={"Write stuff"}
         />
-        <br />
-        THIS SHOULD APPEAR BELOW EDIT BAR
       </div>
     );
   }

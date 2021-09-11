@@ -49,7 +49,6 @@ function BlockMenuItem({
     >
       <Icon color={selected ? theme.black : undefined} />
       &nbsp;&nbsp;{title}
-      <Shortcut>{shortcut}</Shortcut>
     </MenuItem>
   );
 }
