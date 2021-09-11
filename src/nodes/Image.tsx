@@ -1,8 +1,7 @@
 import * as React from "react";
 import { DownloadIcon } from "outline-icons";
-import { Plugin, NodeSelection } from "prosemirror-state";
+import { Plugin, TextSelection, NodeSelection } from "prosemirror-state";
 import { InputRule } from "prosemirror-inputrules";
-import { setTextSelection } from "prosemirror-utils";
 import styled from "styled-components";
 import ImageZoom from "react-medium-image-zoom";
 import getDataTransferFiles from "../lib/getDataTransferFiles";
@@ -194,9 +193,11 @@ export default class Image extends Node {
       event.preventDefault();
 
       const { view } = this.editor;
-      const pos = getPos() + node.nodeSize;
+      const $pos = view.state.doc.resolve(getPos() + node.nodeSize);
+      view.dispatch(
+        view.state.tr.setSelection(new TextSelection($pos)).split($pos.pos)
+      );
       view.focus();
-      view.dispatch(setTextSelection(pos)(view.state.tr));
       return;
     }
 
