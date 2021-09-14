@@ -28,6 +28,16 @@ export default function blockMenuItems(
 ): MenuItem[] {
   return [
     {
+      name: "container_query_block",
+      title: dictionary.queryBlock,
+      icon: CodeIcon,
+      keywords: "query sql script runs results",
+      shortcut: ";;;",
+    },
+    {
+      name: "separator",
+    },
+    {
       name: "heading",
       title: dictionary.h1,
       keywords: "h1 heading1 title",
@@ -87,12 +97,6 @@ export default function blockMenuItems(
       title: dictionary.quote,
       icon: BlockQuoteIcon,
       shortcut: `${mod} ]`,
-    },
-    {
-      name: "container_query_block",
-      title: dictionary.queryBlock,
-      icon: CodeIcon,
-      keywords: "query sql script runs results",
     },
     {
       name: "code_block",

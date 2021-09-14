@@ -7,6 +7,16 @@ const mod = isMac ? "⌘" : "ctrl";
 function blockMenuItems(dictionary) {
     return [
         {
+            name: "container_query_block",
+            title: dictionary.queryBlock,
+            icon: outline_icons_1.CodeIcon,
+            keywords: "query sql script runs results",
+            shortcut: ";;;",
+        },
+        {
+            name: "separator",
+        },
+        {
             name: "heading",
             title: dictionary.h1,
             keywords: "h1 heading1 title",
@@ -66,12 +76,6 @@ function blockMenuItems(dictionary) {
             title: dictionary.quote,
             icon: outline_icons_1.BlockQuoteIcon,
             shortcut: `${mod} ]`,
-        },
-        {
-            name: "container_query_block",
-            title: dictionary.queryBlock,
-            icon: outline_icons_1.CodeIcon,
-            keywords: "query sql script runs results",
         },
         {
             name: "code_block",
