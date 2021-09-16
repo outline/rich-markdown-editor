@@ -1227,13 +1227,18 @@ const StyledEditor = styled("div")<{
     background-position: 0 2px;
     content: "";
     display: ${props => (props.readOnly ? "none" : "inline-block")};
-    cursor: move;
+    cursor: grab;
     width: 24px;
     height: 24px;
     position: absolute;
     ${props => (props.rtl ? "right" : "left")}: -40px;
     opacity: 0;
     transition: opacity 200ms ease-in-out;
+  }
+
+  ul li[draggable=true]::before,
+  ol li[draggable=true]::before {
+    cursor: grabbing;
   }
 
   ul > li.counter-2::before,
