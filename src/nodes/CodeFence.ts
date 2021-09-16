@@ -15,10 +15,10 @@ import ruby from "refractor/lang/ruby";
 import sql from "refractor/lang/sql";
 import typescript from "refractor/lang/typescript";
 import yaml from "refractor/lang/yaml";
-import { setBlockType } from "prosemirror-commands";
 import { textblockTypeInputRule } from "prosemirror-inputrules";
 import copy from "copy-to-clipboard";
 import Prism, { LANGUAGES } from "../plugins/Prism";
+import toggleBlockType from "../commands/toggleBlockType";
 import isInCode from "../queries/isInCode";
 import Node from "./Node";
 import { ToastType } from "../types";
@@ -108,16 +108,17 @@ export default class CodeFence extends Node {
     };
   }
 
-  commands({ type }) {
-    return () =>
-      setBlockType(type, {
+  commands({ type, schema }) {
+    return attrs =>
+      toggleBlockType(type, schema.nodes.paragraph, {
         language: localStorage?.getItem(PERSISTENCE_KEY) || DEFAULT_LANGUAGE,
+        ...attrs,
       });
   }
 
-  keys({ type }) {
+  keys({ type, schema }) {
     return {
-      "Shift-Ctrl-\\": setBlockType(type),
+      "Shift-Ctrl-\\": toggleBlockType(type, schema.nodes.paragraph),
       "Shift-Enter": (state, dispatch) => {
         if (!isInCode(state)) return false;
 
