@@ -166,8 +166,16 @@ export default class SelectionToolbar extends React.Component<Props> {
     });
 
     items = filterExcessSeparators(items);
-
     if (!items.length) {
+      return null;
+    }
+
+    const selectionText = state.doc.cut(
+      state.selection.from,
+      state.selection.to
+    ).textContent;
+
+    if (!selectionText) {
       return null;
     }
 
