@@ -132,6 +132,7 @@ export type Props = {
   handleDOMEvents?: {
     [name: string]: (view: EditorView, event: Event) => boolean;
   };
+  transformPasted?: (slice: Slice) => Slice;
   uploadImage?: (file: File) => Promise<string>;
   onBlur?: () => void;
   onFocus?: () => void;
@@ -528,6 +529,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       editable: () => !this.props.readOnly,
       nodeViews: this.nodeViews,
       handleDOMEvents: this.props.handleDOMEvents,
+      transformPasted: this.props.transformPasted,
       dispatchTransaction: function(transaction) {
         // callback is bound to have the view instance as its this binding
         const { state, transactions } = this.state.applyTransaction(

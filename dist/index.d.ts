@@ -2,7 +2,7 @@ import * as React from "react";
 import { EditorState, Plugin } from "prosemirror-state";
 import { MarkdownParser, MarkdownSerializer } from "prosemirror-markdown";
 import { EditorView } from "prosemirror-view";
-import { Schema, NodeSpec, MarkSpec } from "prosemirror-model";
+import { Schema, NodeSpec, MarkSpec, Slice } from "prosemirror-model";
 import { InputRule } from "prosemirror-inputrules";
 import baseDictionary from "./dictionary";
 import { SearchResult } from "./components/LinkEditor";
@@ -110,6 +110,7 @@ export declare type Props = {
     handleDOMEvents?: {
         [name: string]: (view: EditorView, event: Event) => boolean;
     };
+    transformPasted?: (slice: Slice) => Slice;
     uploadImage?: (file: File) => Promise<string>;
     onBlur?: () => void;
     onFocus?: () => void;
