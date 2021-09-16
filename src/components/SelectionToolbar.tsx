@@ -12,6 +12,7 @@ import getDividerMenuItems from "../menus/divider";
 import FloatingToolbar from "./FloatingToolbar";
 import LinkEditor, { SearchResult } from "./LinkEditor";
 import Menu from "./Menu";
+import filterExcessSeparators from "../lib/filterExcessSeparators";
 import isMarkActive from "../queries/isMarkActive";
 import getMarkRange from "../queries/getMarkRange";
 import isNodeActive from "../queries/isNodeActive";
@@ -163,6 +164,8 @@ export default class SelectionToolbar extends React.Component<Props> {
       if (item.name && !this.props.commands[item.name]) return false;
       return true;
     });
+
+    items = filterExcessSeparators(items);
 
     if (!items.length) {
       return null;
