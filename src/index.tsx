@@ -1063,12 +1063,6 @@ const StyledEditor = styled("div")<{
     }
   }
 
-  @media print {
-    .placeholder {
-      display: none;
-    }
-  }
-
   .notice-block {
     display: flex;
     align-items: center;
@@ -1715,16 +1709,6 @@ const StyledEditor = styled("div")<{
     }
   }
 
-  @media print {
-    .block-menu-trigger {
-      display: none;
-    }
-
-    .page-break {
-      opacity: 0;
-    }
-  }
-
   .ProseMirror-gapcursor {
     display: none;
     pointer-events: none;
@@ -1756,6 +1740,22 @@ const StyledEditor = styled("div")<{
   }
 
   @media print {
+    .placeholder:before,
+    .block-menu-trigger,
+    .heading-actions,
+    h1:not(.placeholder):before,
+    h2:not(.placeholder):before,
+    h3:not(.placeholder):before,
+    h4:not(.placeholder):before,
+    h5:not(.placeholder):before,
+    h6:not(.placeholder):before {
+      display: none;
+    }
+
+    .page-break {
+      opacity: 0;
+    }
+
     em,
     blockquote {
       font-family: "SF Pro Text", ${props => props.theme.fontFamily};
