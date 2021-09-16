@@ -822,10 +822,14 @@ const StyledEditor = styled("div")<{
     clear: both;
 
     img {
-      pointer-events: ${props => (props.readOnly ? "initial" : "none")};
+      pointer-events: none;
       display: inline-block;
       max-width: 100%;
       max-height: 75vh;
+    }
+
+    .ProseMirror-selectednode img {
+      pointer-events: initial;
     }
   }
 
