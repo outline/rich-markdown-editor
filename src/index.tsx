@@ -1255,6 +1255,7 @@ const StyledEditor = styled("div")<{
   }
 
   ul.checkbox_list li input {
+    cursor: pointer;
     pointer-events: ${props =>
       props.readOnly && !props.readOnlyWriteCheckboxes ? "none" : "initial"};
     opacity: ${props =>
