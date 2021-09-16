@@ -1114,7 +1114,7 @@ const StyledEditor = styled("div")<{
 
   blockquote {
     margin: 0;
-    padding-left: 1em;
+    padding-left: 1.5em;
     font-style: italic;
     overflow: hidden;
     position: relative;
@@ -1122,10 +1122,10 @@ const StyledEditor = styled("div")<{
     &:before {
       content: "";
       display: inline-block;
-      width: 3px;
+      width: 2px;
       border-radius: 1px;
       position: absolute;
-      margin-${props => (props.rtl ? "right" : "left")}: -16px;
+      margin-${props => (props.rtl ? "right" : "left")}: -1.5em;
       top: 0;
       bottom: 0;
       background: ${props => props.theme.quote};
