@@ -8,7 +8,7 @@ export default styled.button<Props>`
   width: 24px;
   height: 24px;
   cursor: pointer;
-  margin-left: 10px;
+  margin-left: 8px;
   border: none;
   background: none;
   transition: opacity 100ms ease-in-out;
