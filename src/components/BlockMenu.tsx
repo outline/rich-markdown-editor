@@ -12,6 +12,7 @@ import getDataTransferFiles from "../lib/getDataTransferFiles";
 import insertFiles from "../commands/insertFiles";
 import getMenuItems from "../menus/block";
 import baseDictionary from "../dictionary";
+import filterExcessSeparators from "../lib/filterExcessSeparators";
 
 const SSR = typeof window === "undefined";
 
@@ -203,8 +204,6 @@ class BlockMenu extends React.Component<Props, State> {
         name: "embed",
         attrs: {
           href,
-          component: this.state.insertItem.component,
-          matches,
         },
       });
     }
@@ -230,8 +229,6 @@ class BlockMenu extends React.Component<Props, State> {
         name: "embed",
         attrs: {
           href,
-          component: this.state.insertItem.component,
-          matches,
         },
       });
     }
@@ -435,24 +432,7 @@ class BlockMenu extends React.Component<Props, State> {
     });
 
     // this block literally just trims unneccessary separators from the results
-    return filtered.reduce((acc, item, index) => {
-      // trim separators from start / end
-      if (item.name === "separator" && index === 0) return acc;
-      if (item.name === "separator" && index === filtered.length - 1)
-        return acc;
-
-      // trim double separators looking ahead / behind
-      const prev = filtered[index - 1];
-      if (prev && prev.name === "separator" && item.name === "separator")
-        return acc;
-
-      const next = filtered[index + 1];
-      if (next && next.name === "separator" && item.name === "separator")
-        return acc;
-
-      // otherwise, continue
-      return [...acc, item];
-    }, []);
+    return filterExcessSeparators(filtered);
   }
 
   render() {

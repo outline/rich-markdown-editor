@@ -822,10 +822,14 @@ const StyledEditor = styled("div")<{
     clear: both;
 
     img {
-      pointer-events: ${props => (props.readOnly ? "initial" : "none")};
+      pointer-events: none;
       display: inline-block;
       max-width: 100%;
       max-height: 75vh;
+    }
+
+    .ProseMirror-selectednode img {
+      pointer-events: initial;
     }
   }
 
@@ -1059,12 +1063,6 @@ const StyledEditor = styled("div")<{
     }
   }
 
-  @media print {
-    .placeholder {
-      display: none;
-    }
-  }
-
   .notice-block {
     display: flex;
     align-items: center;
@@ -1116,7 +1114,7 @@ const StyledEditor = styled("div")<{
 
   blockquote {
     margin: 0;
-    padding-left: 1em;
+    padding-left: 1.5em;
     font-style: italic;
     overflow: hidden;
     position: relative;
@@ -1124,10 +1122,10 @@ const StyledEditor = styled("div")<{
     &:before {
       content: "";
       display: inline-block;
-      width: 3px;
+      width: 2px;
       border-radius: 1px;
       position: absolute;
-      margin-${props => (props.rtl ? "right" : "left")}: -16px;
+      margin-${props => (props.rtl ? "right" : "left")}: -1.5em;
       top: 0;
       bottom: 0;
       background: ${props => props.theme.quote};
@@ -1223,13 +1221,18 @@ const StyledEditor = styled("div")<{
     background-position: 0 2px;
     content: "";
     display: ${props => (props.readOnly ? "none" : "inline-block")};
-    cursor: move;
+    cursor: grab;
     width: 24px;
     height: 24px;
     position: absolute;
     ${props => (props.rtl ? "right" : "left")}: -40px;
     opacity: 0;
     transition: opacity 200ms ease-in-out;
+  }
+
+  ul li[draggable=true]::before,
+  ol li[draggable=true]::before {
+    cursor: grabbing;
   }
 
   ul > li.counter-2::before,
@@ -1252,6 +1255,7 @@ const StyledEditor = styled("div")<{
   }
 
   ul.checkbox_list li input {
+    cursor: pointer;
     pointer-events: ${props =>
       props.readOnly && !props.readOnlyWriteCheckboxes ? "none" : "initial"};
     opacity: ${props =>
@@ -1706,16 +1710,6 @@ const StyledEditor = styled("div")<{
     }
   }
 
-  @media print {
-    .block-menu-trigger {
-      display: none;
-    }
-
-    .page-break {
-      opacity: 0;
-    }
-  }
-
   .ProseMirror-gapcursor {
     display: none;
     pointer-events: none;
@@ -1747,6 +1741,22 @@ const StyledEditor = styled("div")<{
   }
 
   @media print {
+    .placeholder:before,
+    .block-menu-trigger,
+    .heading-actions,
+    h1:not(.placeholder):before,
+    h2:not(.placeholder):before,
+    h3:not(.placeholder):before,
+    h4:not(.placeholder):before,
+    h5:not(.placeholder):before,
+    h6:not(.placeholder):before {
+      display: none;
+    }
+
+    .page-break {
+      opacity: 0;
+    }
+
     em,
     blockquote {
       font-family: "SF Pro Text", ${props => props.theme.fontFamily};

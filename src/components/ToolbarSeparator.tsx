@@ -6,7 +6,7 @@ const Separator = styled.div`
   background: ${props => props.theme.toolbarItem};
   opacity: 0.3;
   display: inline-block;
-  margin-left: 10px;
+  margin-left: 8px;
 `;
 
 export default Separator;

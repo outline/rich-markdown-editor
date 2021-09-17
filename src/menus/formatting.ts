@@ -3,10 +3,12 @@ import {
   CodeIcon,
   Heading1Icon,
   Heading2Icon,
-  ItalicIcon,
   BlockQuoteIcon,
   LinkIcon,
   StrikethroughIcon,
+  OrderedListIcon,
+  BulletedListIcon,
+  TodoListIcon,
   InputIcon,
   HighlightIcon,
 } from "outline-icons";
@@ -45,12 +47,6 @@ export default function formattingMenuItems(
       tooltip: dictionary.strong,
       icon: BoldIcon,
       active: isMarkActive(schema.marks.strong),
-    },
-    {
-      name: "em",
-      tooltip: dictionary.em,
-      icon: ItalicIcon,
-      active: isMarkActive(schema.marks.em),
     },
     {
       name: "strikethrough",
@@ -98,6 +94,31 @@ export default function formattingMenuItems(
       active: isNodeActive(schema.nodes.blockquote),
       attrs: { level: 2 },
       visible: allowBlocks,
+    },
+    {
+      name: "separator",
+    },
+    {
+      name: "checkbox_list",
+      tooltip: dictionary.checkboxList,
+      icon: TodoListIcon,
+      keywords: "checklist checkbox task",
+      active: isNodeActive(schema.nodes.checkbox_list),
+      visible: allowBlocks || isList,
+    },
+    {
+      name: "bullet_list",
+      tooltip: dictionary.bulletList,
+      icon: BulletedListIcon,
+      active: isNodeActive(schema.nodes.bullet_list),
+      visible: allowBlocks || isList,
+    },
+    {
+      name: "ordered_list",
+      tooltip: dictionary.orderedList,
+      icon: OrderedListIcon,
+      active: isNodeActive(schema.nodes.ordered_list),
+      visible: allowBlocks || isList,
     },
     {
       name: "separator",

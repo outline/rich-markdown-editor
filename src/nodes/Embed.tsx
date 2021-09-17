@@ -15,7 +15,6 @@ export default class Embed extends Node {
       atom: true,
       attrs: {
         href: {},
-        matches: {},
       },
       parseDOM: [
         {
@@ -30,7 +29,6 @@ export default class Embed extends Node {
                 if (matches) {
                   return {
                     href,
-                    matches,
                   };
                 }
               }
@@ -54,13 +52,17 @@ export default class Embed extends Node {
     // matches are cached in module state to avoid re running loops and regex
     // here. Unfortuantely this function is not compatible with React.memo or
     // we would use that instead.
-    let Component = cache[node.attrs.href];
+    const hit = cache[node.attrs.href];
+    let Component = hit ? hit.Component : undefined;
+    let matches = hit ? hit.matches : undefined;
 
     if (!Component) {
       for (const embed of embeds) {
-        const matches = embed.matcher(node.attrs.href);
-        if (matches) {
-          Component = cache[node.attrs.href] = embed.component;
+        const m = embed.matcher(node.attrs.href);
+        if (m) {
+          Component = embed.component;
+          matches = m;
+          cache[node.attrs.href] = { Component, matches };
         }
       }
     }
@@ -71,7 +73,7 @@ export default class Embed extends Node {
 
     return (
       <Component
-        attrs={node.attrs}
+        attrs={{ ...node.attrs, matches }}
         isEditable={isEditable}
         isSelected={isSelected}
         theme={theme}
@@ -101,7 +103,6 @@ export default class Embed extends Node {
       node: "embed",
       getAttrs: token => ({
         href: token.attrGet("href"),
-        matches: token.attrGet("matches"),
       }),
     };
   }

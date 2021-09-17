@@ -3,7 +3,6 @@ import copy from "copy-to-clipboard";
 import { Decoration, DecorationSet } from "prosemirror-view";
 import { Node as ProsemirrorNode, NodeType } from "prosemirror-model";
 import { textblockTypeInputRule } from "prosemirror-inputrules";
-import { setBlockType } from "prosemirror-commands";
 import { MarkdownSerializerState } from "prosemirror-markdown";
 import { findBlockNodes } from "prosemirror-utils";
 import findCollapsedNodes from "../queries/findCollapsedNodes";
@@ -163,12 +162,16 @@ export default class Heading extends Node {
     }
   };
 
-  keys({ type }: { type: NodeType }) {
+  keys({ type, schema }) {
     const options = this.options.levels.reduce(
       (items, level) => ({
         ...items,
         ...{
-          [`Shift-Ctrl-${level}`]: setBlockType(type, { level }),
+          [`Shift-Ctrl-${level}`]: toggleBlockType(
+            type,
+            schema.nodes.paragraph,
+            { level }
+          ),
         },
       }),
       {}

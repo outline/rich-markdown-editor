@@ -65,8 +65,6 @@ export default class PasteHandler extends Extension {
                   if (matches) {
                     this.editor.commands.embed({
                       href: text,
-                      component: embed.component,
-                      matches,
                     });
                     return true;
                   }

@@ -71,7 +71,7 @@ export default class OrderedList extends Node {
     return {
       block: "ordered_list",
       getAttrs: tok => ({
-        order: tok.attrGet("start"),
+        order: parseInt(tok.attrGet("start") || "1", 10),
       }),
     };
   }
