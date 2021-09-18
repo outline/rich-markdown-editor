@@ -1,4 +1,4 @@
-import { Plugin, Selection } from "prosemirror-state";
+import { Plugin, TextSelection } from "prosemirror-state";
 import copy from "copy-to-clipboard";
 import { Decoration, DecorationSet } from "prosemirror-view";
 import { Node as ProsemirrorNode, NodeType } from "prosemirror-model";
@@ -186,35 +186,39 @@ export default class Heading extends Node {
         // check we're in a matching node
         if ($from.parent.type !== type) return null;
 
+        dispatch(
+          state.tr.split(state.selection.to, 1, [
+            $from.parent,
+            { level: 1, collapsed: false },
+          ])
+        );
+
+        return true;
+
         // check if we're at the end of the heading
         // const $pos = state.doc.resolve(from - 1);
         //if ($pos.pos + $pos.parent.nodeSize !== from) return null;
 
-        const allBlocks = findBlockNodes(state.doc);
-        const collapsedBlocks = findCollapsedNodes(state.doc);
-        const visibleBlocks = allBlocks.filter(
-          a => !collapsedBlocks.find(b => b.pos === a.pos)
-        );
-        const nextVisibleBlock = visibleBlocks.find(a => a.pos > from);
-        if (!nextVisibleBlock) {
-          return false;
-        }
+        // const allBlocks = findBlockNodes(state.doc);
+        // const collapsedBlocks = findCollapsedNodes(state.doc);
+        // const visibleBlocks = allBlocks.filter(
+        //   a => !collapsedBlocks.find(b => b.pos === a.pos)
+        // );
+        // const nextVisibleBlock = visibleBlocks.find(a => a.pos > from);
+        // const pos = nextVisibleBlock
+        //   ? nextVisibleBlock.pos
+        //   : state.doc.content.size;
 
-        dispatch(
-          state.tr.setSelection(
-            Selection.near(state.doc.resolve(nextVisibleBlock.pos))
-          )
-        );
-
-        console.log({ nextVisibleBlock });
-
-        // okay, replace it with a paragraph
         // dispatch(
         //   state.tr
-        //     .setBlockType(from, to, type.schema.nodes.paragraph)
+        //     .insert(pos, type.create())
+        //     .setSelection(TextSelection.near(state.doc.resolve(pos)))
         //     .scrollIntoView()
         // );
-        return false;
+
+        // console.log({ nextVisibleBlock });
+
+        return true;
       },
     };
   }
