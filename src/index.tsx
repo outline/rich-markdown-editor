@@ -822,7 +822,7 @@ const StyledEditor = styled("div")<{
     clear: both;
 
     img {
-      pointer-events: none;
+      pointer-events: ${props => (props.readOnly ? "initial" : "none")};
       display: inline-block;
       max-width: 100%;
       max-height: 75vh;
