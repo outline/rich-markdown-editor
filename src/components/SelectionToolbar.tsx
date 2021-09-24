@@ -142,6 +142,7 @@ export default class SelectionToolbar extends React.Component<Props> {
     const range = getMarkRange(selection.$from, state.schema.marks.link);
     const isImageSelection =
       selection.node && selection.node.type.name === "image";
+    let isTextSelection = false;
 
     let items: MenuItem[] = [];
     if (isTableSelection) {
@@ -156,6 +157,7 @@ export default class SelectionToolbar extends React.Component<Props> {
       items = getDividerMenuItems(state, dictionary);
     } else {
       items = getFormattingMenuItems(state, isTemplate, dictionary);
+      isTextSelection = true;
     }
 
     // Some extensions may be disabled, remove corresponding items
@@ -175,7 +177,7 @@ export default class SelectionToolbar extends React.Component<Props> {
       state.selection.to
     ).textContent;
 
-    if (!selectionText) {
+    if (isTextSelection && !selectionText) {
       return null;
     }
 
