@@ -14,7 +14,7 @@ const CLOSE_REGEX = /(^(?!\/(\w+)?)(.*)$|^\/((\w+)\s.*|\s)$)/;
 
 // based on the input rules code in Prosemirror, here:
 // https://github.com/ProseMirror/prosemirror-inputrules/blob/master/src/inputrules.js
-function run(view, from, to, regex, handler) {
+export function run(view, from, to, regex, handler) {
   if (view.composing) {
     return false;
   }

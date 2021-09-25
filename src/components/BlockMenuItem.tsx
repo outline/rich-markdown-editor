@@ -3,14 +3,15 @@ import scrollIntoView from "smooth-scroll-into-view-if-needed";
 import styled, { withTheme } from "styled-components";
 import theme from "../theme";
 
-type Props = {
+export type Props = {
   selected: boolean;
   disabled?: boolean;
   onClick: () => void;
   theme: typeof theme;
-  icon: typeof React.Component | React.FC<any>;
-  title: string;
+  icon?: typeof React.Component | React.FC<any>;
+  title: React.ReactNode;
   shortcut?: string;
+  containerId?: string;
 };
 
 function BlockMenuItem({
@@ -20,6 +21,7 @@ function BlockMenuItem({
   title,
   shortcut,
   icon,
+  containerId = "block-menu-container",
 }: Props) {
   const Icon = icon;
 
@@ -33,12 +35,12 @@ function BlockMenuItem({
             // All the parent elements of your target are checked until they
             // reach the #block-menu-container. Prevents body and other parent
             // elements from being scrolled
-            return parent.id !== "block-menu-container";
+            return parent.id !== containerId;
           },
         });
       }
     },
-    [selected]
+    [selected, containerId]
   );
 
   return (
@@ -47,13 +49,18 @@ function BlockMenuItem({
       onClick={disabled ? undefined : onClick}
       ref={ref}
     >
-      <Icon
-        color={
-          selected ? theme.blockToolbarIconSelected : theme.blockToolbarIcon
-        }
-      />
-      &nbsp;&nbsp;{title}
-      <Shortcut>{shortcut}</Shortcut>
+      {Icon && (
+        <>
+          <Icon
+            color={
+              selected ? theme.blockToolbarIconSelected : theme.blockToolbarIcon
+            }
+          />
+          &nbsp;&nbsp;
+        </>
+      )}
+      {title}
+      {shortcut && <Shortcut>{shortcut}</Shortcut>}
     </MenuItem>
   );
 }

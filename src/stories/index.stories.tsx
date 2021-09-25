@@ -34,6 +34,15 @@ Default.args = {
 Just an easy to use **Markdown** editor with \`slash commands\``,
 };
 
+export const Emoji = Template.bind({});
+Emoji.args = {
+  defaultValue: `# Emoji
+
+\
+:1st_place_medal:
+`,
+};
+
 export const TemplateDoc = Template.bind({});
 TemplateDoc.args = {
   template: true,
