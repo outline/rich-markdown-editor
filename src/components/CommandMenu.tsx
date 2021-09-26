@@ -58,7 +58,7 @@ type State = {
   selectedIndex: number;
 };
 
-class BlockMenu<T = MenuItem> extends React.Component<Props<T>, State> {
+class CommandMenu<T = MenuItem> extends React.Component<Props<T>, State> {
   menuRef = React.createRef<HTMLDivElement>();
   inputRef = React.createRef<HTMLInputElement>();
 
@@ -610,4 +610,4 @@ export const Wrapper = styled.div<{
   }
 `;
 
-export default BlockMenu;
+export default CommandMenu;

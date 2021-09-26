@@ -18,7 +18,7 @@ const FlexibleWrapper = styled.div`
   display: flex;
 `;
 
-class Menu extends React.Component<Props> {
+class ToolbarMenu extends React.Component<Props> {
   render() {
     const { view, items } = this.props;
     const { state } = view;
@@ -55,4 +55,4 @@ class Menu extends React.Component<Props> {
   }
 }
 
-export default withTheme(Menu);
+export default withTheme(ToolbarMenu);

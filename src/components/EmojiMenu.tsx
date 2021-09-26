@@ -1,8 +1,7 @@
 import React from "react";
 import gemojies from "gemoji";
 import FuzzySearch from "fuzzy-search";
-
-import BlockMenu, { Props } from "./CommonBlockMenu";
+import CommandMenu, { Props } from "./CommandMenu";
 import EmojiMenuItem from "./EmojiMenuItem";
 
 type Emoji = {
@@ -66,7 +65,7 @@ class EmojiMenu extends React.Component<
 
   render() {
     return (
-      <BlockMenu
+      <CommandMenu
         {...this.props}
         id="emoji-menu-container"
         filterable={false}

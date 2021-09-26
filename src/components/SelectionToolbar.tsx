@@ -11,7 +11,7 @@ import getImageMenuItems from "../menus/image";
 import getDividerMenuItems from "../menus/divider";
 import FloatingToolbar from "./FloatingToolbar";
 import LinkEditor, { SearchResult } from "./LinkEditor";
-import Menu from "./Menu";
+import ToolbarMenu from "./ToolbarMenu";
 import filterExcessSeparators from "../lib/filterExcessSeparators";
 import isMarkActive from "../queries/isMarkActive";
 import getMarkRange from "../queries/getMarkRange";
@@ -195,7 +195,7 @@ export default class SelectionToolbar extends React.Component<Props> {
               {...rest}
             />
           ) : (
-            <Menu items={items} {...rest} />
+            <ToolbarMenu items={items} {...rest} />
           )}
         </FloatingToolbar>
       </Portal>

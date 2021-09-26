@@ -84,7 +84,10 @@ const MenuItem = styled.button<{
       ? props.theme.blockToolbarTextSelected
       : props.theme.blockToolbarText};
   background: ${props =>
-    props.selected ? props.theme.blockToolbarTrigger : "none"};
+    props.selected
+      ? props.theme.blockToolbarSelectedBackground ||
+        props.theme.blockToolbarTrigger
+      : "none"};
   padding: 0 16px;
   outline: none;
 
@@ -93,7 +96,8 @@ const MenuItem = styled.button<{
     color: ${props => props.theme.blockToolbarTextSelected};
     background: ${props =>
       props.selected
-        ? props.theme.blockToolbarTrigger
+        ? props.theme.blockToolbarSelectedBackground ||
+          props.theme.blockToolbarTrigger
         : props.theme.blockToolbarHoverBackground};
   }
 `;
