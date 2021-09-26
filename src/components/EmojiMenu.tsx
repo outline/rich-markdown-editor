@@ -1,14 +1,9 @@
 import React from "react";
-import { gemoji as gemojies } from "gemoji";
+import gemojies from "gemoji";
 import FuzzySearch from "fuzzy-search";
 
 import BlockMenu, { Props } from "./CommonBlockMenu";
 import EmojiMenuItem from "./EmojiMenuItem";
-
-const searcher = new FuzzySearch(gemojies, ["names"], {
-  caseSensitive: true,
-  sort: true,
-});
 
 type Emoji = {
   name: string;
@@ -17,6 +12,15 @@ type Emoji = {
   description: string;
   attrs: { markup: string; "data-name": string };
 };
+
+const searcher = new FuzzySearch<{
+  names: string[];
+  description: string;
+  emoji: string;
+}>(gemojies, ["names"], {
+  caseSensitive: true,
+  sort: true,
+});
 
 class EmojiMenu extends React.Component<
   Omit<

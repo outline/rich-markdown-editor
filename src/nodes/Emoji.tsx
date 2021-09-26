@@ -1,5 +1,6 @@
 import { InputRule } from "prosemirror-inputrules";
-import { nameToEmoji } from "gemoji";
+// eslint-disable-next-line import/no-unresolved
+import nameToEmoji from "gemoji/name-to-emoji";
 import Node from "./Node";
 
 export default class Emoji extends Node {
