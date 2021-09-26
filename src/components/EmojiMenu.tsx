@@ -1,5 +1,5 @@
 import React from "react";
-import { gemoji as gemojies } from "gemoji";
+import gemojies from "gemoji";
 import FuzzySearch from "fuzzy-search";
 
 import BlockMenu, { Props } from "./CommonBlockMenu";

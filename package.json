@@ -27,7 +27,7 @@
   "dependencies": {
     "copy-to-clipboard": "^3.0.8",
     "fuzzy-search": "^3.2.1",
-    "gemoji": "^7.0.0",
+    "gemoji": "6.x",
     "lodash": "^4.17.11",
     "markdown-it": "^12.2.0",
     "markdown-it-container": "^3.0.0",
