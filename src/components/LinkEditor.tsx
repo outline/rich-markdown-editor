@@ -11,7 +11,7 @@ import {
 } from "outline-icons";
 import styled, { withTheme } from "styled-components";
 import isUrl from "../lib/isUrl";
-import theme from "../theme";
+import theme from "../styles/theme";
 import Flex from "./Flex";
 import Input from "./Input";
 import ToolbarButton from "./ToolbarButton";

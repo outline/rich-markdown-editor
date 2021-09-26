@@ -3,7 +3,7 @@ import { EditorView } from "prosemirror-view";
 import styled, { withTheme } from "styled-components";
 import ToolbarButton from "./ToolbarButton";
 import ToolbarSeparator from "./ToolbarSeparator";
-import theme from "../theme";
+import theme from "../styles/theme";
 import { MenuItem } from "../types";
 
 type Props = {
