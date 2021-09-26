@@ -4,7 +4,7 @@ import { ThemeProvider } from "styled-components";
 import { EditorView, Decoration } from "prosemirror-view";
 import Extension from "../lib/Extension";
 import Node from "../nodes/Node";
-import { light as lightTheme, dark as darkTheme } from "../theme";
+import { light as lightTheme, dark as darkTheme } from "../styles/theme";
 import Editor from "../";
 
 type Component = (options: {

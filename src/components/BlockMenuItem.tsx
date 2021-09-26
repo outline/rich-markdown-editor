@@ -1,7 +1,7 @@
 import * as React from "react";
 import scrollIntoView from "smooth-scroll-into-view-if-needed";
 import styled, { withTheme } from "styled-components";
-import theme from "../theme";
+import theme from "../styles/theme";
 
 export type Props = {
   selected: boolean;
