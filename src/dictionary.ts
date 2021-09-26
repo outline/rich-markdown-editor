@@ -25,6 +25,7 @@ export const base = {
   alignImageDefault: "Center large",
   em: "Italic",
   embedInvalidLink: "Sorry, that link won’t work for this embed type",
+  file: "File",
   findOrCreateDoc: "Find or create a doc…",
   h1: "Big heading",
   h2: "Medium heading",
