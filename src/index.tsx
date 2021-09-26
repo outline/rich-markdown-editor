@@ -27,6 +27,9 @@ import ExtensionManager from "./lib/ExtensionManager";
 import ComponentView from "./lib/ComponentView";
 import headingToSlug from "./lib/headingToSlug";
 
+// styles
+import { StyledEditor } from "./styles/editor";
+
 // nodes
 import ReactNode from "./nodes/ReactNode";
 import Doc from "./nodes/Doc";
@@ -73,7 +76,6 @@ import Placeholder from "./plugins/Placeholder";
 import SmartText from "./plugins/SmartText";
 import TrailingNode from "./plugins/TrailingNode";
 import PasteHandler from "./plugins/PasteHandler";
-import { StyledEditor } from "./styles/editor";
 
 export { schema, parser, serializer, renderToHtml } from "./server";
 
