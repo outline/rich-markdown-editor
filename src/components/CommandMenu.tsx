@@ -563,9 +563,7 @@ export const Wrapper = styled.div<{
   color: ${props => props.theme.text};
   font-family: ${props => props.theme.fontFamily};
   position: absolute;
-  z-index: ${props => {
-    return props.theme.zIndex + 100;
-  }};
+  z-index: ${props => props.theme.zIndex + 100};
   ${props => props.top !== undefined && `top: ${props.top}px`};
   ${props => props.bottom !== undefined && `bottom: ${props.bottom}px`};
   left: ${props => props.left}px;
