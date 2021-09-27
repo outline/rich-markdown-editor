@@ -1,3 +1,4 @@
+import { EditorView } from "prosemirror-view";
 import Node from "./Node";
 export default class CheckboxItem extends Node {
     get name(): string;
@@ -10,6 +11,7 @@ export default class CheckboxItem extends Node {
         content: string;
         defining: boolean;
         draggable: boolean;
+        disableDropCursor: (view: EditorView) => boolean;
         parseDOM: {
             tag: string;
             getAttrs: (dom: HTMLLIElement) => {

@@ -34,6 +34,11 @@ class CheckboxItem extends Node_1.default {
             content: "paragraph block*",
             defining: true,
             draggable: true,
+            disableDropCursor: (view) => {
+                var _a, _b, _c;
+                return ((_c = (_b = (_a = view.state.selection) === null || _a === void 0 ? void 0 : _a.node) === null || _b === void 0 ? void 0 : _b.type) === null || _c === void 0 ? void 0 : _c.name) ===
+                    "container_query_block";
+            },
             parseDOM: [
                 {
                     tag: `li[data-type="${this.name}"]`,

@@ -8,8 +8,9 @@ import {
   EditorState,
   Plugin,
   TextSelection,
+  NodeSelection,
 } from "prosemirror-state";
-import { DecorationSet, Decoration } from "prosemirror-view";
+import { DecorationSet, Decoration, EditorView } from "prosemirror-view";
 import { findParentNodeClosestToPos } from "prosemirror-utils";
 
 import Node from "./Node";
@@ -26,6 +27,9 @@ export default class ListItem extends Node {
       content: "paragraph block*",
       defining: true,
       draggable: true,
+      disableDropCursor: (view: EditorView) =>
+        (view.state.selection as NodeSelection)?.node?.type?.name ===
+        "container_query_block",
       parseDOM: [{ tag: "li" }],
       toDOM: () => ["li", 0],
     };

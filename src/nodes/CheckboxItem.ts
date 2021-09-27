@@ -3,6 +3,8 @@ import {
   sinkListItem,
   liftListItem,
 } from "prosemirror-schema-list";
+import { NodeSelection } from "prosemirror-state";
+import { EditorView } from "prosemirror-view";
 import Node from "./Node";
 
 export default class CheckboxItem extends Node {
@@ -20,6 +22,9 @@ export default class CheckboxItem extends Node {
       content: "paragraph block*",
       defining: true,
       draggable: true,
+      disableDropCursor: (view: EditorView) =>
+        (view.state.selection as NodeSelection)?.node?.type?.name ===
+        "container_query_block",
       parseDOM: [
         {
           tag: `li[data-type="${this.name}"]`,

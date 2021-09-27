@@ -1,5 +1,5 @@
 import { Transaction, EditorState, Plugin } from "prosemirror-state";
-import { DecorationSet } from "prosemirror-view";
+import { DecorationSet, EditorView } from "prosemirror-view";
 import Node from "./Node";
 export default class ListItem extends Node {
     get name(): string;
@@ -7,6 +7,7 @@ export default class ListItem extends Node {
         content: string;
         defining: boolean;
         draggable: boolean;
+        disableDropCursor: (view: EditorView) => boolean;
         parseDOM: {
             tag: string;
         }[];

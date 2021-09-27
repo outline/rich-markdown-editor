@@ -1,4 +1,5 @@
 import Node from "./Node";
+import { EditorView } from "prosemirror-view";
 export default class Notice extends Node {
     get styleOptions(): [string, any][];
     get name(): string;
@@ -12,6 +13,7 @@ export default class Notice extends Node {
         group: string;
         defining: boolean;
         draggable: boolean;
+        disableDropCursor: (view: EditorView) => boolean;
         parseDOM: {
             tag: string;
             preserveWhitespace: string;

@@ -4,6 +4,8 @@ import { WarningIcon, InfoIcon, StarredIcon } from "outline-icons";
 import * as React from "react";
 import ReactDOM from "react-dom";
 import Node from "./Node";
+import { EditorView } from "prosemirror-view";
+import { NodeSelection } from "prosemirror-state";
 
 export default class Notice extends Node {
   get styleOptions() {
@@ -29,6 +31,9 @@ export default class Notice extends Node {
       group: "block",
       defining: true,
       draggable: true,
+      disableDropCursor: (view: EditorView) =>
+        (view.state.selection as NodeSelection)?.node?.type?.name ===
+        "container_query_block",
       parseDOM: [
         {
           tag: "div.notice-block",
