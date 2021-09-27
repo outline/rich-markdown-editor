@@ -101,7 +101,7 @@ export default class ExtensionManager {
 
   get plugins() {
     return this.extensions
-      .filter(extension => extension.plugins)
+      .filter(extension => "plugins" in extension)
       .reduce((allPlugins, { plugins }) => [...allPlugins, ...plugins], []);
   }
 
