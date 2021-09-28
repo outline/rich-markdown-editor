@@ -18,11 +18,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const fetchProtectedFile_1 = __importDefault(require("../lib/fetchProtectedFile"));
 const uploadPlaceholder_1 = __importStar(require("../lib/uploadPlaceholder"));
 const types_1 = require("../types");
 const insertFiles = function (view, event, pos, files, options) {
-    const images = files.filter(file => /image/i.test(file.type));
+    const images = files.filter((file) => /image/i.test(file.type));
     if (images.length === 0)
         return;
     const { dictionary, uploadImage, onImageUploadStart, onImageUploadStop, onShowToast, } = options;
@@ -42,24 +46,31 @@ const insertFiles = function (view, event, pos, files, options) {
             add: { id, file, pos },
         });
         view.dispatch(tr);
+        let returnSrcFile;
         uploadImage(file)
-            .then(src => {
+            .then((src) => {
+            returnSrcFile = src;
+            return fetchProtectedFile_1.default(src);
+        })
+            .then((blob) => {
             const pos = uploadPlaceholder_1.findPlaceholder(view.state, id);
             if (pos === null)
                 return;
             const newImg = new Image();
+            const imageUrl = URL.createObjectURL(blob);
             newImg.onload = () => {
                 const transaction = view.state.tr
-                    .replaceWith(pos, pos, schema.nodes.image.create({ src }))
+                    .replaceWith(pos, pos, schema.nodes.image.create({ src: returnSrcFile }))
                     .setMeta(uploadPlaceholder_1.default, { remove: { id } });
                 view.dispatch(transaction);
+                URL.revokeObjectURL(imageUrl);
             };
-            newImg.onerror = error => {
+            newImg.onerror = (error) => {
                 throw error;
             };
-            newImg.src = src;
+            newImg.src = imageUrl;
         })
-            .catch(error => {
+            .catch((error) => {
             console.error(error);
             const transaction = view.state.tr.setMeta(uploadPlaceholder_1.default, {
                 remove: { id },

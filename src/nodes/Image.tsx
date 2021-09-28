@@ -4,10 +4,11 @@ import { Plugin, NodeSelection } from "prosemirror-state";
 import { InputRule } from "prosemirror-inputrules";
 import { setTextSelection } from "prosemirror-utils";
 import styled from "styled-components";
-import ImageZoom from "react-medium-image-zoom";
 import getDataTransferFiles from "../lib/getDataTransferFiles";
 import uploadPlaceholderPlugin from "../lib/uploadPlaceholder";
+import fetchProtectedFile from "../lib/fetchProtectedFile";
 import insertFiles from "../commands/insertFiles";
+import { ProtectedImageZoom } from "../components/ProtectedImageZoom";
 import Node from "./Node";
 
 /**
@@ -99,8 +100,8 @@ const getLayoutAndTitle = tokenTitle => {
 };
 
 const downloadImageNode = async node => {
-  const image = await fetch(node.attrs.src);
-  const imageBlob = await image.blob();
+  const imageBlob = await fetchProtectedFile(node.attrs.src);
+
   const imageURL = URL.createObjectURL(imageBlob);
   const extension = imageBlob.type.split("/")[1];
   const potentialName = node.attrs.alt || "image";
@@ -254,7 +255,7 @@ export default class Image extends Node {
               onClick={this.handleDownload(props)}
             />
           </Button>
-          <ImageZoom
+          <ProtectedImageZoom
             image={{
               src,
               alt,

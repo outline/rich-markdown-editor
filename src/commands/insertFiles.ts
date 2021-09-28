@@ -1,3 +1,4 @@
+import fetchProtectedFile from "../lib/fetchProtectedFile";
 import uploadPlaceholderPlugin, {
   findPlaceholder,
 } from "../lib/uploadPlaceholder";
@@ -5,7 +6,7 @@ import { ToastType } from "../types";
 
 const insertFiles = function(view, event, pos, files, options) {
   // filter to only include image files
-  const images = files.filter(file => /image/i.test(file.type));
+  const images = files.filter((file) => /image/i.test(file.type));
   if (images.length === 0) return;
 
   const {
@@ -51,8 +52,13 @@ const insertFiles = function(view, event, pos, files, options) {
     // start uploading the image file to the server. Using "then" syntax
     // to allow all placeholders to be entered at once with the uploads
     // happening in the background in parallel.
+    let returnSrcFile: string;
     uploadImage(file)
-      .then(src => {
+      .then((src: string) => {
+        returnSrcFile = src;
+        return fetchProtectedFile(src);
+      })
+      .then((blob: Blob) => {
         const pos = findPlaceholder(view.state, id);
 
         // if the content around the placeholder has been deleted
@@ -62,22 +68,28 @@ const insertFiles = function(view, event, pos, files, options) {
         // otherwise, insert it at the placeholder's position, and remove
         // the placeholder itself
         const newImg = new Image();
+        const imageUrl = URL.createObjectURL(blob);
 
         newImg.onload = () => {
           const transaction = view.state.tr
-            .replaceWith(pos, pos, schema.nodes.image.create({ src }))
+            .replaceWith(
+              pos,
+              pos,
+              schema.nodes.image.create({ src: returnSrcFile })
+            )
             .setMeta(uploadPlaceholderPlugin, { remove: { id } });
 
           view.dispatch(transaction);
+          URL.revokeObjectURL(imageUrl);
         };
 
-        newImg.onerror = error => {
+        newImg.onerror = (error) => {
           throw error;
         };
 
-        newImg.src = src;
+        newImg.src = imageUrl;
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
 
         // cleanup the placeholder if there is a failure

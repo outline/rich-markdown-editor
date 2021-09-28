@@ -28,10 +28,11 @@ const prosemirror_state_1 = require("prosemirror-state");
 const prosemirror_inputrules_1 = require("prosemirror-inputrules");
 const prosemirror_utils_1 = require("prosemirror-utils");
 const styled_components_1 = __importDefault(require("styled-components"));
-const react_medium_image_zoom_1 = __importDefault(require("react-medium-image-zoom"));
 const getDataTransferFiles_1 = __importDefault(require("../lib/getDataTransferFiles"));
 const uploadPlaceholder_1 = __importDefault(require("../lib/uploadPlaceholder"));
+const fetchProtectedFile_1 = __importDefault(require("../lib/fetchProtectedFile"));
 const insertFiles_1 = __importDefault(require("../commands/insertFiles"));
+const ProtectedImageZoom_1 = require("../components/ProtectedImageZoom");
 const Node_1 = __importDefault(require("./Node"));
 const IMAGE_INPUT_REGEX = /!\[(?<alt>.*?)]\((?<filename>.*?)(?=\“|\))\“?(?<layoutclass>[^\”]+)?\”?\)/;
 const uploadPlugin = options => new prosemirror_state_1.Plugin({
@@ -96,8 +97,7 @@ const getLayoutAndTitle = tokenTitle => {
     }
 };
 const downloadImageNode = async (node) => {
-    const image = await fetch(node.attrs.src);
-    const imageBlob = await image.blob();
+    const imageBlob = await fetchProtectedFile_1.default(node.attrs.src);
     const imageURL = URL.createObjectURL(imageBlob);
     const extension = imageBlob.type.split("/")[1];
     const potentialName = node.attrs.alt || "image";
@@ -165,7 +165,7 @@ class Image extends Node_1.default {
                 React.createElement(ImageWrapper, { className: isSelected ? "ProseMirror-selectednode" : "", onClick: this.handleSelect(props) },
                     React.createElement(Button, null,
                         React.createElement(outline_icons_1.DownloadIcon, { color: "currentColor", onClick: this.handleDownload(props) })),
-                    React.createElement(react_medium_image_zoom_1.default, { image: {
+                    React.createElement(ProtectedImageZoom_1.ProtectedImageZoom, { image: {
                             src,
                             alt,
                             title,
