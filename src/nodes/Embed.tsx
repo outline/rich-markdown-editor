@@ -8,9 +8,13 @@ export default class Embed extends Node {
 
   get schema() {
     return {
+      // doesn't work.. on reload will be empty
+      // inline: true,
       content: "inline*",
       group: "block",
+      // group: "inline",
       atom: true,
+      // selectable: true,
       attrs: {
         href: {},
         component: {},
