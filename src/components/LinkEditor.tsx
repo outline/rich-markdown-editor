@@ -395,35 +395,6 @@ class LinkEditor extends React.Component<Props, State> {
           autoFocus={this.href === ""}
         />
 
-        {/* <ToolbarButton onClick={this.handleOpenLink} disabled={!value}>
-          <Tooltip tooltip={dictionary.openLink} placement="top">
-            <OpenIcon color={theme.toolbarItem} />
-          </Tooltip>
-        </ToolbarButton> */}
-        {/* <ToolbarButton onClick={this.handleRemoveLink}>
-          <Tooltip tooltip={dictionary.removeLink} placement="top">
-            {this.initialValue ? (
-              <TrashIcon color={theme.toolbarItem} />
-            ) : (
-              <CloseIcon color={theme.toolbarItem} />
-            )}
-          </Tooltip>
-        </ToolbarButton> */}
-        {cardsInside && onMoveLink && (
-          <ToolbarButton onClick={() => onMoveLink(value)} disabled={!value}>
-            <Tooltip
-              tooltip={
-                isInside
-                  ? "Move linked lesson outside"
-                  : "Move linked lesson inside"
-              }
-              placement="top"
-            >
-              <MoveToIcon color={theme.toolbarItem} moveOut={isInside} />
-            </Tooltip>
-          </ToolbarButton>
-        )}
-
         {showResults && (
           <SearchResults id="link-search-results">
             {showCreateLink && (

@@ -1054,6 +1054,7 @@ const StyledEditor = styled("div")<{
     color: #2c2424;
     text-decoration: none;
     user-select: text;
+    cursor: pointer;
     background: #e2f3ff
       url(https://storage.googleapis.com/alley-d0944.appspot.com/public/externallink4.svg)
       0px 5px no-repeat;
@@ -1072,20 +1073,6 @@ const StyledEditor = styled("div")<{
       0px 5px no-repeat;
     text-decoration: none;
   }
-
-  ${props =>
-    props.cardsInside
-      ? props.cardsInside.map(
-          pth => `a[href^="${pth}"] {
-    background: #e2f3ff;
-    padding-left: 2px;
-  }
-
-  a[href^="${pth}"]:hover {
-    background: #b5defc;
-  }`
-        )
-      : ""}
 
   ul,
   ol {
