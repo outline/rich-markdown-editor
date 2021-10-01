@@ -1,5 +1,5 @@
 import refractor from "refractor/core";
-import flattenDeep from "lodash/flattenDeep";
+import flattenDeep from "lodash-es/flattenDeep";
 import { Plugin, PluginKey } from "prosemirror-state";
 import { Node } from "prosemirror-model";
 import { Decoration, DecorationSet } from "prosemirror-view";

@@ -1,5 +1,5 @@
 import Editor from "./index";
-import debounce from "lodash/debounce";
+import debounce from "lodash-es/debounce";
 import { Props } from "..";
 import React from "react";
 import { Story, Meta } from "@storybook/react/types-6-0";

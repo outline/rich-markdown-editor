@@ -1,7 +1,7 @@
 import assert from "assert";
 import * as React from "react";
 import { Portal } from "react-portal";
-import some from "lodash/some";
+import some from "lodash-es/some";
 import { EditorView } from "prosemirror-view";
 import getTableColMenuItems from "../menus/tableCol";
 import getTableRowMenuItems from "../menus/tableRow";
