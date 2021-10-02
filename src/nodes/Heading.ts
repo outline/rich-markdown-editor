@@ -48,7 +48,6 @@ export default class Heading extends Node {
         anchor.innerText = "#";
         anchor.type = "button";
         anchor.className = "heading-anchor";
-        anchor.contentEditable = "false";
         anchor.addEventListener("click", event => this.handleCopyLink(event));
 
         const fold = document.createElement("button");
@@ -59,7 +58,6 @@ export default class Heading extends Node {
         fold.className = `heading-fold ${
           node.attrs.collapsed ? "collapsed" : ""
         }`;
-        fold.contentEditable = "false";
         fold.addEventListener("click", event => this.handleFoldContent(event));
 
         return [
@@ -67,6 +65,7 @@ export default class Heading extends Node {
           [
             "span",
             {
+              contentEditable: false,
               class: `heading-actions ${
                 node.attrs.collapsed ? "collapsed" : ""
               }`,
