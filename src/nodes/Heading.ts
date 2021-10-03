@@ -6,6 +6,7 @@ import { textblockTypeInputRule } from "prosemirror-inputrules";
 import { MarkdownSerializerState } from "prosemirror-markdown";
 import backspaceToParagraph from "../commands/backspaceToParagraph";
 import toggleBlockType from "../commands/toggleBlockType";
+import splitHeading from "../commands/splitHeading";
 import headingToSlug, { headingToPersistenceKey } from "../lib/headingToSlug";
 import Node from "./Node";
 import { ToastType } from "../types";
@@ -186,6 +187,7 @@ export default class Heading extends Node {
     return {
       ...options,
       Backspace: backspaceToParagraph(type),
+      Enter: splitHeading(type),
     };
   }
 
