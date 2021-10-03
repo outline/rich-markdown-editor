@@ -1,13 +1,12 @@
-import { Plugin, TextSelection } from "prosemirror-state";
+import { Plugin } from "prosemirror-state";
 import copy from "copy-to-clipboard";
 import { Decoration, DecorationSet } from "prosemirror-view";
 import { Node as ProsemirrorNode, NodeType } from "prosemirror-model";
 import { textblockTypeInputRule } from "prosemirror-inputrules";
 import { MarkdownSerializerState } from "prosemirror-markdown";
-import { findBlockNodes } from "prosemirror-utils";
-import findCollapsedNodes from "../queries/findCollapsedNodes";
 import backspaceToParagraph from "../commands/backspaceToParagraph";
 import toggleBlockType from "../commands/toggleBlockType";
+import splitHeading from "../commands/splitHeading";
 import headingToSlug, { headingToPersistenceKey } from "../lib/headingToSlug";
 import Node from "./Node";
 import { ToastType } from "../types";
@@ -180,46 +179,7 @@ export default class Heading extends Node {
     return {
       ...options,
       Backspace: backspaceToParagraph(type),
-      Enter: (state, dispatch) => {
-        const { $from, from } = state.selection;
-
-        // check we're in a matching node
-        if ($from.parent.type !== type) return null;
-
-        dispatch(
-          state.tr.split(state.selection.to, 1, [
-            $from.parent,
-            { level: 1, collapsed: false },
-          ])
-        );
-
-        return true;
-
-        // check if we're at the end of the heading
-        // const $pos = state.doc.resolve(from - 1);
-        //if ($pos.pos + $pos.parent.nodeSize !== from) return null;
-
-        // const allBlocks = findBlockNodes(state.doc);
-        // const collapsedBlocks = findCollapsedNodes(state.doc);
-        // const visibleBlocks = allBlocks.filter(
-        //   a => !collapsedBlocks.find(b => b.pos === a.pos)
-        // );
-        // const nextVisibleBlock = visibleBlocks.find(a => a.pos > from);
-        // const pos = nextVisibleBlock
-        //   ? nextVisibleBlock.pos
-        //   : state.doc.content.size;
-
-        // dispatch(
-        //   state.tr
-        //     .insert(pos, type.create())
-        //     .setSelection(TextSelection.near(state.doc.resolve(pos)))
-        //     .scrollIntoView()
-        // );
-
-        // console.log({ nextVisibleBlock });
-
-        return true;
-      },
+      Enter: splitHeading(type),
     };
   }
 
