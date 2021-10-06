@@ -4,7 +4,7 @@ import Extension from "../lib/Extension";
 import { run } from "./BlockMenuTrigger";
 
 const OPEN_REGEX = /(?:^|[^a-zA-Z0-9_!#$%&*@＠]):([0-9a-zA-Z_+-]+)?$/;
-const CLOSE_REGEX = /(?:^|[^a-zA-Z0-9_!#$%&*@＠]):([0-9a-zA-Z_+-]*)(:[\w\s]*)$|^:(\s+)([0-9a-zA-Z_+-]*)|^:([0-9a-zA-Z_+-]*)([\s]+)/;
+const CLOSE_REGEX = /(?:^|[^a-zA-Z0-9_!#$%&*@＠]):(([0-9a-zA-Z_+-]*\s+)|(\s+[0-9a-zA-Z_+-]+)|[^0-9a-zA-Z_+-]+)$/;
 
 export default class EmojiTrigger extends Extension {
   get name() {
@@ -76,6 +76,7 @@ export default class EmojiTrigger extends Extension {
       // :<space>word
       // :<space>
       // :word<space>
+      // :)
       new InputRule(CLOSE_REGEX, (state, match) => {
         if (match) {
           this.options.onClose();
