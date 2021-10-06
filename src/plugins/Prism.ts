@@ -16,6 +16,7 @@ export const LANGUAGES = {
   java: "Java",
   javascript: "JavaScript",
   json: "JSON",
+  perl: "Perl",
   php: "PHP",
   powershell: "Powershell",
   python: "Python",

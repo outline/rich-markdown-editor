@@ -8,6 +8,7 @@ import java from "refractor/lang/java";
 import javascript from "refractor/lang/javascript";
 import json from "refractor/lang/json";
 import markup from "refractor/lang/markup";
+import perl from "refractor/lang/perl";
 import php from "refractor/lang/php";
 import python from "refractor/lang/python";
 import powershell from "refractor/lang/powershell";
@@ -15,6 +16,7 @@ import ruby from "refractor/lang/ruby";
 import sql from "refractor/lang/sql";
 import typescript from "refractor/lang/typescript";
 import yaml from "refractor/lang/yaml";
+
 import { textblockTypeInputRule } from "prosemirror-inputrules";
 import copy from "copy-to-clipboard";
 import Prism, { LANGUAGES } from "../plugins/Prism";
@@ -36,6 +38,7 @@ const DEFAULT_LANGUAGE = "javascript";
   javascript,
   json,
   markup,
+  perl,
   php,
   python,
   powershell,
