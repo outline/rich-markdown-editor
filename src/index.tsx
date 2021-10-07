@@ -22,7 +22,7 @@ import BlockMenu from "./components/BlockMenu";
 import EmojiMenu from "./components/EmojiMenu";
 import LinkToolbar from "./components/LinkToolbar";
 import Tooltip from "./components/Tooltip";
-import Extension from "./lib/Extension";
+import Extension, { RulePlugin } from "./lib/Extension";
 import ExtensionManager from "./lib/ExtensionManager";
 import ComponentView from "./lib/ComponentView";
 import headingToSlug from "./lib/headingToSlug";
@@ -214,6 +214,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   nodes: { [name: string]: NodeSpec };
   marks: { [name: string]: MarkSpec };
   commands: Record<string, any>;
+  rulePlugins: RulePlugin[];
 
   componentDidMount() {
     this.init();
@@ -293,6 +294,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     this.marks = this.createMarks();
     this.schema = this.createSchema();
     this.plugins = this.createPlugins();
+    this.rulePlugins = this.createRulePlugins();
     this.keymaps = this.createKeymaps();
     this.serializer = this.createSerializer();
     this.parser = this.createParser();
@@ -418,6 +420,10 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     return this.extensions.plugins;
   }
 
+  createRulePlugins() {
+    return this.extensions.rulePlugins;
+  }
+
   createKeymaps() {
     return this.extensions.keymaps({
       schema: this.schema,
@@ -481,6 +487,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   createParser() {
     return this.extensions.parser({
       schema: this.schema,
+      plugins: this.rulePlugins,
     });
   }
 
@@ -488,6 +495,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     return this.extensions.parser({
       schema: this.schema,
       rules: { linkify: true },
+      plugins: this.rulePlugins,
     });
   }
 

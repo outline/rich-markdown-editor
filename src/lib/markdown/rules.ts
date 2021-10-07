@@ -7,9 +7,18 @@ import tablesPlugin from "./tables";
 import noticesPlugin from "./notices";
 import underlinesPlugin from "./underlines";
 import emojiPlugin from "markdown-it-emoji";
+import { RulePlugin } from "../Extension";
 
-export default function rules({ embeds, rules = {} }) {
-  return markdownit("default", {
+export default function rules({
+  embeds,
+  rules = {},
+  plugins = [],
+}: {
+  embeds: any;
+  rules?: Record<string, any>;
+  plugins?: RulePlugin[];
+}) {
+  const markdownIt = markdownit("default", {
     breaks: false,
     html: false,
     linkify: false,
@@ -24,4 +33,7 @@ export default function rules({ embeds, rules = {} }) {
     .use(tablesPlugin)
     .use(noticesPlugin)
     .use(emojiPlugin);
+
+  plugins.forEach(plugin => markdownIt.use(plugin));
+  return markdownIt;
 }

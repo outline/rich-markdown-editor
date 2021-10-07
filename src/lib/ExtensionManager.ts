@@ -3,7 +3,7 @@ import { keymap } from "prosemirror-keymap";
 import { MarkdownParser } from "prosemirror-markdown";
 import { MarkdownSerializer } from "./markdown/serializer";
 import Editor from "../";
-import Extension from "./Extension";
+import Extension, { RulePlugin } from "./Extension";
 import makeRules from "./markdown/rules";
 import Node from "../nodes/Node";
 import Mark from "../marks/Mark";
@@ -62,9 +62,11 @@ export default class ExtensionManager {
   parser({
     schema,
     rules,
+    plugins,
   }: {
     schema: any;
     rules?: Record<string, any>;
+    plugins?: RulePlugin[];
   }): MarkdownParser {
     const tokens: Record<string, any> = this.extensions
       .filter(
@@ -82,7 +84,7 @@ export default class ExtensionManager {
 
     return new MarkdownParser(
       schema,
-      makeRules({ embeds: this.embeds, rules }),
+      makeRules({ embeds: this.embeds, rules, plugins }),
       tokens
     );
   }
@@ -103,6 +105,18 @@ export default class ExtensionManager {
     return this.extensions
       .filter(extension => "plugins" in extension)
       .reduce((allPlugins, { plugins }) => [...allPlugins, ...plugins], []);
+  }
+
+  get rulePlugins() {
+    return this.extensions
+      .filter(extension => "rulePlugins" in extension)
+      .reduce(
+        (allRulePlugins, { rulePlugins }) => [
+          ...allRulePlugins,
+          ...rulePlugins,
+        ],
+        []
+      );
   }
 
   keymaps({ schema }: { schema: Schema }) {
