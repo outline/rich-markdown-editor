@@ -469,6 +469,7 @@ class RichMarkdownEditor extends React.PureComponent {
             nodeViews: this.nodeViews,
             handleDOMEvents: this.props.handleDOMEvents,
             transformPasted: this.props.transformPasted,
+            handlePaste: this.props.handlePaste,
             handleDrop: this.props.handleDrop,
             dispatchTransaction: function (transaction) {
                 const { state, transactions } = this.state.applyTransaction(transaction);

@@ -111,6 +111,7 @@ export declare type Props = {
         [name: string]: (view: EditorView, event: Event) => boolean;
     };
     transformPasted?: (slice: Slice) => Slice;
+    handlePaste?: (view: EditorView, event: ClipboardEvent, slice: Slice) => boolean;
     handleDrop?: (view: EditorView, event: Event, slice: Slice, moved: boolean) => boolean;
     uploadImage?: (file: File) => Promise<string>;
     onBlur?: () => void;
