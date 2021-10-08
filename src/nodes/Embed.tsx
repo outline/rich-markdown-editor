@@ -1,5 +1,6 @@
 import * as React from "react";
 import Node from "./Node";
+import embedsRule from "../rules/embeds";
 
 const cache = {};
 
@@ -44,6 +45,10 @@ export default class Embed extends Node {
         0,
       ],
     };
+  }
+
+  get rulePlugins() {
+    return [embedsRule(this.options.embeds)];
   }
 
   component({ isEditable, isSelected, theme, node }) {

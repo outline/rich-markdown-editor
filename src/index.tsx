@@ -22,7 +22,7 @@ import BlockMenu from "./components/BlockMenu";
 import EmojiMenu from "./components/EmojiMenu";
 import LinkToolbar from "./components/LinkToolbar";
 import Tooltip from "./components/Tooltip";
-import Extension, { RulePlugin } from "./lib/Extension";
+import Extension from "./lib/Extension";
 import ExtensionManager from "./lib/ExtensionManager";
 import ComponentView from "./lib/ComponentView";
 import headingToSlug from "./lib/headingToSlug";
@@ -76,6 +76,7 @@ import Placeholder from "./plugins/Placeholder";
 import SmartText from "./plugins/SmartText";
 import TrailingNode from "./plugins/TrailingNode";
 import PasteHandler from "./plugins/PasteHandler";
+import { PluginSimple } from "markdown-it";
 
 export { schema, parser, serializer, renderToHtml } from "./server";
 
@@ -214,7 +215,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   nodes: { [name: string]: NodeSpec };
   marks: { [name: string]: MarkSpec };
   commands: Record<string, any>;
-  rulePlugins: RulePlugin[];
+  rulePlugins: PluginSimple[];
 
   componentDidMount() {
     this.init();
@@ -329,7 +330,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           new CheckboxList(),
           new CheckboxItem(),
           new BulletList(),
-          new Embed(),
+          new Embed({ embeds: this.props.embeds }),
           new ListItem(),
           new Notice({
             dictionary,

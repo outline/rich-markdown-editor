@@ -22,6 +22,7 @@ import {
   moveRow,
 } from "prosemirror-utils";
 import { Plugin, TextSelection } from "prosemirror-state";
+import tablesRule from "../rules/tables";
 
 export default class Table extends Node {
   get name() {
@@ -47,6 +48,10 @@ export default class Table extends Node {
         ];
       },
     };
+  }
+
+  get rulePlugins() {
+    return [tablesRule];
   }
 
   commands({ schema }) {

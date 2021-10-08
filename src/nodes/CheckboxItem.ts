@@ -4,6 +4,7 @@ import {
   liftListItem,
 } from "prosemirror-schema-list";
 import Node from "./Node";
+import checkboxRule from "../rules/checkboxes";
 
 export default class CheckboxItem extends Node {
   get name() {
@@ -55,6 +56,10 @@ export default class CheckboxItem extends Node {
         ];
       },
     };
+  }
+
+  get rulePlugins() {
+    return [checkboxRule];
   }
 
   handleChange = event => {

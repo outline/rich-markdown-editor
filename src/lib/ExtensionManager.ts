@@ -3,14 +3,14 @@ import { keymap } from "prosemirror-keymap";
 import { MarkdownParser } from "prosemirror-markdown";
 import { MarkdownSerializer } from "./markdown/serializer";
 import Editor from "../";
-import Extension, { RulePlugin } from "./Extension";
+import Extension from "./Extension";
 import makeRules from "./markdown/rules";
 import Node from "../nodes/Node";
 import Mark from "../marks/Mark";
+import { PluginSimple } from "markdown-it";
 
 export default class ExtensionManager {
   extensions: Extension[];
-  embeds;
 
   constructor(extensions: Extension[] = [], editor?: Editor) {
     if (editor) {
@@ -20,7 +20,6 @@ export default class ExtensionManager {
     }
 
     this.extensions = extensions;
-    this.embeds = editor ? editor.props.embeds : undefined;
   }
 
   get nodes() {
@@ -66,7 +65,7 @@ export default class ExtensionManager {
   }: {
     schema: any;
     rules?: Record<string, any>;
-    plugins?: RulePlugin[];
+    plugins?: PluginSimple[];
   }): MarkdownParser {
     const tokens: Record<string, any> = this.extensions
       .filter(
@@ -82,11 +81,7 @@ export default class ExtensionManager {
         };
       }, {});
 
-    return new MarkdownParser(
-      schema,
-      makeRules({ embeds: this.embeds, rules, plugins }),
-      tokens
-    );
+    return new MarkdownParser(schema, makeRules({ rules, plugins }), tokens);
   }
 
   get marks() {

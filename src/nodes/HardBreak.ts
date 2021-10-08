@@ -1,5 +1,6 @@
 import Node from "./Node";
 import { isInTable } from "prosemirror-tables";
+import breakRule from "../rules/breaks";
 
 export default class HardBreak extends Node {
   get name() {
@@ -16,6 +17,10 @@ export default class HardBreak extends Node {
         return ["br"];
       },
     };
+  }
+
+  get rulePlugins() {
+    return [breakRule];
   }
 
   commands({ type }) {

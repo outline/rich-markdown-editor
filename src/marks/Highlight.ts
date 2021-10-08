@@ -1,6 +1,7 @@
 import { toggleMark } from "prosemirror-commands";
 import markInputRule from "../lib/markInputRule";
 import Mark from "./Mark";
+import markRule from "../rules/mark";
 
 export default class Highlight extends Mark {
   get name() {
@@ -22,6 +23,10 @@ export default class Highlight extends Mark {
     return {
       "Mod-Ctrl-h": toggleMark(type),
     };
+  }
+
+  get rulePlugins() {
+    return [markRule({ delim: "==", mark: "highlight" })];
   }
 
   get toMarkdown() {
