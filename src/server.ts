@@ -80,4 +80,5 @@ export const parser = extensions.parser({
 
 export const serializer = extensions.serializer();
 
-export const renderToHtml = render;
+export const renderToHtml = (markdown: string): string =>
+  render(markdown, extensions.rulePlugins);
