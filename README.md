@@ -84,7 +84,7 @@ List of included extension names to disable. Removes corresponding menu items an
 
 #### `theme`
 
-Allows overriding the inbuilt theme to brand the editor, for example use your own font face and brand colors to have the editor fit within your application. See the [inbuilt theme](/src/theme.ts) for an example of the keys that should be provided.
+Allows overriding the inbuilt theme to brand the editor, for example use your own font face and brand colors to have the editor fit within your application. See the [inbuilt theme](/src/styles/theme.ts) for an example of the keys that should be provided.
 
 #### `dictionary`
 
@@ -92,7 +92,7 @@ Allows overriding the inbuilt copy dictionary, for example to internationalize t
 
 #### `dark`
 
-With `dark` set to `true` the editor will use a default dark theme that's included. See the [source here](/src/theme.ts).
+With `dark` set to `true` the editor will use a default dark theme that's included. See the [source here](/src/styles/theme.ts).
 
 #### `dir`
 
