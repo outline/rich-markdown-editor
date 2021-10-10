@@ -1048,6 +1048,8 @@ const StyledEditor = styled("div")<{
 
   a {
     color: ${props => props.theme.linkExternal};
+    cursor: pointer;
+    text-decoration: none;
   }
 
   a[href^="/"] {
