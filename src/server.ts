@@ -76,6 +76,7 @@ export const schema = new Schema({
 
 export const parser = extensions.parser({
   schema,
+  plugins: extensions.rulePlugins,
 });
 
 export const serializer = extensions.serializer();
