@@ -92,6 +92,10 @@ export default class SelectionToolbar extends React.Component<Props> {
       return;
     }
 
+    if (!this.isActive) {
+      return;
+    }
+
     const { view } = this.props;
     const { dispatch } = view;
 
