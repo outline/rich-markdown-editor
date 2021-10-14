@@ -76,6 +76,7 @@ import Placeholder from "./plugins/Placeholder";
 import SmartText from "./plugins/SmartText";
 import TrailingNode from "./plugins/TrailingNode";
 import PasteHandler from "./plugins/PasteHandler";
+import { PluginSimple } from "markdown-it";
 
 export { schema, parser, serializer, renderToHtml } from "./server";
 
@@ -214,6 +215,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   nodes: { [name: string]: NodeSpec };
   marks: { [name: string]: MarkSpec };
   commands: Record<string, any>;
+  rulePlugins: PluginSimple[];
 
   componentDidMount() {
     this.init();
@@ -293,6 +295,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     this.marks = this.createMarks();
     this.schema = this.createSchema();
     this.plugins = this.createPlugins();
+    this.rulePlugins = this.createRulePlugins();
     this.keymaps = this.createKeymaps();
     this.serializer = this.createSerializer();
     this.parser = this.createParser();
@@ -327,7 +330,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           new CheckboxList(),
           new CheckboxItem(),
           new BulletList(),
-          new Embed(),
+          new Embed({ embeds: this.props.embeds }),
           new ListItem(),
           new Notice({
             dictionary,
@@ -418,6 +421,10 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     return this.extensions.plugins;
   }
 
+  createRulePlugins() {
+    return this.extensions.rulePlugins;
+  }
+
   createKeymaps() {
     return this.extensions.keymaps({
       schema: this.schema,
@@ -481,6 +488,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   createParser() {
     return this.extensions.parser({
       schema: this.schema,
+      plugins: this.rulePlugins,
     });
   }
 
@@ -488,6 +496,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     return this.extensions.parser({
       schema: this.schema,
       rules: { linkify: true },
+      plugins: this.rulePlugins,
     });
   }
 

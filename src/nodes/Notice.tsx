@@ -4,6 +4,7 @@ import { WarningIcon, InfoIcon, StarredIcon } from "outline-icons";
 import * as React from "react";
 import ReactDOM from "react-dom";
 import Node from "./Node";
+import noticesRule from "../rules/notices";
 
 export default class Notice extends Node {
   get styleOptions() {
@@ -16,6 +17,10 @@ export default class Notice extends Node {
 
   get name() {
     return "container_notice";
+  }
+
+  get rulePlugins() {
+    return [noticesRule];
   }
 
   get schema() {

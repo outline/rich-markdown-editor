@@ -1,6 +1,7 @@
 import { toggleMark } from "prosemirror-commands";
 import markInputRule from "../lib/markInputRule";
 import Mark from "./Mark";
+import underlinesRule from "../rules/underlines";
 
 export default class Underline extends Mark {
   get name() {
@@ -18,6 +19,10 @@ export default class Underline extends Mark {
       ],
       toDOM: () => ["u", 0],
     };
+  }
+
+  get rulePlugins() {
+    return [underlinesRule];
   }
 
   inputRules({ type }) {
