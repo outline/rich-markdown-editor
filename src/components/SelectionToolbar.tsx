@@ -3,6 +3,7 @@ import * as React from "react";
 import { Portal } from "react-portal";
 import some from "lodash/some";
 import { EditorView } from "prosemirror-view";
+import { TextSelection } from "prosemirror-state";
 import getTableColMenuItems from "../menus/tableCol";
 import getTableRowMenuItems from "../menus/tableRow";
 import getTableMenuItems from "../menus/table";
@@ -60,6 +61,7 @@ function isVisible(props) {
 
 export default class SelectionToolbar extends React.Component<Props> {
   isActive = false;
+  menuRef = React.createRef<HTMLDivElement>();
 
   componentDidUpdate(): void {
     const visible = isVisible(this.props);
@@ -72,6 +74,31 @@ export default class SelectionToolbar extends React.Component<Props> {
       this.props.onOpen();
     }
   }
+
+  componentDidMount(): void {
+    window.addEventListener("mousedown", this.handleClickOutside);
+  }
+
+  componentWillUnmount(): void {
+    window.removeEventListener("mousedown", this.handleClickOutside);
+  }
+
+  handleClickOutside = (ev: MouseEvent): void => {
+    if (
+      ev.target instanceof Node &&
+      this.menuRef.current &&
+      this.menuRef.current.contains(ev.target)
+    ) {
+      return;
+    }
+
+    const { view } = this.props;
+    const { dispatch } = view;
+
+    dispatch(
+      view.state.tr.setSelection(new TextSelection(view.state.doc.resolve(0)))
+    );
+  };
 
   handleOnCreateLink = async (title: string): Promise<void> => {
     const { dictionary, onCreateLink, view, onShowToast } = this.props;
@@ -183,7 +210,11 @@ export default class SelectionToolbar extends React.Component<Props> {
 
     return (
       <Portal>
-        <FloatingToolbar view={view} active={isVisible(this.props)}>
+        <FloatingToolbar
+          view={view}
+          active={isVisible(this.props)}
+          ref={this.menuRef}
+        >
           {link && range ? (
             <LinkEditor
               dictionary={dictionary}
