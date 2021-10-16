@@ -781,7 +781,6 @@ const StyledEditor = styled("div")<{
   readOnlyWriteCheckboxes?: boolean;
   cardsInside?: Array<string>;
 }>`
-  color: ${props => props.theme.text};
   background: ${props => props.theme.background};
   line-height: 1.7em;
   width: 100%;
@@ -893,7 +892,6 @@ const StyledEditor = styled("div")<{
   h6 {
     margin: 1em 0 0.5em;
     font-weight: 500;
-    cursor: default;
 
     &:not(.placeholder):before {
       display: ${props => (props.readOnly ? "none" : "block")};
