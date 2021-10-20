@@ -109,9 +109,14 @@ class LinkEditor extends React.Component<Props, State> {
     this.discardInputValue = true;
     const { from, to } = this.props;
 
-    // If the input doesn't start with a protocol or relative slash, make sure
-    // a protocol is added to the beginning
-    if (!isUrl(href) && !href.startsWith("/") && !href.startsWith("#")) {
+    // Make sure a protocol is added to the beginning of the input if it's
+    // likely an absolute URL that was entered without one.
+    if (
+      !isUrl(href) &&
+      !href.startsWith("/") &&
+      !href.startsWith("#") &&
+      !href.startsWith("mailto:")
+    ) {
       href = `https://${href}`;
     }
 
