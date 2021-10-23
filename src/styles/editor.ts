@@ -845,8 +845,8 @@ export const StyledEditor = styled("div")<{
     scrollbar-color: transparent transparent;
 
     &:hover {
-      scrollbar-color: ${props => props.theme.scrollbarThumb}
-        ${props => props.theme.scrollbarBackground};
+      scrollbar-color: ${props => props.theme.scrollbarThumb} ${props =>
+  props.theme.scrollbarBackground};
     }
 
     & ::-webkit-scrollbar {

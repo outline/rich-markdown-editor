@@ -69,6 +69,7 @@ export default class TableCell extends Node {
                       grip.className = className;
                       grip.addEventListener("mousedown", event => {
                         event.preventDefault();
+                        event.stopImmediatePropagation();
                         this.options.onSelectTable(state);
                       });
                       return grip;
@@ -93,6 +94,7 @@ export default class TableCell extends Node {
                     grip.className = className;
                     grip.addEventListener("mousedown", event => {
                       event.preventDefault();
+                      event.stopImmediatePropagation();
                       this.options.onSelectRow(index, state);
                     });
                     return grip;
