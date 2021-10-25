@@ -1,4 +1,3 @@
-import assert from "assert";
 import * as React from "react";
 import { EditorView } from "prosemirror-view";
 import LinkEditor, { SearchResult } from "./LinkEditor";
@@ -70,7 +69,10 @@ export default class LinkToolbar extends React.Component<Props> {
 
     const { dispatch, state } = view;
     const { from, to } = state.selection;
-    assert(from === to);
+    if (from !== to) {
+      // selection must be collapsed
+      return;
+    }
 
     const href = `creating#${title}…`;
 
@@ -108,7 +110,10 @@ export default class LinkToolbar extends React.Component<Props> {
 
     const { dispatch, state } = view;
     const { from, to } = state.selection;
-    assert(from === to);
+    if (from !== to) {
+      // selection must be collapsed
+      return;
+    }
 
     dispatch(
       view.state.tr

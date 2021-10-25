@@ -1,4 +1,3 @@
-import assert from "assert";
 import * as React from "react";
 import { Portal } from "react-portal";
 import some from "lodash/some";
@@ -113,7 +112,10 @@ export default class SelectionToolbar extends React.Component<Props> {
 
     const { dispatch, state } = view;
     const { from, to } = state.selection;
-    assert(from !== to);
+    if (from === to) {
+      // selection cannot be collapsed
+      return;
+    }
 
     const href = `creating#${title}…`;
     const markType = state.schema.marks.link;
