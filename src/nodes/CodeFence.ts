@@ -24,6 +24,7 @@ import toggleBlockType from "../commands/toggleBlockType";
 import isInCode from "../queries/isInCode";
 import Node from "./Node";
 import { ToastType } from "../types";
+import { TextSelection, Transaction } from "prosemirror-state";
 
 const PERSISTENCE_KEY = "rme-code-language";
 const DEFAULT_LANGUAGE = "javascript";
@@ -124,9 +125,24 @@ export default class CodeFence extends Node {
       "Shift-Ctrl-\\": toggleBlockType(type, schema.nodes.paragraph),
       "Shift-Enter": (state, dispatch) => {
         if (!isInCode(state)) return false;
+        const {
+          tr,
+          selection,
+        }: { tr: Transaction; selection: TextSelection } = state;
+        const text = selection?.$anchor?.nodeBefore?.text;
 
-        const { tr, selection } = state;
-        dispatch(tr.insertText("\n", selection.from, selection.to));
+        if (!text) {
+          dispatch(tr.insertText("\n", selection.from, selection.to));
+          return true;
+        }
+
+        const splitByNewLine = text.split("\n");
+        const numOfSpaces = splitByNewLine[splitByNewLine.length - 1].search(
+          /\S|$/
+        );
+        const newText = "\n" + " ".repeat(numOfSpaces);
+
+        dispatch(tr.insertText(newText, selection.from, selection.to));
         return true;
       },
       Tab: (state, dispatch) => {
