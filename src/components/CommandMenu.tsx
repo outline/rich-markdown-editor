@@ -121,7 +121,11 @@ class CommandMenu<T = MenuItem> extends React.Component<Props<T>, State> {
       }
     }
 
-    if (event.key === "ArrowUp" || (event.ctrlKey && event.key === "p")) {
+    if (
+      event.key === "ArrowUp" ||
+      (event.key === "Tab" && event.shiftKey) ||
+      (event.ctrlKey && event.key === "p")
+    ) {
       event.preventDefault();
       event.stopPropagation();
 
@@ -142,7 +146,7 @@ class CommandMenu<T = MenuItem> extends React.Component<Props<T>, State> {
 
     if (
       event.key === "ArrowDown" ||
-      event.key === "Tab" ||
+      (event.key === "Tab" && !event.shiftKey) ||
       (event.ctrlKey && event.key === "n")
     ) {
       event.preventDefault();
