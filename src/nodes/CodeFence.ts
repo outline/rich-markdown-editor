@@ -139,7 +139,7 @@ export default class CodeFence extends Node {
     };
   }
 
-  handleCopyToClipboard(event) {
+  handleCopyToClipboard = event => {
     const { view } = this.editor;
     const element = event.target;
     const { top, left } = element.getBoundingClientRect();
@@ -157,9 +157,9 @@ export default class CodeFence extends Node {
         }
       }
     }
-  }
+  };
 
-  handleLanguageChange(event) {
+  handleLanguageChange = event => {
     const { view } = this.editor;
     const { tr } = view.state;
     const element = event.target;
@@ -175,7 +175,7 @@ export default class CodeFence extends Node {
 
       localStorage?.setItem(PERSISTENCE_KEY, language);
     }
-  }
+  };
 
   get plugins() {
     return [Prism({ name: this.name })];
