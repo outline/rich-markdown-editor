@@ -49,6 +49,20 @@ function BlockMenuItem({
     >
       <Icon color={selected ? theme.black : undefined} />
       &nbsp;&nbsp;{title}
+      {title === "Muse.ai video" && (
+        <a
+          target="_blank"
+          rel="noreferrer noopener"
+          href="https://muse.ai/traverse-deal"
+          style={{
+            marginLeft: "80px",
+            textDecoration: "none",
+            color: "#8f8f8f",
+          }}
+        >
+          Get Muse.ai
+        </a>
+      )}
     </MenuItem>
   );
 }
