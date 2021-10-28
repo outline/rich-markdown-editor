@@ -131,16 +131,15 @@ export default class CodeFence extends Node {
         }: { tr: Transaction; selection: TextSelection } = state;
         const text = selection?.$anchor?.nodeBefore?.text;
 
-        if (!text) {
-          dispatch(tr.insertText("\n", selection.from, selection.to));
-          return true;
-        }
+        let newText = "\n";
 
-        const splitByNewLine = text.split("\n");
-        const numOfSpaces = splitByNewLine[splitByNewLine.length - 1].search(
-          /\S|$/
-        );
-        const newText = "\n" + " ".repeat(numOfSpaces);
+        if (text) {
+          const splitByNewLine = text.split("\n");
+          const numOfSpaces = splitByNewLine[splitByNewLine.length - 1].search(
+            /\S|$/
+          );
+          newText += " ".repeat(numOfSpaces);
+        }
 
         dispatch(tr.insertText(newText, selection.from, selection.to));
         return true;
