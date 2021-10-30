@@ -49,7 +49,7 @@ function BlockMenuItem({
     >
       <Icon color={selected ? theme.black : undefined} />
       &nbsp;&nbsp;{title}
-      {title === "Muse.ai video" && (
+      {title === "muse.ai video" && (
         <a
           target="_blank"
           rel="noreferrer noopener"
@@ -60,7 +60,7 @@ function BlockMenuItem({
             color: "#8f8f8f",
           }}
         >
-          Get Muse.ai
+          Get muse.ai
         </a>
       )}
     </MenuItem>
