@@ -269,14 +269,18 @@ export const StyledEditor = styled("div")<{
     }
   }
 
-  .placeholder {
-    &:before {
-      display: block;
-      content: ${props => (props.readOnly ? "" : "attr(data-empty-text)")};
-      pointer-events: none;
-      height: 0;
-      color: ${props => props.theme.placeholder};
-    }
+  .placeholder:before {
+    display: block;
+    opacity: 0;
+    transition: opacity 150ms ease-in-out;
+    content: ${props => (props.readOnly ? "" : "attr(data-empty-text)")};
+    pointer-events: none;
+    height: 0;
+    color: ${props => props.theme.placeholder};
+  }
+
+  .ProseMirror-focused .placeholder:before {
+    opacity: 1;
   }
 
   .notice-block {
@@ -904,6 +908,8 @@ export const StyledEditor = styled("div")<{
   }
 
   .block-menu-trigger {
+    opacity: 0;
+    pointer-events: none;
     display: ${props => (props.readOnly ? "none" : "inline")};
     width: 24px;
     height: 24px;
@@ -911,7 +917,8 @@ export const StyledEditor = styled("div")<{
     background: none;
     position: absolute;
     transition: color 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275),
-      transform 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transform 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275),
+      opacity 150ms ease-in-out;
     outline: none;
     border: 0;
     padding: 0;
@@ -924,6 +931,13 @@ export const StyledEditor = styled("div")<{
       transform: scale(1.2);
       color: ${props => props.theme.text};
     }
+  }
+
+  .ProseMirror-focused .block-menu-trigger,
+  .block-menu-trigger:active,
+  .block-menu-trigger:focus {
+    opacity: 1;
+    pointer-events: initial;
   }
 
   .ProseMirror-gapcursor {
