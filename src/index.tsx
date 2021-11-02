@@ -16,7 +16,7 @@ import { light as lightTheme, dark as darkTheme } from "./theme";
 import baseDictionary from "./dictionary";
 import Flex from "./components/Flex";
 import { EmbedDescriptor, ToastType } from "./types";
-import SelectionToolbar, { iOS } from "./components/SelectionToolbar";
+import SelectionToolbar, { iOS, getText } from "./components/SelectionToolbar";
 import BlockMenu from "./components/BlockMenu";
 import LinkToolbar from "./components/LinkToolbar";
 import Tooltip from "./components/Tooltip";
@@ -74,6 +74,22 @@ export { schema, parser, serializer } from "./server";
 export { default as Extension } from "./lib/Extension";
 
 export const theme = lightTheme;
+
+const getParent = (selection, state) => {
+  const selectionStart = selection.$from;
+  let depth = selectionStart.depth;
+  let parent;
+  do {
+    parent = selectionStart.node(depth);
+    if (parent) {
+      if (parent.type === state.schema.nodes.theNodeTypeImLookingFor) {
+        break;
+      }
+      depth--;
+    }
+  } while (depth > 0 && parent);
+  return parent;
+};
 
 export type Props = {
   id?: string;
@@ -590,6 +606,16 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     });
     return headings;
   };
+
+  getSelection = () => {
+    const selection = this.view?.state?.selection;
+    const selectionContent = selection?.content();
+    const selectedText = (selectionContent && getText(selectionContent)) || "";
+    const parent = getParent(selection, this.view.state);
+    const surroundingText = parent ? getText(parent) : selectedText;
+    return [selectedText, surroundingText];
+  };
+
 
   theme = () => {
     return this.props.theme || (this.props.dark ? darkTheme : lightTheme);
