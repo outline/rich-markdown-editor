@@ -344,14 +344,7 @@ class LinkEditor extends React.Component<Props, State> {
   }
 
   render() {
-    const {
-      dictionary,
-      theme,
-      Avatar,
-      onCreateFlashcard,
-      onMoveLink,
-      onTurnIntoCards,
-    } = this.props;
+    const { dictionary, theme, Avatar, onTurnIntoCards } = this.props;
     const { value, selectedIndex } = this.state;
     const looksLikeUrl = value.match(/^https?:\/\/|^www./i);
     const showTurnInto = !!looksLikeUrl && onTurnIntoCards;
@@ -363,8 +356,6 @@ class LinkEditor extends React.Component<Props, State> {
         : this.state.results[value.trim()] ||
           this.state.results[this.state.previousValue] ||
           [];
-
-    const isInside = onCreateFlashcard && onCreateFlashcard.includes(value);
 
     const Tooltip = this.props.tooltip;
     // create card on top, should be default action. order of search results
