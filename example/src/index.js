@@ -117,7 +117,8 @@ const docSearchResults = [
   },
 ];
 
-const cardsInside = ["/doc/hiring"];
+const onCreateFlashcard = (txt, surroundingTxt) =>
+  console.log(`txt`, txt, surroundingTxt);
 
 class YoutubeEmbed extends React.Component {
   render() {
@@ -202,9 +203,9 @@ class Example extends React.Component {
         <br />
         <Editor
           id="example"
-          cardsInside={cardsInside}
+          onCreateFlashcard={onCreateFlashcard}
           // onMoveLink={lnk =>
-          //   console.log(cardsInside.includes(lnk) ? "move out" : "move in")
+          //   console.log(onCreateFlashcard.includes(lnk) ? "move out" : "move in")
           // }
           editorMinHeight="400px"
           readOnly={this.state.readOnly}

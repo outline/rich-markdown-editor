@@ -100,7 +100,7 @@ type Props = {
   view: EditorView;
   theme: typeof theme;
   selectedText?: string;
-  cardsInside?: Array<string>;
+  onCreateFlashcard?: (txt?: string, surroundTxt?: string) => void;
   onMoveLink?: (title: string) => Promise<string>;
 };
 
@@ -348,7 +348,7 @@ class LinkEditor extends React.Component<Props, State> {
       dictionary,
       theme,
       Avatar,
-      cardsInside,
+      onCreateFlashcard,
       onMoveLink,
       onTurnIntoCards,
     } = this.props;
@@ -364,7 +364,7 @@ class LinkEditor extends React.Component<Props, State> {
           this.state.results[this.state.previousValue] ||
           [];
 
-    const isInside = cardsInside && cardsInside.includes(value);
+    const isInside = onCreateFlashcard && onCreateFlashcard.includes(value);
 
     const Tooltip = this.props.tooltip;
     // create card on top, should be default action. order of search results

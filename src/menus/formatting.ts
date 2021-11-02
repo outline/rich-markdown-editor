@@ -89,5 +89,11 @@ export default function formattingMenuItems(
       attrs: { level: 2 },
       visible: allowBlocks,
     },
+    {
+      name: "add_flashcard",
+      tooltip: dictionary.quote,
+      text: "+ flashcard",
+      visible: true
+    },
   ];
 }

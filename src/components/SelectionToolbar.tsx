@@ -69,7 +69,7 @@ type Props = {
   searchTriggerOpen?: boolean;
   resetSearchTrigger?: () => void;
   Avatar: typeof React.Component | React.FC<any>;
-  cardsInside?: Array<string>;
+  onCreateFlashcard?: (txt?: string, surroundTxt?: string) => void;
   onMoveLink?: (title: string) => Promise<string>;
 };
 
@@ -236,7 +236,7 @@ export default class SelectionToolbar extends React.Component<Props> {
     const MenuEl = <Menu items={items} {...rest} />;
     const LinkEditorEl = (
       <LinkEditor
-        cardsInside={this.props.cardsInside}
+        onCreateFlashcard={this.props.onCreateFlashcard}
         dictionary={dictionary}
         mark={(range && range.mark) || undefined}
         from={(range && range.from) || selection.from}

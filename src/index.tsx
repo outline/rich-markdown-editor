@@ -16,11 +16,7 @@ import { light as lightTheme, dark as darkTheme } from "./theme";
 import baseDictionary from "./dictionary";
 import Flex from "./components/Flex";
 import { EmbedDescriptor, ToastType } from "./types";
-import SelectionToolbar, {
-  iOS,
-  android,
-  getText,
-} from "./components/SelectionToolbar";
+import SelectionToolbar, { iOS } from "./components/SelectionToolbar";
 import BlockMenu from "./components/BlockMenu";
 import LinkToolbar from "./components/LinkToolbar";
 import Tooltip from "./components/Tooltip";
@@ -79,22 +75,6 @@ export { default as Extension } from "./lib/Extension";
 
 export const theme = lightTheme;
 
-const getParent = (selection, state) => {
-  const selectionStart = selection.$from;
-  let depth = selectionStart.depth;
-  let parent;
-  do {
-    parent = selectionStart.node(depth);
-    if (parent) {
-      if (parent.type === state.schema.nodes.theNodeTypeImLookingFor) {
-        break;
-      }
-      depth--;
-    }
-  } while (depth > 0 && parent);
-  return parent;
-};
-
 export type Props = {
   id?: string;
   value?: string;
@@ -140,7 +120,7 @@ export type Props = {
   style?: Record<string, string>;
   editorMinHeight?: string;
   fixedToolbar?: boolean;
-  cardsInside?: Array<string>;
+  onCreateFlashcard?: (txt?: string, surroundTxt?: string) => void;
   limitBlockMenuItems?: Array<string>;
 };
 
@@ -177,7 +157,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     newLinePlaceholder: "",
     childCards: [],
     fixedToolbar: false,
-    cardsInside: [],
+    onCreateFlashcard: null,
   };
 
   state = {
@@ -611,15 +591,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     return headings;
   };
 
-  getSelection = () => {
-    const selection = this.view?.state?.selection;
-    const selectionContent = selection?.content();
-    const selectedText = (selectionContent && getText(selectionContent)) || "";
-    const parent = getParent(selection, this.view.state);
-    const surroundingText = parent ? getText(parent) : selectedText;
-    return [selectedText, surroundingText];
-  };
-
   theme = () => {
     return this.props.theme || (this.props.dark ? darkTheme : lightTheme);
   };
@@ -680,7 +651,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   ? this.props.editorMinHeight
                   : undefined,
               }}
-              cardsInside={this.props.cardsInside}
+              onCreateFlashcard={this.props.onCreateFlashcard}
               readOnly={readOnly}
               readOnlyWriteCheckboxes={readOnlyWriteCheckboxes}
               ref={ref => (this.element = ref)}
@@ -699,7 +670,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                       onClickLink={this.props.onClickLink}
                       onCreateLink={this.props.onCreateLink}
                       onMoveLink={this.props.onMoveLink}
-                      cardsInside={this.props.cardsInside}
+                      onCreateFlashcard={this.props.onCreateFlashcard}
                       Avatar={this.props.Avatar}
                       onTurnIntoCards={this.props.onTurnIntoCards}
                       tooltip={tooltip}
@@ -710,7 +681,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                       isActive={this.state.linkMenuOpen}
                       onCreateLink={this.props.onCreateLink}
                       onMoveLink={this.props.onMoveLink}
-                      cardsInside={this.props.cardsInside}
+                      onCreateFlashcard={this.props.onCreateFlashcard}
                       Avatar={this.props.Avatar}
                       onTurnIntoCards={this.props.onTurnIntoCards}
                       onSearchLink={this.props.onSearchLink}
@@ -755,7 +726,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                 resetSearchTrigger={() =>
                   this.setState({ searchTriggerOpen: false })
                 }
-                cardsInside={this.props.cardsInside}
+                onCreateFlashcard={this.props.onCreateFlashcard}
                 onMoveLink={this.props.onMoveLink}
                 onClose={this.handleCloseLinkMenu}
                 view={this.view}
@@ -779,7 +750,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 const StyledEditor = styled("div")<{
   readOnly?: boolean;
   readOnlyWriteCheckboxes?: boolean;
-  cardsInside?: Array<string>;
+  onCreateFlashcard?: (txt?: string, surroundTxt?: string) => void;
 }>`
   background: ${props => props.theme.background};
   line-height: 1.7em;
