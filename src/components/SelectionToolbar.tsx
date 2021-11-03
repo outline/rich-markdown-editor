@@ -75,11 +75,11 @@ export default class SelectionToolbar extends React.Component<Props> {
   }
 
   componentDidMount(): void {
-    window.addEventListener("mousedown", this.handleClickOutside);
+    window.addEventListener("mouseup", this.handleClickOutside);
   }
 
   componentWillUnmount(): void {
-    window.removeEventListener("mousedown", this.handleClickOutside);
+    window.removeEventListener("mouseup", this.handleClickOutside);
   }
 
   handleClickOutside = (ev: MouseEvent): void => {
@@ -96,6 +96,10 @@ export default class SelectionToolbar extends React.Component<Props> {
     }
 
     const { view } = this.props;
+    if (view.hasFocus()) {
+      return;
+    }
+
     const { dispatch } = view;
 
     dispatch(
