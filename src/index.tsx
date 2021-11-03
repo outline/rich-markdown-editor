@@ -616,7 +616,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     return [selectedText, surroundingText];
   };
 
-
   theme = () => {
     return this.props.theme || (this.props.dark ? darkTheme : lightTheme);
   };

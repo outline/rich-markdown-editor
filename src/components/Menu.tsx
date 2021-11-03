@@ -67,6 +67,7 @@ class Menu extends React.Component<Props> {
                   cursor: "pointer",
                   filter: "drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.25))",
                 }}
+                className="onboarding-flashcard"
                 onClick={() =>
                   this.props.onCreateFlashcard &&
                   this.props.onCreateFlashcard(selectedText, surroundingText)
