@@ -380,6 +380,7 @@ export const StyledEditor = styled("div")<{
 
   a {
     color: ${props => props.theme.link};
+    cursor: pointer;
   }
 
   a:hover {
