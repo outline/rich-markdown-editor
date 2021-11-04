@@ -279,7 +279,10 @@ export const StyledEditor = styled("div")<{
     color: ${props => props.theme.placeholder};
   }
 
-  .ProseMirror-focused .placeholder:before {
+  /** Show the placeholder if focused or the first visible item nth(2) accounts for block insert trigger */
+  .ProseMirror-focused .placeholder:before,
+  .placeholder:nth-child(1):before,
+  .placeholder:nth-child(2):before {
     opacity: 1;
   }
 
