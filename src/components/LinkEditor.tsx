@@ -367,6 +367,7 @@ const Wrapper = styled(Flex)`
   margin-left: -8px;
   margin-right: -8px;
   min-width: 336px;
+  pointer-events: all;
 `;
 
 const SearchResults = styled.ol`

@@ -211,6 +211,7 @@ const Wrapper = styled.div<{
     position: absolute;
     bottom: -2px;
     left: calc(50% - ${props => props.offset || 0}px);
+    pointer-events: none;
   }
 
   * {
@@ -221,7 +222,6 @@ const Wrapper = styled.div<{
     active &&
     `
     transform: translateY(-6px) scale(1);
-    pointer-events: all;
     opacity: 1;
   `};
 
