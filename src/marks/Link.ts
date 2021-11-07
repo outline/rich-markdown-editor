@@ -66,8 +66,7 @@ export default class Link extends Mark {
         "a",
         {
           ...node.attrs,
-          // FIXME nofollow for external links
-          rel: "noopener noreferrer",
+          rel: "noopener noreferrer nofollow",
         },
         0,
       ],

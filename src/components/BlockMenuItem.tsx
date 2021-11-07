@@ -52,7 +52,7 @@ function BlockMenuItem({
       {title === "muse.ai video" && (
         <a
           target="_blank"
-          rel="noreferrer noopener"
+          rel="noreferrer noopener nofollow"
           href="https://muse.ai/traverse-deal"
           style={{
             marginLeft: "80px",
