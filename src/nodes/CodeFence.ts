@@ -17,6 +17,7 @@ import sql from "refractor/lang/sql";
 import typescript from "refractor/lang/typescript";
 import yaml from "refractor/lang/yaml";
 
+import { Selection, TextSelection, Transaction } from "prosemirror-state";
 import { textblockTypeInputRule } from "prosemirror-inputrules";
 import copy from "copy-to-clipboard";
 import Prism, { LANGUAGES } from "../plugins/Prism";
@@ -24,7 +25,6 @@ import toggleBlockType from "../commands/toggleBlockType";
 import isInCode from "../queries/isInCode";
 import Node from "./Node";
 import { ToastType } from "../types";
-import { TextSelection, Transaction } from "prosemirror-state";
 
 const PERSISTENCE_KEY = "rme-code-language";
 const DEFAULT_LANGUAGE = "javascript";
@@ -183,9 +183,12 @@ export default class CodeFence extends Node {
 
     if (result) {
       const language = element.value;
-      const transaction = tr.setNodeMarkup(result.inside, undefined, {
-        language,
-      });
+
+      const transaction = tr
+        .setSelection(Selection.near(view.state.doc.resolve(result.inside)))
+        .setNodeMarkup(result.inside, undefined, {
+          language,
+        });
       view.dispatch(transaction);
 
       localStorage?.setItem(PERSISTENCE_KEY, language);

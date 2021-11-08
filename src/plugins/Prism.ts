@@ -1,6 +1,6 @@
 import refractor from "refractor/core";
 import flattenDeep from "lodash/flattenDeep";
-import { Plugin, PluginKey } from "prosemirror-state";
+import { Plugin, PluginKey, Transaction } from "prosemirror-state";
 import { Node } from "prosemirror-model";
 import { Decoration, DecorationSet } from "prosemirror-view";
 import { findBlockNodes } from "prosemirror-utils";
@@ -113,13 +113,14 @@ export default function Prism({ name }) {
       init: (_: Plugin, { doc }) => {
         return DecorationSet.create(doc, []);
       },
-      apply: (transaction, decorationSet, oldState, state) => {
+      apply: (transaction: Transaction, decorationSet, oldState, state) => {
         const nodeName = state.selection.$head.parent.type.name;
         const previousNodeName = oldState.selection.$head.parent.type.name;
         const codeBlockChanged =
           transaction.docChanged && [nodeName, previousNodeName].includes(name);
+        const ySyncEdit = !!transaction.getMeta("y-sync$");
 
-        if (!highlighted || codeBlockChanged) {
+        if (!highlighted || codeBlockChanged || ySyncEdit) {
           highlighted = true;
           return getDecorations({ doc: transaction.doc, name });
         }
