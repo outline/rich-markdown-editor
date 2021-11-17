@@ -89,7 +89,7 @@ export type Props = {
   value?: string;
   defaultValue: string;
   placeholder: string;
-  extensions: Extension[];
+  extensions?: Extension[];
   disableExtensions?: (
     | "strong"
     | "code_inline"
@@ -411,7 +411,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           }
           return true;
         }),
-        ...this.props.extensions,
+        ...(this.props.extensions || []),
       ],
       this
     );
