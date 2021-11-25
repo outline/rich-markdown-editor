@@ -79,6 +79,33 @@ When set enforces a maximum character length on the document, not including mark
 #### `extensions`
 
 Allows additional [Prosemirror plugins](https://prosemirror.net/docs/ref/#state.Plugin_System) to be passed to the underlying Prosemirror instance.
+Also, you can add extra commands into the Block menu:
+```javascript
+class DemoExtension extends Extension {
+  get name(): string {
+    return "demo";
+  }
+
+  get menuItems(): MenuItem[] {
+    return [
+      {
+        name: "demo",
+        title: "Demo button",
+        keywords: "Demo keywords",
+        icon: DemoIcon,
+        attrs: { type: 1 },
+      },
+    ];
+  }
+
+  commands() {
+    return attr => {
+      console.log("Demo action", attr);
+      return () => null;
+    };
+  }
+}
+```
 
 #### `disableExtensions`
 
