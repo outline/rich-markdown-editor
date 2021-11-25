@@ -89,6 +89,12 @@ export default class Notice extends Node {
     return attrs => toggleWrap(type, attrs);
   }
 
+  keys({ type, schema }) {
+    return {
+      "Shift-Ctrl-`": toggleWrap(type, schema.nodes.container_notice),
+    };
+  }
+
   handleStyleChange = event => {
     const { view } = this.editor;
     const { tr } = view.state;
