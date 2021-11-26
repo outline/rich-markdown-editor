@@ -13,7 +13,7 @@ export const LANGUAGES = {
   csharp: "C#",
   go: "Go",
   markup: "HTML",
-  objectivec: "ObjectiveC",
+  objectivec: "Objective-C",
   java: "Java",
   javascript: "JavaScript",
   json: "JSON",
