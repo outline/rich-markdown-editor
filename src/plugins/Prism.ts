@@ -22,6 +22,7 @@ export const LANGUAGES = {
   powershell: "Powershell",
   python: "Python",
   ruby: "Ruby",
+  rust: "Rust",
   sql: "SQL",
   typescript: "TypeScript",
   yaml: "YAML",

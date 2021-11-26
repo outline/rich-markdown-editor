@@ -14,6 +14,7 @@ import php from "refractor/lang/php";
 import python from "refractor/lang/python";
 import powershell from "refractor/lang/powershell";
 import ruby from "refractor/lang/ruby";
+import rust from "refractor/lang/rust";
 import sql from "refractor/lang/sql";
 import typescript from "refractor/lang/typescript";
 import yaml from "refractor/lang/yaml";
@@ -46,6 +47,7 @@ const DEFAULT_LANGUAGE = "javascript";
   python,
   powershell,
   ruby,
+  rust,
   sql,
   typescript,
   yaml,
