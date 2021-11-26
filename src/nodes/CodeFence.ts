@@ -8,6 +8,7 @@ import java from "refractor/lang/java";
 import javascript from "refractor/lang/javascript";
 import json from "refractor/lang/json";
 import markup from "refractor/lang/markup";
+import objectivec from "refractor/lang/objectivec";
 import perl from "refractor/lang/perl";
 import php from "refractor/lang/php";
 import python from "refractor/lang/python";
@@ -39,6 +40,7 @@ const DEFAULT_LANGUAGE = "javascript";
   javascript,
   json,
   markup,
+  objectivec,
   perl,
   php,
   python,
