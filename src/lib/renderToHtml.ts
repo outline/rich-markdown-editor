@@ -7,7 +7,7 @@ import breakRule from "../rules/breaks";
 import tablesRule from "../rules/tables";
 import noticesRule from "../rules/notices";
 import underlinesRule from "../rules/underlines";
-import emojiRule from "markdown-it-emoji";
+import emojiRule from "../rules/emoji";
 
 const defaultRules = [
   embedsRule,
