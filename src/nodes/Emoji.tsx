@@ -1,7 +1,7 @@
 import { InputRule } from "prosemirror-inputrules";
 import nameToEmoji from "gemoji/name-to-emoji.json";
 import Node from "./Node";
-import emojiPlugin from "markdown-it-emoji";
+import emojiRule from "../rules/emoji";
 
 export default class Emoji extends Node {
   get name() {
@@ -54,7 +54,7 @@ export default class Emoji extends Node {
   }
 
   get rulePlugins() {
-    return [emojiPlugin];
+    return [emojiRule];
   }
 
   commands({ type }) {
