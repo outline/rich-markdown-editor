@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          always-auth: true
+          node-version: '12.x'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@directumufa'
+      - run: echo "//npm.pkg.github.co/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ~/.npmrc
+      - run: yarn
+      - run: yarn config set registry https://npm.pkg.github.com
+      - run: yarn publish

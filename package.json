@@ -1,5 +1,5 @@
 {
-  "name": "rich-markdown-editor",
+  "name": "@directumufa/rich-markdown-editor",
   "description": "A rich text editor with Markdown shortcuts",
   "version": "11.20.1",
   "main": "dist/index.js",
@@ -116,7 +116,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/outline/rich-markdown-editor.git"
+    "url": "git+https://github.com/directumufa/rich-markdown-editor.git"
   },
   "keywords": [
     "editor",
