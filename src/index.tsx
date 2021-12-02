@@ -143,7 +143,12 @@ export type Props = {
   onImageUploadStart?: () => void;
   onImageUploadStop?: () => void;
   onCreateLink?: (title: string) => Promise<string>;
-  onSelectLink?: (href: string) => void;
+  onSelectLink?: (options: {
+    href: string;
+    title?: string;
+    from: number;
+    to: number;
+  }) => void;
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
   onClickLink: (href: string, event: MouseEvent) => void;
   onHoverLink?: (event: MouseEvent) => boolean;

@@ -11,7 +11,12 @@ type Props = {
   tooltip: typeof React.Component | React.FC<any>;
   dictionary: typeof baseDictionary;
   onCreateLink?: (title: string) => Promise<string>;
-  onSelectLink?: (href: string) => void;
+  onSelectLink?: (options: {
+    href: string;
+    title?: string;
+    from: number;
+    to: number;
+  }) => void;
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
   onClickLink: (href: string, event: MouseEvent) => void;
   onShowToast?: (msg: string, code: string) => void;
@@ -140,9 +145,9 @@ export default class LinkToolbar extends React.Component<Props> {
             from={selection.from}
             to={selection.to}
             onCreateLink={onCreateLink ? this.handleOnCreateLink : undefined}
-            onSelectLink={this.handleOnSelectLink}
             onRemoveLink={onClose}
             {...rest}
+            onSelectLink={this.handleOnSelectLink}
           />
         )}
       </FloatingToolbar>
