@@ -3,6 +3,7 @@ import { InputRule } from "prosemirror-inputrules";
 import { Plugin } from "prosemirror-state";
 import Editor from "../";
 import { PluginSimple } from "markdown-it";
+import { MenuItem } from "../types";
 
 type Command = (attrs) => (state, dispatch) => any;
 
@@ -47,6 +48,10 @@ export default class Extension {
 
   commands(options): Record<string, Command> | Command {
     return attrs => () => false;
+  }
+
+  get menuItems(): MenuItem[] {
+    return [];
   }
 
   get defaultOptions() {

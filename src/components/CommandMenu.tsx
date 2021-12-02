@@ -11,6 +11,7 @@ import getDataTransferFiles from "../lib/getDataTransferFiles";
 import filterExcessSeparators from "../lib/filterExcessSeparators";
 import insertFiles from "../commands/insertFiles";
 import baseDictionary from "../dictionary";
+import { Extension } from "../index";
 
 const SSR = typeof window === "undefined";
 
@@ -36,6 +37,7 @@ export type Props<T extends MenuItem = MenuItem> = {
   onClose: () => void;
   onClearSearch: () => void;
   embeds?: EmbedDescriptor[];
+  extensions?: Extension[];
   renderMenuItem: (
     item: T,
     index: number,
@@ -398,9 +400,11 @@ class CommandMenu<T = MenuItem> extends React.Component<Props<T>, State> {
       uploadImage,
       commands,
       filterable = true,
+      extensions,
     } = this.props;
     let items: (EmbedDescriptor | MenuItem)[] = this.props.items;
     const embedItems: EmbedDescriptor[] = [];
+    const extensionsItems: MenuItem[] = [];
 
     for (const embed of embeds) {
       if (embed.title && embed.icon) {
@@ -411,11 +415,24 @@ class CommandMenu<T = MenuItem> extends React.Component<Props<T>, State> {
       }
     }
 
+    for (const extension of extensions || []) {
+      extensionsItems.push(...extension.menuItems);
+    }
+
     if (embedItems.length) {
       items.push({
         name: "separator",
       });
       items = items.concat(embedItems);
+    }
+
+    if (extensionsItems.length) {
+      items.push(
+        {
+          name: "separator",
+        },
+        ...extensionsItems
+      );
     }
 
     const filtered = items.filter(item => {
