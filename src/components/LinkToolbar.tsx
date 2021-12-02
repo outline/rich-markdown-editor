@@ -11,6 +11,7 @@ type Props = {
   tooltip: typeof React.Component | React.FC<any>;
   dictionary: typeof baseDictionary;
   onCreateLink?: (title: string) => Promise<string>;
+  onSelectLink?: (href: string) => void;
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
   onClickLink: (href: string, event: MouseEvent) => void;
   onShowToast?: (msg: string, code: string) => void;
@@ -107,6 +108,7 @@ export default class LinkToolbar extends React.Component<Props> {
 
     onClose();
     this.props.view.focus();
+    this.props.onSelectLink?.call(href);
 
     const { dispatch, state } = view;
     const { from, to } = state.selection;

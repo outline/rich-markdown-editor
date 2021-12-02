@@ -14,6 +14,7 @@ export default {
     onCancel: { action: "cancel" },
     onClickHashtag: { action: "hashtag clicked" },
     onClickLink: { action: "link clicked" },
+    onSelectLink: { action: "link selected" },
     onHoverLink: { action: "link hovered" },
     onShowToast: { action: "toast" },
     onFocus: { action: "focused" },
