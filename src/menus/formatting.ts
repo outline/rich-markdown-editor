@@ -11,6 +11,7 @@ import {
   TodoListIcon,
   InputIcon,
   HighlightIcon,
+  InfoIcon
 } from "outline-icons";
 import { isInTable } from "prosemirror-tables";
 import { EditorState } from "prosemirror-state";
@@ -123,6 +124,18 @@ export default function formattingMenuItems(
     },
     {
       name: "separator",
+    },
+    {
+      name: "container_notice",
+      tooltip: dictionary.infoNotice,
+      icon: InfoIcon,
+      active: isNodeActive(schema.node.container_notice),
+      attrs: { style: "info" },
+      visible: allowBlocks,
+    },
+    {
+      name: "separator",
+      visible: allowBlocks,
     },
     {
       name: "link",
