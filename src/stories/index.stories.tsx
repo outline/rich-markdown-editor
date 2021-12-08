@@ -1,8 +1,10 @@
 import Editor from "./index";
 import debounce from "lodash/debounce";
-import { Props } from "..";
+import { Extension, Props } from "..";
 import React from "react";
 import { Story, Meta } from "@storybook/react/types-6-0";
+import { MenuItem } from "../types";
+import { GlobeIcon } from "outline-icons";
 
 export default {
   title: "Editor",
@@ -234,4 +236,34 @@ RTL.args = {
 \\
 - [x] آیتم اول
 - [ ] آیتم دوم`,
+};
+
+class DemoExtension extends Extension {
+  get name(): string {
+    return "demo";
+  }
+
+  get menuItems(): MenuItem[] {
+    return [
+      {
+        name: "demo",
+        title: "Demo button",
+        keywords: "Demo keywords Демо",
+        icon: GlobeIcon,
+        attrs: { type: 1 },
+      },
+    ];
+  }
+
+  commands() {
+    return attr => {
+      console.log("Demo action", attr);
+      return () => null;
+    };
+  }
+}
+
+export const Exts = Template.bind({});
+Exts.args = {
+  extensions: [new DemoExtension()],
 };

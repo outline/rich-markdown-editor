@@ -10,7 +10,7 @@ import Extension from "../lib/Extension";
 
 const MAX_MATCH = 500;
 const OPEN_REGEX = /^\/([\w\u0400-\u04FF]+)?$/;
-const CLOSE_REGEX = /(^(?!\/([\w\u0400-\u04FF]+)?)(.*)$|^\/(([\w\W]+)\s.*|\s)$|^\/((\W)+)$)/;
+const CLOSE_REGEX = /(^(?!\/([\w\u0400-\u04FF]+)?)(.*)$|^\/(([\w\u0400-\u04FF\W]+)\s.*|\s)$|^\/((\W\u0400-\u04FF)+)$)/;
 
 // based on the input rules code in Prosemirror, here:
 // https://github.com/ProseMirror/prosemirror-inputrules/blob/master/src/inputrules.js
