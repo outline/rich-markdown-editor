@@ -113,7 +113,7 @@ export default class LinkToolbar extends React.Component<Props> {
 
     onClose();
     this.props.view.focus();
-    this.props.onSelectLink?.call(href);
+    this.props.onSelectLink?.call(this, { href, title });
 
     const { dispatch, state } = view;
     const { from, to } = state.selection;
