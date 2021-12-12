@@ -434,18 +434,6 @@ const Button = styled.button`
   }
 `;
 
-const ImageWrapper = styled.span`
-  line-height: 0;
-  display: inline-block;
-  position: relative;
-
-  &:hover {
-    ${Button} {
-      opacity: 0.9;
-    }
-  }
-`;
-
 const Caption = styled.p`
   border: 0;
   display: block;
@@ -463,9 +451,29 @@ const Caption = styled.p`
   user-select: text;
   cursor: text;
 
+  &:empty:not(:focus) {
+    visibility: hidden;
+  }
+
   &:empty:before {
     color: ${props => props.theme.placeholder};
     content: attr(data-caption);
     pointer-events: none;
+  }
+`;
+
+const ImageWrapper = styled.span`
+  line-height: 0;
+  display: inline-block;
+  position: relative;
+
+  &:hover {
+    ${Button} {
+      opacity: 0.9;
+    }
+  }
+
+  &.ProseMirror-selectednode + ${Caption} {
+    visibility: visible;
   }
 `;
