@@ -360,6 +360,36 @@ export default class Image extends Node {
         dispatch(state.tr.setNodeMarkup(selection.from, undefined, attrs));
         return true;
       },
+      replaceImage: () => state => {
+        const { view } = this.editor;
+        const {
+          uploadImage,
+          onImageUploadStart,
+          onImageUploadStop,
+          onShowToast,
+        } = this.editor.props;
+
+        if (!uploadImage) {
+          throw new Error("uploadImage prop is required to replace images");
+        }
+
+        // create an input element and click to trigger picker
+        const inputElement = document.createElement("input");
+        inputElement.type = "file";
+        inputElement.accept = "image/*";
+        inputElement.onchange = (event: Event) => {
+          const files = getDataTransferFiles(event);
+          insertFiles(view, event, state.selection.from, files, {
+            uploadImage,
+            onImageUploadStart,
+            onImageUploadStop,
+            onShowToast,
+            dictionary: this.options.dictionary,
+            replaceExisting: true,
+          });
+        };
+        inputElement.click();
+      },
       alignCenter: () => (state, dispatch) => {
         const attrs = { ...state.selection.node.attrs, layoutClass: null };
         const { selection } = state;

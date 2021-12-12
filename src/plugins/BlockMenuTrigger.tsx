@@ -46,7 +46,7 @@ export default class BlockMenuTrigger extends Extension {
     const button = document.createElement("button");
     button.className = "block-menu-trigger";
     button.type = "button";
-    ReactDOM.render(<PlusIcon fill="currentColor" />, button);
+    ReactDOM.render(<PlusIcon color="currentColor" />, button);
 
     return [
       new Plugin({

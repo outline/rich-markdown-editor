@@ -1,9 +1,24 @@
+import { EditorView } from "prosemirror-view";
 import uploadPlaceholderPlugin, {
   findPlaceholder,
 } from "../lib/uploadPlaceholder";
 import { ToastType } from "../types";
+import baseDictionary from "../dictionary";
 
-const insertFiles = function(view, event, pos, files, options) {
+const insertFiles = function(
+  view: EditorView,
+  event: Event,
+  pos: number,
+  files: File[],
+  options: {
+    dictionary: typeof baseDictionary;
+    replaceExisting?: boolean;
+    uploadImage: (file: File) => Promise<string>;
+    onImageUploadStart?: () => void;
+    onImageUploadStop?: () => void;
+    onShowToast?: (message: string, code: string) => void;
+  }
+): void {
   // filter to only include image files
   const images = files.filter(file => /image/i.test(file.type));
   if (images.length === 0) return;
@@ -43,10 +58,12 @@ const insertFiles = function(view, event, pos, files, options) {
     const { tr } = view.state;
 
     // insert a placeholder at this position
-    tr.setMeta(uploadPlaceholderPlugin, {
-      add: { id, file, pos },
-    });
-    view.dispatch(tr);
+    if (!options.replaceExisting) {
+      tr.setMeta(uploadPlaceholderPlugin, {
+        add: { id, file, pos },
+      });
+      view.dispatch(tr);
+    }
 
     // start uploading the image file to the server. Using "then" syntax
     // to allow all placeholders to be entered at once with the uploads
@@ -58,14 +75,28 @@ const insertFiles = function(view, event, pos, files, options) {
         const newImg = new Image();
 
         newImg.onload = () => {
-          const pos = findPlaceholder(view.state, id);
+          let from: number | undefined;
+          let to: number | undefined;
+          const $pos = view.state.doc.resolve(pos);
+
+          if (
+            options.replaceExisting &&
+            $pos.nodeAfter?.type.name === "image"
+          ) {
+            from = $pos.pos;
+            to = from + $pos.nodeAfter.nodeSize;
+          } else {
+            from = findPlaceholder(view.state, id);
+          }
 
           // if the content around the placeholder has been deleted
           // then forget about inserting this image
-          if (pos === null) return;
+          if (from === null || from === undefined) {
+            return;
+          }
 
           const transaction = view.state.tr
-            .replaceWith(pos, pos, schema.nodes.image.create({ src }))
+            .replaceWith(from, to || from, schema.nodes.image.create({ src }))
             .setMeta(uploadPlaceholderPlugin, { remove: { id } });
 
           view.dispatch(transaction);
@@ -91,7 +122,6 @@ const insertFiles = function(view, event, pos, files, options) {
           onShowToast(dictionary.imageUploadError, ToastType.Error);
         }
       })
-      // eslint-disable-next-line no-loop-func
       .finally(() => {
         complete++;
 
