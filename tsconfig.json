@@ -9,6 +9,7 @@
     "resolveJsonModule": true,
     "module": "commonjs",
     "target": "es2017",
+    "lib": ["dom", "es2018"],
     "jsx": "react",
     "types": [
       "react",

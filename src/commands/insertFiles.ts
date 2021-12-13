@@ -1,9 +1,27 @@
+import { EditorView } from "prosemirror-view";
 import uploadPlaceholderPlugin, {
   findPlaceholder,
 } from "../lib/uploadPlaceholder";
 import { ToastType } from "../types";
+import baseDictionary from "../dictionary";
+import { NodeSelection } from "prosemirror-state";
 
-const insertFiles = function(view, event, pos, files, options) {
+let uploadId = 0;
+
+const insertFiles = function(
+  view: EditorView,
+  event: Event,
+  pos: number,
+  files: File[],
+  options: {
+    dictionary: typeof baseDictionary;
+    replaceExisting?: boolean;
+    uploadImage: (file: File) => Promise<string>;
+    onImageUploadStart?: () => void;
+    onImageUploadStop?: () => void;
+    onShowToast?: (message: string, code: string) => void;
+  }
+): void {
   // filter to only include image files
   const images = files.filter(file => /image/i.test(file.type));
   if (images.length === 0) return;
@@ -37,14 +55,19 @@ const insertFiles = function(view, event, pos, files, options) {
 
   // the user might have dropped multiple images at once, we need to loop
   for (const file of images) {
-    // Use an object to act as the ID for this upload, clever.
-    const id = {};
+    const id = `upload-${uploadId++}`;
 
     const { tr } = view.state;
 
-    // insert a placeholder at this position
+    // insert a placeholder at this position, or mark an existing image as being
+    // replaced
     tr.setMeta(uploadPlaceholderPlugin, {
-      add: { id, file, pos },
+      add: {
+        id,
+        file,
+        pos,
+        replaceExisting: options.replaceExisting,
+      },
     });
     view.dispatch(tr);
 
@@ -58,17 +81,31 @@ const insertFiles = function(view, event, pos, files, options) {
         const newImg = new Image();
 
         newImg.onload = () => {
-          const pos = findPlaceholder(view.state, id);
+          const result = findPlaceholder(view.state, id);
 
           // if the content around the placeholder has been deleted
           // then forget about inserting this image
-          if (pos === null) return;
+          if (result === null) {
+            return;
+          }
 
-          const transaction = view.state.tr
-            .replaceWith(pos, pos, schema.nodes.image.create({ src }))
-            .setMeta(uploadPlaceholderPlugin, { remove: { id } });
+          const [from, to] = result;
+          view.dispatch(
+            view.state.tr
+              .replaceWith(from, to || from, schema.nodes.image.create({ src }))
+              .setMeta(uploadPlaceholderPlugin, { remove: { id } })
+          );
 
-          view.dispatch(transaction);
+          // If the users selection is still at the image then make sure to select
+          // the entire node once done. Otherwise, if the selection has moved
+          // elsewhere then we don't want to modify it
+          if (view.state.selection.from === from) {
+            view.dispatch(
+              view.state.tr.setSelection(
+                new NodeSelection(view.state.doc.resolve(from))
+              )
+            );
+          }
         };
 
         newImg.onerror = error => {
@@ -91,7 +128,6 @@ const insertFiles = function(view, event, pos, files, options) {
           onShowToast(dictionary.imageUploadError, ToastType.Error);
         }
       })
-      // eslint-disable-next-line no-loop-func
       .finally(() => {
         complete++;
 

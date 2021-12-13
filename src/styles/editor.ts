@@ -59,6 +59,12 @@ export const StyledEditor = styled("div")<{
     }
   }
 
+  .image-replacement-uploading {
+    img {
+      opacity: 0.5;
+    }
+  }
+
   .image-right-50 {
     float: right;
     width: 50%;
@@ -395,11 +401,6 @@ export const StyledEditor = styled("div")<{
   ol {
     margin: ${props => (props.rtl ? "0 -26px 0 0.1em" : "0 0.1em 0 -26px")};
     padding: ${props => (props.rtl ? "0 44px 0 0" : "0 0 0 44px")};
-
-    ul,
-    ol {
-      margin-${props => (props.rtl ? "left" : "right")}: -24px;
-    }
   }
 
   ol ol {

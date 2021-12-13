@@ -275,6 +275,10 @@ class CommandMenu<T = MenuItem> extends React.Component<Props<T>, State> {
 
     this.clearSearch();
 
+    if (!uploadImage) {
+      throw new Error("uploadImage prop is required to replace images");
+    }
+
     if (parent) {
       insertFiles(view, event, parent.pos, files, {
         uploadImage,
