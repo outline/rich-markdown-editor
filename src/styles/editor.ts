@@ -59,6 +59,12 @@ export const StyledEditor = styled("div")<{
     }
   }
 
+  .image-replacement-uploading {
+    img {
+      opacity: 0.5;
+    }
+  }
+
   .image-right-50 {
     float: right;
     width: 50%;

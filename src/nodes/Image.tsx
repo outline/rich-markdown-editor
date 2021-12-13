@@ -360,6 +360,36 @@ export default class Image extends Node {
         dispatch(state.tr.setNodeMarkup(selection.from, undefined, attrs));
         return true;
       },
+      replaceImage: () => state => {
+        const { view } = this.editor;
+        const {
+          uploadImage,
+          onImageUploadStart,
+          onImageUploadStop,
+          onShowToast,
+        } = this.editor.props;
+
+        if (!uploadImage) {
+          throw new Error("uploadImage prop is required to replace images");
+        }
+
+        // create an input element and click to trigger picker
+        const inputElement = document.createElement("input");
+        inputElement.type = "file";
+        inputElement.accept = "image/*";
+        inputElement.onchange = (event: Event) => {
+          const files = getDataTransferFiles(event);
+          insertFiles(view, event, state.selection.from, files, {
+            uploadImage,
+            onImageUploadStart,
+            onImageUploadStop,
+            onShowToast,
+            dictionary: this.options.dictionary,
+            replaceExisting: true,
+          });
+        };
+        inputElement.click();
+      },
       alignCenter: () => (state, dispatch) => {
         const attrs = { ...state.selection.node.attrs, layoutClass: null };
         const { selection } = state;
@@ -434,18 +464,6 @@ const Button = styled.button`
   }
 `;
 
-const ImageWrapper = styled.span`
-  line-height: 0;
-  display: inline-block;
-  position: relative;
-
-  &:hover {
-    ${Button} {
-      opacity: 0.9;
-    }
-  }
-`;
-
 const Caption = styled.p`
   border: 0;
   display: block;
@@ -463,9 +481,29 @@ const Caption = styled.p`
   user-select: text;
   cursor: text;
 
+  &:empty:not(:focus) {
+    visibility: hidden;
+  }
+
   &:empty:before {
     color: ${props => props.theme.placeholder};
     content: attr(data-caption);
     pointer-events: none;
+  }
+`;
+
+const ImageWrapper = styled.span`
+  line-height: 0;
+  display: inline-block;
+  position: relative;
+
+  &:hover {
+    ${Button} {
+      opacity: 0.9;
+    }
+  }
+
+  &.ProseMirror-selectednode + ${Caption} {
+    visibility: visible;
   }
 `;
