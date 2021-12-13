@@ -320,14 +320,20 @@ class CommandMenu<T = MenuItem> extends React.Component<Props<T>, State> {
     const { state } = view;
     const parent = findParentNode(node => !!node)(state.selection);
 
+    this.clearSearch();
+
     if (parent) {
-      insertAllFiles(view, event, files, {
+      insertAllFiles(view, event, parent.pos, files, {
         uploadFile,
         onFileUploadStart,
         onFileUploadStop,
         onShowToast,
         dictionary: this.props.dictionary,
       });
+    }
+
+    if (this.inputRef.current) {
+      this.inputRef.current.value = "";
     }
 
     this.props.onClose();
