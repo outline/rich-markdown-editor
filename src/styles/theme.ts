@@ -1,25 +1,22 @@
 const colors = {
-  black: "#000",
   almostBlack: "#181A1B",
   lightBlack: "#2F3336",
   almostWhite: "#E6E6E6",
   white: "#FFF",
   white10: "rgba(255, 255, 255, 0.1)",
+  black: "#000",
   black10: "rgba(0, 0, 0, 0.1)",
   primary: "#1AB6FF",
   greyLight: "#F4F7FA",
   grey: "#E8EBED",
   greyMid: "#C5CCD3",
   greyDark: "#DAE1E9",
-  knowtGreyLight: "#F1F0F1",
-  knowtGrey: "#E9E9E9",
-  knowtGreyStrong: "#666666",
 };
 
 export const base = {
   ...colors,
   fontFamily:
-    "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen, Ubuntu,Ctextantarell,'Open Sans','Helvetica Neue',sans-serif",
+    "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen, Ubuntu,Cantarell,'Open Sans','Helvetica Neue',sans-serif",
   fontFamilyMono:
     "'SFMono-Regular',Consolas,'Liberation Mono', Menlo, Courier,monospace",
   fontWeight: 400,
@@ -51,13 +48,13 @@ export const base = {
   blockToolbarTrigger: colors.greyMid,
   blockToolbarTriggerIcon: colors.white,
   blockToolbarItem: colors.almostBlack,
-  blockToolbarIcon: colors.knowtGreyStrong,
+  blockToolbarIcon: undefined,
   blockToolbarIconSelected: colors.black,
-  blockToolbarText: colors.black,
+  blockToolbarText: colors.almostBlack,
   blockToolbarTextSelected: colors.black,
-  blockToolbarSelectedBackground: colors.knowtGrey,
-  blockToolbarHoverBackground: colors.knowtGreyLight,
-  blockToolbarDivider: colors.knowtGrey,
+  blockToolbarSelectedBackground: colors.greyMid,
+  blockToolbarHoverBackground: colors.greyLight,
+  blockToolbarDivider: colors.greyMid,
 
   noticeInfoBackground: "#F5BE31",
   noticeInfoText: colors.almostBlack,
