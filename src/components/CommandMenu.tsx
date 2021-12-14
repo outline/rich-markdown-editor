@@ -302,6 +302,7 @@ class CommandMenu<T = MenuItem> extends React.Component<Props<T>, State> {
     this.clearSearch();
 
     const command = this.props.commands[item.name];
+
     if (command) {
       command(item.attrs);
     } else {
