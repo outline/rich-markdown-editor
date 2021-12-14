@@ -299,7 +299,6 @@ class CommandMenu<T = MenuItem> extends React.Component<Props<T>, State> {
   };
 
   insertBlock(item) {
-    console.log({ item });
     this.clearSearch();
 
     const command = this.props.commands[item.name];
