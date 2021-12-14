@@ -22,8 +22,8 @@ export default class Emoji extends Node {
       content: "text*",
       marks: "",
       group: "inline",
-      selectable: true,
-      draggable: true,
+      selectable: false,
+      draggable: false,
       parseDOM: [
         {
           tag: "span.emoji",
