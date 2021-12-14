@@ -23,7 +23,6 @@ export default class Emoji extends Node {
       marks: "",
       group: "inline",
       selectable: false,
-      draggable: false,
       parseDOM: [
         {
           tag: "span.emoji",
