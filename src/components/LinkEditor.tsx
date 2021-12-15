@@ -120,7 +120,7 @@ class LinkEditor extends React.Component<Props, State> {
 
   state: State = {
     selectedIndex: -1,
-    value: this.href || this.props.selectedText || "",
+    value: this.href || "",
     previousValue: "",
     results: {},
   };
@@ -346,6 +346,7 @@ class LinkEditor extends React.Component<Props, State> {
   render() {
     const { dictionary, theme, Avatar, onTurnIntoCards } = this.props;
     const { value, selectedIndex } = this.state;
+    console.log(`value`, value);
     const looksLikeUrl = value.match(/^https?:\/\/|^www./i);
     const showTurnInto = !!looksLikeUrl && onTurnIntoCards;
     const initialIsCardLink =
