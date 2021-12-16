@@ -59,7 +59,9 @@ export default class Heading extends Node {
         fold.className = `heading-fold ${
           node.attrs.collapsed ? "collapsed" : ""
         }`;
-        fold.addEventListener("click", event => this.handleFoldContent(event));
+        fold.addEventListener("mousedown", event =>
+          this.handleFoldContent(event)
+        );
 
         return [
           `h${node.attrs.level + (this.options.offset || 0)}`,
@@ -111,6 +113,7 @@ export default class Heading extends Node {
     event.preventDefault();
 
     const { view } = this.editor;
+    const hadFocus = view.hasFocus();
     const { tr } = view.state;
     const { top, left } = event.target.getBoundingClientRect();
     const result = view.posAtCoords({ top, left });
@@ -142,7 +145,10 @@ export default class Heading extends Node {
         }
 
         view.dispatch(transaction);
-        view.focus();
+
+        if (hadFocus) {
+          view.focus();
+        }
       }
     }
   };

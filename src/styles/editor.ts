@@ -139,6 +139,8 @@ export const StyledEditor = styled("div")<{
       font-size: 13px;
       line-height: 0;
       margin-${props => (props.rtl ? "right" : "left")}: -24px;
+      transition: opacity 150ms ease-in-out;
+      opacity: 0;
       width: 24px;
     }
 
@@ -193,6 +195,19 @@ export const StyledEditor = styled("div")<{
   }
   h6:not(.placeholder):before {
     content: "H6";
+  }
+
+  .ProseMirror-focused {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      &:not(.placeholder):before {
+        opacity: 1;
+      }
+    }
   }
 
   .with-emoji {
