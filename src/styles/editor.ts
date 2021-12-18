@@ -538,9 +538,10 @@ export const StyledEditor = styled("div")<{
   code {
     border-radius: 4px;
     border: 1px solid ${props => props.theme.codeBorder};
+    background: ${props => props.theme.codeBackground};
     padding: 3px 4px;
     font-family: ${props => props.theme.fontFamilyMono};
-    font-size: 85%;
+    font-size: 80%;
   }
 
   mark {
