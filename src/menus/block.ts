@@ -11,6 +11,7 @@ import {
   TableIcon,
   TodoListIcon,
   ImageIcon,
+  NotepadIcon,
   StarredIcon,
   WarningIcon,
   InfoIcon,
@@ -114,6 +115,12 @@ export default function blockMenuItems(
       title: dictionary.image,
       icon: ImageIcon,
       keywords: "picture photo",
+    },
+    {
+      name: "file",
+      title: dictionary.file,
+      icon: NotepadIcon,
+      keywords: "doc pdf",
     },
     {
       name: "link",
