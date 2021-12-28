@@ -160,7 +160,6 @@ export default class LinkToolbar extends React.Component<Props> {
             to={selection.to}
             onCreateLink={onCreateLink ? this.handleOnCreateLink : undefined}
             onMoveLink={this.props.onMoveLink}
-            Avatar={this.props.Avatar}
             onSelectLink={this.handleOnSelectLink}
             onRemoveLink={onClose}
             {...rest}

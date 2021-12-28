@@ -24,6 +24,7 @@ import Extension from "./lib/Extension";
 import ExtensionManager from "./lib/ExtensionManager";
 import ComponentView from "./lib/ComponentView";
 import headingToSlug from "./lib/headingToSlug";
+import { mathSerializer } from "@benrbray/prosemirror-math";
 
 // nodes
 import ReactNode from "./nodes/ReactNode";
@@ -41,6 +42,8 @@ import Heading from "./nodes/Heading";
 import HorizontalRule from "./nodes/HorizontalRule";
 import Image from "./nodes/Image";
 import ListItem from "./nodes/ListItem";
+import Math from "./nodes/Math";
+import MathDisplay from "./nodes/MathDisplay";
 import Notice from "./nodes/Notice";
 import OrderedList from "./nodes/OrderedList";
 import Paragraph from "./nodes/Paragraph";
@@ -69,7 +72,7 @@ import SmartText from "./plugins/SmartText";
 import TrailingNode from "./plugins/TrailingNode";
 import MarkdownPaste from "./plugins/MarkdownPaste";
 
-export { schema, parser, serializer } from "./server";
+export { schema, parser, serializer, renderToHtml } from "./server";
 
 export { default as Extension } from "./lib/Extension";
 
@@ -124,7 +127,6 @@ export type Props = {
   enableTemplatePlaceholder?: boolean;
   getPlaceHolderLink: (title: string) => string;
   Avatar: typeof React.Component | React.FC<any>;
-  childCards?: Array<string>;
   newLinePlaceholder?: string;
   onHoverLink?: (event: MouseEvent) => boolean;
   onClickHashtag?: (tag: string, event: MouseEvent) => void;
@@ -135,7 +137,6 @@ export type Props = {
   className?: string;
   style?: Record<string, string>;
   editorMinHeight?: string;
-  fixedToolbar?: boolean;
   onCreateFlashcard?: (txt?: string, surroundTxt?: string) => void;
   limitBlockMenuItems?: Array<string>;
 };
@@ -171,8 +172,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     extensions: [],
     tooltip: Tooltip,
     newLinePlaceholder: "",
-    childCards: [],
-    fixedToolbar: false,
     onCreateFlashcard: null,
   };
 
@@ -313,6 +312,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new Highlight(),
         new Italic(),
         ...templatePlaceHolderList,
+        new Math(),
+        new MathDisplay(),
         new Underline(),
         new Link({
           onKeyboardShortcut: this.handleOpenLinkMenu,
@@ -464,6 +465,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       editable: () => !this.props.readOnly,
       nodeViews: this.nodeViews,
       handleDOMEvents: this.props.handleDOMEvents,
+      clipboardTextSerializer: slice => mathSerializer.serializeSlice(slice),
       dispatchTransaction: transaction => {
         const { state, transactions } = this.view.state.applyTransaction(
           transaction
@@ -683,44 +685,41 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
             />
             {!readOnly && this.view && (
               <React.Fragment>
-                {!this.props.fixedToolbar && (
-                  <>
-                    <SelectionToolbar
-                      floating={true}
-                      view={this.view}
-                      dictionary={dictionary}
-                      commands={this.commands}
-                      onSearchLink={this.props.onSearchLink}
-                      isTemplate={this.props.template === true}
-                      onClickLink={this.props.onClickLink}
-                      onCreateLink={this.props.onCreateLink}
-                      onMoveLink={this.props.onMoveLink}
-                      onCreateFlashcard={this.props.onCreateFlashcard}
-                      Avatar={this.props.Avatar}
-                      onTurnIntoCards={this.props.onTurnIntoCards}
-                      tooltip={tooltip}
-                    />
-                    <LinkToolbar
-                      view={this.view}
-                      dictionary={dictionary}
-                      isActive={this.state.linkMenuOpen}
-                      onCreateLink={this.props.onCreateLink}
-                      onMoveLink={this.props.onMoveLink}
-                      onCreateFlashcard={this.props.onCreateFlashcard}
-                      Avatar={this.props.Avatar}
-                      onTurnIntoCards={this.props.onTurnIntoCards}
-                      onSearchLink={this.props.onSearchLink}
-                      onClickLink={this.props.onClickLink}
-                      onShowToast={this.props.onShowToast}
-                      onClose={this.handleCloseLinkMenu}
-                      tooltip={tooltip}
-                      searchTriggerOpen={this.state.searchTriggerOpen}
-                      resetSearchTrigger={() =>
-                        this.setState({ searchTriggerOpen: false })
-                      }
-                    />
-                  </>
-                )}
+                <SelectionToolbar
+                  floating={true}
+                  view={this.view}
+                  dictionary={dictionary}
+                  commands={this.commands}
+                  onSearchLink={this.props.onSearchLink}
+                  isTemplate={this.props.template === true}
+                  onClickLink={this.props.onClickLink}
+                  onCreateLink={this.props.onCreateLink}
+                  onMoveLink={this.props.onMoveLink}
+                  onCreateFlashcard={this.props.onCreateFlashcard}
+                  Avatar={this.props.Avatar}
+                  onTurnIntoCards={this.props.onTurnIntoCards}
+                  tooltip={tooltip}
+                />
+                <LinkToolbar
+                  view={this.view}
+                  dictionary={dictionary}
+                  isActive={this.state.linkMenuOpen}
+                  onCreateLink={this.props.onCreateLink}
+                  onMoveLink={this.props.onMoveLink}
+                  onCreateFlashcard={this.props.onCreateFlashcard}
+                  Avatar={this.props.Avatar}
+                  onTurnIntoCards={this.props.onTurnIntoCards}
+                  onSearchLink={this.props.onSearchLink}
+                  onClickLink={this.props.onClickLink}
+                  onShowToast={this.props.onShowToast}
+                  onClose={this.handleCloseLinkMenu}
+                  tooltip={tooltip}
+                  searchTriggerOpen={this.state.searchTriggerOpen}
+                  resetSearchTrigger={() =>
+                    this.setState({ searchTriggerOpen: false })
+                  }
+                />
+
                 <BlockMenu
                   view={this.view}
                   commands={this.commands}
@@ -740,32 +739,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
               </React.Fragment>
             )}
           </React.Fragment>
-          {!readOnly &&
-            this.view &&
-            this.state.focused &&
-            this.props.fixedToolbar && (
-              <SelectionToolbar
-                floating={false}
-                linkIsActive={this.state.linkMenuOpen}
-                searchTriggerOpen={this.state.searchTriggerOpen}
-                resetSearchTrigger={() =>
-                  this.setState({ searchTriggerOpen: false })
-                }
-                onCreateFlashcard={this.props.onCreateFlashcard}
-                onMoveLink={this.props.onMoveLink}
-                onClose={this.handleCloseLinkMenu}
-                view={this.view}
-                dictionary={dictionary}
-                commands={this.commands}
-                onSearchLink={this.props.onSearchLink}
-                isTemplate={this.props.template === true}
-                onClickLink={this.props.onClickLink}
-                onCreateLink={this.props.onCreateLink}
-                Avatar={this.props.Avatar}
-                onTurnIntoCards={this.props.onTurnIntoCards}
-                tooltip={tooltip}
-              />
-            )}
         </Flex>
       </ThemeProvider>
     );

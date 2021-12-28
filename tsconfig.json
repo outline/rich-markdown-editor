@@ -10,7 +10,8 @@
     "target": "es2017",
     "jsx": "react",
     "types": [
-      "react"
+      "react",
+      "jest"
     ],
     "rootDir": "src",
     "outDir": "dist",

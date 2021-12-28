@@ -7,6 +7,7 @@ import {
   Heading2Icon,
   Heading3Icon,
   HorizontalRuleIcon,
+  MathIcon,
   OrderedListIcon,
   TableIcon,
   TodoListIcon,
@@ -114,6 +115,11 @@ export default function blockMenuItems(
       title: "Upload audio/video",
       icon: ArchiveIcon,
       keywords: "audio sound mp3 video movie film mp4",
+    },
+    {
+      name: "math_inline",
+      title: dictionary.math,
+      icon: MathIcon,
     },
     {
       name: "link",

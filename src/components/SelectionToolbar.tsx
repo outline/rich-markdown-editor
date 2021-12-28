@@ -243,7 +243,6 @@ export default class SelectionToolbar extends React.Component<Props> {
         to={(range && range.to) || selection.to}
         onCreateLink={onCreateLink ? this.handleOnCreateLink : undefined}
         onMoveLink={this.props.onMoveLink}
-        Avatar={this.props.Avatar}
         onSelectLink={this.handleOnSelectLink}
         selectedText={selectedText}
         onRemoveLink={this.props.onClose}
