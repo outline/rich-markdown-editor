@@ -63,7 +63,6 @@ type Props = {
   onTurnIntoCards?: (href: string) => Promise<string>;
   onShowToast?: (msg: string, code: string) => void;
   view: EditorView;
-  floating?: boolean;
   linkIsActive?: boolean;
   onClose?: () => void;
   searchTriggerOpen?: boolean;
@@ -250,35 +249,12 @@ export default class SelectionToolbar extends React.Component<Props> {
       />
     );
 
-    return this.props.floating ? (
+    return (
       <Portal>
         <FloatingToolbar view={view} active={isActive(this.props)}>
           {link && range ? LinkEditorEl : MenuEl}
         </FloatingToolbar>
       </Portal>
-    ) : (
-      <BottomToolbarWrapper>
-        <div style={{ padding: "10px" }}>
-          {((link && range) || this.props.linkIsActive) && LinkEditorEl}
-        </div>
-        {MenuEl}
-      </BottomToolbarWrapper>
     );
   }
 }
-
-export const BottomToolbarWrapper = ({ children }) => {
-  return (
-    <div
-      style={{
-        width: "100%",
-        background: "#fff",
-        position: "sticky",
-        // prevent gap on chrome
-        bottom: "-2px",
-      }}
-    >
-      {children}
-    </div>
-  );
-};

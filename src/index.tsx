@@ -619,7 +619,10 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   theme = () => {
-    return this.props.theme || (this.props.dark ? darkTheme : lightTheme);
+    return {
+      ...(this.props.dark ? darkTheme : lightTheme),
+      ...(this.props.theme || {}),
+    };
   };
 
   dictionary = memoize(
@@ -678,7 +681,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   ? this.props.editorMinHeight
                   : undefined,
               }}
-              onCreateFlashcard={this.props.onCreateFlashcard}
               readOnly={readOnly}
               readOnlyWriteCheckboxes={readOnlyWriteCheckboxes}
               ref={ref => (this.element = ref)}
@@ -686,7 +688,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
             {!readOnly && this.view && (
               <React.Fragment>
                 <SelectionToolbar
-                  floating={true}
                   view={this.view}
                   dictionary={dictionary}
                   commands={this.commands}
@@ -748,7 +749,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 const StyledEditor = styled("div")<{
   readOnly?: boolean;
   readOnlyWriteCheckboxes?: boolean;
-  onCreateFlashcard?: (txt?: string, surroundTxt?: string) => void;
 }>`
   background: ${props => props.theme.background};
   line-height: 1.7em;
