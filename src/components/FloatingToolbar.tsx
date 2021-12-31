@@ -27,17 +27,22 @@ const useComponentSize = ref => {
   });
 
   React.useEffect(() => {
-    const sizeObserver = new ResizeObserver(entries => {
-      entries.forEach(({ target }) => {
-        if (
-          size.width !== target.clientWidth ||
-          size.height !== target.clientHeight
-        ) {
-          setSize({ width: target.clientWidth, height: target.clientHeight });
-        }
+    let sizeObserver;
+    try {
+      sizeObserver = new ResizeObserver(entries => {
+        entries.forEach(({ target }) => {
+          if (
+            size.width !== target.clientWidth ||
+            size.height !== target.clientHeight
+          ) {
+            setSize({ width: target.clientWidth, height: target.clientHeight });
+          }
+        });
       });
-    });
-    sizeObserver.observe(ref.current);
+      sizeObserver.observe(ref.current);
+    } catch {
+      console.warn(`ResizeObserver not supported`);
+    }
 
     return () => sizeObserver.disconnect();
   }, [ref]);
