@@ -103,6 +103,7 @@ export default function Example(props) {
             }, 1500);
           });
         }}
+        onChange={val => console.log(`change`, val())}
         onSearchLink={async term => {
           console.log("Searched link: ", term);
 

@@ -192,6 +192,7 @@ export default class SelectionToolbar extends React.Component<Props> {
     const { dictionary, onCreateLink, isTemplate, ...rest } = this.props;
     const { view } = rest;
     const { state } = view;
+    console.log(`view`, view);
     const { selection }: { selection: any } = state;
     const isCodeSelection = isNodeActive(state.schema.nodes.code_block)(state);
 

@@ -4,6 +4,7 @@ import {
   insertMathCmd,
 } from "@benrbray/prosemirror-math";
 import Node from "./Node";
+import { InputRule } from "prosemirror-inputrules";
 
 export default class MathDisplay extends Node {
   get name() {
@@ -16,11 +17,10 @@ export default class MathDisplay extends Node {
       content: "text*",
       atom: true,
       code: true,
-      toDOM: () => [
-        "math-display",
-        { class: "math-node", spellcheck: "false" },
-        0,
-      ],
+      toDOM: node => {
+        console.log(`math display node`, node);
+        return ["math-display", { class: "math-node" }, 0];
+      },
       parseDOM: [
         {
           tag: "math-display",
@@ -37,6 +37,28 @@ export default class MathDisplay extends Node {
     return [makeBlockMathInputRule(REGEX_BLOCK_MATH_DOLLARS, type)];
   }
 
+  // inputRules({ type }) {
+  //   return [
+  //     new InputRule(REGEX_BLOCK_MATH_DOLLARS, (state, match, start, end) => {
+  //       const [okay, alt, src, matchedTitle] = match;
+  //       console.log(`match`, match);
+  //       const { tr } = state;
+  //       if (okay) {
+  //         tr.replaceWith(
+  //           start - 1,
+  //           end,
+  //           type.create({
+  //             src,
+  //             alt,
+  //           })
+  //         );
+  //       }
+
+  //       return tr;
+  //     }),
+  //   ];
+  // }
+
   toMarkdown(state, node) {
     state.write("$$\n");
     state.text(node.textContent, false);
@@ -48,6 +70,15 @@ export default class MathDisplay extends Node {
   parseMarkdown() {
     return {
       node: "math_display",
+      // node: "math_display",
+      // getAttrs: token => {
+      //   console.log(`math token dispaly`, token);
+      //   return {
+      //     content: token.content,
+      //     // src: token.attrGet("src"),
+      //     // alt: (token.children[0] && token.children[0].content) || null,
+      //   };
+      // },
     };
   }
 }

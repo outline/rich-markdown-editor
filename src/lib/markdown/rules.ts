@@ -6,7 +6,7 @@ import breakPlugin from "./breaks";
 import tablesPlugin from "./tables";
 import noticesPlugin from "./notices";
 import underlinesPlugin from "./underlines";
-import mathPlugin from "./math";
+import mathPlugin from "./math_katex";
 
 export default function rules({ embeds, enableTemplatePlaceholder }) {
   let mdIt = markdownit("default", {

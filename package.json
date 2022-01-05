@@ -25,7 +25,7 @@
     ]
   },
   "dependencies": {
-    "@benrbray/prosemirror-math": "^0.1.4",
+    "@benrbray/prosemirror-math": "0.2.2",
     "copy-to-clipboard": "^3.0.8",
     "katex": "^0.13.3",
     "lodash": "^4.17.11",

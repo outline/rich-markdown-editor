@@ -23,9 +23,29 @@ const Template: Story<Props> = args => <Editor {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {
-  defaultValue: `# Welcome
+  defaultValue: `
+\`\`\`javascript
+sdf
+\`\`\`
 
-Just an easy to use **Markdown** editor with \`slash commands\``,
+\
+$x^2$
+
+\
+$$
+X^5
+$$
+
+\\
+**bold**
+_italic_
+~~strikethrough~~
+__underline__
+==highlighted==
+\`inline code\`
+!!placeholder!!
+[a link](http://www.getoutline.com)
+`,
 };
 
 export const TemplateDoc = Template.bind({});

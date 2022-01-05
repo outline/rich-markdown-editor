@@ -44,7 +44,7 @@ const useComponentSize = ref => {
       console.warn(`ResizeObserver not supported`);
     }
 
-    return () => sizeObserver.disconnect();
+    return () => sizeObserver && sizeObserver.disconnect();
   }, [ref]);
 
   return size;

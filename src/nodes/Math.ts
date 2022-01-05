@@ -1,3 +1,6 @@
+
+import styled from "styled-components";
+
 import {
   chainCommands,
   deleteSelection,
@@ -14,6 +17,13 @@ import {
 import Node from "./Node";
 import "katex/dist/katex.min.css";
 import "@benrbray/prosemirror-math/style/math.css";
+import { InputRule } from "prosemirror-inputrules";
+import * as React from "react";
+
+const ImageWrapper = styled.span`
+  line-height: 0;
+  display: inline-block;
+`;
 
 export default class Math extends Node {
   get name() {
@@ -26,11 +36,10 @@ export default class Math extends Node {
       content: "text*",
       inline: true,
       atom: true,
-      toDOM: () => [
-        "math-inline",
-        { class: "math-node", spellcheck: "false" },
-        0,
-      ],
+      toDOM: node => {
+        console.log(`math inline node`, node);
+        return ["math-inline", { class: "math-node" }, 0];
+      },
       parseDOM: [
         {
           tag: "math-inline",
@@ -39,11 +48,17 @@ export default class Math extends Node {
     };
   }
 
+  // component = props => {
+  //   console.log(`props`, props);
+  //   return "HIII!!";
+  // }
+
   commands({ type }) {
     return () => insertMathCmd(type);
   }
 
   inputRules({ schema }) {
+    console.log(`schema`, schema);
     return [
       makeInlineMathInputRule(
         REGEX_INLINE_MATH_DOLLARS,
@@ -51,6 +66,28 @@ export default class Math extends Node {
       ),
     ];
   }
+
+  // inputRules({ type }) {
+  //   return [
+  //     new InputRule(REGEX_INLINE_MATH_DOLLARS, (state, match, start, end) => {
+  //       const [okay, alt, src, matchedTitle] = match;
+  //       console.log(`match`, match);
+  //       const { tr } = state;
+  //       if (okay) {
+  //         tr.replaceWith(
+  //           start - 1,
+  //           end,
+  //           type.create({
+  //             src,
+  //             alt,
+  //           })
+  //         );
+  //       }
+
+  //       return tr;
+  //     }),
+  //   ];
+  // }
 
   keys({ type }) {
     return {
@@ -76,7 +113,16 @@ export default class Math extends Node {
 
   parseMarkdown() {
     return {
+      // block: "math_display",
       node: "math_inline",
+      // getAttrs: token => {
+      //   console.log(`math token inline`, token);
+      //   return {
+      //     content: token.content
+      //     // src: token.attrGet("src"),
+      //     // alt: (token.children[0] && token.children[0].content) || null,
+      //   };
+      // },
     };
   }
 }

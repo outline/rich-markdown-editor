@@ -92,7 +92,7 @@ export default class CodeFence extends Node {
           option.selected = node.attrs.language === value;
           select.appendChild(option);
         });
-
+        console.log(`code node`, node);
         return [
           "div",
           { class: "code-block", "data-language": node.attrs.language },
@@ -168,7 +168,10 @@ export default class CodeFence extends Node {
   parseMarkdown() {
     return {
       block: "code_block",
-      getAttrs: tok => ({ language: tok.info }),
+      getAttrs: tok => {
+        console.log(`code tok`, tok);
+        return { language: tok.info };
+      },
     };
   }
 }
