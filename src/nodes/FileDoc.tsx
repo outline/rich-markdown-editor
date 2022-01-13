@@ -1,12 +1,11 @@
 import { wrappingInputRule } from "prosemirror-inputrules";
 import { Plugin } from "prosemirror-state";
 import toggleWrap from "../commands/toggleWrap";
-import { WarningIcon, InfoIcon, StarredIcon, LinkIcon } from "outline-icons";
+import { LinkIcon } from "outline-icons";
 import * as React from "react";
 import ReactDOM from "react-dom";
 import Node from "./Node";
 import filesRule from "../rules/files";
-import { InputRule } from "prosemirror-inputrules";
 import uploadFilePlaceholderPlugin from "../lib/uploadFilePlaceholder";
 import getDataTransferFiles from "../lib/getDataTransferFiles";
 import insertAllFiles from "../commands/insertAllFiles";
@@ -73,7 +72,6 @@ const uploadPlugin = options =>
   });
 
 export default class File extends Node {
-
   get name() {
     return "container_file";
   }
@@ -100,19 +98,17 @@ export default class File extends Node {
           preserveWhitespace: "full",
           contentElement: "div:last-child",
           getAttrs: (dom: HTMLDivElement) => ({
-            alt: dom.className.includes("a")
+            alt: dom.className.includes("a"),
           }),
         },
       ],
-      toDOM: node => {  
+      toDOM: node => {
         const a = document.createElement("a");
         a.href = node.attrs.src;
         const fileName = document.createTextNode(node.attrs.alt);
         a.appendChild(fileName);
 
-        let component;
-
-        component = <LinkIcon color="currentColor" />;
+        const component = <LinkIcon color="currentColor" />;
 
         const icon = document.createElement("div");
         icon.className = "icon";
@@ -121,7 +117,8 @@ export default class File extends Node {
         return [
           "div",
           { class: `file-block` },
-          icon, a,
+          icon,
+          a,
           ["div", { contentEditable: true }],
           ["div", { class: "content" }, 0],
         ];
@@ -139,10 +136,14 @@ export default class File extends Node {
 
   toMarkdown(state, node) {
     state.write("\n@@@");
-    state.write("[" +  
-      state.esc(node.attrs.alt) + "]" + "(" +
-      state.esc(node.attrs.src) + ")"
-    )
+    state.write(
+      "[" +
+        state.esc(node.attrs.alt) +
+        "]" +
+        "(" +
+        state.esc(node.attrs.src) +
+        ")"
+    );
     state.ensureNewLine();
     state.write("@@@");
     state.closeBlock(node);
@@ -152,11 +153,11 @@ export default class File extends Node {
     return {
       block: "container_file",
       getAttrs: token => {
-        const file_regex =  /\[(?<alt>[^]*?)\]\((?<filename>[^]*?)\)/g;
+        const file_regex = /\[(?<alt>[^]*?)\]\((?<filename>[^]*?)\)/g;
         const result = file_regex.exec(token.info);
         return {
-          src: result? result[2] : null,
-          alt: result? result[1] : null,
+          src: result ? result[2] : null,
+          alt: result ? result[1] : null,
         };
       },
     };
