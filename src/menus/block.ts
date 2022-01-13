@@ -12,6 +12,7 @@ import {
   TodoListIcon,
   ImageIcon,
   StarredIcon,
+  DocumentIcon,
   WarningIcon,
   InfoIcon,
   LinkIcon,
@@ -145,6 +146,12 @@ export default function blockMenuItems(
       icon: StarredIcon,
       keywords: "container_notice card suggestion",
       attrs: { style: "tip" },
+    },
+    {
+      name: "container_file",
+      title: dictionary.file,
+      icon: DocumentIcon,
+      keywords: "file",
     },
   ];
 }
