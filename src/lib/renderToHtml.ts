@@ -6,6 +6,7 @@ import embedsRule from "../rules/embeds";
 import breakRule from "../rules/breaks";
 import tablesRule from "../rules/tables";
 import noticesRule from "../rules/notices";
+import filesRule from "../rules/files";
 import underlinesRule from "../rules/underlines";
 import emojiRule from "../rules/emoji";
 
@@ -18,6 +19,7 @@ const defaultRules = [
   underlinesRule,
   tablesRule,
   noticesRule,
+  filesRule,
   emojiRule,
 ];
 

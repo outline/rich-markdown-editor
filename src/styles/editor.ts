@@ -81,6 +81,23 @@ export const StyledEditor = styled("div")<{
     clear: initial;
   }
 
+  .loader {
+    border: 5px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 5px solid #3498db;
+    width: 2.5em;
+    height: 2.5em;
+    margin: 80px auto;
+    position: relative;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
   .ProseMirror-hideselection *::selection {
     background: transparent;
   }
@@ -305,6 +322,38 @@ export const StyledEditor = styled("div")<{
   .placeholder:nth-child(1):before,
   .placeholder:nth-child(2):before {
     opacity: 1;
+  }
+
+  .file-block {
+    display: flex;
+    align-items: center;
+    background: #F0F8FF;
+    color: #181A1B;
+    border-radius: 4px;
+    padding: 8px 16px;
+    margin: 8px 0;
+
+    a {
+      color: #181A1B;
+    }
+
+    a:not(.heading-name) {
+      text-decoration: underline;
+    }
+  }
+
+  .file-block .content {
+    flex-grow: 1;
+    min-width: 0;
+  }
+
+  .file-block .icon {
+    width: 24px;
+    height: 24px;
+    align-self: flex-start;
+    margin-${props => (props.rtl ? "left" : "right")}: 4px;
+    position: relative;
+    top: 1px;
   }
 
   .notice-block {
@@ -580,6 +629,13 @@ export const StyledEditor = styled("div")<{
     }
 
     &.notice-block {
+      select,
+      button {
+        ${props => (props.rtl ? "left" : "right")}: 4px;
+      }
+    }
+
+    &.file-block {
       select,
       button {
         ${props => (props.rtl ? "left" : "right")}: 4px;

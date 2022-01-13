@@ -48,6 +48,7 @@ import HorizontalRule from "./nodes/HorizontalRule";
 import Image from "./nodes/Image";
 import ListItem from "./nodes/ListItem";
 import Notice from "./nodes/Notice";
+import FileDoc from "./nodes/FileDoc";
 import OrderedList from "./nodes/OrderedList";
 import Paragraph from "./nodes/Paragraph";
 import Table from "./nodes/Table";
@@ -135,6 +136,7 @@ export type Props = {
     [name: string]: (view: EditorView, event: Event) => boolean;
   };
   uploadImage?: (file: File) => Promise<string>;
+  uploadFile?: (file: File) => Promise<string>;
   onBlur?: () => void;
   onFocus?: () => void;
   onSave?: ({ done: boolean }) => void;
@@ -142,6 +144,8 @@ export type Props = {
   onChange?: (value: () => string) => void;
   onImageUploadStart?: () => void;
   onImageUploadStop?: () => void;
+  onFileUploadStart?: () => void;
+  onFileUploadStop?: () => void;
   onCreateLink?: (title: string) => Promise<string>;
   onSearchLink?: (term: string) => Promise<SearchResult[]>;
   onClickLink: (href: string, event: MouseEvent) => void;
@@ -335,6 +339,13 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           new Notice({
             dictionary,
           }),
+          new FileDoc({
+            dictionary,
+            uploadFile: this.props.uploadFile,
+            onFileUploadStart: this.props.onFileUploadStart,
+            onFileUploadStop: this.props.onFileUploadStop,
+            onShowToast: this.props.onShowToast,
+          }),
           new Heading({
             dictionary,
             onShowToast: this.props.onShowToast,
@@ -527,7 +538,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     if (!this.element) {
       throw new Error("createView called before ref available");
     }
-
     const isEditingCheckbox = tr => {
       return tr.steps.some(
         (step: Step) =>
@@ -805,9 +815,12 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   search={this.state.blockMenuSearch}
                   onClose={this.handleCloseBlockMenu}
                   uploadImage={this.props.uploadImage}
+                  uploadFile={this.props.uploadFile}
                   onLinkToolbarOpen={this.handleOpenLinkMenu}
                   onImageUploadStart={this.props.onImageUploadStart}
                   onImageUploadStop={this.props.onImageUploadStop}
+                  onFileUploadStart={this.props.onFileUploadStart}
+                  onFileUploadStop={this.props.onFileUploadStop}
                   onShowToast={this.props.onShowToast}
                   embeds={this.props.embeds}
                 />

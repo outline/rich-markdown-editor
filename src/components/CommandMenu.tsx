@@ -10,6 +10,7 @@ import VisuallyHidden from "./VisuallyHidden";
 import getDataTransferFiles from "../lib/getDataTransferFiles";
 import filterExcessSeparators from "../lib/filterExcessSeparators";
 import insertFiles from "../commands/insertFiles";
+import insertAllFiles from "../commands/insertAllFiles";
 import baseDictionary from "../dictionary";
 
 const SSR = typeof window === "undefined";
@@ -31,6 +32,9 @@ export type Props<T extends MenuItem = MenuItem> = {
   uploadImage?: (file: File) => Promise<string>;
   onImageUploadStart?: () => void;
   onImageUploadStop?: () => void;
+  uploadFile?: (file: File) => Promise<string>;
+  onFileUploadStart?: () => void;
+  onFileUploadStop?: () => void;
   onShowToast?: (message: string, id: string) => void;
   onLinkToolbarOpen?: () => void;
   onClose: () => void;
@@ -61,6 +65,7 @@ type State = {
 class CommandMenu<T = MenuItem> extends React.Component<Props<T>, State> {
   menuRef = React.createRef<HTMLDivElement>();
   inputRef = React.createRef<HTMLInputElement>();
+  fileInputRef = React.createRef<HTMLInputElement>();
 
   state: State = {
     left: -1000,
@@ -177,6 +182,8 @@ class CommandMenu<T = MenuItem> extends React.Component<Props<T>, State> {
     switch (item.name) {
       case "image":
         return this.triggerImagePick();
+      case "container_file":
+        return this.triggerFilePick();
       case "embed":
         return this.triggerLinkInput(item);
       case "link": {
@@ -254,6 +261,12 @@ class CommandMenu<T = MenuItem> extends React.Component<Props<T>, State> {
     }
   };
 
+  triggerFilePick = () => {
+    if (this.fileInputRef.current) {
+      this.fileInputRef.current.click();
+    }
+  };
+
   triggerLinkInput = item => {
     this.setState({ insertItem: item });
   };
@@ -289,6 +302,40 @@ class CommandMenu<T = MenuItem> extends React.Component<Props<T>, State> {
 
     if (this.inputRef.current) {
       this.inputRef.current.value = "";
+    }
+
+    this.props.onClose();
+  };
+
+  handleFilePicked = event => {
+    const files = getDataTransferFiles(event);
+
+    const {
+      view,
+      uploadFile,
+      onFileUploadStart,
+      onFileUploadStop,
+      onShowToast,
+    } = this.props;
+    const { state, dispatch } = view;
+    const parent = findParentNode(node => !!node)(state.selection);
+
+    if (parent) {
+      dispatch(
+        state.tr.insertText(
+          "",
+          parent.pos,
+          parent.pos + parent.node.textContent.length + 1
+        )
+      );
+
+      insertAllFiles(view, event, parent.pos, files, {
+        uploadFile,
+        onFileUploadStart,
+        onFileUploadStop,
+        onShowToast,
+        dictionary: this.props.dictionary,
+      });
     }
 
     this.props.onClose();
@@ -401,6 +448,7 @@ class CommandMenu<T = MenuItem> extends React.Component<Props<T>, State> {
       embeds = [],
       search = "",
       uploadImage,
+      uploadFile,
       commands,
       filterable = true,
     } = this.props;
@@ -438,6 +486,9 @@ class CommandMenu<T = MenuItem> extends React.Component<Props<T>, State> {
       // If no image upload callback has been passed, filter the image block out
       if (!uploadImage && item.name === "image") return false;
 
+      // If no file upload callback has been passed, filter the file block out
+      if (!uploadFile && item.name === "file") return false;
+
       // some items (defaultHidden) are not visible until a search query exists
       if (!search) return !item.defaultHidden;
 
@@ -455,7 +506,7 @@ class CommandMenu<T = MenuItem> extends React.Component<Props<T>, State> {
   }
 
   render() {
-    const { dictionary, isActive, uploadImage } = this.props;
+    const { dictionary, isActive, uploadImage, uploadFile } = this.props;
     const items = this.filtered;
     const { insertItem, ...positioning } = this.state;
 
@@ -520,6 +571,16 @@ class CommandMenu<T = MenuItem> extends React.Component<Props<T>, State> {
                 ref={this.inputRef}
                 onChange={this.handleImagePicked}
                 accept="image/*"
+              />
+            </VisuallyHidden>
+          )}
+          {uploadFile && (
+            <VisuallyHidden>
+              <input
+                type="file"
+                ref={this.fileInputRef}
+                onChange={this.handleFilePicked}
+                accept="*"
               />
             </VisuallyHidden>
           )}
