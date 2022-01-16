@@ -116,11 +116,11 @@ export default function blockMenuItems(
       icon: ArchiveIcon,
       keywords: "audio sound mp3 video movie film mp4",
     },
-    // {
-    //   name: "math_inline",
-    //   title: dictionary.math,
-    //   icon: MathIcon,
-    // },
+    {
+      name: "math_inline",
+      title: dictionary.math,
+      icon: MathIcon,
+    },
     {
       name: "link",
       title: dictionary.link,
