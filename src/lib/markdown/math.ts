@@ -9,7 +9,6 @@ function math(state, silent) {
   const match = state.src
     .slice(++startMathPos)
     .match(/^(?:\\\[|\\\(|begin\{([^}]*)\})/);
-  console.log(`math match`, match);
   if (!match) {
     return false;
   }
@@ -26,7 +25,6 @@ function math(state, silent) {
     endMarker = "\\end{" + match[1] + "}";
     includeMarkers = true;
   }
-  console.log(`token type`, type);
   const endMarkerPos = state.src.indexOf(endMarker, startMathPos);
   if (endMarkerPos === -1) {
     return false;
@@ -101,7 +99,6 @@ function texMath(state, silent) {
     token.content = state.src.slice(startMathPos, endMarkerPos);
   }
   state.pos = nextPos;
-  console.log(`math inline match`, state);
   return true;
 }
 
@@ -135,7 +132,6 @@ export default function(md) {
     const before = options["before" + mapping[key]];
     const after = options["after" + mapping[key]];
     md.renderer.rules[key] = function(tokens, idx) {
-      console.log(`tokens`, tokens);
       return before + escapeHtml(tokens[idx].content) + after;
     };
   });

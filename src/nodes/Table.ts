@@ -36,7 +36,6 @@ export default class Table extends Node {
       group: "block",
       parseDOM: [{ tag: "table" }],
       toDOM() {
-        console.log(`todom table`);
         return [
           "div",
           { class: "scrollable-wrapper" },

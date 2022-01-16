@@ -42,7 +42,6 @@ export default class Math extends Node {
   }
 
   inputRules({ schema }) {
-    console.log(`schema`, schema);
     return [
       makeInlineMathInputRule(
         REGEX_INLINE_MATH_DOLLARS,

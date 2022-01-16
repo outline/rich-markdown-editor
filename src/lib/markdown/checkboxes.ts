@@ -69,7 +69,6 @@ export default function markdownItCheckbox(md: MarkdownIt): void {
           j++;
         }
         tokens[j].type = "checkbox_item_close";
-        console.log(`token check`, tokens, state);
       }
     }
 

@@ -143,7 +143,6 @@ export default class Image extends Node {
         },
       ],
       toDOM: node => {
-        console.log(`todom image`, node);
         const className = node.attrs.layoutClass
           ? `image image-${node.attrs.layoutClass}`
           : "image";
@@ -279,7 +278,6 @@ export default class Image extends Node {
     return {
       node: "image",
       getAttrs: token => {
-        console.log(`img token`, token);
         return {
           src: token.attrGet("src"),
           alt: (token.children[0] && token.children[0].content) || null,
@@ -316,7 +314,6 @@ export default class Image extends Node {
         return true;
       },
       alignCenter: () => (state, dispatch) => {
-        console.log(`state.selection.node.attrs`, state.selection.node.attrs);
         const attrs = {
           ...state.selection.node.attrs,
           layoutClass:
@@ -345,7 +342,6 @@ export default class Image extends Node {
     return [
       new InputRule(IMAGE_INPUT_REGEX, (state, match, start, end) => {
         const [okay, alt, src, matchedTitle] = match;
-        console.log(`image match`, match);
         const { tr } = state;
         if (okay) {
           tr.replaceWith(

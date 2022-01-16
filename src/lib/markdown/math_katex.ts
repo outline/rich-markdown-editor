@@ -114,7 +114,6 @@ function math_inline(state, silent) {
     token.markup = "$";
     token.content = state.src.slice(start, match);
   }
-  console.log(`token math_inline`, token, state);
 
   state.pos = match + 1;
   return true;
@@ -186,7 +185,6 @@ function math_display(state, start, end, silent) {
     (lastLine && lastLine.trim() ? lastLine : "");
   token.map = [start, state.line];
   token.markup = "$$";
-  console.log(`token`, token);
   return true;
 }
 
@@ -197,7 +195,6 @@ export default function math_plugin(md, options) {
 
   // set KaTeX as the renderer for markdown-it-simplemath
   const katexInline = function(latex) {
-    console.log(`render latex`, latex);
     options.displayMode = false;
     try {
       return katex.renderToString(latex, options);
@@ -210,7 +207,6 @@ export default function math_plugin(md, options) {
   };
 
   const inlineRenderer = function(tokens, idx) {
-    console.log(`inlineRenderer`);
     return katexInline(tokens[idx].content);
   };
 
@@ -227,7 +223,6 @@ export default function math_plugin(md, options) {
   };
 
   const blockRenderer = function(tokens, idx) {
-    console.log(`blockRenderer`, tokens);
     return katexBlock(tokens[idx].content) + "\n";
   };
 
@@ -235,6 +230,6 @@ export default function math_plugin(md, options) {
   md.block.ruler.after("blockquote", "math_display", math_display, {
     alt: ["paragraph", "reference", "blockquote", "list"],
   });
-  md.renderer.rules.math_inline = inlineRenderer;
+  // md.renderer.rules.math_inline = inlineRenderer;
   // md.renderer.rules.math_display = blockRenderer;
 }

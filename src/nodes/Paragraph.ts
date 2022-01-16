@@ -12,7 +12,6 @@ export default class Paragraph extends Node {
       group: "block",
       parseDOM: [{ tag: "p" }],
       toDOM() {
-        console.log(`p node`);
         return ["p", 0];
       },
     };

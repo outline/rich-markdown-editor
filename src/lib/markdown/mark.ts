@@ -57,7 +57,6 @@ export default function(options: {
           close: scanned.can_close,
         });
       }
-      console.log(`token mark`, token, state);
       state.pos += scanned.length;
       return true;
     }
