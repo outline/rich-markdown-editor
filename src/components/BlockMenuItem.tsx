@@ -49,6 +49,7 @@ function BlockMenuItem({
     >
       <Icon color={selected ? theme.black : undefined} />
       &nbsp;&nbsp;{title}
+      <Shortcut>{shortcut}</Shortcut>
       {title === "muse.ai video" && (
         <a
           target="_blank"
@@ -99,7 +100,7 @@ const MenuItem = styled.button<{
 `;
 
 const Shortcut = styled.span`
-  color: ${props => props.theme.textSecondary};
+  color: rgb(209 213 219);
   flex-grow: 1;
   text-align: right;
 `;
